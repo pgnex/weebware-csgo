@@ -6,21 +6,13 @@
 
 c_paint_traverse g_paint_traverse;
 
-void __stdcall hook_functions::hk_paint_traverse(unsigned int v, bool f, bool a)
+void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 {
-
- 	// Calling Original
-	// reinterpret_cast<pt_t>(g_hooking.vmt_panel.get_origin_func(41))(g_weebware.g_panel, v, f, a);
-
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
 	g_esp.calc_w2svalues();
 
 	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
-
-	// g_weebware.g_effects->Sparks(*local->m_Origin());
-	// g_weebware.g_effects->Dust(*local->m_Origin(), local->m_vecVelocity() * 50, 50, 1);
-
 }
 
 void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color color, DWORD alignment, const char* msg, ...) // 1 is right, 0 is normal

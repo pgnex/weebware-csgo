@@ -4,11 +4,10 @@
 #define HOOKFUNCS
 namespace hook_functions
 {
-
-	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
-	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
+	bool clientmode_cm(float input_sample_time, c_usercmd* cmd);
+	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
+	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
 	long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 }

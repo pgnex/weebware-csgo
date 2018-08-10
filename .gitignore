@@ -1,0 +1,14 @@
+
+.vs/weebware/v15/.suo
+*.db
+*.opendb
+*.ipch
+*.exe
+*.dll
+*.iobj
+*.ipdb
+*.pdb
+*.obj
+*.tlog
+*.log
+*.idb

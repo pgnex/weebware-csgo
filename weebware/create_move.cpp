@@ -6,14 +6,13 @@
 
 c_create_move g_create_move;
 
-bool __stdcall hook_functions::hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
+bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
 	if (cmd->command_number == 0)
 	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-	//	return reinterpret_cast<bool(__stdcall*)(float, c_usercmd*)>(g_hooking.vmt_client_mode.get_origin_func(24))(input_sample_time, cmd); // call original
 	}
-	
+
 	if (cmd && cmd->command_number)
 	{
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
@@ -24,11 +23,10 @@ bool __stdcall hook_functions::hk_clientmode_cm(float input_sample_time, c_userc
 			{
 				__try
 				{
-					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();					
+					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 
 					g_create_move.create_move(cmd);
 
-					// g_engine_prediction.begin(cmd, g_create_move.local);
 #pragma region Legit
 					g_legitbot.m_local = g_create_move.local;
 
@@ -36,11 +34,9 @@ bool __stdcall hook_functions::hk_clientmode_cm(float input_sample_time, c_userc
 
 					g_accuracy.accuracy_boost(cmd);
 #pragma endregion
-				//	g_engine_prediction.end(g_create_move.local);
 
 					g_ai.create_move(cmd, g_create_move.local);
 
-					// walkbot_main(g_create_move.local, cmd);
 #pragma region Clamping
 				}
 				__except (EXCEPTION_EXECUTE_HANDLER)

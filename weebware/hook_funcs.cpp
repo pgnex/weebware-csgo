@@ -10,20 +10,39 @@ PLH::VEHHook* VEH_RESET;
 PLH::VEHHook* VEH_FSN;
 PLH::VEHHook* VEH_PRESENT;
 
+void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
+{
+	auto protecc = VEH_PAINT->GetProtectionObject();
+
+	hook_functions::paint_traverse(v, f, a);
+}
+
+bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
+{
+	auto protecc = VEH_CM->GetProtectionObject();
+
+	return hook_functions::clientmode_cm(input_sample_time, cmd);
+}
+
+long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
+{
+	auto protecc = VEH_RESET->GetProtectionObject();
+
+	return hook_functions::reset(device, presentation_param);
+}
 
 void c_hooking::hook_all_functions()
 {
 	VEH_PAINT = new PLH::VEHHook();
-	VEH_PAINT->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41], (BYTE*)&hook_functions::hk_paint_traverse, PLH::VEHHook::VEHMethod::HARDWARE_BP);
+	VEH_PAINT->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41], (BYTE*)&hk_paint_traverse, PLH::VEHHook::VEHMethod::INT3_BP);
 	VEH_PAINT->Hook();
 	o_painttraverse = VEH_PAINT->GetOriginal<pt_t>();
 
 	// tramp_paint = new c_trampolines(, &hook_functions::hk_paint_traverse, create_original(o_painttraverse));
-
 	// tramp_paint = new c_trampolines((*reinterpret_cast<LPVOID**>(g_weebware.g_panel))[41], &hook_functions::hk_paint_traverse, create_original(o_painttraverse));
 
 	VEH_CM = new PLH::VEHHook();
-	VEH_CM->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24], (BYTE*)&hook_functions::hk_clientmode_cm, PLH::VEHHook::VEHMethod::HARDWARE_BP);
+	VEH_CM->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24], (BYTE*)&hk_clientmode_cm, PLH::VEHHook::VEHMethod::INT3_BP);
 	VEH_CM->Hook();
 	o_createmove = VEH_CM->GetOriginal<fn_createmove>();
 
@@ -41,7 +60,7 @@ void c_hooking::hook_all_functions()
 	**reinterpret_cast<void***>(g_weebware.g_present_address) = reinterpret_cast<void*>(&hook_functions::hk_present); // (*(uintptr_t**)this)[0]
 
 	VEH_RESET = new PLH::VEHHook();
-	VEH_RESET->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16], (BYTE*)&hook_functions::hk_reset, PLH::VEHHook::VEHMethod::HARDWARE_BP);
+	VEH_RESET->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16], (BYTE*)&hk_reset, PLH::VEHHook::VEHMethod::INT3_BP);
 	VEH_RESET->Hook();
 	o_reset = VEH_RESET->GetOriginal<fn_reset>();
 

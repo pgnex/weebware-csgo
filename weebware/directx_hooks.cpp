@@ -177,14 +177,12 @@ long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* 
 	return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
 }
 
-
-long __stdcall hook_functions::hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
+long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
-
 	if (!has_d3d) {
 		return g_hooking.o_reset(device, presentation_param);
 	}
-	
+
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
 	g_esp.esp_reset();
@@ -192,9 +190,10 @@ long __stdcall hook_functions::hk_reset(IDirect3DDevice9* device, D3DPRESENT_PAR
 	auto hr = g_hooking.o_reset(device, presentation_param);
 
 	ImGui_ImplDX9_CreateDeviceObjects();
-	
+
 	return hr;
 }
+
 
 // Call imgui setup
 ImFont* pFont[2];
