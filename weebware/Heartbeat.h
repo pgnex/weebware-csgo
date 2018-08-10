@@ -11,12 +11,12 @@
 //#pragma warning( disable : 4996 )
 
 
-class c_heartbeat
+namespace auth
 {
-public:
-
-private:
-	void send_beat(void);
-
-	uintptr_t m_missed_beats;
+	std::string GetServerVariable(std::string key);
+	__int64 GetEpochMS();
+	__int64 GetEpochS();
+	std::string base64_encode(const std::string &in);
+	void reverseString(std::string &str);
+	std::string base64_decode(const std::string &in);
 };

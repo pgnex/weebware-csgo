@@ -56,6 +56,26 @@ void call_dx9()
 
 }
 
+//static std::string base64_decode(const std::string &in) {
+//
+//	std::string out;
+//
+//	std::vector<int> T(256, -1);
+//	for (int i = 0; i < 64; i++) T["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[i]] = i;
+//
+//	int val = 0, valb = -8;
+//	for (unsigned char c : in) {
+//		if (T[c] == -1) break;
+//		val = (val << 6) + T[c];
+//		valb += 6;
+//		if (valb >= 0) {
+//			out.push_back(char((val >> valb) & 0xFF));
+//			valb -= 8;
+//		}
+//	}
+//	return out;
+//}
+
 bool c_weebware::init_interfaces()
 {
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
@@ -80,8 +100,10 @@ bool c_weebware::init_interfaces()
 	// Load Our Interfaces.	
 
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
-
+//	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
+	
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
+//	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
 
 	g_client_mode = **(unsigned long***)((*(uintptr_t**)g_client)[10] + 0x5);
 
@@ -194,7 +216,7 @@ void c_weebware::setup_debug_window()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-	SetConsoleTitle("weebware Cheat Console");
+	SetConsoleTitle("weebware Cheat Console");	
 }
 
 // paste wtf am i meant to write huh?

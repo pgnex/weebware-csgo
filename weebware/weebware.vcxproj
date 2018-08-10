@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\programmingbinarys\binarys;C:\programmingbinarys\curl-master;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\weebware\weebware\weebware\curl;C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
