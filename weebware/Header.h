@@ -1,0 +1,65 @@
+#pragma once
+
+// parent include file.
+
+#include <iostream>
+#include <Windows.h>
+#include <conio.h>
+#include <cmath>
+#include <time.h>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <Psapi.h>
+#include <memory>
+#include <process.h>  
+#include <unordered_map>
+#include <string>
+#include <fstream>
+#include <ostream>
+#include <streambuf>
+#include <iterator>
+#include <string.h>
+#include <d3d9.h>
+#include <WinUser.h>
+#include <C:\\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h>
+#pragma comment(lib, "d3d9.lib")
+#pragma comment(lib, "d3dx9.lib")
+#include "Trampoline.h"
+#include "imgui\imgui.h"
+#include "imgui\dx9\imgui_dx9.h"
+
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4227)
+#pragma warning(disable : 4172)
+#pragma warning(disable : 4307)
+#pragma warning(disable : 4996)
+
+// custom include files
+class c_weebware;
+extern c_weebware g_weebware;
+
+#include "vmt.h"
+#include "virtual_function.h"
+#include "netvars.h"
+#include "maths.h"
+#include "configuration.h"
+#include "c_engine_client.h"
+#include "vector.h"
+#include "player_info.h"
+#include "net_channel.h"
+#include "key_values.h"
+#include "c_entities.h"
+#include "c_misc_sdk.h"
+#include "c_rec.h"
+#include "c_client.h"
+#include "c_surface.h"
+#include "move_helper.h"
+#include "trace.h"
+#include "hook_funcs.h"
+#include "shared.h"
+#include "weebware_config.h"
+#include "Heartbeat.h"
+#include "navmesh.h"
+#include "Ai.h"
+

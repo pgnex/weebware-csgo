@@ -1,0 +1,255 @@
+#include "Header.h"
+#include "shared.h"
+#include "netvars.h"
+#include "drawing.h"
+#include "hook_funcs.h"
+c_weebware g_weebware;
+
+unsigned __stdcall entry_thread(void* v_arg)
+{
+	g_weebware.setup_thread(); // run our thread
+
+	_endthreadex(0); // close thread
+
+	return 0; // return 0.
+}
+
+create_interface retrieve_interface(LPCSTR module_name);
+
+void call_dx9()
+{
+	// FF 15 ? ? ? ? 89 46 44
+	// 0x20h ; SDKVersion
+	/*
+	// *this <- pointer to pass in for our dx9 buffer.
+	// a2 <- sdk version
+	// https://msdn.microsoft.com/en-us/library/windows/desktop/bb219685(v=vs.85).aspx
+
+
+	char __thiscall sub_10029BF0(_DWORD *this, int a2)
+	{
+	  _DWORD *v2; // esi@1
+	  IDirect3D9 *v3; // eax@2
+
+	  v2 = this;
+	  if ( !(unsigned __int8)sub_100285E0(a2) )
+		return 0;
+	  v3 = Direct3DCreate9(0x20u);
+	  v2[17] = v3;
+	  if ( !v3 )
+	  {
+		Warning("Failed to create D3D9!\n");
+		return 0;
+	  }
+	  return 1;
+	}
+	// From microsoft.
+	IDirect3D9* Direct3DCreate9(
+	UINT SDKVersion
+	);
+
+*/
+/*	int version = 20h; // 32
+	static auto sub_10029BF0 = reinterpret_cast<IDirect3DDevice9*(__thiscall*)(int)>(((DWORD)(g_entry.pattern_scan("shaderapidx9.dll", "FF 15 ? ? ? ? 89 46 44"))));
+	IDirect3DDevice9* device = sub_10029BF0(0x20h);
+	*/
+
+}
+
+bool c_weebware::init_interfaces()
+{
+	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
+		Sleep(200);
+
+	engine_fact = retrieve_interface("engine.dll");
+
+	if (GetModuleHandleA("client.dll"))
+		client_fact = retrieve_interface("client.dll");
+	else
+		client_fact = retrieve_interface("client_panorama.dll");
+
+	surface_fact = retrieve_interface("vguimatsurface.dll");
+	vgui2_fact = retrieve_interface("vgui2.dll");
+	mat_system_fact = retrieve_interface("materialsystem.dll");
+	vstd_lib_fact = retrieve_interface("vstdlib.dll");
+	steam_fact = retrieve_interface("steamclient.dll");
+	cache_fact = retrieve_interface("datacache.dll");
+	phys_fact = retrieve_interface("vphysics.dll");
+	input_fact = retrieve_interface("inputsystem.dll");
+
+	// Load Our Interfaces.	
+
+	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
+
+	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
+
+	g_client_mode = **(unsigned long***)((*(uintptr_t**)g_client)[10] + 0x5);
+
+	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
+
+	g_panel = reinterpret_cast<c_panel*>(vgui2_fact("VGUI_Panel009", NULL));
+
+	g_surface = reinterpret_cast<c_surface*>(surface_fact("VGUI_Surface031", NULL));
+
+	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan("shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
+
+	g_input_system = reinterpret_cast<c_input_system*>(input_fact("InputSystemVersion001", NULL));
+
+	g_model_info = reinterpret_cast<iv_model_info*>(engine_fact("VModelInfoClient004", NULL));
+
+	g_engine_trace = reinterpret_cast<i_engine_trace*>(engine_fact("EngineTraceClient004", NULL));
+
+	g_debug_overlay = reinterpret_cast<c_debug_overlay*>(engine_fact("VDebugOverlay004", NULL));
+
+	g_global_vars = *reinterpret_cast<c_global_vars**>(((*(PDWORD*)g_client)[0]) + 0x1B);
+
+	g_global_vars = reinterpret_cast<c_global_vars*>(*(PDWORD)g_global_vars);
+
+	g_render_view = reinterpret_cast<c_render_view*>(engine_fact("VEngineRenderView014", NULL));
+
+	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
+
+	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact("GameMovement001", NULL));
+
+	g_prediction = reinterpret_cast<c_prediction*>(client_fact("VClientPrediction001", NULL));
+
+	g_move_helper = **(c_move_helper***)(pattern_scan("client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 0x2);
+
+	g_convars = reinterpret_cast<c_iconvar*>(vstd_lib_fact("VEngineCvar007", NULL));
+
+	g_effects = reinterpret_cast<i_effects*>(client_fact("IEffects001", NULL));
+
+	// Load our meme database for our p netvars
+	netvar_manager::_instance()->create_database();
+
+	// Load fonts.
+	g_draw.GetDevice(g_direct_x);
+
+	init_fonts();
+
+	g_config_list.update_all_configs();
+
+	srand(time(0));
+
+	return true;
+}
+
+void c_weebware::init_fonts()
+{
+	tahoma_font = g_weebware.g_surface->create_font();
+	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
+	g_draw.AddFont(("Verdana"), 12, true, false);
+	g_draw.AddFont(("Verdana"), 11, true, false);
+	g_draw.AddFont(("Verdana"), 18, true, false);
+	g_draw.AddFont(("Verdana"), 17, true, false);
+}
+
+void c_weebware::setup_thread()
+{
+#define debug 0
+
+#if debug
+	setup_debug_window();
+#endif
+
+	if (init_interfaces())
+	{
+		// Function for netvar dumping
+#if 1
+		netvar_manager::_instance()->dump("latest.txt");
+#endif 
+
+		//if (g_weebware.g_engine->get_engine_build() != 13644)
+		//{
+		//	goto label_exit;
+		//}
+
+		g_hooking.hook_all_functions();
+	}
+
+
+	while (g_vars.g_unload.get() == 0.0f)
+	{
+#if 0
+		g_config.Process();
+#endif
+		Sleep(250);
+	}
+	g_hooking.unhook_all_functions();
+
+label_exit:
+
+	printf("\nUnloading\n");
+
+	FreeConsole();
+
+	Sleep(1500); // allow thread finishing time
+
+	FreeLibraryAndExitThread(h_module, 0);
+}
+
+void c_weebware::setup_debug_window()
+{
+	AllocConsole();
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	SetConsoleTitle("weebware Cheat Console");
+}
+
+// paste wtf am i meant to write huh?
+uint64_t c_weebware::pattern_scan(const char* szModule, const char* szSignature)
+{
+	const char* cModule = szModule;
+	if (strstr(szModule, "client.dll")) {
+		if (!GetModuleHandleA("client.dll")) {
+			cModule = "client_panorama.dll";
+		}
+	}
+	//CREDITS: learn_more
+#define INRANGE(x,a,b)  (x >= a && x <= b) 
+#define getBits( x )    (INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
+#define getByte( x )    (getBits(x[0]) << 4 | getBits(x[1]))
+
+	MODULEINFO modinfo;
+	GetModuleInformation(GetCurrentProcess(), GetModuleHandleA(cModule), &modinfo, sizeof(MODULEINFO));
+	DWORD start_address = (DWORD)modinfo.lpBaseOfDll;
+	DWORD endAddress = start_address + modinfo.SizeOfImage;
+	const char* pat = szSignature;
+	DWORD first_match = 0;
+	for (DWORD _cur = start_address; _cur < endAddress; _cur++)
+	{
+		if (!*pat) return first_match;
+		if (*(PBYTE)pat == '\?' || *(BYTE*)_cur == getByte(pat))
+		{
+			if (!first_match) first_match = _cur;
+			if (!pat[2]) return first_match;
+			if (*(PWORD)pat == '\?\?' || *(PBYTE)pat != '\?') pat += 3;
+			else pat += 2; //one ?
+		}
+		else
+		{
+			pat = szSignature;
+			first_match = 0;
+		}
+	}
+	return NULL;
+}
+
+create_interface retrieve_interface(LPCSTR module_name)
+{
+	return reinterpret_cast<create_interface>(GetProcAddress(GetModuleHandle(module_name), "CreateInterface"));
+}
+
+bool c_base_entity::trace_from_smoke(Vector src)
+{
+	typedef bool(*td_LineGoesThroughSmoke)(float, float, float, float, float, float, short);
+
+	Vector dst = *this->m_Origin();
+	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0"));
+
+	if (!line_through_smoke)
+		return false;
+
+	return line_through_smoke(src.x, src.y, src.z, dst.x, dst.y, dst.z, 1);
+}
