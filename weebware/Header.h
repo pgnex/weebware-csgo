@@ -59,7 +59,7 @@ extern c_weebware g_weebware;
 #include "hook_funcs.h"
 #include "shared.h"
 #include "weebware_config.h"
-#include "Heartbeat.h"
+#include "authentication.h"
 #include "navmesh.h"
 #include "Ai.h"
 

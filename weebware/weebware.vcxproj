@@ -137,7 +137,7 @@
     <ClCompile Include="frame_stage.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="gui_baserelational.cpp" />
-    <ClCompile Include="Heartbeat.cpp" />
+    <ClCompile Include="authentication.cpp" />
     <ClCompile Include="imgui\dx9\imgui_dx9.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -178,7 +178,7 @@
     <ClInclude Include="gui_definitions.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="c_client.h" />
-    <ClInclude Include="Heartbeat.h" />
+    <ClInclude Include="authentication.h" />
     <ClInclude Include="hook_funcs.h" />
     <ClInclude Include="imgui\dx9\imgui_dx9.h" />
     <ClInclude Include="imgui\imconfig.h" />

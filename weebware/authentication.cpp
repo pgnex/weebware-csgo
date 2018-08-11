@@ -1,4 +1,4 @@
-#include "Heartbeat.h"
+#include "authentication.h"
 
 #define CURL_STATICLIB
 #include "curl/curl.h"
@@ -76,9 +76,9 @@ std::string auth::GetServerVariable(std::string key) {
 		// it took us more than 30 seconds to receive and parse that data? :thinking:
 		pieces.clear();
 		decodedContentStream.str(std::string());
-		std::string gayNigger = "=4ibvl2czV2cgUmchdnYlV2dgIXdvlHIm9GI5RXaydWZ05WagUGa0BSemlmclZHIvRHIlxmYh5WV";
-		reverseString(gayNigger);
-		MessageBox(NULL, (base64_decode(gayNigger).c_str()), ("Error"), MB_ICONWARNING);
+		std::string Error1 = "=4ibvl2czV2cgUmchdnYlV2dgIXdvlHIm9GI5RXaydWZ05WagUGa0BSemlmclZHIvRHIlxmYh5WV";
+		reverseString(Error1);
+		MessageBox(NULL, (base64_decode(Error1).c_str()), ("Error"), MB_ICONWARNING);
 		exit(EXIT_SUCCESS);
 	}
 	content = pieces.at(0);

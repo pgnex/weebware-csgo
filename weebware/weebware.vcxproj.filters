@@ -49,9 +49,6 @@
     <Filter Include="Source Files\hooking\Frame Stage Notify">
       <UniqueIdentifier>{f5d8f1e6-9138-4c9e-a97b-63a69ef395b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Heart Beating">
-      <UniqueIdentifier>{050c0d02-84fa-448d-a671-3e4919c9b64e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\hooking\CreateMove">
       <UniqueIdentifier>{6b4929ef-bb64-48dd-b4da-d5d917de50c9}</UniqueIdentifier>
     </Filter>
@@ -64,9 +61,6 @@
     <Filter Include="Source Files\Source Development Kit\md5">
       <UniqueIdentifier>{4d9f8577-fa16-4f06-83a9-90864f16f016}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Heart Beating\CURL">
-      <UniqueIdentifier>{8d633d8e-9ad9-4a70-93a9-ecf067910f19}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\hooking\CreateMove\AI">
       <UniqueIdentifier>{d75dd64d-c32f-4a27-837e-7e0964baecbc}</UniqueIdentifier>
     </Filter>
@@ -75,6 +69,12 @@
     </Filter>
     <Filter Include="Header Files\Trampolines\Disasm">
       <UniqueIdentifier>{65b8b00d-7f75-4ba0-8240-58acf098654a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Authentication">
+      <UniqueIdentifier>{050c0d02-84fa-448d-a671-3e4919c9b64e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Authentication\CURL">
+      <UniqueIdentifier>{8d633d8e-9ad9-4a70-93a9-ecf067910f19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -153,9 +153,6 @@
     <ClCompile Include="checksum_md5.cpp">
       <Filter>Source Files\Source Development Kit\md5</Filter>
     </ClCompile>
-    <ClCompile Include="Heartbeat.cpp">
-      <Filter>Source Files\Heart Beating</Filter>
-    </ClCompile>
     <ClCompile Include="Ai.cpp">
       <Filter>Source Files\hooking\CreateMove\AI</Filter>
     </ClCompile>
@@ -170,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="weebware_config.cpp">
       <Filter>Source Files\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="authentication.cpp">
+      <Filter>Source Files\Authentication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -302,9 +302,6 @@
     <ClInclude Include="checksum_md5.hpp">
       <Filter>Source Files\Source Development Kit\md5</Filter>
     </ClInclude>
-    <ClInclude Include="Heartbeat.h">
-      <Filter>Source Files\Heart Beating</Filter>
-    </ClInclude>
     <ClInclude Include="Ai.h">
       <Filter>Source Files\hooking\CreateMove\AI</Filter>
     </ClInclude>
@@ -325,6 +322,9 @@
     </ClInclude>
     <ClInclude Include="weebware_config.h">
       <Filter>Source Files\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="authentication.h">
+      <Filter>Source Files\Authentication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
