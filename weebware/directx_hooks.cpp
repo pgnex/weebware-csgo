@@ -4,6 +4,7 @@
 #include "imgui_custom.h"
 #include "imgui\imgui_internal.h"
 #include "hook_funcs.h"
+#include <intrin.h>
 
 // https://www.unknowncheats.me/forum/direct3d/66594-d3d9-vtables.html
 
@@ -147,12 +148,25 @@ long c_hooking::hk_end_scene(IDirect3DDevice9* device)
 
 long hook_functions::end_scene(IDirect3DDevice9* device)
 {
-	__try {
-	//	g_esp.esp_main(device);
-	}
-	__except (EXCEPTION_EXECUTE_HANDLER) {}
+	static auto wanted_ret_address = _ReturnAddress();
+	if (_ReturnAddress() == wanted_ret_address)
+	{
+		//backup render states
+		DWORD colorwrite, srgbwrite;
+		device->GetRenderState(D3DRS_COLORWRITEENABLE, &colorwrite);
+		device->GetRenderState(D3DRS_SRGBWRITEENABLE, &srgbwrite);
 
-	imgui_main(device);
+		//fix drawing without calling engine functons/cl_showpos
+		device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
+		//removes the source engine color correction
+		device->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
+
+		imgui_main(device);
+
+		device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
+		device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
+	}
+
 
 	return g_hooking.o_endscene(device);
 }
