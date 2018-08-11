@@ -10,9 +10,12 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 {
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
-	g_esp.calc_w2svalues();
+	g_esp.esp_main();
+}
 
-	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
+void c_paint_traverse::draw_water_mark()
+{
+	draw_string(g_weebware.tahoma_font, 50, 50, c_color(255, 255, 255, 255), 0, "weebware cheat");
 }
 
 void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color color, DWORD alignment, const char* msg, ...) // 1 is right, 0 is normal
@@ -45,11 +48,7 @@ void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color col
 	g_weebware.g_surface->drawsettextcolor(r, g, b, a);
 	g_weebware.g_surface->drawsettextpos(x, y - height / 2);
 	g_weebware.g_surface->drawprinttext(wbuf, wcslen(wbuf));
-
 }
 
-void c_paint_traverse::draw_water_mark()
-{
-	draw_string(g_weebware.tahoma_font, 50, 50, c_color(255, 255, 255, 255), 0, "weebware Cheat");
-}
+
 

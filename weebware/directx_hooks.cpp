@@ -17,6 +17,10 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 {
 	switch (uMsg)
 	{
+	case WM_ACTIVATEAPP:
+
+		break;
+
 	case WM_LBUTTONDOWN:
 		g_weebware.pressed_keys[VK_LBUTTON] = true;
 		break;
@@ -141,6 +145,17 @@ long c_hooking::hk_end_scene(IDirect3DDevice9* device)
 }
 #endif
 
+long hook_functions::end_scene(IDirect3DDevice9* device)
+{
+	__try {
+	//	g_esp.esp_main(device);
+	}
+	__except (EXCEPTION_EXECUTE_HANDLER) {}
+
+	imgui_main(device);
+
+	return g_hooking.o_endscene(device);
+}
 
 long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
@@ -163,7 +178,7 @@ long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* 
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
 
 	__try {
-		g_esp.esp_main(device);
+	//	g_esp.esp_main(device);
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {}
 
@@ -179,15 +194,13 @@ long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* 
 
 long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
-	if (!has_d3d) {
-		return g_hooking.o_reset(device, presentation_param);
-	}
-
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
 	g_esp.esp_reset();
 
 	auto hr = g_hooking.o_reset(device, presentation_param);
+
+	printf("Reset\n");
 
 	ImGui_ImplDX9_CreateDeviceObjects();
 
@@ -542,8 +555,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							}
 							ImGui::EndChild();
 
+							}
 						}
-					}
 #pragma endregion
 
 #pragma region Settings
@@ -626,20 +639,20 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 #pragma endregion
 
-				}
+					}
 
 				ImGui::EndChild();
-			}
+				}
 
 			ImGui::PopFont();
 
 
-		}
+			}
 		ImGui::End();
-	}
+		}
 
 	ImGui::Render();
-}
+	}
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb174369(v=vs.85).aspx 
 // STDMETHOD(DrawIndexedPrimitive)(THIS_ D3DPRIMITIVETYPE,INT BaseVertexIndex,UINT MinVertexIndex,UINT NumVertices,UINT startIndex,UINT primCount) PURE;

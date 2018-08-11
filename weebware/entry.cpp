@@ -131,6 +131,10 @@ bool c_weebware::init_interfaces()
 
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
 
+	//int __stdcall reset_replacement(int a1, int a2)
+	// This is the first reset func
+	g_reset_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 FF 78 18 85 F6 74 14 FF 75 E0 8B CE 53 FF 75 EC E8 ? ? ? ? 8A 45 E1 88 46 4D") + 0x2;
+
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact("GameMovement001", NULL));
 
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact("VClientPrediction001", NULL));
@@ -159,7 +163,7 @@ bool c_weebware::init_interfaces()
 void c_weebware::init_fonts()
 {
 	tahoma_font = g_weebware.g_surface->create_font();
-	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
+	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
 	g_draw.AddFont(("Verdana"), 12, true, false);
 	g_draw.AddFont(("Verdana"), 11, true, false);
 	g_draw.AddFont(("Verdana"), 18, true, false);
@@ -168,7 +172,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 1
+#define debug 0
 
 #if debug
 	setup_debug_window();

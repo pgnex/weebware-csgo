@@ -10,6 +10,7 @@ namespace hook_functions
 	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
 	long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
+	long end_scene(IDirect3DDevice9* device);
 }
 
 class c_hooking
@@ -44,6 +45,8 @@ private:
 public:
 	using fn_reset = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 	fn_reset o_reset;
+	using fn_endscene = long(__stdcall*)(IDirect3DDevice9*);
+	fn_endscene o_endscene;
 #pragma endregion
 
 #pragma region FSN
@@ -56,8 +59,11 @@ public:
 	// Global function to initate the hooks
 	void hook_all_functions();
 	void unhook_all_functions();
-	long(__stdcall* original_present)(IDirect3DDevice9*, const RECT*, const RECT*, HWND, const RGNDATA*);
 
+#pragma region GameOverlay
+	long(__stdcall* original_present)(IDirect3DDevice9*, const RECT*, const RECT*, HWND, const RGNDATA*);
+	long(__stdcall* original_reset)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
+#pragma endregion
 
 };
 

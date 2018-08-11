@@ -1,15 +1,14 @@
 #include "esp.h"
 #include "drawing.h"
 #include "Legit.h"
+#include "paint_traverse.h"
 
 c_esp g_esp;
 
 bool has_esp_init = false;
 
-void c_esp::esp_main(IDirect3DDevice9* device)
+void c_esp::esp_main()
 {
-	g_draw.GetDevice(device);
-
 	water_mark();
 
 #if 0
@@ -29,12 +28,9 @@ void c_esp::esp_main(IDirect3DDevice9* device)
 		}
 	}
 
-
-
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 	{
 		local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
-
 
 		if (local)
 		{
@@ -42,6 +38,36 @@ void c_esp::esp_main(IDirect3DDevice9* device)
 			{
 				draw_inaccuracy_circle();
 				display_backtrack();
+
+				if (g_weebwarecfg.vis_cfg.visuals_backtrack_dots) {
+
+					for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
+					{
+						Vector w2s;
+
+						if (g_maths.world_to_screen(g_accuracy.accuracy_records[i].m_head, w2s))
+						{
+							g_accuracy.accuracy_records[i].m_w2s_head = w2s;
+							g_accuracy.accuracy_records[i].m_has_w2s = true;
+						}
+					}
+#if 1
+
+					for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++)
+					{
+						if (g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], m_skeleton_backtrack.w2s_parent[i])) {
+							m_skeleton_backtrack.has_w2s_parent[i] = true;
+						}
+
+						if (g_maths.world_to_screen(g_accuracy.m_best_record.child[i], m_skeleton_backtrack.w2s_child[i])) {
+							m_skeleton_backtrack.has_w2s_child[i] = true;
+						}
+
+					}
+
+#endif
+				}
+
 			}
 
 			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
@@ -92,9 +118,8 @@ void c_esp::esp_main(IDirect3DDevice9* device)
 
 						sprintf(timer_s, "Time till explosion: %.2f\nDamage: %.0f", remaining, floor(predicted_damage));
 
-						g_draw.Text(timer_s, 5, offset_y, 0, 2, D3DCOLOR_RGBA(0, 0, 0, 255));
-						g_draw.Text(timer_s, 5, offset_y, 0, 3, predicted_damage < local->m_iHealth() ? D3DCOLOR_RGBA(0, 255, 0, 255) : D3DCOLOR_RGBA(255, 0, 0, 255));
-
+						g_paint_traverse.draw_string(g_weebware.tahoma_font,5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
+			
 						// Okay now lets check if we have defuse on the bomb..
 						// m_flDefuseCountDown // interesting netvar let see what it returns...
 
@@ -103,10 +128,7 @@ void c_esp::esp_main(IDirect3DDevice9* device)
 				}
 
 
-
-				// Players
-
-
+#pragma region players
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
 
 					continue;
@@ -135,9 +157,16 @@ void c_esp::esp_main(IDirect3DDevice9* device)
 					continue;
 				}
 
+				w2s_player[i].boundary = calc_boundaries(ent);
+
+				if (ent->is_dormant())
+					w2s_player[i].boundary.dormant = true;
+
 				render_box(w2s_player[i].boundary, ent->m_iTeamNum() == local->m_iTeamNum());
 
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
+#pragma endregion
+
 			}
 
 		}
@@ -198,45 +227,9 @@ void c_esp::calc_w2svalues()
 					continue;
 				}
 
-				w2s_player[i].boundary = calc_boundaries(ent);
-
-				if (ent->is_dormant())
-					w2s_player[i].boundary.dormant = true;
+			
 
 			}
-
-
-			if (g_weebwarecfg.vis_cfg.visuals_backtrack_dots) {
-
-				for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
-				{
-					Vector w2s;
-
-					if (g_maths.world_to_screen(g_accuracy.accuracy_records[i].m_head, w2s))
-					{
-						g_accuracy.accuracy_records[i].m_w2s_head = w2s;
-						g_accuracy.accuracy_records[i].m_has_w2s = true;
-					}
-				}
-#if 1
-
-				for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++)
-				{
-					if (g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], m_skeleton_backtrack.w2s_parent[i])) {
-						m_skeleton_backtrack.has_w2s_parent[i] = true;
-					}
-
-					if (g_maths.world_to_screen(g_accuracy.m_best_record.child[i], m_skeleton_backtrack.w2s_child[i])) {
-						m_skeleton_backtrack.has_w2s_child[i] = true;
-					}
-
-				}
-
-#endif
-			}
-
-
-
 		}
 
 
@@ -250,9 +243,7 @@ void c_esp::water_mark()
 
 		c_color watermark(g_weebwarecfg.sets_cfg.water_mark);
 
-		g_draw.Text("weebware.Win", 5, 5, 0, 2, D3DCOLOR_RGBA(0, 0, 0, watermark.a));
-		g_draw.Text("weebware.Win", 5, 5, 0, 3, D3DCOLOR_RGBA(watermark.r, watermark.g, watermark.b, watermark.a));
-
+		g_paint_traverse.draw_water_mark();
 	}
 }
 // Returns the center of a hitbox
@@ -355,20 +346,21 @@ void c_esp::render_box(s_boundaries bounds, bool is_team)
 	c_color col = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_bounding_team) : c_color(g_weebwarecfg.sets_cfg.visuals_bounding);
 
 	// Box
-	g_draw.BoxOutlined(bounds.x - 1, bounds.y - 1, bounds.w + 2, bounds.h + 2, D3DCOLOR_RGBA(0, 0, 0, 60));
-	//g_draw.BoxOutlined(bounds.x + 1, bounds.y + 1, bounds.w - 2, bounds.h - 2, D3DCOLOR_RGBA(0, 0, 0, 100));
+	g_weebware.g_surface->drawsetcolor(0, 0, 0, 60);
 
-	D3DCOLOR box_col = D3DCOLOR_RGBA(col.r, col.g, col.b, col.a);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x - 1, bounds.y - 1, bounds.w + 2 + bounds.x - 1, bounds.h + 2 + bounds.y - 1);
 
 	if (g_weebwarecfg.vis_cfg.visuals_dormant_esp) {
+
 		if (bounds.dormant) {
 			
-			c_color dormantcol = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col);
-			box_col = D3DCOLOR_RGBA(dormantcol.r, dormantcol.g, dormantcol.b, dormantcol.a);
+			c_color col = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col);
 		}
-	}
 
-	g_draw.BoxOutlined(bounds.x, bounds.y, bounds.w, bounds.h, box_col);
+	}
+	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+
+	g_weebware.g_surface->drawoutlinedrect(bounds.x, bounds.y, bounds.w + bounds.x, bounds.h + bounds.y);
 
 #if 0
 	// Top
@@ -395,9 +387,11 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 	int length = (hp * bounds.h);
 
 	// render the full black line.
-	g_draw.Line(bounds.x - 5, bounds.y, bounds.x - 5, bounds.y + bounds.h, 1, true, D3DCOLOR_RGBA(0, 0, 0, 255));
-	g_draw.Line(bounds.x - 6, bounds.y - 1, bounds.x - 6, bounds.y + bounds.h + 1, 1, true, D3DCOLOR_RGBA(0, 0, 0, 50));
-	g_draw.Line(bounds.x - 4, bounds.y - 1, bounds.x - 4, bounds.y + bounds.h + 1, 1, true, D3DCOLOR_RGBA(0, 0, 0, 50));
+	g_weebware.g_surface->drawsetcolor(0, 0, 0, 255);
+	g_weebware.g_surface->drawline(bounds.x - 5, bounds.y, bounds.x - 5, bounds.y + bounds.h);
+	g_weebware.g_surface->drawsetcolor(0, 0, 0, 50);
+	g_weebware.g_surface->drawline(bounds.x - 6, bounds.y - 1, bounds.x - 6, bounds.y + bounds.h + 1);
+	g_weebware.g_surface->drawline(bounds.x - 4, bounds.y - 1, bounds.x - 4, bounds.y + bounds.h + 1);
 
 	// render the line.
 	// Calculate color
@@ -410,14 +404,14 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 		}
 	}
 
-	g_draw.Line(bounds.x - 5, bounds.y + length, bounds.x - 5, bounds.y + bounds.h, 1, true, D3DCOLOR_RGBA(col.r, col.g, col.b, col.a));
+	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+
+	g_weebware.g_surface->drawline(bounds.x - 5, bounds.y + length, bounds.x - 5, bounds.y + bounds.h);
 
 	if (ent->m_iHealth() < 100 && ent->m_iHealth() > 0) {
-
-		g_draw.Text((char*)std::to_string(ent->m_iHealth()).c_str(), bounds.x - 5, bounds.y + length, 1, 0, D3DCOLOR_RGBA(0, 0, 0, 255));
-
-		g_draw.Text((char*)std::to_string(ent->m_iHealth()).c_str(), bounds.x - 5, bounds.y + length, 1, 1, D3DCOLOR_RGBA(255, 255, 255, 255));
-
+		
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length,c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
+	
 	}
 }
 
@@ -438,7 +432,8 @@ void c_esp::draw_inaccuracy_circle()
 	int x, y;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.sets_cfg.visuals_innacc_circle);
-	g_draw.CircleFilled(x / 2, y / 2, local->m_pActiveWeapon()->Get_Innacuracy() * 200, 0, full, 1920, D3DCOLOR_RGBA(col.r, col.g, col.b, col.a));
+
+	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, local->m_pActiveWeapon()->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
 }
 
 #if 0
@@ -489,8 +484,9 @@ void c_esp::display_backtrack()
 			|| !m_skeleton_backtrack.has_w2s_child[i] || !m_skeleton_backtrack.has_w2s_parent[i])
 			continue;
 
-		g_draw.Line(m_skeleton_backtrack.w2s_parent[i].x, m_skeleton_backtrack.w2s_parent[i].y, m_skeleton_backtrack.w2s_child[i].x, m_skeleton_backtrack.w2s_child[i].y, 1, false, D3DCOLOR_RGBA(col.r, col.g, col.b, col.a));
+		g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
+		g_weebware.g_surface->drawline(m_skeleton_backtrack.w2s_parent[i].x, m_skeleton_backtrack.w2s_parent[i].y, m_skeleton_backtrack.w2s_child[i].x, m_skeleton_backtrack.w2s_child[i].y);
 	}
 #endif
 	}

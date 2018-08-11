@@ -28,7 +28,7 @@ struct backtrack_skeleton
 class c_esp
 {
 public:
-	void esp_main(IDirect3DDevice9* device);
+	void esp_main();
 	void esp_reset();
 
 	// w2s needs to be done in paint

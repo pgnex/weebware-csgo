@@ -8,7 +8,8 @@ class c_weebware
 public:
 	void setup_thread();
 	uint64_t pattern_scan(const char* szModule, const char* szSignature);
-	
+	void init_fonts();
+
 
 	HMODULE h_module;
 	c_engine_client* g_engine;
@@ -25,6 +26,7 @@ public:
 	c_global_vars* g_global_vars;
 	c_render_view* g_render_view;
 	unsigned long g_present_address;
+	unsigned long g_reset_address;
 	c_gamemovement* g_game_movement;
 	c_prediction* g_prediction;
 	c_move_helper* g_move_helper;
@@ -40,7 +42,6 @@ public:
 private:
 	bool init_interfaces();
 	void setup_debug_window();
-	void init_fonts();
 
 	create_interface engine_fact;
 	create_interface client_fact;

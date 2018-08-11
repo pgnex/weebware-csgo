@@ -9,6 +9,7 @@ PLH::VEHHook* VEH_CM;
 PLH::VEHHook* VEH_RESET;
 PLH::VEHHook* VEH_FSN;
 PLH::VEHHook* VEH_PRESENT;
+PLH::VEHHook* VEH_ENDSCENE;
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
@@ -31,15 +32,19 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 	return hook_functions::reset(device, presentation_param);
 }
 
+long __stdcall hk_endscene(IDirect3DDevice9* device)
+{
+	auto protecc = VEH_ENDSCENE->GetProtectionObject();
+
+	return hook_functions::end_scene(device);
+}
+
 void c_hooking::hook_all_functions()
 {
 	VEH_PAINT = new PLH::VEHHook();
 	VEH_PAINT->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41], (BYTE*)&hk_paint_traverse, PLH::VEHHook::VEHMethod::INT3_BP);
 	VEH_PAINT->Hook();
 	o_painttraverse = VEH_PAINT->GetOriginal<pt_t>();
-
-	// tramp_paint = new c_trampolines(, &hook_functions::hk_paint_traverse, create_original(o_painttraverse));
-	// tramp_paint = new c_trampolines((*reinterpret_cast<LPVOID**>(g_weebware.g_panel))[41], &hook_functions::hk_paint_traverse, create_original(o_painttraverse));
 
 	VEH_CM = new PLH::VEHHook();
 	VEH_CM->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24], (BYTE*)&hk_clientmode_cm, PLH::VEHHook::VEHMethod::INT3_BP);
@@ -56,14 +61,26 @@ void c_hooking::hook_all_functions()
 	// sub_1006C670+112    02C                 mov     eax, [eax]
 	// sub_1006C670+114    02C                 mov     esi, [eax]
 
+#if 0
+
 	original_present = **reinterpret_cast<decltype(&original_present)*>(g_weebware.g_present_address);
 	**reinterpret_cast<void***>(g_weebware.g_present_address) = reinterpret_cast<void*>(&hook_functions::hk_present); // (*(uintptr_t**)this)[0]
+
+	original_reset = **reinterpret_cast<decltype(&original_reset)*>(g_weebware.g_reset_address);
+	**reinterpret_cast<void***>(g_weebware.g_reset_address) = reinterpret_cast<void*>(&hk_reset);
+
+#endif
 
 	VEH_RESET = new PLH::VEHHook();
 	VEH_RESET->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16], (BYTE*)&hk_reset, PLH::VEHHook::VEHMethod::INT3_BP);
 	VEH_RESET->Hook();
 	o_reset = VEH_RESET->GetOriginal<fn_reset>();
 
+	VEH_ENDSCENE = new PLH::VEHHook();
+	VEH_ENDSCENE->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42], (BYTE*)&hk_endscene, PLH::VEHHook::VEHMethod::INT3_BP);
+	VEH_ENDSCENE->Hook();
+	o_endscene = VEH_ENDSCENE->GetOriginal<fn_endscene>();
+	
 #if 0
 	tramp_fsn = new PLH::X86Detour();
 	tramp_fsn->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[36], (BYTE*)&hook_functions::hk_frame_stage_notify);
@@ -94,6 +111,7 @@ void c_hooking::unhook_all_functions()
 	VEH_PAINT->UnHook();
 	VEH_CM->UnHook();
 	VEH_RESET->UnHook();
+	VEH_ENDSCENE->UnHook();
 	// 	tramp_fsn->UnHook();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	g_vars.g_unload.set(1.0f);

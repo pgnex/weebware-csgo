@@ -71,7 +71,6 @@ public:
 	void OnLostDevice();
 	void GetDevice(IDirect3DDevice9* pDev) { pDevice = pDev; }
 	void Reset();
-
 	//=============================================================================================
 
 private:
