@@ -10,7 +10,9 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 {
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
-	g_esp.esp_main();
+	if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel")) {
+		g_esp.esp_main();
+	}
 }
 
 void c_paint_traverse::draw_water_mark()
