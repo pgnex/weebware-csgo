@@ -6,7 +6,7 @@ c_config_list g_config_list;
 
 c_weebwarecfg g_weebwarecfg;
 
-#define weebware_dir "C://weebware.win"
+#define weebware_dir "C:\\weebware\\cfgs"
 
 // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
 std::vector<std::string> get_all_files_names_within_folder(std::string folder)
