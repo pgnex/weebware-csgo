@@ -175,14 +175,14 @@ void c_weebware::setup_thread()
 #define debug 0
 
 #if debug
-	setup_debug_window();
+	//setup_debug_window();
 #endif
 
 	if (init_interfaces())
 	{
 		// Function for netvar dumping
-#if 1
-		netvar_manager::_instance()->dump("latest.txt");
+#if debug
+	//	netvar_manager::_instance()->dump("latest.txt");
 #endif 
 
 		//if (g_weebware.g_engine->get_engine_build() != 13644)
