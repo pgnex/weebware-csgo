@@ -17,7 +17,7 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 
 void c_paint_traverse::draw_water_mark()
 {
-	draw_string(g_weebware.tahoma_font, 50, 50, c_color(255, 255, 255, 255), 0, "weebware");
+	draw_string(g_weebware.tahoma_font, 5, 10, c_color(255, 255, 255, 255), 0, "weebware");
 }
 
 void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color color, DWORD alignment, const char* msg, ...) // 1 is right, 0 is normal

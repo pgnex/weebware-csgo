@@ -535,14 +535,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Checkbox("Enable", &g_weebwarecfg.misc_cfg.enable_misc, false);
 								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.misc_cfg.auto_jump, false);
-
-								if (ImGui::Button("Reset Panorama UI")) {
-									reinterpret_cast<void*(*)()>((uintptr_t)GetModuleHandleA("panorama.dll") + 0x6450)();
-								}
-
-								if (ImGui::Button("Print Dir")) {
-									reinterpret_cast<int(__thiscall*)()>((uintptr_t)GetModuleHandleA("panorama.dll") + 0x1470F0)();
-								}
 							}
 							ImGui::EndChild();
 
@@ -550,7 +542,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::BeginChild("Misc 2", ImVec2(0, 0), true);
 							{
-								ImGui::Text("Kite Ai - wip");
+								ImGui::Text("Kite Ai (walkbot) - wip");
 								ImGui::Separator();
 								ImGui::Checkbox("Enabed", &g_weebwarecfg.misc_cfg.misc_ai, false);
 								ImGui::Checkbox("Random", &g_weebwarecfg.misc_cfg.misc_ai_random, false);
