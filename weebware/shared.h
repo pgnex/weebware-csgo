@@ -32,10 +32,13 @@ public:
 	c_move_helper* g_move_helper;
 	c_iconvar* g_convars;
 	i_effects* g_effects;
+	c_mat_system* g_mat_sys;
+	c_model_render* g_model_render;
+
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;
-
+	
 	bool menu_opened = false;
 	bool pressed_keys[256];
 

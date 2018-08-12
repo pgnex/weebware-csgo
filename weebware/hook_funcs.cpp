@@ -10,6 +10,7 @@ PLH::VEHHook* VEH_RESET;
 PLH::VEHHook* VEH_FSN;
 PLH::VEHHook* VEH_PRESENT;
 PLH::VEHHook* VEH_ENDSCENE;
+PLH::VEHHook* VEH_DME;
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
@@ -37,6 +38,13 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	auto protecc = VEH_ENDSCENE->GetProtectionObject();
 
 	return hook_functions::end_scene(device);
+}
+
+void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
+{
+	auto protecc = VEH_DME->GetProtectionObject();
+
+	hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
 void c_hooking::hook_all_functions()
@@ -81,6 +89,11 @@ void c_hooking::hook_all_functions()
 	VEH_ENDSCENE->Hook();
 	o_endscene = VEH_ENDSCENE->GetOriginal<fn_endscene>();
 	
+	VEH_DME = new PLH::VEHHook();
+	VEH_DME->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21], (BYTE*)&hk_draw_model_execute, PLH::VEHHook::VEHMethod::INT3_BP);
+	VEH_DME->Hook();
+	o_dme = VEH_DME->GetOriginal<fn_dme>();
+
 #if 0
 	tramp_fsn = new PLH::X86Detour();
 	tramp_fsn->SetupHook((BYTE*)(*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[36], (BYTE*)&hook_functions::hk_frame_stage_notify);
@@ -112,6 +125,7 @@ void c_hooking::unhook_all_functions()
 	VEH_CM->UnHook();
 	VEH_RESET->UnHook();
 	VEH_ENDSCENE->UnHook();
+	VEH_DME->UnHook();
 	// 	tramp_fsn->UnHook();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	g_vars.g_unload.set(1.0f);

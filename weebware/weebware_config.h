@@ -70,6 +70,7 @@ public:
 	bool visuals_bspotted;
 	bool visuals_bomb_timer;
 	bool visuals_dormant_esp;
+	int visuals_chams;
 };
 
 class c_misc_cfg
@@ -96,6 +97,8 @@ public:
 	ImVec4 visuals_dormant_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
 
+	ImVec4 visuals_chams = ImVec4(0, 0, 0, 100);
+	ImVec4 visuals_chams_team = ImVec4(0, 0, 0, 100);
 };
 
 /*

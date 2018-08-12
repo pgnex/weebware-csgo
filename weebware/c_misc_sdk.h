@@ -364,6 +364,8 @@ enum materialpropertytypes_t
 
 enum materialvarflags_t;
 
+
+
 class imaterial
 {
 public:
@@ -645,3 +647,122 @@ private:
 	int nTimestampRandomizeWindow;
 };
 
+class c_unknownmat_class {};
+
+class c_mat_system 
+{
+public:
+	imaterial* create_mat(const char* pMaterialName, KeyValues* pVMTKeyValues)
+	{
+		return getvfunc<imaterial*(__thiscall*)(PVOID, const char*, KeyValues*)>(this, 83)(this, pMaterialName, pVMTKeyValues);
+	}
+
+	imaterial* find_material(const char* pMaterialName, const char* pTextureGroupName, bool complain = true, const char* pComplainPrefix = 0)
+	{
+		return getvfunc<imaterial*(__thiscall*)(PVOID, const char*, const char*, bool, const char*)>(this, 84)(this, pMaterialName, pTextureGroupName, complain, pComplainPrefix);
+	}
+
+	
+};
+
+#ifndef TEXTURE_GROUP_NAMES_H
+#define TEXTURE_GROUP_NAMES_H
+#ifdef _WIN32
+#pragma once
+#endif
+
+// These are given to FindMaterial to reference the texture groups that show up on the 
+#define TEXTURE_GROUP_LIGHTMAP						"Lightmaps"
+#define TEXTURE_GROUP_WORLD							"World textures"
+#define TEXTURE_GROUP_MODEL							"Model textures"
+#define TEXTURE_GROUP_VGUI							"VGUI textures"
+#define TEXTURE_GROUP_PARTICLE						"Particle textures"
+#define TEXTURE_GROUP_DECAL							"Decal textures"
+#define TEXTURE_GROUP_SKYBOX						"SkyBox textures"
+#define TEXTURE_GROUP_CLIENT_EFFECTS				"ClientEffect textures"
+#define TEXTURE_GROUP_OTHER							"Other textures"
+#define TEXTURE_GROUP_PRECACHED						"Precached"				// TODO: assign texture groups to the precached materials
+#define TEXTURE_GROUP_CUBE_MAP						"CubeMap textures"
+#define TEXTURE_GROUP_RENDER_TARGET					"RenderTargets"
+#define TEXTURE_GROUP_UNACCOUNTED					"Unaccounted textures"	// Textures that weren't assigned a texture group.
+//#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER		"Static Vertex"
+#define TEXTURE_GROUP_STATIC_INDEX_BUFFER			"Static Indices"
+#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER_DISP		"Displacement Verts"
+#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER_COLOR	"Lighting Verts"
+#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER_WORLD	"World Verts"
+#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER_MODELS	"Model Verts"
+#define TEXTURE_GROUP_STATIC_VERTEX_BUFFER_OTHER	"Other Verts"
+#define TEXTURE_GROUP_DYNAMIC_INDEX_BUFFER			"Dynamic Indices"
+#define TEXTURE_GROUP_DYNAMIC_VERTEX_BUFFER			"Dynamic Verts"
+#define TEXTURE_GROUP_DEPTH_BUFFER					"DepthBuffer"
+#define TEXTURE_GROUP_VIEW_MODEL					"ViewModel"
+#define TEXTURE_GROUP_PIXEL_SHADERS					"Pixel Shaders"
+#define TEXTURE_GROUP_VERTEX_SHADERS				"Vertex Shaders"
+#define TEXTURE_GROUP_RENDER_TARGET_SURFACE			"RenderTarget Surfaces"
+#define TEXTURE_GROUP_MORPH_TARGETS					"Morph Targets"
+
+#endif // TEXTURE_GROUP_NAMES_H
+
+
+struct modelrenderinfo_t
+{
+	Vector origin;
+	Vector angles;
+	char pad[0x4];
+	c_unknownmat_class* pRenderable;
+	const model_t* pModel;
+	const matrix3x4* pModelToWorld;
+	const matrix3x4* pLightingOffset;
+	const Vector* pLightingOrigin;
+	int flags;
+	int entity_index;
+	int skin;
+	int body;
+	int hitboxset;
+	c_unknownmat_class instance;
+};
+
+enum overridetype_t
+{
+	override_normal = 0,
+	override_build_shadows,
+	override_depth_write,
+	override_whatever
+};
+
+class c_model_render
+{
+public:
+	virtual int drawmodel(int flags, iclientrenderable* prenderable, c_unknownmat_class instance, int entity_index, const model_t* model, Vector const& origin, Vector const& angles, int skin, int body, int hitboxset, const matrix3x4* modeltoworld = 0, const matrix3x4* plightingoffset = 0) = 0;
+	virtual void forcedmaterialoverride(imaterial* newmaterial, overridetype_t noverridetype = overridetype_t::override_normal, int a = 0) = 0;
+	virtual bool isforcedmaterialoverride() = 0;
+	virtual void setviewtarget(const c_unknownmat_class* pstudiohdr, int nbodyindex, const Vector& target) = 0;
+	virtual c_unknownmat_class createinstance(iclientrenderable* prenderable, c_unknownmat_class* pcache = 0) = 0;
+	virtual void destroyinstance(c_unknownmat_class handle) = 0;
+	virtual void setstaticlighting(c_unknownmat_class handle, c_unknownmat_class* phandle) = 0;
+	virtual c_unknownmat_class getstaticlighting(c_unknownmat_class handle) = 0;
+	virtual bool changeinstance(c_unknownmat_class handle, iclientrenderable* prenderable) = 0;
+	virtual void adddecal(c_unknownmat_class handle, c_unknownmat_class const& ray, Vector const& decalup, int decalindex, int body, bool nopokethru = false, int maxlodtodecal = -1) = 0;
+	virtual void removealldecals(c_unknownmat_class handle) = 0;
+	virtual bool modelhasdecals(c_unknownmat_class handle) = 0;
+	virtual void removealldecalsfromallmodels() = 0;
+	virtual matrix3x4* drawmodelshadowsetup(iclientrenderable* prenderable, int body, int skin, c_unknownmat_class* pinfo, matrix3x4* pcustombonetoworld = 0) = 0;
+	virtual void drawmodelshadow(iclientrenderable* prenderable, const c_unknownmat_class& info, matrix3x4* pcustombonetoworld = 0) = 0;
+	virtual bool recomputestaticlighting(c_unknownmat_class handle) = 0;
+	virtual void releaseallstaticpropcolordata() = 0;
+	virtual void restoreallstaticpropcolordata() = 0;
+	virtual int drawmodelex(modelrenderinfo_t& pinfo) = 0;
+	virtual int drawmodelexstaticprop(modelrenderinfo_t& pinfo) = 0;
+	virtual bool drawmodelsetup(modelrenderinfo_t& pinfo, c_unknownmat_class* pstate, matrix3x4** ppbonetoworldout) = 0;
+	virtual void drawmodelexecute(c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pinfo, matrix3x4* pcustombonetoworld = 0) = 0;
+	virtual void setuplighting(const Vector& veccenter) = 0;
+	virtual int drawstaticproparrayfast(c_unknownmat_class* pprops, int count, bool bshadowdepth) = 0;
+	virtual void suppressenginelighting(bool bsuppress) = 0;
+	virtual void setupcolormeshes(int ntotalverts) = 0;
+	virtual void setuplightingex(const Vector& veccenter, c_unknownmat_class handle) = 0;
+	virtual bool getbrightestshadowinglightsource(const Vector& veccenter, Vector& lightpos, Vector& lightbrightness, bool ballownontaggedlights) = 0;
+	virtual void computelightingstate(int ncount, const c_unknownmat_class* pquery, c_unknownmat_class* pstate, c_unknownmat_class** ppenvcubemaptexture) = 0;
+	virtual void getmodeldecalhandles(LPVOID* pdecals, int ndecalstride, int ncount, const c_unknownmat_class* phandles) = 0;
+	virtual void computestaticlightingstate(int ncount, const c_unknownmat_class* pquery, c_unknownmat_class* pstate, c_unknownmat_class* pdecalstate, c_unknownmat_class** ppstaticlighting, c_unknownmat_class** ppenvcubemaptexture, void* pcolormeshhandles) = 0;
+	virtual void cleanupstaticlightingstate(int ncount, void* pcolormeshhandles) = 0;
+};

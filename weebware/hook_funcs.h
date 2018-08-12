@@ -11,6 +11,7 @@ namespace hook_functions
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
 	long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
+	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
 }
 
 class c_hooking
@@ -54,6 +55,10 @@ public:
 	fn_fsn o_fsn;
 #pragma endregion
 
+#pragma region DME
+	typedef void(__thiscall* fn_dme)(void*,  c_unknownmat_class*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4*);
+	fn_dme o_dme;
+#pragma endregion
 
 public:
 	// Global function to initate the hooks

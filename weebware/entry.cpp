@@ -100,12 +100,15 @@ bool c_weebware::init_interfaces()
 	// Load Our Interfaces.	
 
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
-//	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
-	
-	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
-//	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
+	//	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 
-	g_client_mode = **(unsigned long***)((*(uintptr_t**)g_client)[10] + 0x5);
+	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
+	//	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
+
+	// g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
+
+	// Im not a paster lol. 
+	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
 
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
 
@@ -124,10 +127,13 @@ bool c_weebware::init_interfaces()
 	g_debug_overlay = reinterpret_cast<c_debug_overlay*>(engine_fact("VDebugOverlay004", NULL));
 
 	g_global_vars = *reinterpret_cast<c_global_vars**>(((*(PDWORD*)g_client)[0]) + 0x1B);
-
 	g_global_vars = reinterpret_cast<c_global_vars*>(*(PDWORD)g_global_vars);
 
 	g_render_view = reinterpret_cast<c_render_view*>(engine_fact("VEngineRenderView014", NULL));
+
+	g_mat_sys = reinterpret_cast<c_mat_system*>(mat_system_fact("VMaterialSystem080", NULL));
+
+	g_model_render = reinterpret_cast<c_model_render*>(engine_fact("VEngineModel016", NULL));
 
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
 
@@ -220,14 +226,14 @@ void c_weebware::setup_debug_window()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-	SetConsoleTitle("weebware Cheat Console");	
+	SetConsoleTitle("weebware Cheat Console");
 }
 
 // paste wtf am i meant to write huh?
 uint64_t c_weebware::pattern_scan(const char* szModule, const char* szSignature)
 {
 	const char* cModule = szModule;
-	if (strstr(szModule, "client.dll")) {
+	if (strstr(szModule, "client.dll") || strstr(szModule, "client_panorama.dll")) {
 		if (!GetModuleHandleA("client.dll")) {
 			cModule = "client_panorama.dll";
 		}

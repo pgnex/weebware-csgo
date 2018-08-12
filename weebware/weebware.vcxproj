@@ -130,6 +130,7 @@
     <ClCompile Include="directx_hooks.cpp" />
     <ClCompile Include="disassembler\hde32.c" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="dme.cpp" />
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="esp.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="c_surface.h" />
     <ClInclude Include="disassembler\hde32.h" />
     <ClInclude Include="disassembler\table32.h" />
+    <ClInclude Include="dme.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />
     <ClInclude Include="frame_stage.h" />

@@ -488,7 +488,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Activation type");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.vis_cfg.enable_visuals_key, key_counter);
 								const char* activation_type[] = { "Off", "Default", "On key" };
-								ImGui::Combo("", &g_weebwarecfg.vis_cfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
+								ImGui::Combo("##activationtype", &g_weebwarecfg.vis_cfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.vis_cfg.visuals_teammates, false);
 								ImGui::Checkbox("Visible only", &g_weebwarecfg.vis_cfg.visuals_visible_only, false);
 								ImGui::Checkbox("Bounding box", &g_weebwarecfg.vis_cfg.visuals_bounding_box, false);
@@ -496,6 +496,17 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Health bar", &g_weebwarecfg.vis_cfg.visuals_health_bars, false);
 								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.vis_cfg.visuals_dormant_esp, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_dormant_col, g_weebwarecfg.sets_cfg.visuals_dormant_col_team, g_weebwarecfg.vis_cfg.visuals_teammates, "DormantDraw");
+
+								ImGui::Text("Chams");
+								ImGui::Separator();
+
+								const char* cham_type[] = { "Default", "Platinum", "Glass", "Crystal", "Gold", "Dark Chrome", "Glow", "Chams", "Chams Wire", "Chams Gloss", "Rim 3D" };
+
+								ImGui::Text("Material");
+								ImGui::Combo("##chammaterials", &g_weebwarecfg.vis_cfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
+								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_chams, g_weebwarecfg.sets_cfg.visuals_chams_team, 1, "Chams");
+
+
 
 
 							}
