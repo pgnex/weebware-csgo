@@ -596,7 +596,7 @@ public:
 
 	float m_flNextPrimaryAttack()
 	{
-		static int offset = retrieve_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextSecondaryAttack");
+		static int offset = retrieve_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
 		return get_value<float>(offset);
 	}
 

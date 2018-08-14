@@ -79,6 +79,9 @@
     <Filter Include="Source Files\hooking\Draw Model Execute">
       <UniqueIdentifier>{7a637797-5f3b-4461-8f99-798e18e7aad6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\Poly">
+      <UniqueIdentifier>{39728d61-28aa-4de9-9489-08d17a00671f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -176,6 +179,24 @@
     </ClCompile>
     <ClCompile Include="dme.cpp">
       <Filter>Source Files\hooking\Draw Model Execute</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -334,6 +355,42 @@
     </ClInclude>
     <ClInclude Include="dme.h">
       <Filter>Source Files\hooking\Draw Model Execute</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Enums.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\IHook.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Instruction.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\MemProtector.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\BreakPointHook.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

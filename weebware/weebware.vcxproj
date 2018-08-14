@@ -102,6 +102,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <WholeProgramOptimization>false</WholeProgramOptimization>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -143,6 +144,12 @@
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui_custom.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp" />
     <ClCompile Include="weebware_config.cpp" />
     <ClCompile Include="Legit.cpp" />
     <ClCompile Include="maths.cpp" />
@@ -191,6 +198,18 @@
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_custom.h" />
     <ClInclude Include="key_values.h" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Enums.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\BreakPointHook.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\IHook.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Instruction.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\MemProtector.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
     <ClInclude Include="weebware_config.h" />
     <ClInclude Include="Legit.h" />
     <ClInclude Include="maths.h" />
