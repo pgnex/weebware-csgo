@@ -13,15 +13,11 @@ void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_cla
 	g_dme.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
-uintptr_t* generate_texture()
-{
-	return 0;
-}
-
 imaterial* c_dme::create_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "","models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "models/inventory_items/trophy_majors/gloss"};
+	const char* material_list[] = { "","models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "models/inventory_items/trophy_majors/gloss", "vgui/achievements/glow", "chams", "chams_wire", "chams_flat", "chams_gloss", "dev/glow_rim3d" };
+
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
 	return g_weebware.g_mat_sys->find_material(material_list[type], nullptr);
