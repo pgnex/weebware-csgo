@@ -79,12 +79,19 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 	g_weebware.g_engine->get_view_angles(view_angles);
 
-	QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
+	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim)
+	{
+		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
 
-	cmd->viewangles = delta;
+		cmd->viewangles = delta;
 
-	g_weebware.g_engine->set_view_angles(cmd->viewangles);
+		g_weebware.g_engine->set_view_angles(cmd->viewangles);
+	}
+	else {
 
+		if ((cmd->buttons & in_attack) && (next_attack_queued())) 
+			cmd->viewangles = aim_angle;
+	}
 }
 
 int c_legitbot::get_config_index()

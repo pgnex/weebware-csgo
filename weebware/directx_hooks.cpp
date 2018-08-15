@@ -406,6 +406,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Text("Activation type");
 
+								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
+
+
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
 
 								const char* activation_type[] = { "Off", "On Fire", "On key", "Magnetic" };
@@ -486,16 +489,16 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Player ESP");
 								ImGui::Separator();
 								ImGui::Text("Activation type");
-								imgui_custom::custom_inline_keyinput(g_weebwarecfg.vis_cfg.enable_visuals_key, key_counter);
+								imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
 								const char* activation_type[] = { "Off", "Default", "On key" };
-								ImGui::Combo("##activationtype", &g_weebwarecfg.vis_cfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
-								ImGui::Checkbox("Teammates", &g_weebwarecfg.vis_cfg.visuals_teammates, false);
-								ImGui::Checkbox("Visible only", &g_weebwarecfg.vis_cfg.visuals_visible_only, false);
-								ImGui::Checkbox("Bounding box", &g_weebwarecfg.vis_cfg.visuals_bounding_box, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_bounding, g_weebwarecfg.sets_cfg.visuals_bounding_team, g_weebwarecfg.vis_cfg.visuals_teammates, "BoundingBox");
-								ImGui::Checkbox("Health bar", &g_weebwarecfg.vis_cfg.visuals_health_bars, false);
-								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.vis_cfg.visuals_dormant_esp, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_dormant_col, g_weebwarecfg.sets_cfg.visuals_dormant_col_team, g_weebwarecfg.vis_cfg.visuals_teammates, "DormantDraw");
+								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
+								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
+								ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
+								ImGui::Checkbox("Bounding box", &g_weebwarecfg.visuals_bounding_box, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col, g_weebwarecfg.visuals_bounding_team_col, g_weebwarecfg.visuals_teammates, "BoundingBox");
+								ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
+								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "DormantDraw");
 
 								ImGui::Text("Chams");
 								ImGui::Separator();
@@ -503,8 +506,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								const char* cham_type[] = { "Default", "Platinum", "Glass", "Crystal", "Gold", "Dark Chrome", "Glow", "Chams", "Chams Wire", "Chams Gloss", "Rim 3D" };
 
 								ImGui::Text("Material");
-								ImGui::Combo("##chammaterials", &g_weebwarecfg.vis_cfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_chams, g_weebwarecfg.sets_cfg.visuals_chams_team, 1, "Chams");
+								ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Chams");
 
 
 
@@ -520,12 +523,12 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 
 
-								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.vis_cfg.visuals_inacc_circle, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_innacc_circle, "Inacc Color");
-								ImGui::Checkbox("Show backtrack", &g_weebwarecfg.vis_cfg.visuals_backtrack_dots, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.visuals_backtrack_col, "Backtrack Color");
-								ImGui::Checkbox("Show on radar", &g_weebwarecfg.vis_cfg.visuals_bspotted, false);
-								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.vis_cfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+								ImGui::Checkbox("Show backtrack", &g_weebwarecfg.visuals_backtrack_dots, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
+								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
+								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 
 							}
 							ImGui::EndChild();
@@ -544,8 +547,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Misc");
 								ImGui::Separator();
-								ImGui::Checkbox("Enable", &g_weebwarecfg.misc_cfg.enable_misc, false);
-								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.misc_cfg.auto_jump, false);
+								ImGui::Checkbox("Enable", &g_weebwarecfg.enable_misc, false);
+								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.auto_jump, false);
 							}
 							ImGui::EndChild();
 
@@ -555,11 +558,11 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Kite Ai (walkbot) - wip");
 								ImGui::Separator();
-								ImGui::Checkbox("Enabed", &g_weebwarecfg.misc_cfg.misc_ai, false);
-								ImGui::Checkbox("Random", &g_weebwarecfg.misc_cfg.misc_ai_random, false);
-								ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_cfg.misc_ai_nearest, false);
-								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_cfg.misc_ai_defuse, false);
-								ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_cfg.misc_ai_defend, false);
+								ImGui::Checkbox("Enabed", &g_weebwarecfg.misc_ai, false);
+								ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
+								ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
+								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
+								ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
 
 								ImGui::Separator();
 
@@ -645,8 +648,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Settings");
 								ImGui::Separator();
-								ImGui::Checkbox("Watermark", &g_weebwarecfg.vis_cfg.visuals_watermark, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.sets_cfg.water_mark, "watermark");
+								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark");
 							}
 							ImGui::EndChild();
 

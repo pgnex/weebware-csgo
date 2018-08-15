@@ -38,6 +38,7 @@ public:
 	bool standalone_rcs;
 	float standalone_rcs_power = 60.f;
 	int accuracy_boost;
+	bool silent_aim;
 
 	int triggerbot_active;
 	int triggerbot_key;
@@ -46,18 +47,19 @@ public:
 	bool triggerbot_stomach;
 	float triggerbot_hitchance;
 };
-
-
-class c_rage_cfg
-{
-public:
-	bool enable_ragebot;
-
-};
 	
-class c_vis_cfg
+
+
+/*
+c_weebwarecfg will load the actual config itself
+*/
+
+class c_weebwarecfg
 {
 public:
+	int legit_cfg_index;
+	c_legit_cfg legit_cfg[8];
+
 	int enable_visuals;
 	int enable_visuals_key;
 	bool visuals_watermark;
@@ -71,11 +73,7 @@ public:
 	bool visuals_bomb_timer;
 	bool visuals_dormant_esp;
 	int visuals_chams;
-};
 
-class c_misc_cfg
-{
-public:
 	bool enable_misc;
 	bool auto_jump;
 	bool misc_ai;
@@ -84,36 +82,18 @@ public:
 	bool misc_ai_nearest;
 	bool misc_ai_defuse;
 	bool misc_ai_defend;
-};
 
-class c_sets_cfg
-{
-public:
-	ImVec4 water_mark = ImVec4(113, 221, 229, 255);
-	ImVec4 visuals_bounding = ImVec4(255, 0, 0, 255);
-	ImVec4 visuals_bounding_team = ImVec4(255, 255, 0, 255);
-	ImVec4 visuals_innacc_circle = ImVec4(0, 0, 255, 50);
+	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
+	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
+	ImVec4 visuals_bounding_team_col = ImVec4(255, 255, 0, 255);
+	ImVec4 visuals_innacc_circle_col = ImVec4(0, 0, 255, 50);
 	ImVec4 visuals_backtrack_col = ImVec4(0, 0, 255, 50);
 	ImVec4 visuals_dormant_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
 
-	ImVec4 visuals_chams = ImVec4(0, 0, 0, 100);
-	ImVec4 visuals_chams_team = ImVec4(0, 0, 0, 100);
-};
+	ImVec4 visuals_chams_col = ImVec4(0, 0, 0, 100);
+	ImVec4 visuals_chams_team_col = ImVec4(0, 0, 0, 100);
 
-/*
-c_weebwarecfg will load the actual config itself
-*/
-
-class c_weebwarecfg
-{
-public:
-	int legit_cfg_index;
-	c_legit_cfg legit_cfg[8];
-	c_rage_cfg rage_cfg;
-	c_vis_cfg vis_cfg;
-	c_misc_cfg misc_cfg;
-	c_sets_cfg sets_cfg;
 };
 
 extern c_weebwarecfg g_weebwarecfg;

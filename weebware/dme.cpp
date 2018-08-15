@@ -42,7 +42,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 		init = true;
 	}
 
-	if (g_weebwarecfg.vis_cfg.visuals_chams > 0) {
+	if (g_weebwarecfg.visuals_chams > 0) {
 
 		// Get players only
 		auto entity = g_weebware.g_entlist->getcliententity(pInfo.entity_index);
@@ -53,14 +53,14 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 		// Filtering out players only
 		if (entity && entity->is_valid_player() && local && local->is_valid_player() && strstr(g_weebware.g_model_info->getmodelname((model_t*)pInfo.pModel), "models/player")) {
 
-			c_color col = c_color(entity->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.sets_cfg.visuals_chams_team : g_weebwarecfg.sets_cfg.visuals_chams);
+			c_color col = c_color(entity->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
 
 			// Set material info.
-			mat_list[g_weebwarecfg.vis_cfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
-			mat_list[g_weebwarecfg.vis_cfg.visuals_chams]->alphamodulate(col.a / 255.f);
+			mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
+			mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 			// mat_list[g_weebwarecfg.vis_cfg.visuals_chams]->setmaterialvarflag(material_var_no_draw, true);
 
-			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.vis_cfg.visuals_chams], overridetype_t::override_normal);
+			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
 
 			g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}

@@ -15,14 +15,14 @@ void c_esp::esp_main()
 	render_dark_overlay();
 #endif
 
-	if (g_weebwarecfg.vis_cfg.enable_visuals == 0)
+	if (g_weebwarecfg.enable_visuals == 0)
 	{
 		return;
 	}
 
-	if (g_weebwarecfg.vis_cfg.enable_visuals == 2)
+	if (g_weebwarecfg.enable_visuals == 2)
 	{
-		if (!GetAsyncKeyState(g_weebwarecfg.vis_cfg.enable_visuals_key))
+		if (!GetAsyncKeyState(g_weebwarecfg.enable_visuals_key))
 		{
 			return;
 		}
@@ -39,7 +39,7 @@ void c_esp::esp_main()
 				draw_inaccuracy_circle();
 				display_backtrack();
 
-				if (g_weebwarecfg.vis_cfg.visuals_backtrack_dots) {
+				if (g_weebwarecfg.visuals_backtrack_dots) {
 
 					for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
 					{
@@ -78,7 +78,7 @@ void c_esp::esp_main()
 					continue;
 
 				// We need to find if the planted bomb exists...
-				if (g_weebwarecfg.vis_cfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
+				if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
 				{
 					float remaining = reinterpret_cast<c_bomb*>(ent)->get_blow_time() - g_weebware.g_global_vars->curtime;
 
@@ -87,7 +87,7 @@ void c_esp::esp_main()
 
 						int offset_y = 5;
 
-						if (g_weebwarecfg.vis_cfg.visuals_watermark) {
+						if (g_weebwarecfg.visuals_watermark) {
 							offset_y += 20.f;
 						}
 
@@ -134,13 +134,13 @@ void c_esp::esp_main()
 					continue;
 				}
 
-				if (!g_weebwarecfg.vis_cfg.visuals_dormant_esp) {
+				if (!g_weebwarecfg.visuals_dormant_esp) {
 					if (ent->is_dormant()) {
 						continue;
 					}
 				}
 
-				if (!g_weebwarecfg.vis_cfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) {
+				if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) {
 					continue;
 				}
 
@@ -149,11 +149,11 @@ void c_esp::esp_main()
 					continue;
 				}
 
-				if (g_weebwarecfg.vis_cfg.visuals_bspotted) {
+				if (g_weebwarecfg.visuals_bspotted) {
 					*ent->b_spotted() = true;
 				}
 
-				if (g_weebwarecfg.vis_cfg.visuals_visible_only && !is_visible(local, ent)) {
+				if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
 					continue;
 				}
 
@@ -207,13 +207,13 @@ void c_esp::calc_w2svalues()
 					continue;
 				}
 
-				if (!g_weebwarecfg.vis_cfg.visuals_dormant_esp) {
+				if (!g_weebwarecfg.visuals_dormant_esp) {
 					if (ent->is_dormant()) {
 						continue;
 					}
 				}
 
-				if (!g_weebwarecfg.vis_cfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum())
+				if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum())
 				{
 					continue;
 				}
@@ -223,7 +223,7 @@ void c_esp::calc_w2svalues()
 					continue;
 				}
 
-				if (g_weebwarecfg.vis_cfg.visuals_visible_only && !is_visible(local, ent)) {
+				if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
 					continue;
 				}
 
@@ -238,10 +238,10 @@ void c_esp::calc_w2svalues()
 
 void c_esp::water_mark()
 {
-	if (g_weebwarecfg.vis_cfg.visuals_watermark) {
+	if (g_weebwarecfg.visuals_watermark) {
 		/* Testing purposes. */
 
-		c_color watermark(g_weebwarecfg.sets_cfg.water_mark);
+		c_color watermark(g_weebwarecfg.water_mark_col);
 
 		g_paint_traverse.draw_water_mark();
 	}
@@ -339,22 +339,22 @@ s_boundaries c_esp::calc_boundaries(c_base_entity* Entity)
 
 void c_esp::render_box(s_boundaries bounds, bool is_team)
 {
-	if (!g_weebwarecfg.vis_cfg.visuals_bounding_box)
+	if (!g_weebwarecfg.visuals_bounding_box)
 	{
 		return;
 	}
-	c_color col = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_bounding_team) : c_color(g_weebwarecfg.sets_cfg.visuals_bounding);
+	c_color col = is_team ? c_color(g_weebwarecfg.visuals_bounding_team_col) : c_color(g_weebwarecfg.visuals_bounding_col);
 
 	// Box
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 60);
 
 	g_weebware.g_surface->drawoutlinedrect(bounds.x - 1, bounds.y - 1, bounds.w + 2 + bounds.x - 1, bounds.h + 2 + bounds.y - 1);
 
-	if (g_weebwarecfg.vis_cfg.visuals_dormant_esp) {
+	if (g_weebwarecfg.visuals_dormant_esp) {
 
 		if (bounds.dormant) {
 			
-			c_color col = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col);
+			c_color col = is_team ? c_color(g_weebwarecfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.visuals_dormant_col);
 		}
 
 	}
@@ -376,7 +376,7 @@ void c_esp::render_box(s_boundaries bounds, bool is_team)
 
 void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 {
-	if (!g_weebwarecfg.vis_cfg.visuals_health_bars)
+	if (!g_weebwarecfg.visuals_health_bars)
 		return;
 
 	if (!bounds.has_w2s)
@@ -398,9 +398,9 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	c_color col = c_color(int(255.f - float(ent->m_iHealth()) * 2.55f), int(float(ent->m_iHealth()) * 2.55f), 0, 255);
 
-	if (g_weebwarecfg.vis_cfg.visuals_dormant_esp) {
+	if (g_weebwarecfg.visuals_dormant_esp) {
 		if (bounds.dormant) {
-			col = is_team ? c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.sets_cfg.visuals_dormant_col);
+			col = is_team ? c_color(g_weebwarecfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.visuals_dormant_col);
 		}
 	}
 
@@ -426,12 +426,12 @@ struct player_esp_info
 
 void c_esp::draw_inaccuracy_circle()
 {
-	if (!g_weebwarecfg.vis_cfg.visuals_inacc_circle)
+	if (!g_weebwarecfg.visuals_inacc_circle)
 		return;
 
 	int x, y;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
-	c_color col = c_color(g_weebwarecfg.sets_cfg.visuals_innacc_circle);
+	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
 
 	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, local->m_pActiveWeapon()->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
 }
@@ -453,7 +453,7 @@ void render_dark_overlay()
 
 void c_esp::display_backtrack()
 {
-	if (!g_weebwarecfg.vis_cfg.visuals_backtrack_dots)
+	if (!g_weebwarecfg.visuals_backtrack_dots)
 		return;
 
 #if 0
@@ -468,7 +468,7 @@ void c_esp::display_backtrack()
 	if (!g_accuracy.m_best_record.player->is_valid_player())
 		return;
 
-	c_color col = c_color(g_weebwarecfg.sets_cfg.visuals_backtrack_col);
+	c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
 
 	int max_width, max_height;
 	g_weebware.g_engine->get_screen_dimensions(max_width, max_height);

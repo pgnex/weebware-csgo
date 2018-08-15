@@ -15,12 +15,12 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 
 	m_target_ent = nullptr;
 
-	if (!g_weebwarecfg.misc_cfg.misc_ai || cmd->buttons & in_attack) {
+	if (!g_weebwarecfg.misc_ai || cmd->buttons & in_attack) {
 		// g_Walkbot.m_target_area = nullptr;
 		return;
 	}
 
-	if (g_weebwarecfg.misc_cfg.misc_ai_random) {
+	if (g_weebwarecfg.misc_ai_random) {
 		g_Walkbot.m_CurrentMode = ai_movement::random;
 	}
 

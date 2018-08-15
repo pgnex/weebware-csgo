@@ -8,6 +8,8 @@ c_create_move g_create_move;
 
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
+	Vector original_angles = cmd->viewangles;
+
 	if (cmd->command_number == 0)
 	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
@@ -41,8 +43,10 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 				}
 				__except (EXCEPTION_EXECUTE_HANDLER)
 				{
-					printf("Exception Caught in Createmove");
+					printf("Exception Caught in Createmove\n");
 				}
+
+
 				QAngle cmd_view = cmd->viewangles;
 
 				g_maths.normalize_angle(cmd_view);
@@ -50,6 +54,8 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 				g_maths.clamp_angle(cmd_view);
 
 				cmd->viewangles = cmd_view;
+
+				g_create_move.correct_movement(original_angles, cmd);
 
 				g_maths.normalize_angle(cmd->viewangles);
 
@@ -81,9 +87,22 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 	return false;
 }
 
+void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
+{
+	Vector o_move(cmd->forwardmove, cmd->sidemove, cmd->upmove);
+	float speed = o_move.size(), yaw;
+	QAngle wish_dir;
+	g_maths.vector_qangles3d(o_move, wish_dir);
+	yaw = DEG2RAD(cmd->viewangles.y - old_view_angles.y + wish_dir.y);
+	cmd->forwardmove = cos(yaw) * speed;
+	cmd->sidemove = sin(yaw) * speed;
+	if (cmd->viewangles.x < -90.f || cmd->viewangles.x > 90.f)
+		cmd->forwardmove = -cmd->forwardmove;
+}
+
 void c_create_move::create_move(c_usercmd* cmd)
 {
-	if (!g_weebwarecfg.misc_cfg.enable_misc)
+	if (!g_weebwarecfg.enable_misc)
 	{
 		return;
 	}
@@ -93,7 +112,7 @@ void c_create_move::create_move(c_usercmd* cmd)
 
 void c_create_move::auto_jump(c_usercmd* cmd)
 {
-	if (!g_weebwarecfg.misc_cfg.auto_jump)
+	if (!g_weebwarecfg.auto_jump)
 	{
 		return;
 	}

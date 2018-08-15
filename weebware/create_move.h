@@ -7,6 +7,7 @@ public:
 	c_base_entity* local;
 	bool send_packet;
 	void create_move(c_usercmd* cmd);
+	void correct_movement(Vector old_view_angles, c_usercmd* cmd);
 private:
 	void auto_jump(c_usercmd* cmd);
 };

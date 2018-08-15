@@ -120,6 +120,31 @@ void c_maths::vector_qangles(Vector forward, QAngle& angles)
 	angles.z = 0;
 }
 
+void c_maths::vector_qangles3d(Vector& vecForward, Vector& vecAngles)
+{
+	Vector vecView;
+	if (vecForward.y == 0.f && vecForward.x == 0.f)
+	{
+		vecView.x = 0.f;
+		vecView.y = 0.f;
+	}
+	else
+	{
+		vecView.y = atan2(vecForward.y, vecForward.x) * 180.f / 3.14159265358979323846f;
+
+		if (vecView.y < 0.f)
+			vecView.y += 360;
+
+		vecView.z = sqrt(vecForward.x * vecForward.x + vecForward.y * vecForward.y);
+
+		vecView.x = atan2(vecForward.z, vecView.z) * 180.f / 3.14159265358979323846f;
+	}
+
+	vecAngles.x = -vecView.x;
+	vecAngles.y = vecView.y;
+	vecAngles.z = 0.f;
+}
+
 void c_maths::qangle_vector(const QAngle& angles, Vector& forward)
 {
 	Assert(s_bMathlibInitialized);
