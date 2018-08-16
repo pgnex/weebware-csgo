@@ -78,6 +78,7 @@ void call_dx9()
 
 bool c_weebware::init_interfaces()
 {
+	// Sleep(5000);
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
 		Sleep(200);
 
@@ -103,11 +104,11 @@ bool c_weebware::init_interfaces()
 	//	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
+
 	//	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
-
 	// g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
-
 	// Im not a paster lol. 
+
 	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
 
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
@@ -161,6 +162,10 @@ bool c_weebware::init_interfaces()
 
 	g_config_list.update_all_configs();
 
+#pragma region load_skins
+	g_skin_list = create_skin_list();
+#pragma endregion
+
 	srand(time(0));
 
 	return true;
@@ -186,9 +191,8 @@ void c_weebware::setup_thread()
 
 	if (init_interfaces())
 	{
-		// Function for netvar dumping
 #if debug
-	//	netvar_manager::_instance()->dump("latest.txt");
+		netvar_manager::_instance()->dump("latest.txt");
 #endif 
 
 		//if (g_weebware.g_engine->get_engine_build() != 13644)
@@ -227,6 +231,24 @@ void c_weebware::setup_debug_window()
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
 	SetConsoleTitle("weebware Cheat Console");
+}
+
+std::vector<skin_type> c_weebware::create_skin_list()
+{
+	std::ifstream skin_file("C://weebware//dependencies//skins.txt");
+	std::string cur_line = "";
+	std::vector<skin_type> skin_list;
+	while (std::getline(skin_file, cur_line))
+	{
+		std::string skin_name = strstr(cur_line.c_str(), ":");
+		auto name_length = skin_name.length();
+		skin_name = skin_name.substr(2);
+		auto id_len = cur_line.length() - name_length;
+		auto id = cur_line.substr(0, id_len);
+		auto iId = std::stoi(id);
+		skin_list.push_back({ iId, skin_name });
+	}
+	return skin_list;
 }
 
 // paste wtf am i meant to write huh?

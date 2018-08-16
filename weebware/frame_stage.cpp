@@ -44,3 +44,4 @@ void c_frame_stage_notify::pvs_fix()
 		*reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ent) + 0xA28) = NULL;
 	}
 }
+

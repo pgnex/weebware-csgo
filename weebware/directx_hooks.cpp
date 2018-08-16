@@ -192,7 +192,7 @@ long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* 
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
 
 	__try {
-	//	g_esp.esp_main(device);
+		//	g_esp.esp_main(device);
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER) {}
 
@@ -507,6 +507,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Material");
 								ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Chams");
+								ImGui::Checkbox("Render team", &g_weebwarecfg.visuals_chams_render_team, false);
 
 
 
@@ -574,8 +575,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							}
 							ImGui::EndChild();
 
-							}
 						}
+					}
 #pragma endregion
 
 #pragma region Settings
@@ -658,20 +659,49 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 #pragma endregion
 
+#pragma region Skins
+					if (selected_tab == tabs::paint) {
+
+						ImGui::Checkbox("Enabled", &g_weebwarecfg.skinchanger_enabled, false);
+
+						ImGui::Columns(2, "SkinChanger", false);
+						ImGui::SetColumnOffset(1, 290);
+
+						ImGui::BeginChild("Guns", ImVec2(0, 0), true);
+
+						ImGui::EndChild();
+
+						ImGui::NextColumn();
+
+						ImGui::BeginChild("Skins", ImVec2(0, 0), true);
+
+						for (auto skin_part : g_weebware.g_skin_list)
+						{
+							if (ImGui::Selectable(skin_part.name.c_str(), g_weebwarecfg.skinchanger_selected_skin_id == skin_part.id))
+							{
+								g_weebwarecfg.skinchanger_selected_skin_id = skin_part.id;
+							}
+						}
+
+						ImGui::EndChild();
+
 					}
+#pragma endregion
+
+				}
 
 				ImGui::EndChild();
-				}
+			}
 
 			ImGui::PopFont();
 
 
-			}
-		ImGui::End();
 		}
+		ImGui::End();
+	}
 
 	ImGui::Render();
-	}
+}
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/bb174369(v=vs.85).aspx 
 // STDMETHOD(DrawIndexedPrimitive)(THIS_ D3DPRIMITIVETYPE,INT BaseVertexIndex,UINT MinVertexIndex,UINT NumVertices,UINT startIndex,UINT primCount) PURE;

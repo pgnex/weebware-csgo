@@ -94,6 +94,12 @@ public:
 	ImVec4 visuals_chams_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_chams_team_col = ImVec4(0, 0, 0, 100);
 
+	bool visuals_chams_render_team = false;
+
+	bool skinchanger_enabled = false;
+
+	int skinchanger_selected_skin_id = 0;
+
 };
 
 extern c_weebwarecfg g_weebwarecfg;

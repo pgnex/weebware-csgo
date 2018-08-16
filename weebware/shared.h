@@ -3,6 +3,12 @@
 
 typedef void* (__cdecl* create_interface)(const char*, int*);
 
+struct skin_type
+{
+	int id;
+	std::string name;
+};
+
 class c_weebware
 {
 public:
@@ -41,6 +47,10 @@ public:
 	
 	bool menu_opened = false;
 	bool pressed_keys[256];
+
+	std::vector<skin_type> create_skin_list();
+	std::vector<skin_type> g_skin_list;
+	std::vector<skin_type> g_glove_list;
 
 private:
 	bool init_interfaces();

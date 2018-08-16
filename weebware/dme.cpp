@@ -132,6 +132,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 		// Get local
 		auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+
 		// Filtering out players only
 		if (entity && entity->is_valid_player() && local && local->is_valid_player() && strstr(g_weebware.g_model_info->getmodelname((model_t*)pInfo.pModel), "models/player")) {
 
@@ -141,7 +142,14 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
 			mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 
-			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+			if (local->m_iTeamNum() == entity->m_iTeamNum()) {
+				if (g_weebwarecfg.visuals_chams_render_team) {
+					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+				}
+			}
+			else {
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+			}
 
 			g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}
