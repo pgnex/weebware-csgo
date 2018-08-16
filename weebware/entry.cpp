@@ -230,10 +230,10 @@ void c_weebware::setup_debug_window()
 }
 
 // paste wtf am i meant to write huh?
-uint64_t c_weebware::pattern_scan(const char* szModule, const char* szSignature)
+uint64_t c_weebware::pattern_scan(const char* model_name, const char* ida_sig)
 {
-	const char* cModule = szModule;
-	if (strstr(szModule, "client.dll") || strstr(szModule, "client_panorama.dll")) {
+	const char* cModule = model_name;
+	if (strstr(model_name, "client.dll") || strstr(model_name, "client_panorama.dll")) {
 		if (!GetModuleHandleA("client.dll")) {
 			cModule = "client_panorama.dll";
 		}
@@ -247,7 +247,7 @@ uint64_t c_weebware::pattern_scan(const char* szModule, const char* szSignature)
 	GetModuleInformation(GetCurrentProcess(), GetModuleHandleA(cModule), &modinfo, sizeof(MODULEINFO));
 	DWORD start_address = (DWORD)modinfo.lpBaseOfDll;
 	DWORD endAddress = start_address + modinfo.SizeOfImage;
-	const char* pat = szSignature;
+	const char* pat = ida_sig;
 	DWORD first_match = 0;
 	for (DWORD _cur = start_address; _cur < endAddress; _cur++)
 	{
@@ -261,7 +261,7 @@ uint64_t c_weebware::pattern_scan(const char* szModule, const char* szSignature)
 		}
 		else
 		{
-			pat = szSignature;
+			pat = ida_sig;
 			first_match = 0;
 		}
 	}

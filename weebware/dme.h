@@ -13,23 +13,24 @@ public:
 
 	enum custom_mats : int
 	{
-		platinum = 1,
+		plain = 1,
+		platinum,
 		glass,
 		crystal,
 		gold,
 		dark_chrome,
 		plastic,
 		glow,
-		chams,
-		chams_wire,
-		chams_flat,
-		chams_gloss,
 		glow_rim3d,
+		wildfire_gold,
+		crystal_blue,
+		velvet,
+		darude,
 		max
 	};
 
 	// Returns a material based on type
-	imaterial* create_mat(c_dme::custom_mats type);
+	imaterial* borrow_mat(c_dme::custom_mats type);
 
 private:
 

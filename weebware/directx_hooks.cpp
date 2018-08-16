@@ -503,8 +503,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Chams");
 								ImGui::Separator();
 
-								const char* cham_type[] = { "Default", "Platinum", "Glass", "Crystal", "Gold", "Dark Chrome", "Glow", "Chams", "Chams Wire", "Chams Gloss", "Rim 3D" };
-
+								const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome", "Gloss", "Glow","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude" };
 								ImGui::Text("Material");
 								ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Chams");

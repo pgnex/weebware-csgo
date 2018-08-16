@@ -13,11 +13,89 @@ void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_cla
 	g_dme.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
-imaterial* c_dme::create_mat(custom_mats type)
+void init_key_vals(KeyValues* keyValues, char* name)
+{
+	static DWORD keyval_addr = 0;
+
+	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
+
+	static DWORD dwFunction = 0;
+
+	if (!dwFunction) dwFunction = keyval_addr + *reinterpret_cast<PDWORD_PTR>(keyval_addr + 1) + 5;
+
+	if (!dwFunction) {
+		return;
+	}
+	__asm
+	{
+		push name
+		mov ecx, keyValues
+		call dwFunction
+	}
+}
+
+void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *pBuffer, class IBaseFileSystem* pFileSystem, const char *pPathID, void* pUnknown)
+{
+	static  DWORD dwFunction = 0;
+
+	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89 4C 24 04");
+
+	if (!dwFunction) {
+		return;
+	}
+
+	__asm
+	{
+		push pUnknown
+		push pPathID
+		push pFileSystem
+		push pBuffer
+		push resourceName
+		mov ecx, keyValues
+		call dwFunction
+	}
+}
+
+// Ayyware
+imaterial* generate_material(bool ignore, bool lit, bool wire_frame)
+{
+	static int created = 0;
+	static const char tmp[] =
+	{
+		"\"%s\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$envmap\" \"\"\
+		\n\t\"$model\" \"1\"\
+		\n\t\"$flat\" \"1\"\
+		\n\t\"$nocull\" \"0\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$halflambert\" \"1\"\
+		\n\t\"$nofog\" \"0\"\
+		\n\t\"$ignorez\" \"%i\"\
+		\n\t\"$znearer\" \"0\"\
+		\n\t\"$wireframe\" \"%i\"\
+        \n}\n"
+	};
+
+	char* baseType = (lit == true ? "VertexLitGeneric" : "UnlitGeneric");
+	char material[512];
+	char name[512];
+	sprintf_s(material, sizeof(material), tmp, baseType, (ignore) ? 1 : 0, (wire_frame) ? 1 : 0);
+	sprintf_s(name, sizeof(name), "#chams%i.vmt", created);
+	++created;
+	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+	init_key_vals(keyValues, baseType);
+	load_from_buf(keyValues, name, material, 0, 0, 0);
+	imaterial* created_mat = g_weebware.g_mat_sys->create_mat(name, keyValues);
+	created_mat->incrementreferencecount();
+	return created_mat;
+}
+
+imaterial* c_dme::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "","models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "models/inventory_items/trophy_majors/gloss", "vgui/achievements/glow", "chams", "chams_wire", "chams_flat", "chams_gloss", "dev/glow_rim3d" };
-
+	const char* material_list[] = { "", "", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "models/inventory_items/trophy_majors/gloss", "vgui/achievements/glow", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
 	return g_weebware.g_mat_sys->find_material(material_list[type], nullptr);
@@ -35,9 +113,13 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 	if (!init) {
 
-		for (auto i = 0; i < custom_mats::max; i++) {
-			mat_list[i] = create_mat(static_cast<custom_mats>(i));
+		// Grab pre-generated materials
+		for (auto i = 2; i < custom_mats::max; i++) {
+			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
 		}
+
+		// Make our own materials
+		mat_list[custom_mats::plain] = generate_material(0, 1, 0);
 
 		init = true;
 	}
@@ -58,7 +140,6 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			// Set material info.
 			mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
 			mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
-			// mat_list[g_weebwarecfg.vis_cfg.visuals_chams]->setmaterialvarflag(material_var_no_draw, true);
 
 			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
 
