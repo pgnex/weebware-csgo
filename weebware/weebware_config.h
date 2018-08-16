@@ -99,7 +99,7 @@ public:
 	bool skinchanger_enabled = false;
 	char cur_save_name[256];
 
-	char skin_search[256];
+	char skinchanger_skinsearch[256];
 	int skinchanger_selected_skin_id = 0;
 
 };

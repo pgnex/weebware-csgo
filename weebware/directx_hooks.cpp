@@ -319,7 +319,38 @@ enum tabs {
 	paint
 };
 
+std::vector<skin_type> filtered_skins()
+{
+	// Get text
+	std::string filter = g_weebwarecfg.skinchanger_skinsearch;
 
+	static std::vector<skin_type> filtered_skins = g_weebware.g_skin_list;
+
+	static std::string change = filter;
+
+	if (change != filter) {
+
+		// Empty buffer
+		filtered_skins.clear();
+		// update, execute code for cpu saving
+
+		for (auto part : g_weebware.g_skin_list) {
+
+			std::string lower_search = filter;
+			std::transform(lower_search.begin(), lower_search.end(), lower_search.begin(), ::tolower);
+			std::string lower_skin = part.name;
+			std::transform(lower_skin.begin(), lower_skin.end(), lower_skin.begin(), ::tolower);
+
+			if (strstr(lower_skin.c_str(), lower_search.c_str())) {
+				filtered_skins.push_back(part);
+			}
+		}
+
+		change = filter;
+	}
+
+	return filtered_skins;
+}
 
 void imgui_main(IDirect3DDevice9* pDevice)
 {
@@ -678,17 +709,26 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 						ImGui::NextColumn();
 
-						ImGui::BeginChild("Skins", ImVec2(0, 0), true);
+						ImGui::BeginChild("SkinList", ImVec2(0, 0), true);
+						ImGui::Text("Skins");
+						ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
+						ImGui::InputText("##Search Skin", g_weebwarecfg.skinchanger_skinsearch, ARRAYSIZE(g_weebwarecfg.skinchanger_skinsearch));
+						ImGui::PopItemWidth();
 
-						ImGui::InputText("Search Skin", g_weebwarecfg.skin_search, ARRAYSIZE(g_weebwarecfg.skin_search));
+						auto skin_list = filtered_skins();
 
-						for (auto skin_part : g_weebware.g_skin_list)
+						ImGui::Separator();
+						ImGui::BeginChild("Existing Configs", ImVec2(0, 355), false);
+						for (auto skin_part : skin_list)
 						{
 							if (ImGui::Selectable(skin_part.name.c_str(), g_weebwarecfg.skinchanger_selected_skin_id == skin_part.id))
 							{
 								g_weebwarecfg.skinchanger_selected_skin_id = skin_part.id;
 							}
 						}
+						ImGui::EndChild();
+						ImGui::Separator();
+
 
 						ImGui::EndChild();
 
