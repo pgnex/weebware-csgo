@@ -97,7 +97,9 @@ public:
 	bool visuals_chams_render_team = false;
 
 	bool skinchanger_enabled = false;
+	char cur_save_name[256];
 
+	char skin_search[256];
 	int skinchanger_selected_skin_id = 0;
 
 };

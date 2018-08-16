@@ -262,6 +262,8 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.80f, 0.80f, 0.83f, 0.31f);
 	style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
 	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
+
+	// Change active stuff later.
 	style->Colors[ImGuiCol_CheckMark] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
 	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.161f, 0.502f, 0.725f, 0.7f);
 	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.161f, 0.502f, 0.725f, 0.7f);
@@ -272,6 +274,7 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->Colors[ImGuiCol_Header] = ImVec4(0.161f, 0.502f, 0.725f, 0.4f);
 	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.161f, 0.502f, 0.725f, 0.7f);
 	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
+
 	style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 0.30f);
 	style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_ColumnActive] = ImVec4(0.56f, 0.56f, 0.58f, 1.00f);
@@ -315,6 +318,8 @@ enum tabs {
 	sets,
 	paint
 };
+
+
 
 void imgui_main(IDirect3DDevice9* pDevice)
 {
@@ -674,6 +679,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::NextColumn();
 
 						ImGui::BeginChild("Skins", ImVec2(0, 0), true);
+
+						ImGui::InputText("Search Skin", g_weebwarecfg.skin_search, ARRAYSIZE(g_weebwarecfg.skin_search));
 
 						for (auto skin_part : g_weebware.g_skin_list)
 						{
