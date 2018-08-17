@@ -596,7 +596,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Show backtrack", &g_weebwarecfg.visuals_backtrack_dots, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
-								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Bomb Information", &g_weebwarecfg.visuals_bomb_timer, false);
 
 							}
 							ImGui::EndChild();
@@ -776,7 +776,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						// Enumerate skins at start of game and filter them out b4 drawing
 						for (auto skin_part : skin_list)
 						{
-							if (ImGui::Selectable(skin_part.name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
+							std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
+							if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
 							{
 								g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
 								g_weebware.call_full_update = true;
