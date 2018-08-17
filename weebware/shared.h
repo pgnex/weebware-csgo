@@ -3,11 +3,20 @@
 
 typedef void* (__cdecl* create_interface)(const char*, int*);
 
-struct skin_type
-{
-	int id;
-	std::string name;
-};
+namespace skinchanger {
+
+	struct gun_type
+	{
+
+	};
+
+	struct skin_type
+	{
+		int id;
+		std::string name;
+	};
+
+}
 
 class c_weebware
 {
@@ -44,13 +53,13 @@ public:
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;
-	
+
 	bool menu_opened = false;
 	bool pressed_keys[256];
 
-	std::vector<skin_type> create_skin_list();
-	std::vector<skin_type> g_skin_list;
-	std::vector<skin_type> g_glove_list;
+	std::vector<skinchanger::skin_type> create_skin_list();
+	std::vector<skinchanger::skin_type> g_skin_list;
+	std::vector<skinchanger::skin_type> g_glove_list;
 
 private:
 	bool init_interfaces();

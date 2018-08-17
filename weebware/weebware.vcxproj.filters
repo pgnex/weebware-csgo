@@ -40,9 +40,6 @@
     <Filter Include="Source Files\Imgui">
       <UniqueIdentifier>{eefcef83-7b62-494d-a30d-75b2fe461de5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hooking\esp">
-      <UniqueIdentifier>{17eec881-a799-434a-86b0-da4cf77e34a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GI\Graphics">
       <UniqueIdentifier>{ab53a4b7-b578-432c-a7ab-a74b8173aeca}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Source Files\hooking\Poly">
       <UniqueIdentifier>{39728d61-28aa-4de9-9489-08d17a00671f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooking\Drawing">
+      <UniqueIdentifier>{17eec881-a799-434a-86b0-da4cf77e34a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -127,13 +127,13 @@
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="esp.cpp">
-      <Filter>Source Files\hooking\esp</Filter>
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="imgui_custom.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="drawing.cpp">
-      <Filter>Source Files\hooking\esp</Filter>
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="maths.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
@@ -148,7 +148,7 @@
       <Filter>Source Files\hooking\CreateMove</Filter>
     </ClCompile>
     <ClCompile Include="directx_hooks.cpp">
-      <Filter>Source Files\hooking\esp</Filter>
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
     <ClCompile Include="Legit.cpp">
       <Filter>Source Files\hooking\CreateMove\Legitbot</Filter>
@@ -303,10 +303,10 @@
       <Filter>Source Files\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="esp.h">
-      <Filter>Source Files\hooking\esp</Filter>
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="drawing.h">
-      <Filter>Source Files\hooking\esp</Filter>
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="imgui_custom.h">
       <Filter>Source Files\Imgui</Filter>

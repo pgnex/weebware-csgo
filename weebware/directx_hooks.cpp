@@ -319,12 +319,12 @@ enum tabs {
 	paint
 };
 
-std::vector<skin_type> filtered_skins()
+std::vector<skinchanger::skin_type> filtered_skins()
 {
 	// Get text
 	std::string filter = g_weebwarecfg.skinchanger_skinsearch;
 
-	static std::vector<skin_type> filtered_skins = g_weebware.g_skin_list;
+	static std::vector<skinchanger::skin_type> filtered_skins = g_weebware.g_skin_list;
 
 	static std::string change = filter;
 
@@ -705,7 +705,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 						ImGui::BeginChild("Guns", ImVec2(0, 0), true);
 
+
 						ImGui::EndChild();
+
 
 						ImGui::NextColumn();
 
@@ -719,6 +721,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 						ImGui::Separator();
 						ImGui::BeginChild("Existing Configs", ImVec2(0, 355), false);
+						// Enumerate skins at start of game and filter them out b4 drawing
 						for (auto skin_part : skin_list)
 						{
 							if (ImGui::Selectable(skin_part.name.c_str(), g_weebwarecfg.skinchanger_selected_skin_id == skin_part.id))

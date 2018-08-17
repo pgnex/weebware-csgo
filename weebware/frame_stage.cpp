@@ -45,3 +45,15 @@ void c_frame_stage_notify::pvs_fix()
 	}
 }
 
+void update_skinwheel()
+{
+	// The skin wheel will be a selection of skins saved
+
+}
+
+void run_skinchanger()
+{
+	// 
+	// Get Skin ID
+
+}

@@ -91,8 +91,8 @@ public:
 	ImVec4 visuals_dormant_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
 
-	ImVec4 visuals_chams_col = ImVec4(0, 0, 0, 100);
-	ImVec4 visuals_chams_team_col = ImVec4(0, 0, 0, 100);
+	ImVec4 visuals_chams_col = ImVec4(255, 0, 0, 255);
+	ImVec4 visuals_chams_team_col = ImVec4(0, 255, 255, 255);
 
 	bool visuals_chams_render_team = false;
 

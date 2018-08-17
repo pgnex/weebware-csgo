@@ -16,66 +16,6 @@ unsigned __stdcall entry_thread(void* v_arg)
 
 create_interface retrieve_interface(LPCSTR module_name);
 
-void call_dx9()
-{
-	// FF 15 ? ? ? ? 89 46 44
-	// 0x20h ; SDKVersion
-	/*
-	// *this <- pointer to pass in for our dx9 buffer.
-	// a2 <- sdk version
-	// https://msdn.microsoft.com/en-us/library/windows/desktop/bb219685(v=vs.85).aspx
-
-
-	char __thiscall sub_10029BF0(_DWORD *this, int a2)
-	{
-	  _DWORD *v2; // esi@1
-	  IDirect3D9 *v3; // eax@2
-
-	  v2 = this;
-	  if ( !(unsigned __int8)sub_100285E0(a2) )
-		return 0;
-	  v3 = Direct3DCreate9(0x20u);
-	  v2[17] = v3;
-	  if ( !v3 )
-	  {
-		Warning("Failed to create D3D9!\n");
-		return 0;
-	  }
-	  return 1;
-	}
-	// From microsoft.
-	IDirect3D9* Direct3DCreate9(
-	UINT SDKVersion
-	);
-
-*/
-/*	int version = 20h; // 32
-	static auto sub_10029BF0 = reinterpret_cast<IDirect3DDevice9*(__thiscall*)(int)>(((DWORD)(g_entry.pattern_scan("shaderapidx9.dll", "FF 15 ? ? ? ? 89 46 44"))));
-	IDirect3DDevice9* device = sub_10029BF0(0x20h);
-	*/
-
-}
-
-//static std::string base64_decode(const std::string &in) {
-//
-//	std::string out;
-//
-//	std::vector<int> T(256, -1);
-//	for (int i = 0; i < 64; i++) T["ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"[i]] = i;
-//
-//	int val = 0, valb = -8;
-//	for (unsigned char c : in) {
-//		if (T[c] == -1) break;
-//		val = (val << 6) + T[c];
-//		valb += 6;
-//		if (valb >= 0) {
-//			out.push_back(char((val >> valb) & 0xFF));
-//			valb -= 8;
-//		}
-//	}
-//	return out;
-//}
-
 bool c_weebware::init_interfaces()
 {
 	// Sleep(5000);
@@ -233,11 +173,13 @@ void c_weebware::setup_debug_window()
 	SetConsoleTitle("weebware Cheat Console");
 }
 
-std::vector<skin_type> c_weebware::create_skin_list()
+
+
+std::vector<skinchanger::skin_type> c_weebware::create_skin_list()
 {
 	std::ifstream skin_file("C://weebware//dependencies//skins.txt");
 	std::string cur_line = "";
-	std::vector<skin_type> skin_list;
+	std::vector<skinchanger::skin_type> skin_list;
 	while (std::getline(skin_file, cur_line))
 	{
 		std::string skin_name = strstr(cur_line.c_str(), ":");
