@@ -115,8 +115,6 @@ void c_hooking::hook_all_functions()
 
 	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
 
-	// vmt_client = vmt_manager(reinterpret_cast<uintptr_t*>(g_weebware.g_client));
-	// vmt_client.hook_m((*(uintptr_t**)this)[function_by_count::frame_stage_notify], 36);
 }
 
 void c_hooking::unhook_all_functions()

@@ -142,6 +142,7 @@
     <ClCompile Include="imgui\dx9\imgui_dx9.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_custom.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="imgui\dx9\imgui_dx9.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
     <ClInclude Include="imgui\stb_rect_pack.h" />
     <ClInclude Include="imgui\stb_textedit.h" />

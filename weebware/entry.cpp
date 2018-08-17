@@ -18,7 +18,8 @@ create_interface retrieve_interface(LPCSTR module_name);
 
 bool c_weebware::init_interfaces()
 {
-	// Sleep(5000);
+	 Sleep(5000);
+
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
 		Sleep(200);
 
@@ -123,10 +124,10 @@ void c_weebware::init_fonts()
 {
 	tahoma_font = g_weebware.g_surface->create_font();
 	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
-	g_draw.AddFont(("Verdana"), 12, true, false);
-	g_draw.AddFont(("Verdana"), 11, true, false);
-	g_draw.AddFont(("Verdana"), 18, true, false);
-	g_draw.AddFont(("Verdana"), 17, true, false);
+	g_draw.AddFont("Verdana", 12, true, false);
+	g_draw.AddFont("Verdana", 11, true, false);
+	g_draw.AddFont("Verdana", 18, true, false);
+	g_draw.AddFont("Verdana", 17, true, false);
 }
 
 void c_weebware::setup_thread()

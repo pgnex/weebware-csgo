@@ -186,6 +186,9 @@
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>Source Files\Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -367,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>Source Files\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

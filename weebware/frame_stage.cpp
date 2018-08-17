@@ -24,6 +24,9 @@ void __stdcall hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 void c_frame_stage_notify::pvs_fix()
 {
+	if (!local)
+		return;
+
 	for (int i = 1; i <= 99; i++)
 	{
 		if (i == local->index)

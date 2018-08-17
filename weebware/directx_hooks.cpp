@@ -5,6 +5,9 @@
 #include "imgui\imgui_internal.h"
 #include "hook_funcs.h"
 #include <intrin.h>
+#include "imgui/imgui_impl_win32.h"
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // https://www.unknowncheats.me/forum/direct3d/66594-d3d9-vtables.html
 
@@ -18,10 +21,6 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 {
 	switch (uMsg)
 	{
-	case WM_ACTIVATEAPP:
-
-		break;
-
 	case WM_LBUTTONDOWN:
 		g_weebware.pressed_keys[VK_LBUTTON] = true;
 		break;
@@ -107,8 +106,8 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 		g_weebware.menu_opened = !g_weebware.menu_opened;
 	}
 
-	if (has_d3d && g_weebware.menu_opened)
-		ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	if (g_weebware.menu_opened)
+		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 	return CallWindowProc(g_weebware.old_window_proc, hWnd, uMsg, wParam, lParam);
 }
@@ -472,10 +471,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 
 								ImGui::Text("Activation type");
-
-								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-
-
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
 
 								const char* activation_type[] = { "Off", "On Fire", "On key", "Magnetic" };
@@ -483,6 +478,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Enabled", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, false);
 #endif
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
+								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
 
 								ImGui::Text("Maximum FOV");
 								ImGui::SliderFloat("Maximum FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].maximum_fov, 0, 30, "%.1f");
