@@ -12,3 +12,5 @@
 *.tlog
 *.log
 *.idb
+*.json
+*.sqlite

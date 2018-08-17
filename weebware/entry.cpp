@@ -103,7 +103,15 @@ bool c_weebware::init_interfaces()
 	g_config_list.update_all_configs();
 
 #pragma region load_skins
+	// Initialise 
+	for (auto i = 0; i < 100; i++) {
+		g_weebwarecfg.skin_wheel[i] = override_skin_style();
+		g_weebwarecfg.skin_wheel[i].weapon_id = i;
+	}
+
 	g_skin_list = create_skin_list();
+
+	g_gun_list = create_gun_list();
 #pragma endregion
 
 	srand(time(0));
@@ -126,7 +134,7 @@ void c_weebware::setup_thread()
 #define debug 0
 
 #if debug
-	//setup_debug_window();
+	setup_debug_window();
 #endif
 
 	if (init_interfaces())
@@ -173,7 +181,23 @@ void c_weebware::setup_debug_window()
 	SetConsoleTitle("weebware Cheat Console");
 }
 
-
+std::vector<skinchanger::gun_type> c_weebware::create_gun_list()
+{
+	std::ifstream skin_file("C://weebware//dependencies//guns.txt");
+	std::string cur_line = "";
+	std::vector<skinchanger::gun_type> gun_list;
+	while (std::getline(skin_file, cur_line))
+	{
+		std::string skin_name = strstr(cur_line.c_str(), ":");
+		auto name_length = skin_name.length();
+		skin_name = skin_name.substr(2);
+		auto id_len = cur_line.length() - name_length;
+		auto id = cur_line.substr(0, id_len);
+		auto iId = std::stoi(id);
+		gun_list.push_back({ iId, skin_name });
+	}
+	return gun_list;
+}
 
 std::vector<skinchanger::skin_type> c_weebware::create_skin_list()
 {

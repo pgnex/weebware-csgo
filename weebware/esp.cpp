@@ -36,6 +36,9 @@ void c_esp::esp_main()
 		{
 			if (local->is_valid_player())
 			{
+				// Used to print current gun id.
+				// g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, 30, c_color(255, 255, 255, 255), 0, "%i", local->m_pActiveWeapon()->m_iItemDefinitionIndex());
+
 				draw_inaccuracy_circle();
 				display_backtrack();
 
@@ -118,8 +121,8 @@ void c_esp::esp_main()
 
 						sprintf(timer_s, "Time till explosion: %.2f\nDamage: %.0f", remaining, floor(predicted_damage));
 
-						g_paint_traverse.draw_string(g_weebware.tahoma_font,5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
-			
+						g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
+
 						// Okay now lets check if we have defuse on the bomb..
 						// m_flDefuseCountDown // interesting netvar let see what it returns...
 
@@ -227,7 +230,7 @@ void c_esp::calc_w2svalues()
 					continue;
 				}
 
-			
+
 
 			}
 		}
@@ -240,8 +243,6 @@ void c_esp::water_mark()
 {
 	if (g_weebwarecfg.visuals_watermark) {
 		/* Testing purposes. */
-
-		c_color watermark(g_weebwarecfg.water_mark_col);
 
 		g_paint_traverse.draw_water_mark();
 	}
@@ -353,7 +354,7 @@ void c_esp::render_box(s_boundaries bounds, bool is_team)
 	if (g_weebwarecfg.visuals_dormant_esp) {
 
 		if (bounds.dormant) {
-			
+
 			c_color col = is_team ? c_color(g_weebwarecfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.visuals_dormant_col);
 		}
 
@@ -409,9 +410,9 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 	g_weebware.g_surface->drawline(bounds.x - 5, bounds.y + length, bounds.x - 5, bounds.y + bounds.h);
 
 	if (ent->m_iHealth() < 100 && ent->m_iHealth() > 0) {
-		
-		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length,c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
-	
+
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length, c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
+
 	}
 }
 
@@ -447,7 +448,7 @@ void render_dark_overlay()
 		c_color col = c_color(g_weebwarecfg.sets_cfg.visuals_bounding_team);
 
 		g_draw.BoxFilled(0, 0, s, h, D3DCOLOR_RGBA(0, 0, 0, 150));
-	}
+}
 }
 #endif
 
@@ -461,7 +462,7 @@ void c_esp::display_backtrack()
 	{
 		if (record.m_has_w2s)
 			g_draw.Line(record.m_w2s_head.x, record.m_w2s_head.y, record.m_w2s_head.x + 1, record.m_w2s_head.y, 2, false, record.m_best_record ? D3DCOLOR_RGBA(0, 255, 0, 255) : D3DCOLOR_RGBA(255, 0, 0, 255));
-	}
+}
 #endif
 
 #if 1

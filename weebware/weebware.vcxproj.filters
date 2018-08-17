@@ -61,12 +61,6 @@
     <Filter Include="Source Files\hooking\CreateMove\AI">
       <UniqueIdentifier>{d75dd64d-c32f-4a27-837e-7e0964baecbc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Trampolines">
-      <UniqueIdentifier>{866a9c9c-5b79-432a-8482-a9e2df911e9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Trampolines\Disasm">
-      <UniqueIdentifier>{65b8b00d-7f75-4ba0-8240-58acf098654a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Authentication">
       <UniqueIdentifier>{050c0d02-84fa-448d-a671-3e4919c9b64e}</UniqueIdentifier>
     </Filter>
@@ -164,12 +158,6 @@
     </ClCompile>
     <ClCompile Include="navmesh.cpp">
       <Filter>Source Files\hooking\CreateMove\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="Trampoline.cpp">
-      <Filter>Header Files\Trampolines</Filter>
-    </ClCompile>
-    <ClCompile Include="disassembler\hde32.c">
-      <Filter>Header Files\Trampolines\Disasm</Filter>
     </ClCompile>
     <ClCompile Include="weebware_config.cpp">
       <Filter>Source Files\Config</Filter>
@@ -334,18 +322,6 @@
     </ClInclude>
     <ClInclude Include="navmesh.h">
       <Filter>Source Files\hooking\CreateMove\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="Trampoline.h">
-      <Filter>Header Files\Trampolines</Filter>
-    </ClInclude>
-    <ClInclude Include="disassembler\hde32.h">
-      <Filter>Header Files\Trampolines\Disasm</Filter>
-    </ClInclude>
-    <ClInclude Include="disassembler\table32.h">
-      <Filter>Header Files\Trampolines\Disasm</Filter>
-    </ClInclude>
-    <ClInclude Include="Polyhook\PolyHook\PolyHook.hpp">
-      <Filter>Header Files\Trampolines</Filter>
     </ClInclude>
     <ClInclude Include="weebware_config.h">
       <Filter>Source Files\Config</Filter>

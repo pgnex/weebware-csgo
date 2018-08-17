@@ -7,7 +7,8 @@ namespace skinchanger {
 
 	struct gun_type
 	{
-
+		int id;
+		std::string name;
 	};
 
 	struct skin_type
@@ -61,6 +62,10 @@ public:
 	std::vector<skinchanger::skin_type> g_skin_list;
 	std::vector<skinchanger::skin_type> g_glove_list;
 
+	std::vector<skinchanger::gun_type> c_weebware::create_gun_list();
+	std::vector<skinchanger::gun_type> g_gun_list;
+
+	bool call_full_update = false;
 private:
 	bool init_interfaces();
 	void setup_debug_window();

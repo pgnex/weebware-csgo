@@ -8,7 +8,7 @@ namespace hook_functions
 	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
-	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
+	void __stdcall frame_stage_notify(clientframestage_t curStage);
 	long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
@@ -30,7 +30,7 @@ private:
 
 #pragma region paint_traverse
 public:
-	typedef void(__thiscall *pt_t)(void*, unsigned int, bool, bool); // type defs so its shorter to call original.
+	typedef void(__thiscall *pt_t)(void*, unsigned int, bool, bool); 
 	pt_t o_painttraverse;
 #pragma endregion
 private:
@@ -51,7 +51,7 @@ public:
 #pragma endregion
 
 #pragma region FSN
-	using fn_fsn = void(__thiscall*)(i_base_client*, clientframestage_t);
+	using fn_fsn = void(__stdcall*)(clientframestage_t);
 	fn_fsn o_fsn;
 #pragma endregion
 

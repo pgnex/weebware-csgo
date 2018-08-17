@@ -135,8 +135,6 @@ class c_base_entity : public i_client_unknown, public iclientrenderable, public 
 {
 public:
 	char pad01[0x64];
-
-	// Should work?
 	int index;
 
 	template <class _t>
@@ -144,7 +142,6 @@ public:
 	{
 		return *(_t*)((unsigned long)this + offset);
 	}
-
 
 	template <class _t>
 	_t* get_pointer(uintptr_t offset)
@@ -172,7 +169,7 @@ public:
 	}
 	bool* b_spotted()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_bSpotted");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_bSpotted");
 		return get_pointer<bool>(offset);
 	}
 	Vector get_vec_eyepos()
@@ -187,37 +184,37 @@ public:
 
 	Vector* m_Origin()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_vecOrigin");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_vecOrigin");
 		return get_pointer<Vector>(offset);
 	}
 
 	Vector m_vecViewOffset()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "localdata", "m_vecViewOffset[0]");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_vecViewOffset[0]");
 		return get_value<Vector>(offset);
 	}
 
 	float m_angEyeAngles()
 	{
-		static int offset = retrieve_offset("DT_CSPlayer", "m_angEyeAngles[0]");
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_angEyeAngles[0]");
 		return get_value<float>(offset);
 	}
 
 	Vector m_vecVelocity()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "localdata", "m_vecVelocity[0]");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_vecVelocity[0]");
 		return get_value<Vector>(offset);
 	}
 
 	QAngle m_aimPunchAngle()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "localdata", "m_Local", "m_aimPunchAngle");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_Local", "m_aimPunchAngle");
 		return get_value<QAngle>(offset);
 	}
 
 	int m_iHealth()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "m_iHealth");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_iHealth");
 		return get_value<int>(offset);
 	}
 
@@ -229,31 +226,31 @@ public:
 
 	int m_fFlags()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "m_fFlags");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_fFlags");
 		return get_value<int>(offset);
 	}
 
 	int m_iTeamNum()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_iTeamNum");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_iTeamNum");
 		return get_value<int>(offset);
 	}
 
 	int m_lifeState()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "m_lifeState");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_lifeState");
 		return get_value<int>(offset);
 	}
 
 	HANDLE m_hOwnerEntity()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_hOwnerEntity");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_hOwnerEntity");
 		return get_value<HANDLE>(offset);
 	}
 
 	bool m_bGunGameImmunity()
 	{
-		static int offset = retrieve_offset("DT_CSPlayer", "m_bGunGameImmunity");
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_bGunGameImmunity");
 		return get_value<bool>(offset);
 	}
 
@@ -284,7 +281,7 @@ public:
 
 	int get_tick_base()
 	{
-		static int offset = retrieve_offset("DT_BasePlayer", "localdata", "m_nTickBase");
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_nTickBase");
 		return get_value<int>(offset);
 	}
 
@@ -292,26 +289,26 @@ public:
 
 	Vector* m_vecMins()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_Collision", "m_vecMins");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_Collision", "m_vecMins");
 		return get_pointer<Vector>(offset);
 	}
 
 	Vector* m_vecMaxs()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_Collision", "m_vecMaxs");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_Collision", "m_vecMaxs");
 		return get_pointer<Vector>(offset);
 	}
 
 
 	float* m_flCycle()
 	{
-		static int offset = retrieve_offset("DT_BaseAnimating", "serveranimdata", "m_flCycle");
+		static uintptr_t offset = retrieve_offset("DT_BaseAnimating", "serveranimdata", "m_flCycle");
 		return get_pointer<float>(offset);
 	}
 
 	int* m_nSequence()
 	{
-		static int offset = retrieve_offset("DT_BaseAnimating", "m_nSequence");
+		static uintptr_t offset = retrieve_offset("DT_BaseAnimating", "m_nSequence");
 		return get_pointer<int>(offset);
 	}
 
@@ -327,7 +324,7 @@ public:
 
 	float* m_flSimulationTime()
 	{
-		static int offset = retrieve_offset("DT_BaseEntity", "m_flSimulationTime");
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_flSimulationTime");
 		return get_pointer<float>(offset);
 	}
 
@@ -335,8 +332,14 @@ public:
 
 	bool is_flashed()
 	{
-		static int offset = retrieve_offset("DT_CSPlayer", "m_flFlashDuration");
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flFlashDuration");
 		return get_value<float>(offset) > 0;
+	}
+
+	int* get_weapons()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatCharacter", "m_hMyWeapons");
+		return get_pointer<int>(offset);
 	}
 
 	// Weapons.
@@ -402,10 +405,11 @@ enum weapon_type_id
 	weapon_g3sg1,
 	weapon_galil = 13,
 	weapon_m249,
-	weapon_m4a1 = 16,
+	weapon_m4a4 = 16,
 	weapon_mac10,
 	weapon_p90 = 19,
-	weapon_ump45 = 24,
+	weapon_mp5 = 23,
+	weapon_ump45,
 	weapon_xm1014,
 	weapon_bizon,
 	weapon_mag7,
@@ -468,29 +472,29 @@ public:
 	__int32 recoil_seed;		//0x0184
 };
 
-class c_basecombat_weapon : public c_base_entity
+class c_basecombat_weapon : c_base_entity
 {
 public:
 
 	short m_iItemDefinitionIndex()
 	{
-		static int offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
 		return get_value<short>(offset);
 	}
 
 	float Get_Innacuracy()
 	{
-		return getvfunc<float(__thiscall*)(void*)>(this, 468)(this);
+		return getvfunc<float(__thiscall*)(void*)>(this, 467)(this);
 	}
 
 	float GetSpread()
 	{
-		return getvfunc<float(__thiscall*)(void*)>(this, 437)(this);
+		return getvfunc<float(__thiscall*)(void*)>(this, 436)(this);
 	}
 
 	void Update_Accuracy_Penalty()
 	{
-		getvfunc<void(__thiscall*)(void*)>(this, 469)(this);
+		getvfunc<void(__thiscall*)(void*)>(this, 468)(this);
 	}
 
 	bool is_zeus()
@@ -500,12 +504,7 @@ public:
 
 	bool is_knife()
 	{
-		int weapon_id = this->m_iItemDefinitionIndex();
-
-		return (weapon_id == 42 || weapon_id == 59 || weapon_id == 41
-			|| weapon_id == 500 || weapon_id == 505 || weapon_id == 506
-			|| weapon_id == 507 || weapon_id == 508 || weapon_id == 509
-			|| weapon_id == 515 || weapon_id == 512);
+		return (!is_firearm() && !is_zeus() && !is_grenade() && !is_bomb());
 	}
 
 	bool is_pistol()
@@ -524,7 +523,7 @@ public:
 		int weapon_id = this->m_iItemDefinitionIndex();
 
 		return weapon_id == weapon_type_id::weapon_ak47
-			|| weapon_id == weapon_type_id::weapon_m4a1
+			|| weapon_id == weapon_type_id::weapon_m4a4
 			|| weapon_id == weapon_type_id::weapon_m4a1s
 			|| weapon_id == weapon_type_id::weapon_galil
 			|| weapon_id == weapon_type_id::weapon_famas
@@ -538,7 +537,8 @@ public:
 
 		return weapon_id == weapon_type_id::weapon_mac10 || weapon_id == weapon_type_id::weapon_mp7
 			|| weapon_id == weapon_type_id::weapon_mp9 || weapon_id == weapon_type_id::weapon_p90 ||
-			weapon_id == weapon_type_id::weapon_bizon || weapon_id == weapon_type_id::weapon_ump45;
+			weapon_id == weapon_type_id::weapon_bizon || weapon_id == weapon_type_id::weapon_ump45 ||
+			weapon_id == weapon_type_id::weapon_mp5;
 	}
 
 	bool is_autosniper()
@@ -596,12 +596,61 @@ public:
 
 	float m_flNextPrimaryAttack()
 	{
-		static int offset = retrieve_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
 		return get_value<float>(offset);
 	}
 
 	c_weapon_info* get_weapon_info()
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 445)(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 444)(this);
 	}
+
+	int* get_paint_kit()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_nFallbackPaintKit");
+		return get_pointer<int>(offset);
+	}
+
+	int* get_fallbackseed()
+	{	
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_nFallbackSeed");
+		return get_pointer<int>(offset);
+	}
+
+	float* get_fallbackwear()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_flFallbackWear");
+		return get_pointer<float>(offset);
+	}
+
+	int* get_accountid()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iAccountID");
+		return get_pointer<int>(offset);
+	}
+
+	char* get_custom_name()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_szCustomName");
+		return get_pointer<char>(offset);
+	}
+
+	int* get_item_id_high()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemIDHigh");
+		return get_pointer<int>(offset);
+	}
+
+	int* get_original_owner_xuidlow()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_OriginalOwnerXuidLow");
+		return get_pointer<int>(offset);
+	}
+
+	int* get_original_owner_xuidhigh()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_OriginalOwnerXuidHigh");
+		return get_pointer<int>(offset);
+	}
+
 };

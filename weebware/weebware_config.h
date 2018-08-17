@@ -48,11 +48,14 @@ public:
 	float triggerbot_hitchance;
 };
 	
-
-
-/*
-c_weebwarecfg will load the actual config itself
-*/
+struct override_skin_style
+{
+	int weapon_id = 0;
+	int m_paint_kit = 0;
+	float m_wear = FLT_MIN;
+	int m_seed = 69;
+	char name[256];
+};
 
 class c_weebwarecfg
 {
@@ -100,7 +103,11 @@ public:
 	char cur_save_name[256];
 
 	char skinchanger_skinsearch[256];
-	int skinchanger_selected_skin_id = 0;
+
+	override_skin_style skin_wheel[100];
+	char skinchanger_gunsearch[256];
+
+	int skinchanger_selected_gun = 0;
 
 };
 

@@ -129,7 +129,6 @@
     <ClCompile Include="create_move.cpp" />
     <ClCompile Include="c_entities.cpp" />
     <ClCompile Include="directx_hooks.cpp" />
-    <ClCompile Include="disassembler\hde32.c" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dme.cpp" />
     <ClCompile Include="drawing.cpp" />
@@ -159,7 +158,6 @@
     <ClCompile Include="paint_traverse.cpp" />
     <ClCompile Include="hook_funcs.cpp" />
     <ClCompile Include="tinyxml2.cpp" />
-    <ClCompile Include="Trampoline.cpp" />
     <ClCompile Include="vmt.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -172,8 +170,6 @@
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />
-    <ClInclude Include="disassembler\hde32.h" />
-    <ClInclude Include="disassembler\table32.h" />
     <ClInclude Include="dme.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />
@@ -219,11 +215,9 @@
     <ClInclude Include="net_channel.h" />
     <ClInclude Include="paint_traverse.h" />
     <ClInclude Include="player_info.h" />
-    <ClInclude Include="Polyhook\PolyHook\PolyHook.hpp" />
     <ClInclude Include="shared.h" />
     <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="trace.h" />
-    <ClInclude Include="Trampoline.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="virtual_function.h" />
     <ClInclude Include="vmt.h" />

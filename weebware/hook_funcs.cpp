@@ -56,6 +56,7 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 {
 	auto protecc = VEH_FSN->getProtectionObject();
 
+	hook_functions::frame_stage_notify(curStage);
 }
 
 void c_hooking::hook_all_functions()
@@ -107,7 +108,7 @@ void c_hooking::hook_all_functions()
 	VEH_DME->hook();
 	o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
 
-	auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[36];
+	auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[37];
 	VEH_FSN = new PLH::BreakPointHook((const char*)fsn_addr, (const char*)&hk_frame_stage_notify);
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
@@ -120,7 +121,6 @@ void c_hooking::hook_all_functions()
 
 void c_hooking::unhook_all_functions()
 {
-	g_weebware.g_engine->client_cmd_unrestricted("cl_mouseenable 1", NULL);
 	g_weebware.menu_opened = false;
 
 	VEH_PAINT->unHook();
