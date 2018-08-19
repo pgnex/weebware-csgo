@@ -1,6 +1,5 @@
-#include "Header.h"
-#include "shared.h"
 #include "weebware_config.h"
+#include "Header.h"
 
 c_config_list g_config_list;
 

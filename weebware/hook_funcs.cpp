@@ -59,6 +59,227 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 	hook_functions::frame_stage_notify(curStage);
 }
 
+namespace knife_changer {
+
+	RecvVarProxyFn original_sequence;
+
+	enum ESequence
+	{
+		SEQUENCE_DEFAULT_DRAW = 0,
+		SEQUENCE_DEFAULT_IDLE1 = 1,
+		SEQUENCE_DEFAULT_IDLE2 = 2,
+		SEQUENCE_DEFAULT_LIGHT_MISS1 = 3,
+		SEQUENCE_DEFAULT_LIGHT_MISS2 = 4,
+		SEQUENCE_DEFAULT_HEAVY_MISS1 = 9,
+		SEQUENCE_DEFAULT_HEAVY_HIT1 = 10,
+		SEQUENCE_DEFAULT_HEAVY_BACKSTAB = 11,
+		SEQUENCE_DEFAULT_LOOKAT01 = 12,
+
+		SEQUENCE_BUTTERFLY_DRAW = 0,
+		SEQUENCE_BUTTERFLY_DRAW2 = 1,
+		SEQUENCE_BUTTERFLY_LOOKAT01 = 13,
+		SEQUENCE_BUTTERFLY_LOOKAT03 = 15,
+
+		SEQUENCE_FALCHION_IDLE1 = 1,
+		SEQUENCE_FALCHION_HEAVY_MISS1 = 8,
+		SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP = 9,
+		SEQUENCE_FALCHION_LOOKAT01 = 12,
+		SEQUENCE_FALCHION_LOOKAT02 = 13,
+
+		SEQUENCE_DAGGERS_IDLE1 = 1,
+		SEQUENCE_DAGGERS_LIGHT_MISS1 = 2,
+		SEQUENCE_DAGGERS_LIGHT_MISS5 = 6,
+		SEQUENCE_DAGGERS_HEAVY_MISS2 = 11,
+		SEQUENCE_DAGGERS_HEAVY_MISS1 = 12,
+
+		SEQUENCE_BOWIE_IDLE1 = 1,
+	};
+
+	static auto random_sequence(const int low, const int high) -> int
+	{
+		return rand() % (high - low + 1) + low;
+	}
+
+	void animation_fix(const c_rec_proxy_data* pDataConst, void* pStruct, void* pOut)
+	{
+		c_rec_proxy_data* pData = const_cast<c_rec_proxy_data*>(pDataConst);
+
+		auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+		if (local) {
+
+			auto weapon = local->m_pActiveWeapon();
+
+			if (weapon && local->m_pActiveWeapon()->is_knife()) {
+
+				int current_seq = pData->m_Value.m_Int;
+
+				std::cout << "Initial: " << current_seq << std::endl;
+				if (g_weebwarecfg.selected_knife.weapon_index == 515) {
+
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_DRAW:
+						current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, SEQUENCE_BUTTERFLY_LOOKAT03);
+					default:
+						current_seq++;
+					}
+
+				}
+				if (g_weebwarecfg.selected_knife.weapon_index == 512) {
+
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_IDLE2:
+						current_seq = SEQUENCE_FALCHION_IDLE1;
+					case SEQUENCE_DEFAULT_HEAVY_MISS1:
+						current_seq = random_sequence(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq = random_sequence(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
+					case SEQUENCE_DEFAULT_DRAW:
+					case SEQUENCE_DEFAULT_IDLE1:
+						current_seq = current_seq;
+					default:
+						current_seq--;
+					}
+				}
+				if (g_weebwarecfg.selected_knife.weapon_index == 516) {
+
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_IDLE2:
+						current_seq = SEQUENCE_DAGGERS_IDLE1;
+					case SEQUENCE_DEFAULT_LIGHT_MISS1:
+					case SEQUENCE_DEFAULT_LIGHT_MISS2:
+						current_seq = random_sequence(SEQUENCE_DAGGERS_LIGHT_MISS1, SEQUENCE_DAGGERS_LIGHT_MISS5);
+					case SEQUENCE_DEFAULT_HEAVY_MISS1:
+						current_seq = random_sequence(SEQUENCE_DAGGERS_HEAVY_MISS2, SEQUENCE_DAGGERS_HEAVY_MISS1);
+					case SEQUENCE_DEFAULT_HEAVY_HIT1:
+					case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq += 3;
+					case SEQUENCE_DEFAULT_DRAW:
+					case SEQUENCE_DEFAULT_IDLE1:
+						current_seq = current_seq;
+					default:
+						current_seq += 2;
+					}
+
+				}
+				if (g_weebwarecfg.selected_knife.weapon_index == 514) {
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_DRAW:
+					case SEQUENCE_DEFAULT_IDLE1:
+						current_seq = current_seq;
+					case SEQUENCE_DEFAULT_IDLE2:
+						current_seq = SEQUENCE_BOWIE_IDLE1;
+					default:
+						current_seq--;
+					}
+				}
+				if (g_weebwarecfg.selected_knife.weapon_index == 519) {
+
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_DRAW:
+						current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
+					default:
+						current_seq++;
+					}
+
+				}
+				if (g_weebwarecfg.selected_knife.weapon_index == 522) {
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq = random_sequence(12, 13);
+					}
+				}
+
+				if (g_weebwarecfg.selected_knife.weapon_index == 523) {
+					switch (current_seq)
+					{
+					case SEQUENCE_DEFAULT_LOOKAT01:
+						current_seq = random_sequence(14, 15);
+					}
+				}
+				std::cout << "Finish: " << current_seq << std::endl;
+
+				pData->m_Value.m_Int = current_seq;
+
+			}
+		}
+
+		original_sequence(pData, pStruct, pOut);
+	}
+
+
+	void apply_proxyhooks()
+	{
+
+		for (client_class* p_class = g_weebware.g_client->get_all_classes(); p_class; p_class = p_class->m_pNext)
+		{
+			auto class_name = p_class->m_precvtable->m_pNetTableName;
+
+			if (!strcmp(p_class->m_networkedname, "CBaseViewModel")) {
+
+				for (auto i = 0; i < p_class->m_precvtable->m_nProps; i++) {
+
+					auto p_prop = &p_class->m_precvtable->m_pProps[i];
+
+					auto name = p_prop->m_pVarName;
+
+					// animations
+					if (!strcmp(name, "m_nSequence"))
+					{
+						original_sequence = reinterpret_cast<RecvVarProxyFn>(p_prop->m_ProxyFn);
+						p_prop->m_ProxyFn = reinterpret_cast<RecvVarProxyFn>(animation_fix);
+
+						break;
+					}
+				}
+				break;
+			}
+		}
+	}
+
+	void remove_proxyhooks()
+	{
+		auto p_class = g_weebware.g_client->get_all_classes();
+
+		while (p_class) {
+
+			auto class_name = p_class->m_precvtable->m_pNetTableName;
+
+			if (!strcmp(class_name, "DT_BaseViewModel")) {
+
+				for (auto i = 0; i < p_class->m_precvtable->m_nProps; i++) {
+
+					auto p_prop = &(p_class->m_precvtable->m_pProps[i]);
+
+					auto name = p_prop->m_pVarName;
+
+					// animations
+					if (!strcmp(name, "m_nSequence"))
+					{
+						p_prop->m_ProxyFn = reinterpret_cast<RecvVarProxyFn>(original_sequence);
+					}
+
+				}
+
+			}
+
+			p_class = p_class->m_pNext;
+		}
+	}
+
+
+}
 void c_hooking::hook_all_functions()
 {
 	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
@@ -115,6 +336,7 @@ void c_hooking::hook_all_functions()
 
 	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
 
+	knife_changer::apply_proxyhooks();
 }
 
 void c_hooking::unhook_all_functions()
@@ -128,5 +350,6 @@ void c_hooking::unhook_all_functions()
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
+	knife_changer::remove_proxyhooks();
 	g_vars.g_unload.set(1.0f);
 }

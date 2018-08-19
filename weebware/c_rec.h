@@ -12,6 +12,7 @@ public:
 		char* m_pString;
 		void* m_pData;
 		float m_Vector[3];
+		__int64  m_Int64;
 	};
 };
 

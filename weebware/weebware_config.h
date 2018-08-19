@@ -1,6 +1,8 @@
 #pragma once
-#include "Header.h"
+#ifndef CONFIGS
+#define CONFIGS
 
+#include "shared.h"
 
 class c_config_list
 {
@@ -108,7 +110,13 @@ public:
 	char skinchanger_gunsearch[256];
 
 	int skinchanger_selected_gun = 0;
+	c_skinchanger::knife_type selected_knife;
 
+	// Global vars for animation fixes.
+	int previous_knife_index = 0;
+	int next_knife_index = 0;
 };
 
 extern c_weebwarecfg g_weebwarecfg;
+
+#endif

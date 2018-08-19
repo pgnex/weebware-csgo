@@ -342,6 +342,11 @@ public:
 		return get_pointer<int>(offset);
 	}
 
+	HANDLE get_viewmodel_handle() {
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_hViewModel[0]");
+		return get_value<HANDLE>(offset);
+	}
+
 	// Weapons.
 	c_basecombat_weapon* m_pActiveWeapon();
 };
@@ -472,7 +477,7 @@ public:
 	__int32 recoil_seed;		//0x0184
 };
 
-class c_basecombat_weapon : c_base_entity
+class c_basecombat_weapon : public c_base_entity 
 {
 public:
 
@@ -480,6 +485,12 @@ public:
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
 		return get_value<short>(offset);
+	}
+
+	short* m_iItemDefinitionIndexPtr()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
+		return get_pointer<short>(offset);
 	}
 
 	float Get_Innacuracy()
@@ -653,4 +664,63 @@ public:
 		return get_pointer<int>(offset);
 	}
 
+	void set_model_index(int index)
+	{
+		getvfunc<void(__thiscall*)(void*, int)>(this, 75)(this, index);
+	}
+
+	int* m_nModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_nModelIndex");
+		return get_pointer<int>(offset);
+	}
+	int* m_iWorldModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iWorldModelIndex");
+		return get_pointer<int>(offset);
+	}
+	int* m_nViewModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_nViewModelIndex");
+		return get_pointer<int>(offset);
+	}
+
+	HANDLE GetWeaponWorldModelHandle() {
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_hWeaponWorldModel");
+		return get_value<HANDLE>(offset);
+	}
+
+};
+
+class c_viewmodel
+{
+public:
+	template <class _t>
+	inline _t get_value(uintptr_t offset)
+	{
+		return *(_t*)((unsigned long)this + offset);
+	}
+
+	template <class _t>
+	_t* get_pointer(uintptr_t offset)
+	{
+		return (_t*)((unsigned long)this + offset);
+	}
+
+	int* m_nModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_nModelIndex");
+		return get_pointer<int>(offset);
+	}
+
+	HANDLE get_weapon_handle()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_hWeapon");
+		return get_value<HANDLE>(offset);
+	}
+};
+
+class c_weaponworldmodel : public c_viewmodel
+{
+public:
 };

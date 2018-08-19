@@ -107,7 +107,7 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 	}
 
 	if (g_weebware.menu_opened)
-		ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam);
+		ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 	return CallWindowProc(g_weebware.old_window_proc, hWnd, uMsg, wParam, lParam);
 }
@@ -315,12 +315,12 @@ enum tabs {
 };
 
 
-std::vector<skinchanger::gun_type> filtered_guns()
+std::vector<c_skinchanger::gun_type> filtered_guns()
 {
 	// Get text
 	std::string filter = g_weebwarecfg.skinchanger_gunsearch;
 
-	static std::vector<skinchanger::gun_type> filtered_guns = g_weebware.g_gun_list;
+	static std::vector<c_skinchanger::gun_type> filtered_guns = g_weebware.g_gun_list;
 
 	static std::string change = filter;
 
@@ -349,12 +349,12 @@ std::vector<skinchanger::gun_type> filtered_guns()
 }
 
 
-std::vector<skinchanger::skin_type> filtered_skins()
+std::vector<c_skinchanger::skin_type> filtered_skins()
 {
 	// Get text
 	std::string filter = g_weebwarecfg.skinchanger_skinsearch;
 
-	static std::vector<skinchanger::skin_type> filtered_skins = g_weebware.g_skin_list;
+	static std::vector<c_skinchanger::skin_type> filtered_skins = g_weebware.g_skin_list;
 
 	static std::string change = filter;
 
@@ -388,7 +388,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		imgui_setup(pDevice);
 	}
 
-	ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
+	// ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
 
 	ImGui_ImplDX9_NewFrame();
 
@@ -741,7 +741,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						auto gun_list = filtered_guns();
 
 						ImGui::Separator();
-						ImGui::BeginChild("Existing Guns", ImVec2(0, 300), false);
+						ImGui::BeginChild("Existing Guns", ImVec2(0, 240), false);
 						// Enumerate skins at start of game and filter them out b4 drawing
 						for (auto gun_part : gun_list)
 						{
@@ -753,6 +753,20 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						}
 						ImGui::EndChild();
 						ImGui::Separator();
+
+						ImGui::BeginChild("Existing Knives", ImVec2(0, 250), false);
+						// Enumerate skins at start of game and filter them out b4 drawing
+						static std::string knife_selection;
+
+						for (auto knife_part : g_weebware.g_knife_list)
+						{
+							if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife.weapon_index == knife_part.weapon_index))
+							{
+								g_weebwarecfg.selected_knife = knife_part;
+								g_weebware.call_full_update = true;
+							}
+						}
+						ImGui::EndChild();
 
 						ImGui::EndChild();
 

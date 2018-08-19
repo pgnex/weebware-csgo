@@ -113,6 +113,8 @@ bool c_weebware::init_interfaces()
 	g_skin_list = create_skin_list();
 
 	g_gun_list = create_gun_list();
+
+	g_knife_list = create_knife_list();
 #pragma endregion
 
 	srand(time(0));
@@ -182,11 +184,11 @@ void c_weebware::setup_debug_window()
 	SetConsoleTitle("weebware Cheat Console");
 }
 
-std::vector<skinchanger::gun_type> c_weebware::create_gun_list()
+std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list()
 {
 	std::ifstream skin_file("C://weebware//dependencies//guns.txt");
 	std::string cur_line = "";
-	std::vector<skinchanger::gun_type> gun_list;
+	std::vector<c_skinchanger::gun_type> gun_list;
 	while (std::getline(skin_file, cur_line))
 	{
 		std::string skin_name = strstr(cur_line.c_str(), ":");
@@ -200,11 +202,11 @@ std::vector<skinchanger::gun_type> c_weebware::create_gun_list()
 	return gun_list;
 }
 
-std::vector<skinchanger::skin_type> c_weebware::create_skin_list()
+std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list()
 {
 	std::ifstream skin_file("C://weebware//dependencies//skins.txt");
 	std::string cur_line = "";
-	std::vector<skinchanger::skin_type> skin_list;
+	std::vector<c_skinchanger::skin_type> skin_list;
 	while (std::getline(skin_file, cur_line))
 	{
 		std::string skin_name = strstr(cur_line.c_str(), ":");
@@ -218,6 +220,35 @@ std::vector<skinchanger::skin_type> c_weebware::create_skin_list()
 	return skin_list;
 }
 
+std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
+{
+	std::vector<c_skinchanger::knife_type> tmp;
+
+	auto knife_template = [](std::string mdl_file, std::string weapon_name, int defindex) {
+		c_skinchanger::knife_type tmp;
+		tmp.mdl = mdl_file;
+		tmp.weapon_name = weapon_name;
+		tmp.weapon_index = defindex;
+		return tmp;
+	};
+
+	tmp.push_back(knife_template("models/weapons/v_knife_default_t.mdl", "Terrorist Knife", 59));
+	tmp.push_back(knife_template("models/weapons/v_knife_default_ct.mdl", "Counter-Terrorist Knife", 42));
+	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", 515));
+	tmp.push_back(knife_template("models/weapons/v_knife_flip.mdl", "Flip", 505));
+	tmp.push_back(knife_template("models/weapons/v_knife_gut.mdl", "Gut", 506));
+	tmp.push_back(knife_template("models/weapons/v_knife_karam.mdl", "Karambit", 507));
+	tmp.push_back(knife_template("models/weapons/v_knife_m9_bay.mdl", "M9 Bayonet", 508));
+	tmp.push_back(knife_template("models/weapons/v_knife_tactical.mdl", "Huntsman", 509));
+	tmp.push_back(knife_template("models/weapons/v_knife_falchion_advanced.mdl", "Falchion", 512));
+	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", 516));
+	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", 514));
+	tmp.push_back(knife_template("models/weapons/v_knife_stiletto.mdl", "Stiletto", 522));
+	tmp.push_back(knife_template("models/weapons/v_knife_ursus.mdl", "Ursus", 519));
+	tmp.push_back(knife_template("models/weapons/v_knife_gypsy_jackknife.mdl", "Navaja", 520));
+	tmp.push_back(knife_template("models/weapons/v_knife_widowmaker.mdl", "Talon", 523));
+	return tmp;
+}
 // paste wtf am i meant to write huh?
 uint64_t c_weebware::pattern_scan(const char* model_name, const char* ida_sig)
 {

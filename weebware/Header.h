@@ -1,6 +1,11 @@
 #pragma once
-
-// parent include file.
+#ifndef HEADERS
+#define HEADERS
+#pragma warning(disable : 4244)
+#pragma warning(disable : 4227)
+#pragma warning(disable : 4172)
+#pragma warning(disable : 4307)
+#pragma warning(disable : 4996)
 
 #include <iostream>
 #include <Windows.h>
@@ -20,6 +25,8 @@
 #include <streambuf>
 #include <iterator>
 #include <string.h>
+#include <cstddef>
+#include <cstdlib>
 #include <d3d9.h>
 #include <WinUser.h>
 #include <C:\\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\d3dx9.h>
@@ -28,17 +35,6 @@
 #include "Trampoline.h"
 #include "imgui\imgui.h"
 #include "imgui\dx9\imgui_dx9.h"
-
-#pragma warning(disable : 4244)
-#pragma warning(disable : 4227)
-#pragma warning(disable : 4172)
-#pragma warning(disable : 4307)
-#pragma warning(disable : 4996)
-
-// custom include files
-class c_weebware;
-extern c_weebware g_weebware;
-
 #include "vmt.h"
 #include "virtual_function.h"
 #include "netvars.h"
@@ -51,6 +47,7 @@ extern c_weebware g_weebware;
 #include "key_values.h"
 #include "c_entities.h"
 #include "c_misc_sdk.h"
+#include "skindefs.h"
 #include "c_rec.h"
 #include "c_client.h"
 #include "c_surface.h"
@@ -58,8 +55,15 @@ extern c_weebware g_weebware;
 #include "trace.h"
 #include "hook_funcs.h"
 #include "shared.h"
-#include "weebware_config.h"
 #include "authentication.h"
 #include "navmesh.h"
 #include "Ai.h"
+#include "weebware_config.h"
 
+
+// custom include files
+class c_weebware;
+extern c_weebware g_weebware;
+
+
+#endif
