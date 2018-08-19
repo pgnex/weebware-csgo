@@ -114,7 +114,6 @@ namespace knife_changer {
 
 				int current_seq = pData->m_Value.m_Int;
 
-				std::cout << "Initial: " << current_seq << std::endl;
 				if (g_weebwarecfg.selected_knife.weapon_index == 515) {
 
 					switch (current_seq)
@@ -208,7 +207,6 @@ namespace knife_changer {
 						current_seq = random_sequence(14, 15);
 					}
 				}
-				std::cout << "Finish: " << current_seq << std::endl;
 
 				pData->m_Value.m_Int = current_seq;
 
