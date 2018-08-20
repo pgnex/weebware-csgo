@@ -1,3 +1,3 @@
 # weebware
 
-literally hate my life thanks kite
+Game enhancing software by Kite & Nex.
