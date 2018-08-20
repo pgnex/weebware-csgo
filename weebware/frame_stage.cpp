@@ -64,42 +64,65 @@ void c_frame_stage_notify::run_skinchanger()
 		if (!weapon)
 			continue;
 
-		auto weapon_id = weapon->m_iItemDefinitionIndex();
+		auto weapon_id = weapon->filtered_index();
 
-		if (weapon->is_knife()) {
+		auto vm_handle = local->get_viewmodel_handle();
 
-			auto vm_handle = local->get_viewmodel_handle();
+		auto viewmodel = reinterpret_cast<c_viewmodel*>(g_weebware.g_entlist->getcliententityfromhandle(vm_handle));
 
-			auto viewmodel = reinterpret_cast<c_viewmodel*>(g_weebware.g_entlist->getcliententityfromhandle(vm_handle));
+		auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
 
-			auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
+		if (weapon == viewmodel_weapon && weapon_id == 69) {
 
-			if (weapon == viewmodel_weapon) {
+			g_weebwarecfg.previous_knife_index = weapon_id;
 
-				g_weebwarecfg.previous_knife_index = weapon_id;
+			auto knife_cfg = g_weebwarecfg.selected_knife;
 
-				auto knife_cfg = g_weebwarecfg.selected_knife;
+			if (knife_cfg.weapon_index != 0) {
 
-				if (knife_cfg.weapon_index != 0) {
+				auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
+				*viewmodel->m_nModelIndex() = model_index;
 
-					auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
-					*viewmodel->m_nModelIndex() = model_index;
+				weapon->set_model_index(model_index);
 
-					weapon->set_model_index(model_index);
+				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 
-					*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
+				g_weebwarecfg.next_knife_index = knife_cfg.weapon_index;
 
-					g_weebwarecfg.next_knife_index = knife_cfg.weapon_index;
+				auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
 
-					auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
+				*worldmodel_weapon->m_nModelIndex() = model_index + 1;
 
-					*worldmodel_weapon->m_nModelIndex() = model_index + 1;
-				}
-	
+				auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
+
+				*weapon->get_item_id_high() = -1;
+
+				if (skin_config.m_paint_kit != 0)
+					*weapon->get_paint_kit() = skin_config.m_paint_kit;
+
+				*weapon->get_fallbackseed() = skin_config.m_seed;
+
+				// Config Clamping.
+				if (skin_config.m_wear < FLT_MIN)
+					skin_config.m_wear = FLT_MIN;
+
+				*weapon->get_fallbackwear() = skin_config.m_wear;
+
+				std::string custom_name = skin_config.name;
+
+				if (custom_name != "")
+					sprintf(weapon->get_custom_name(), custom_name.c_str());
+
+				*weapon->get_accountid() = local_inf.xuid_low;
+
+				*weapon->get_original_owner_xuidhigh() = 0;
+				*weapon->get_original_owner_xuidlow() = 0;
+
 			}
 
-			weapon_id = 69;
-		}
+		} 
+
+
 
 		if (weapon_id > 100)
 			continue;
@@ -109,7 +132,7 @@ void c_frame_stage_notify::run_skinchanger()
 		*weapon->get_item_id_high() = -1;
 
 		if (skin_config.m_paint_kit != 0)
-		*weapon->get_paint_kit() = skin_config.m_paint_kit;
+			*weapon->get_paint_kit() = skin_config.m_paint_kit;
 
 		*weapon->get_fallbackseed() = skin_config.m_seed;
 

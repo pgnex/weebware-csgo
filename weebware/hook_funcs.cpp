@@ -16,6 +16,21 @@ PLH::BreakPointHook* VEH_FSN;
 PLH::BreakPointHook* VEH_PRESENT;
 PLH::BreakPointHook* VEH_ENDSCENE;
 PLH::BreakPointHook* VEH_DME;
+PLH::BreakPointHook* VEH_CURSORLOCK;
+
+void __stdcall hk_unlock_cursor()
+{
+	auto protecc = VEH_CURSORLOCK->getProtectionObject();
+
+	if (g_weebware.menu_opened) {
+
+		g_weebware.g_surface->unlockcursor();
+
+	}
+	else {
+		g_hooking.o_cursor(g_weebware.g_surface);
+	}
+}
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
@@ -285,10 +300,17 @@ void c_hooking::hook_all_functions()
 	VEH_PAINT->hook();
 	o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
 
+
+	auto cursor_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_surface))[67];
+	VEH_CURSORLOCK = new PLH::BreakPointHook((const char*)cursor_addr, (const char*)&hk_unlock_cursor);
+	VEH_CURSORLOCK->hook();
+	o_cursor = reinterpret_cast<decltype(o_cursor)>(cursor_addr);
+
 	auto cm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24];
 	VEH_CM = new PLH::BreakPointHook((const char*)cm_addr, (const char*)&hk_clientmode_cm);
 	VEH_CM->hook();
 	o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
+
 
 #define StreamProof 0
 #if StreamProof
@@ -347,6 +369,7 @@ void c_hooking::unhook_all_functions()
 	VEH_ENDSCENE->unHook();
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
+	VEH_CURSORLOCK->unHook();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();
 	g_vars.g_unload.set(1.0f);

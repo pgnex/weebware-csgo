@@ -173,8 +173,8 @@ public:
 	virtual void padfunction63() = 0;
 	virtual void padfunction64() = 0;
 	virtual void padfunction65() = 0;
-	virtual void unlockcursor() = 0;
-	virtual void lockcursor() = 0;
+	virtual void unlockcursor() = 0;// 66
+	virtual void lockcursor() = 0; // 67
 	virtual void padfunction68() = 0;
 	virtual void padfunction69() = 0;
 	virtual void padfunction70() = 0;

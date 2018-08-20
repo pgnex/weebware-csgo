@@ -53,6 +53,9 @@ public:
 #pragma region FSN
 	using fn_fsn = void(__stdcall*)(clientframestage_t);
 	fn_fsn o_fsn;
+
+	using fn_cursorlock = void(__thiscall*)(void*);
+	fn_cursorlock o_cursor;
 #pragma endregion
 
 #pragma region DME

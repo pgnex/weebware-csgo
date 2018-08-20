@@ -481,6 +481,22 @@ class c_basecombat_weapon : public c_base_entity
 {
 public:
 
+	short filtered_index()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
+		auto index = get_value<short>(offset);
+
+
+		if (index == 42 || index == 59 || index == 41
+			|| index == 500 || index == 505 || index == 506
+			|| index == 507 || index == 508 || index == 509
+			|| index == 515 || index == 512 || index == 523
+			|| index == 520 || index == 519 || index == 522)
+			return 69;
+
+		return index;
+	}
+
 	short m_iItemDefinitionIndex()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
