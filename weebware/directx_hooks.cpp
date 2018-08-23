@@ -106,8 +106,8 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 		g_weebware.menu_opened = !g_weebware.menu_opened;
 	}
 
-	if (g_weebware.menu_opened)
-		ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
+	if (g_weebware.menu_opened && ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam))
+		return true;
 
 	return CallWindowProc(g_weebware.old_window_proc, hWnd, uMsg, wParam, lParam);
 }

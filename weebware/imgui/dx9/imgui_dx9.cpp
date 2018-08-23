@@ -168,8 +168,7 @@ void ImGui_ImplDX9_RenderDrawLists(ImDrawData* draw_data)
 IMGUI_API LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	ImGuiIO& io = ImGui::GetIO();
-	switch (msg)
-	{
+	switch (msg) {
 	case WM_LBUTTONDOWN:
 		io.MouseDown[0] = true;
 		return true;
@@ -188,6 +187,18 @@ IMGUI_API LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LP
 	case WM_MBUTTONUP:
 		io.MouseDown[2] = false;
 		return true;
+	case WM_XBUTTONDOWN:
+		if ((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON1) == MK_XBUTTON1)
+			io.MouseDown[3] = true;
+		else if ((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON2) == MK_XBUTTON2)
+			io.MouseDown[4] = true;
+		return true;
+	case WM_XBUTTONUP:
+		if ((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON1) == MK_XBUTTON1)
+			io.MouseDown[3] = false;
+		else if ((GET_KEYSTATE_WPARAM(wParam) & MK_XBUTTON2) == MK_XBUTTON2)
+			io.MouseDown[4] = false;
+		return true;
 	case WM_MOUSEWHEEL:
 		io.MouseWheel += GET_WHEEL_DELTA_WPARAM(wParam) > 0 ? +1.0f : -1.0f;
 		return true;
@@ -197,11 +208,11 @@ IMGUI_API LRESULT ImGui_ImplDX9_WndProcHandler(HWND, UINT msg, WPARAM wParam, LP
 		return true;
 	case WM_KEYDOWN:
 		if (wParam < 256)
-			io.KeysDown[wParam] = true;
+			io.KeysDown[wParam] = 1;
 		return true;
 	case WM_KEYUP:
 		if (wParam < 256)
-			io.KeysDown[wParam] = false;
+			io.KeysDown[wParam] = 0;
 		return true;
 	case WM_CHAR:
 		// You can also use ToAscii()+GetKeyboardState() to retrieve characters.
