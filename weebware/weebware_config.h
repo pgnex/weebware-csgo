@@ -15,6 +15,8 @@ public:
 	void delete_weebware_config();
 	char cur_save_name[256];
 	std::string cur_load_name = "";
+	char skinchanger_skinsearch[256];
+	char skinchanger_gunsearch[256];
 
 };
 
@@ -50,13 +52,14 @@ public:
 	float triggerbot_hitchance;
 };
 	
-struct override_skin_style
+class override_skin_style
 {
+public:
 	int weapon_id = 0;
 	int m_paint_kit = 0;
 	float m_wear = FLT_MIN;
 	int m_seed = 69;
-	char name[256];
+//	char* name;
 };
 
 class c_weebwarecfg
@@ -102,12 +105,7 @@ public:
 	bool visuals_chams_render_team = false;
 
 	bool skinchanger_enabled = false;
-	char cur_save_name[256];
 
-	char skinchanger_skinsearch[256];
-
-	override_skin_style skin_wheel[100];
-	char skinchanger_gunsearch[256];
 
 	int skinchanger_selected_gun = 0;
 	c_skinchanger::knife_type selected_knife;
@@ -115,6 +113,12 @@ public:
 	// Global vars for animation fixes.
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
+
+	bool visuals_name_esp = 0;
+	ImVec4 visuals_name_esp_col = ImVec4(255, 255, 255, 255);
+	ImVec4 visuals_name_esp_col_team = ImVec4(255, 255, 255, 255);
+
+	override_skin_style skin_wheel[100];
 };
 
 extern c_weebwarecfg g_weebwarecfg;

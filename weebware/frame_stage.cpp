@@ -29,7 +29,7 @@ void c_frame_stage_notify::pvs_fix()
 
 	for (int i = 1; i <= 99; i++)
 	{
-		if (i == local->index)
+		if (i == local->EntIndex())
 			continue;
 
 		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
@@ -52,7 +52,7 @@ void c_frame_stage_notify::run_skinchanger()
 
 	player_info local_inf;
 
-	g_weebware.g_engine->GetPlayerInfo(g_frame_stage_notify.local->index, &local_inf);
+	g_weebware.g_engine->GetPlayerInfo(g_weebware.g_engine->get_local(), &local_inf);
 
 	auto weapons = g_frame_stage_notify.local->get_weapons();
 	// Skin Changer
@@ -66,70 +66,61 @@ void c_frame_stage_notify::run_skinchanger()
 
 		auto weapon_id = weapon->filtered_index();
 
-		auto vm_handle = local->get_viewmodel_handle();
+		if (weapon_id >= 100)
+			continue;
 
-		auto viewmodel = reinterpret_cast<c_viewmodel*>(g_weebware.g_entlist->getcliententityfromhandle(vm_handle));
+		*weapon->get_item_id_high() = -1;
 
-		auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
+		if (weapon->is_knife() && weapon_id == 69) {
 
-		if (weapon == viewmodel_weapon && weapon_id == 69) {
+			auto vm_handle = local->get_viewmodel_handle();
 
-			g_weebwarecfg.previous_knife_index = weapon_id;
+			auto viewmodel = reinterpret_cast<c_viewmodel*>(g_weebware.g_entlist->getcliententityfromhandle(vm_handle));
+
+			if (!viewmodel)
+				continue;
+
+			auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
 
 			auto knife_cfg = g_weebwarecfg.selected_knife;
-
+#pragma region knifechanger
 			if (knife_cfg.weapon_index != 0) {
 
 				auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
-				*viewmodel->m_nModelIndex() = model_index;
 
-				weapon->set_model_index(model_index);
+				*weapon->m_nModelIndex() = model_index;
 
-				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
+				if (viewmodel_weapon == weapon) {
 
-				g_weebwarecfg.next_knife_index = knife_cfg.weapon_index;
+					*viewmodel->m_nModelIndex() = model_index;
 
-				auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
+					auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
 
-				*worldmodel_weapon->m_nModelIndex() = model_index + 1;
+					if (worldmodel_weapon)
+						*worldmodel_weapon->m_nModelIndex() = model_index + 1;
+				}
 
-				auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
-
-				*weapon->get_item_id_high() = -1;
+				auto skin_config = g_weebwarecfg.skin_wheel[49];
 
 				if (skin_config.m_paint_kit != 0)
 					*weapon->get_paint_kit() = skin_config.m_paint_kit;
 
 				*weapon->get_fallbackseed() = skin_config.m_seed;
 
-				// Config Clamping.
 				if (skin_config.m_wear < FLT_MIN)
 					skin_config.m_wear = FLT_MIN;
 
 				*weapon->get_fallbackwear() = skin_config.m_wear;
-
-				std::string custom_name = skin_config.name;
-
-				if (custom_name != "")
-					sprintf(weapon->get_custom_name(), custom_name.c_str());
-
 				*weapon->get_accountid() = local_inf.xuid_low;
-
+				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 				*weapon->get_original_owner_xuidhigh() = 0;
 				*weapon->get_original_owner_xuidlow() = 0;
-
 			}
 
-		} 
+		}
 
-
-
-		if (weapon_id > 100)
-			continue;
-
+#pragma endregion
 		auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
-
-		*weapon->get_item_id_high() = -1;
 
 		if (skin_config.m_paint_kit != 0)
 			*weapon->get_paint_kit() = skin_config.m_paint_kit;
@@ -142,10 +133,9 @@ void c_frame_stage_notify::run_skinchanger()
 
 		*weapon->get_fallbackwear() = skin_config.m_wear;
 
-		std::string custom_name = skin_config.name;
-
-		if (custom_name != "")
-			sprintf(weapon->get_custom_name(), custom_name.c_str());
+		//std::string custom_name = skin_config.name;
+		//if (custom_name != "")
+		//	sprintf(weapon->get_custom_name(), custom_name.c_str());
 
 		*weapon->get_accountid() = local_inf.xuid_low;
 

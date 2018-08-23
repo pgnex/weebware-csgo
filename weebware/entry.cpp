@@ -142,7 +142,7 @@ void c_weebware::setup_thread()
 
 	if (init_interfaces())
 	{
-#if debug
+#if 0
 		netvar_manager::_instance()->dump("latest.txt");
 #endif 
 

@@ -16,8 +16,9 @@ public:
 		std::string name;
 	};
 
-	struct knife_type
+	class knife_type
 	{
+	public:
 		int weapon_index = 0;
 		std::string mdl = "";
 		std::string weapon_name = "";

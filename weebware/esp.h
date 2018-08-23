@@ -43,6 +43,7 @@ private:
 	void render_box(s_boundaries bounds, bool is_team);
 	void render_health(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void draw_inaccuracy_circle();
+	void render_name(s_boundaries bounds, c_base_entity* ent, bool is_team);
 
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack();

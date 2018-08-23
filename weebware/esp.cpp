@@ -88,10 +88,10 @@ void c_esp::esp_main()
 					// So c4 is still going!
 					if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
 
-						int offset_y = 5;
+						int offset_y = 10;
 
 						if (g_weebwarecfg.visuals_watermark) {
-							offset_y += 20.f;
+							offset_y += 35.f;
 						}
 
 						int Damage = 500;
@@ -168,6 +168,8 @@ void c_esp::esp_main()
 				render_box(w2s_player[i].boundary, ent->m_iTeamNum() == local->m_iTeamNum());
 
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
+
+				render_name(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 #pragma endregion
 
 			}
@@ -221,7 +223,7 @@ void c_esp::calc_w2svalues()
 					continue;
 				}
 
-				if (i == local->index)
+				if (i == local->EntIndex())
 				{
 					continue;
 				}
@@ -414,6 +416,28 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length, c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
 
 	}
+}
+
+void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_team)
+{
+	if (!g_weebwarecfg.visuals_name_esp)
+		return;
+
+	if (!ent)
+		return;
+
+	s_player_info playerinfo;
+
+	g_weebware.g_engine->get_player_info(ent->EntIndex(), &playerinfo);
+
+	c_color draw_col = is_team ? c_color(g_weebwarecfg.visuals_name_esp_col_team) : c_color(g_weebwarecfg.visuals_name_esp_col);
+	
+	std::string player_name = playerinfo.name;
+
+	player_name.resize(15);
+
+	if (bounds.has_w2s)
+	g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x + bounds.w + 2, bounds.y + 5, draw_col, 0, player_name.c_str());
 }
 
 struct player_esp_info

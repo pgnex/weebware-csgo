@@ -318,7 +318,7 @@ enum tabs {
 std::vector<c_skinchanger::gun_type> filtered_guns()
 {
 	// Get text
-	std::string filter = g_weebwarecfg.skinchanger_gunsearch;
+	std::string filter = g_config_list.skinchanger_gunsearch;
 
 	static std::vector<c_skinchanger::gun_type> filtered_guns = g_weebware.g_gun_list;
 
@@ -352,7 +352,7 @@ std::vector<c_skinchanger::gun_type> filtered_guns()
 std::vector<c_skinchanger::skin_type> filtered_skins()
 {
 	// Get text
-	std::string filter = g_weebwarecfg.skinchanger_skinsearch;
+	std::string filter = g_config_list.skinchanger_skinsearch;
 
 	static std::vector<c_skinchanger::skin_type> filtered_skins = g_weebware.g_skin_list;
 
@@ -557,11 +557,18 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
 								ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
+								
 								ImGui::Checkbox("Bounding box", &g_weebwarecfg.visuals_bounding_box, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col, g_weebwarecfg.visuals_bounding_team_col, g_weebwarecfg.visuals_teammates, "BoundingBox");
+								
 								ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
+								
+								ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col, g_weebwarecfg.visuals_name_esp_col_team, g_weebwarecfg.visuals_teammates, "NameESP");
+								
 								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "DormantDraw");
+
 
 								ImGui::Separator();
 								ImGui::Text("Chams");
@@ -735,7 +742,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::BeginChild("GunList", ImVec2(0, 0), true);
 						ImGui::Text("Guns");
 						ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
-						ImGui::InputText("##Search Gun", g_weebwarecfg.skinchanger_gunsearch, ARRAYSIZE(g_weebwarecfg.skinchanger_gunsearch));
+						ImGui::InputText("##Search Gun", g_config_list.skinchanger_gunsearch, ARRAYSIZE(g_config_list.skinchanger_gunsearch));
 						ImGui::PopItemWidth();
 
 						auto gun_list = filtered_guns();
@@ -748,7 +755,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.skinchanger_selected_gun == gun_part.id))
 							{
 								g_weebwarecfg.skinchanger_selected_gun = gun_part.id;
-								g_weebware.call_full_update = true;
 							}
 						}
 						ImGui::EndChild();
@@ -756,14 +762,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 						ImGui::BeginChild("Existing Knives", ImVec2(0, 250), false);
 						// Enumerate skins at start of game and filter them out b4 drawing
-						static std::string knife_selection;
 
 						for (auto knife_part : g_weebware.g_knife_list)
 						{
 							if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife.weapon_index == knife_part.weapon_index))
 							{
+								printf("Selection made\n");
 								g_weebwarecfg.selected_knife = knife_part;
-								g_weebware.call_full_update = true;
 							}
 						}
 						ImGui::EndChild();
@@ -776,7 +781,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::BeginChild("SkinList", ImVec2(0, 0), true);
 						ImGui::Text("Skins");
 						ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
-						ImGui::InputText("##Search Skin", g_weebwarecfg.skinchanger_skinsearch, ARRAYSIZE(g_weebwarecfg.skinchanger_skinsearch));
+						ImGui::InputText("##Search Skin", g_config_list.skinchanger_skinsearch, ARRAYSIZE(g_config_list.skinchanger_skinsearch));
 						ImGui::PopItemWidth();
 
 						auto skin_list = filtered_skins();
@@ -790,7 +795,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
 							{
 								g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
-								g_weebware.call_full_update = true;
 							}
 						}
 						ImGui::EndChild();
@@ -801,7 +805,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
 						ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
 						ImGui::Text("Weapon name");
-						ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name));
+						// ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name, 32);
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
 							g_weebware.call_full_update = true;
 						}

@@ -134,8 +134,6 @@ class c_basecombat_weapon;
 class c_base_entity : public i_client_unknown, public iclientrenderable, public c_clientnetworkable
 {
 public:
-	char pad01[0x64];
-	int index;
 
 	template <class _t>
 	inline _t get_value(uintptr_t offset)
@@ -531,6 +529,14 @@ public:
 
 	bool is_knife()
 	{
+		auto index = this->m_iItemDefinitionIndex();
+
+		return (index == 42 || index == 59 || index == 41
+			|| index == 500 || index == 505 || index == 506
+			|| index == 507 || index == 508 || index == 509
+			|| index == 515 || index == 512 || index == 523
+			|| index == 520 || index == 519 || index == 522);
+
 		return (!is_firearm() && !is_zeus() && !is_grenade() && !is_bomb());
 	}
 
