@@ -301,6 +301,8 @@ namespace knife_changer {
 }
 void c_hooking::hook_all_functions()
 {
+	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
+
 	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
 	VEH_PAINT = new PLH::BreakPointHook((const char*)paint_addr, (const char*)&hk_paint_traverse);
 	VEH_PAINT->hook();
@@ -359,8 +361,6 @@ void c_hooking::hook_all_functions()
 	VEH_FSN = new PLH::BreakPointHook((const char*)fsn_addr, (const char*)&hk_frame_stage_notify);
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
-
-	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
 
 	knife_changer::apply_proxyhooks();
 }
