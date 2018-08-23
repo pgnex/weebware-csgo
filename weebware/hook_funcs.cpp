@@ -37,6 +37,8 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 	auto protecc = VEH_PAINT->getProtectionObject();
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		hook_functions::paint_traverse(v, f, a);
+	else
+		g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 }
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
@@ -45,6 +47,8 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		return hook_functions::clientmode_cm(input_sample_time, cmd);
+	else
+		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
 }
 
 long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
@@ -67,6 +71,8 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+	else
+		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
@@ -75,6 +81,8 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		hook_functions::frame_stage_notify(curStage);
+	else
+		g_hooking.o_fsn(curStage);
 }
 
 namespace knife_changer {
