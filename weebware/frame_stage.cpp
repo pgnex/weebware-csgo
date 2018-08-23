@@ -100,7 +100,7 @@ void c_frame_stage_notify::run_skinchanger()
 						*worldmodel_weapon->m_nModelIndex() = model_index + 1;
 				}
 
-				auto skin_config = g_weebwarecfg.skin_wheel[49];
+				auto skin_config = g_weebwarecfg.skin_wheel[69];
 
 				if (skin_config.m_paint_kit != 0)
 					*weapon->get_paint_kit() = skin_config.m_paint_kit;
