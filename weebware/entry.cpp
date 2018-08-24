@@ -18,7 +18,7 @@ create_interface retrieve_interface(LPCSTR module_name);
 
 bool c_weebware::init_interfaces()
 {
-	 Sleep(5000);
+	Sleep(5000);
 
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
 		Sleep(200);
@@ -41,15 +41,14 @@ bool c_weebware::init_interfaces()
 
 	// Load Our Interfaces.	
 
-	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
-	//	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
+	// g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
+	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
+	// g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
 
-	//	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
-	// g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
+	//g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
 	// Im not a paster lol. 
-
 	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
 
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));

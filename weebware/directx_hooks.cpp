@@ -106,8 +106,8 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 		g_weebware.menu_opened = !g_weebware.menu_opened;
 	}
 
-	if (g_weebware.menu_opened && ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam))
-		return true;
+	if (g_weebware.menu_opened)
+		ImGui_ImplDX9_WndProcHandler(hWnd, uMsg, wParam, lParam);
 
 	return CallWindowProc(g_weebware.old_window_proc, hWnd, uMsg, wParam, lParam);
 }
@@ -807,7 +807,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::Text("Weapon name");
 						// ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name, 32);
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
-							g_weebware.call_full_update = true;
+							static auto call_update = reinterpret_cast<void(*)()>(g_weebware.pattern_scan("engine.dll", "A1 ? ? ? ? B9 ? ? ? ? 56 FF 50 14 8B 34 85 ? ? ? ?"));
+							call_update();				
 						}
 
 						ImGui::EndChild();

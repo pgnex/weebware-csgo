@@ -118,38 +118,33 @@ void c_frame_stage_notify::run_skinchanger()
 			}
 
 		}
+		else {
 
 #pragma endregion
-		auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
+			auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
 
-		if (skin_config.m_paint_kit != 0)
-			*weapon->get_paint_kit() = skin_config.m_paint_kit;
+			if (skin_config.m_paint_kit != 0)
+				*weapon->get_paint_kit() = skin_config.m_paint_kit;
 
-		*weapon->get_fallbackseed() = skin_config.m_seed;
+			*weapon->get_fallbackseed() = skin_config.m_seed;
 
-		// Config Clamping.
-		if (skin_config.m_wear < FLT_MIN)
-			skin_config.m_wear = FLT_MIN;
+			// Config Clamping.
+			if (skin_config.m_wear < FLT_MIN)
+				skin_config.m_wear = FLT_MIN;
 
-		*weapon->get_fallbackwear() = skin_config.m_wear;
+			*weapon->get_fallbackwear() = skin_config.m_wear;
 
-		//std::string custom_name = skin_config.name;
-		//if (custom_name != "")
-		//	sprintf(weapon->get_custom_name(), custom_name.c_str());
+			//std::string custom_name = skin_config.name;
+			//if (custom_name != "")
+			//	sprintf(weapon->get_custom_name(), custom_name.c_str());
 
-		*weapon->get_accountid() = local_inf.xuid_low;
+			*weapon->get_accountid() = local_inf.xuid_low;
 
-		*weapon->get_original_owner_xuidhigh() = 0;
-		*weapon->get_original_owner_xuidlow() = 0;
+			*weapon->get_original_owner_xuidhigh() = 0;
+			*weapon->get_original_owner_xuidlow() = 0;
 
-		if (g_weebware.call_full_update) {
-
-			static auto call_update = reinterpret_cast<void(*)()>(g_weebware.pattern_scan("engine.dll", "A1 ? ? ? ? B9 ? ? ? ? 56 FF 50 14 8B 34 85 ? ? ? ?"));
-
-			call_update();
-
-			g_weebware.call_full_update = false;
 		}
+
 
 	}
 }
