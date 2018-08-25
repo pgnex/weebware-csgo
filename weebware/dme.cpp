@@ -9,8 +9,10 @@ void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_cla
 {
 	if (!ctx)
 		return;
-
-	g_dme.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+	try {
+		g_dme.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+	}
+	catch(...) {}
 }
 
 void init_key_vals(KeyValues* keyValues, char* name)

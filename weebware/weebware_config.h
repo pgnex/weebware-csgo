@@ -117,8 +117,8 @@ public:
 	bool visuals_name_esp = 0;
 	ImVec4 visuals_name_esp_col = ImVec4(255, 255, 255, 255);
 	ImVec4 visuals_name_esp_col_team = ImVec4(255, 255, 255, 255);
-
 	override_skin_style skin_wheel[100];
+	bool skinchanger_apply_nxt = 0;
 };
 
 extern c_weebwarecfg g_weebwarecfg;

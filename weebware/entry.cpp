@@ -74,6 +74,8 @@ bool c_weebware::init_interfaces()
 
 	g_mat_sys = reinterpret_cast<c_mat_system*>(mat_system_fact("VMaterialSystem080", NULL));
 
+	g_client_state = *reinterpret_cast<c_clientstate***>(getvfunc<std::uintptr_t>(g_engine, 12) + 0x10);
+
 	g_model_render = reinterpret_cast<c_model_render*>(engine_fact("VEngineModel016", NULL));
 
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;

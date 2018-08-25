@@ -23,7 +23,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 
 			if (g_create_move.local->is_valid_player())
 			{
-				__try
+				try
 				{
 					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 
@@ -41,7 +41,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 
 #pragma region Clamping
 				}
-				__except (EXCEPTION_EXECUTE_HANDLER)
+				catch (...)
 				{
 					printf("Exception Caught in Createmove\n");
 				}
@@ -79,7 +79,11 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd)
 			}
 			else
 			{
-				g_accuracy.clear_all_records();
+				try {
+					g_accuracy.clear_all_records();
+				}
+				catch (...) {}
+
 				g_Walkbot.m_target_area = nullptr;
 			}
 		}

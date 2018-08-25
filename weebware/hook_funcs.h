@@ -8,7 +8,7 @@ namespace hook_functions
 	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
-	void __stdcall frame_stage_notify(clientframestage_t curStage);
+	void frame_stage_notify(clientframestage_t curStage);
 	long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);

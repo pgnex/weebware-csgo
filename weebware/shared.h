@@ -37,6 +37,7 @@ public:
 	i_effects* g_effects;
 	c_mat_system* g_mat_sys;
 	c_model_render* g_model_render;
+	c_clientstate** g_client_state;
 
 	HWND h_window;
 	WNDPROC old_window_proc;

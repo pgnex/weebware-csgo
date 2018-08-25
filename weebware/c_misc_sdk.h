@@ -766,3 +766,13 @@ public:
 	virtual void computestaticlightingstate(int ncount, const c_unknownmat_class* pquery, c_unknownmat_class* pstate, c_unknownmat_class* pdecalstate, c_unknownmat_class** ppstaticlighting, c_unknownmat_class** ppenvcubemaptexture, void* pcolormeshhandles) = 0;
 	virtual void cleanupstaticlightingstate(int ncount, void* pcolormeshhandles) = 0;
 };
+
+class c_clientstate
+{
+public:
+	void force_update()
+	{
+		// delta tick
+		*reinterpret_cast<int*>(std::uintptr_t(this) + 0x174) = -1;
+	};
+};

@@ -186,11 +186,6 @@ long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* 
 	device->GetRenderState(D3DRS_DESTBLEND, &old_dest_blend);
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
 
-	__try {
-		//	g_esp.esp_main(device);
-	}
-	__except (EXCEPTION_EXECUTE_HANDLER) {}
-
 	imgui_main(device);
 
 	device->SetRenderState(D3DRS_ZENABLE, v_state);//Restore original depth buffer and set pixelshader or texture if target is really visible
@@ -557,15 +552,15 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
 								ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
-								
+
 								ImGui::Checkbox("Bounding box", &g_weebwarecfg.visuals_bounding_box, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col, g_weebwarecfg.visuals_bounding_team_col, g_weebwarecfg.visuals_teammates, "BoundingBox");
-								
+
 								ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
-								
+
 								ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col, g_weebwarecfg.visuals_name_esp_col_team, g_weebwarecfg.visuals_teammates, "NameESP");
-								
+
 								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "DormantDraw");
 
@@ -807,8 +802,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::Text("Weapon name");
 						// ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name, 32);
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
-							static auto call_update = reinterpret_cast<void(*)()>(g_weebware.pattern_scan("engine.dll", "A1 ? ? ? ? B9 ? ? ? ? 56 FF 50 14 8B 34 85 ? ? ? ?"));
-							call_update();				
+							g_weebwarecfg.skinchanger_apply_nxt = 1;
+
 						}
 
 						ImGui::EndChild();

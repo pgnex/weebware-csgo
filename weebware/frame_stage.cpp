@@ -5,18 +5,23 @@
 c_frame_stage_notify g_frame_stage_notify;
 
 #if 1
-void __stdcall hook_functions::frame_stage_notify(clientframestage_t curStage)
+void hook_functions::frame_stage_notify(clientframestage_t curStage)
 {
-	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	try {
+		g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
-		g_frame_stage_notify.run_skinchanger();
-	}
+		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
+			g_frame_stage_notify.run_skinchanger();
+		}
 
-	if (curStage == clientframestage_t::frame_render_start)
-	{
-		g_frame_stage_notify.pvs_fix();
+#if 0
+		if (curStage == clientframestage_t::frame_render_start)
+		{
+			g_frame_stage_notify.pvs_fix();
+		}
+#endif
 	}
+	catch (...) {}
 
 	g_hooking.o_fsn(curStage);
 }
@@ -66,7 +71,7 @@ void c_frame_stage_notify::run_skinchanger()
 
 		auto weapon_id = weapon->filtered_index();
 
-		if (weapon_id >= 100)
+		if (weapon_id >= 100 || weapon_id < 0)
 			continue;
 
 		*weapon->get_item_id_high() = -1;
@@ -143,6 +148,11 @@ void c_frame_stage_notify::run_skinchanger()
 			*weapon->get_original_owner_xuidhigh() = 0;
 			*weapon->get_original_owner_xuidlow() = 0;
 
+		}
+
+		if (g_weebwarecfg.skinchanger_apply_nxt) {
+			(*g_weebware.g_client_state)->force_update();
+			g_weebwarecfg.skinchanger_apply_nxt = 0;
 		}
 
 

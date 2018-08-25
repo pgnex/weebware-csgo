@@ -35,8 +35,9 @@ void __stdcall hk_unlock_cursor()
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
 	auto protecc = VEH_PAINT->getProtectionObject();
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::paint_traverse(v, f, a);
+	}
 	else
 		g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 }
@@ -45,8 +46,9 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
 	auto protecc = VEH_CM->getProtectionObject();
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		return hook_functions::clientmode_cm(input_sample_time, cmd);
+	}
 	else
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
 }
@@ -69,8 +71,9 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 {
 	auto protecc = VEH_DME->getProtectionObject();
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+	}
 	else
 		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 }
@@ -130,117 +133,121 @@ namespace knife_changer {
 	{
 		c_rec_proxy_data* pData = const_cast<c_rec_proxy_data*>(pDataConst);
 
-		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
-		{
-			auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+		try {
+			if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+			{
+				auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-			if (local) {
+				if (local) {
 
-				auto weapon = local->m_pActiveWeapon();
+					auto weapon = local->m_pActiveWeapon();
 
-				if (weapon && local->m_pActiveWeapon()->is_knife()) {
+					if (weapon && local->m_pActiveWeapon()->is_knife()) {
 
-					int current_seq = pData->m_Value.m_Int;
+						int current_seq = pData->m_Value.m_Int;
 
-					if (g_weebwarecfg.selected_knife.weapon_index == 515) {
+						if (g_weebwarecfg.selected_knife.weapon_index == 515) {
 
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_DRAW:
-							current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, SEQUENCE_BUTTERFLY_LOOKAT03);
-						default:
-							current_seq++;
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_DRAW:
+								current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, SEQUENCE_BUTTERFLY_LOOKAT03);
+							default:
+								current_seq++;
+							}
+
+						}
+						if (g_weebwarecfg.selected_knife.weapon_index == 512) {
+
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_IDLE2:
+								current_seq = SEQUENCE_FALCHION_IDLE1;
+							case SEQUENCE_DEFAULT_HEAVY_MISS1:
+								current_seq = random_sequence(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq = random_sequence(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
+							case SEQUENCE_DEFAULT_DRAW:
+							case SEQUENCE_DEFAULT_IDLE1:
+								current_seq = current_seq;
+							default:
+								current_seq--;
+							}
+						}
+						if (g_weebwarecfg.selected_knife.weapon_index == 516) {
+
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_IDLE2:
+								current_seq = SEQUENCE_DAGGERS_IDLE1;
+							case SEQUENCE_DEFAULT_LIGHT_MISS1:
+							case SEQUENCE_DEFAULT_LIGHT_MISS2:
+								current_seq = random_sequence(SEQUENCE_DAGGERS_LIGHT_MISS1, SEQUENCE_DAGGERS_LIGHT_MISS5);
+							case SEQUENCE_DEFAULT_HEAVY_MISS1:
+								current_seq = random_sequence(SEQUENCE_DAGGERS_HEAVY_MISS2, SEQUENCE_DAGGERS_HEAVY_MISS1);
+							case SEQUENCE_DEFAULT_HEAVY_HIT1:
+							case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq += 3;
+							case SEQUENCE_DEFAULT_DRAW:
+							case SEQUENCE_DEFAULT_IDLE1:
+								current_seq = current_seq;
+							default:
+								current_seq += 2;
+							}
+
+						}
+						if (g_weebwarecfg.selected_knife.weapon_index == 514) {
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_DRAW:
+							case SEQUENCE_DEFAULT_IDLE1:
+								current_seq = current_seq;
+							case SEQUENCE_DEFAULT_IDLE2:
+								current_seq = SEQUENCE_BOWIE_IDLE1;
+							default:
+								current_seq--;
+							}
+						}
+						if (g_weebwarecfg.selected_knife.weapon_index == 519) {
+
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_DRAW:
+								current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
+							default:
+								current_seq++;
+							}
+
+						}
+						if (g_weebwarecfg.selected_knife.weapon_index == 522) {
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq = random_sequence(12, 13);
+							}
 						}
 
-					}
-					if (g_weebwarecfg.selected_knife.weapon_index == 512) {
-
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_IDLE2:
-							current_seq = SEQUENCE_FALCHION_IDLE1;
-						case SEQUENCE_DEFAULT_HEAVY_MISS1:
-							current_seq = random_sequence(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq = random_sequence(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
-						case SEQUENCE_DEFAULT_DRAW:
-						case SEQUENCE_DEFAULT_IDLE1:
-							current_seq = current_seq;
-						default:
-							current_seq--;
-						}
-					}
-					if (g_weebwarecfg.selected_knife.weapon_index == 516) {
-
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_IDLE2:
-							current_seq = SEQUENCE_DAGGERS_IDLE1;
-						case SEQUENCE_DEFAULT_LIGHT_MISS1:
-						case SEQUENCE_DEFAULT_LIGHT_MISS2:
-							current_seq = random_sequence(SEQUENCE_DAGGERS_LIGHT_MISS1, SEQUENCE_DAGGERS_LIGHT_MISS5);
-						case SEQUENCE_DEFAULT_HEAVY_MISS1:
-							current_seq = random_sequence(SEQUENCE_DAGGERS_HEAVY_MISS2, SEQUENCE_DAGGERS_HEAVY_MISS1);
-						case SEQUENCE_DEFAULT_HEAVY_HIT1:
-						case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq += 3;
-						case SEQUENCE_DEFAULT_DRAW:
-						case SEQUENCE_DEFAULT_IDLE1:
-							current_seq = current_seq;
-						default:
-							current_seq += 2;
+						if (g_weebwarecfg.selected_knife.weapon_index == 523) {
+							switch (current_seq)
+							{
+							case SEQUENCE_DEFAULT_LOOKAT01:
+								current_seq = random_sequence(14, 15);
+							}
 						}
 
-					}
-					if (g_weebwarecfg.selected_knife.weapon_index == 514) {
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_DRAW:
-						case SEQUENCE_DEFAULT_IDLE1:
-							current_seq = current_seq;
-						case SEQUENCE_DEFAULT_IDLE2:
-							current_seq = SEQUENCE_BOWIE_IDLE1;
-						default:
-							current_seq--;
-						}
-					}
-					if (g_weebwarecfg.selected_knife.weapon_index == 519) {
-
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_DRAW:
-							current_seq = random_sequence(SEQUENCE_BUTTERFLY_DRAW, SEQUENCE_BUTTERFLY_DRAW2);
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq = random_sequence(SEQUENCE_BUTTERFLY_LOOKAT01, 14);
-						default:
-							current_seq++;
-						}
+						pData->m_Value.m_Int = current_seq;
 
 					}
-					if (g_weebwarecfg.selected_knife.weapon_index == 522) {
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq = random_sequence(12, 13);
-						}
-					}
-
-					if (g_weebwarecfg.selected_knife.weapon_index == 523) {
-						switch (current_seq)
-						{
-						case SEQUENCE_DEFAULT_LOOKAT01:
-							current_seq = random_sequence(14, 15);
-						}
-					}
-
-					pData->m_Value.m_Int = current_seq;
-
 				}
 			}
 		}
+		catch (...) {}
+
 
 		original_sequence(pData, pStruct, pOut);
 	}
@@ -248,7 +255,6 @@ namespace knife_changer {
 
 	void apply_proxyhooks()
 	{
-
 		for (client_class* p_class = g_weebware.g_client->get_all_classes(); p_class; p_class = p_class->m_pNext)
 		{
 			auto class_name = p_class->m_precvtable->m_pNetTableName;
@@ -273,6 +279,7 @@ namespace knife_changer {
 				break;
 			}
 		}
+
 	}
 
 	void remove_proxyhooks()
