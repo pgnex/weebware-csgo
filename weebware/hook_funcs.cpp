@@ -34,7 +34,8 @@ void __stdcall hk_unlock_cursor()
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
-	auto protecc = VEH_PAINT->getProtectionObject();
+	auto protecc = VEH_PAINT->getProtectionObject()
+		;
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::paint_traverse(v, f, a);
 	}
@@ -47,7 +48,18 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 	auto protecc = VEH_CM->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-		return hook_functions::clientmode_cm(input_sample_time, cmd);
+
+		bool send_packet = 1;
+
+		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, send_packet);
+
+		if (cmd && cmd->command_number)
+		{
+			uintptr_t* fp;
+			__asm mov fp, ebp;
+			*(bool*)(*fp - 0x1C) = send_packet;
+		}
+		return retv;
 	}
 	else
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
@@ -138,7 +150,7 @@ namespace knife_changer {
 			{
 				auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-				if (local) {
+				if (local->is_valid_player()) {
 
 					auto weapon = local->m_pActiveWeapon();
 

@@ -542,10 +542,7 @@ bool c_legitbot::c_accuracy_boost::is_valid_record(c_accuracy_records record)
 
 void c_legitbot::c_accuracy_boost::clear_all_records()
 {
-	for (size_t i = 0; i < accuracy_records.size(); i++)
-	{
-		accuracy_records.erase(accuracy_records.begin() + i);
-	}
+	accuracy_records.clear();
 }
 
 void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)

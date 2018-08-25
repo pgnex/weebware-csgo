@@ -65,6 +65,8 @@ public:
 	int get_config_index();
 
 	void auto_stop(c_usercmd* cmd);
+
+
 private:
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
 	c_base_entity * closest_target_available();
@@ -75,6 +77,7 @@ private:
 	long get_epoch();
 	double m_last_time = 0;
 	bool next_attack_queued();
+
 };
 
 extern c_legitbot g_legitbot;

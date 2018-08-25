@@ -155,7 +155,7 @@ public:
 	Vector get_bone(int i)
 	{
 		matrix3x4 bone_matrix[128];
-		if (this->setupbones(bone_matrix, 128, 0xFF, (float)GetTickCount64()))
+		if (this->setupbones(bone_matrix, 128, 0x0007FF00, 0.0f))
 		{
 			return Vector(bone_matrix[i][0][3], bone_matrix[i][1][3], bone_matrix[i][2][3]);
 		}
@@ -483,7 +483,6 @@ public:
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
 		auto index = get_value<short>(offset);
-
 
 		if (index == 42 || index == 59 || index == 41
 			|| index == 500 || index == 505 || index == 506

@@ -48,7 +48,6 @@ bool c_weebware::init_interfaces()
 	// g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
 
 	//g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
-	// Im not a paster lol. 
 	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
 
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
@@ -98,7 +97,7 @@ bool c_weebware::init_interfaces()
 	netvar_manager::_instance()->create_database();
 
 	// Load fonts.
-	g_draw.GetDevice(g_direct_x);
+	// g_draw.GetDevice(g_direct_x);
 
 	init_fonts();
 
@@ -127,10 +126,12 @@ void c_weebware::init_fonts()
 {
 	tahoma_font = g_weebware.g_surface->create_font();
 	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
+#if 0
 	g_draw.AddFont("Verdana", 12, true, false);
 	g_draw.AddFont("Verdana", 11, true, false);
 	g_draw.AddFont("Verdana", 18, true, false);
 	g_draw.AddFont("Verdana", 17, true, false);
+#endif
 }
 
 void c_weebware::setup_thread()

@@ -4,7 +4,7 @@
 #define HOOKFUNCS
 namespace hook_functions
 {
-	bool clientmode_cm(float input_sample_time, c_usercmd* cmd);
+	bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket);
 	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);

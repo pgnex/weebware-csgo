@@ -52,18 +52,21 @@ void c_frame_stage_notify::run_skinchanger()
 	if (!g_weebwarecfg.skinchanger_enabled)
 		return;
 
-	if (!g_frame_stage_notify.local)
-		return;
+	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	player_info local_inf;
 
-	g_weebware.g_engine->GetPlayerInfo(g_weebware.g_engine->get_local(), &local_inf);
+	if (!g_weebware.g_engine->GetPlayerInfo(g_weebware.g_engine->get_local(), &local_inf))
+		return;
 
 	auto weapons = g_frame_stage_notify.local->get_weapons();
 	// Skin Changer
 
 	for (size_t i = 0; weapons[i] != 0xFFFFFFFF; i++)
 	{
+		if (weapons[i] == 0xFFFFFFFF)
+			break;
+
 		auto weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(reinterpret_cast<HANDLE>(weapons[i])));
 
 		if (!weapon)
@@ -71,8 +74,16 @@ void c_frame_stage_notify::run_skinchanger()
 
 		auto weapon_id = weapon->filtered_index();
 
-		if (weapon_id >= 100 || weapon_id < 0)
+		if (weapon_id > 99 || weapon_id < 0)
 			continue;
+
+		if (weapon_id > 99)
+			weapon_id = 99;
+
+
+		if (weapon_id <= 0)
+			weapon_id = 0;
+
 
 		*weapon->get_item_id_high() = -1;
 

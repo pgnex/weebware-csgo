@@ -637,7 +637,12 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								// This is still currently a Work in Progess.
 								ImGui::SliderFloat("Legitness", &g_weebwarecfg.misc_cfg.misc_ai_legitfactor, 0, 100, "%.0f%%");
 #endif
+								ImGui::Text("Legit Anti-Aim");
+								ImGui::Separator();
 
+								ImGui::Checkbox("Enabed##LegitAA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+								ImGui::Separator();
 							}
 							ImGui::EndChild();
 
