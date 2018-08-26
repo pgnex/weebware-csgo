@@ -165,35 +165,45 @@ bool can_shoot(c_base_entity* local)
 	return true;
 }
 
-c_base_entity* get_closest_target_available(c_base_entity* local)
+c_base_entity* get_best_target(c_base_entity * local)
 {
-	float best_dst = 999999;
+	float best_fov = 360.f;
 
-	c_base_entity * best_entity = nullptr;
+	c_base_entity* best_entity = nullptr;
 
-	for (int i = 1; i <= 99; i++)
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
-		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
+		c_base_entity* cur_entity = (c_base_entity*)g_weebware.g_entlist->getcliententity(i);
 
-		if (!cur_entity->is_valid_player())
+		if (!cur_entity)
+			continue;
+
+		if (!cur_entity->m_iHealth() > 0)
 			continue;
 
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
 			continue;
 
-		Vector pos = *cur_entity->m_Origin();
+			Vector center_head = cur_entity->get_bone(8);
 
-		auto local_pos = *local->m_Origin();
+			QAngle angle_to_head;
 
-		float distance = fabsf(pos.size() - local_pos.size());
+			g_maths.vector_qangles(center_head - local->get_vec_eyepos(), angle_to_head);
 
-		if (distance < best_dst)
-		{
-			best_entity = cur_entity;
-			best_dst = distance;
-		}
+			QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+
+			g_weebware.g_engine->get_view_angles(view_angles);
+
+			view_angles += local->m_aimPunchAngle() * 2.f;
+
+			float this_fov = g_maths.get_fov(view_angles, angle_to_head);
+
+			if (this_fov < best_fov)
+			{
+				best_entity = cur_entity;
+				best_fov = this_fov;
+			}
 	}
-
 	return best_entity;
 }
 
@@ -203,16 +213,24 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
+	if (local->m_pActiveWeapon()->is_grenade())
+		return;
+
+	if (local->GetMoveType() == MOVETYPE_LADDER)
+		return;
+
 	if (!(cmd->buttons & in_attack) && !send_packets) {
 
-		auto target = get_closest_target_available(this->local);
+	//	auto target = get_closest_target_available(this->local);
+
+		c_base_entity* target = get_best_target(this->local);
 
 		QAngle OriginalAngle = cmd->viewangles;
 
 		QAngle angle2Target = cmd->viewangles;
 
 		bool shouldflip = 0;
-
+		
 		if (target) {
 
 			auto hitbox = *target->m_Origin();

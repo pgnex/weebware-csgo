@@ -129,6 +129,25 @@ enum csgohitboxid : int
 	max
 };
 
+enum MoveType
+{
+	MOVETYPE_NONE = 0,
+	MOVETYPE_ISOMETRIC,
+	MOVETYPE_WALK,
+	MOVETYPE_STEP,
+	MOVETYPE_FLY,
+	MOVETYPE_FLYGRAVITY,
+	MOVETYPE_VPHYSICS,
+	MOVETYPE_PUSH,
+	MOVETYPE_NOCLIP,
+	MOVETYPE_LADDER,
+	MOVETYPE_OBSERVER,
+	MOVETYPE_CUSTOM,
+	MOVETYPE_LAST = MOVETYPE_CUSTOM,
+	MOVETYPE_MAX_BITS = 4,
+	MAX_MOVETYPE
+};
+
 class c_basecombat_weapon;
 
 class c_base_entity : public i_client_unknown, public iclientrenderable, public c_clientnetworkable
@@ -173,6 +192,10 @@ public:
 	Vector get_vec_eyepos()
 	{
 		return (*this->m_Origin() + this->m_vecViewOffset());
+	}
+
+	int GetMoveType() {
+		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x258);
 	}
 
 	bool is_valid_player()
