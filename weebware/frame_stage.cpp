@@ -59,6 +59,9 @@ void c_frame_stage_notify::run_skinchanger()
 	if (!g_frame_stage_notify.local)
 		return;
 
+	if (g_frame_stage_notify.local->m_iHealth() <= 0)
+		return;
+
 	player_info local_inf;
 
 	if (!g_weebware.g_engine->GetPlayerInfo(g_weebware.g_engine->get_local(), &local_inf))
@@ -78,6 +81,7 @@ void c_frame_stage_notify::run_skinchanger()
 			continue;
 
 		int weapon_id = convert_index_id(weapon->filtered_index());
+
 
 		if (weapon_id > 34 || weapon_id < 0)
 			continue;
