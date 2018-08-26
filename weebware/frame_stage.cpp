@@ -3,6 +3,7 @@
 #include "shared.h"
 
 c_frame_stage_notify g_frame_stage_notify;
+int convert_index_id(int index);
 
 #if 1
 void hook_functions::frame_stage_notify(clientframestage_t curStage)
@@ -24,6 +25,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 	catch (...) {}
 
 	g_hooking.o_fsn(curStage);
+	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
 }
 #endif
 
@@ -54,6 +56,9 @@ void c_frame_stage_notify::run_skinchanger()
 
 	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+	if (!g_frame_stage_notify.local)
+		return;
+
 	player_info local_inf;
 
 	if (!g_weebware.g_engine->GetPlayerInfo(g_weebware.g_engine->get_local(), &local_inf))
@@ -72,24 +77,20 @@ void c_frame_stage_notify::run_skinchanger()
 		if (!weapon)
 			continue;
 
-		auto weapon_id = weapon->filtered_index();
+		int weapon_id = convert_index_id(weapon->filtered_index());
 
-		if (weapon_id > 99 || weapon_id < 0)
+		if (weapon_id > 34 || weapon_id < 0)
 			continue;
-
-		if (weapon_id > 99)
-			weapon_id = 99;
-
-
-		if (weapon_id <= 0)
-			weapon_id = 0;
 
 
 		*weapon->get_item_id_high() = -1;
 
-		if (weapon->is_knife() && weapon_id == 69) {
+		if (weapon_id == 0 && weapon->is_knife()) {
 
 			auto vm_handle = local->get_viewmodel_handle();
+
+			if (!vm_handle)
+				continue;
 
 			auto viewmodel = reinterpret_cast<c_viewmodel*>(g_weebware.g_entlist->getcliententityfromhandle(vm_handle));
 
@@ -98,7 +99,9 @@ void c_frame_stage_notify::run_skinchanger()
 
 			auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
 
-			auto knife_cfg = g_weebwarecfg.selected_knife;
+
+			c_skinchanger::knife_type knife_cfg = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]];
+
 #pragma region knifechanger
 			if (knife_cfg.weapon_index != 0) {
 
@@ -106,7 +109,7 @@ void c_frame_stage_notify::run_skinchanger()
 
 				*weapon->m_nModelIndex() = model_index;
 
-				if (viewmodel_weapon == weapon) {
+				if (viewmodel_weapon && viewmodel_weapon == weapon) {
 
 					*viewmodel->m_nModelIndex() = model_index;
 
@@ -116,7 +119,7 @@ void c_frame_stage_notify::run_skinchanger()
 						*worldmodel_weapon->m_nModelIndex() = model_index + 1;
 				}
 
-				auto skin_config = g_weebwarecfg.skin_wheel[69];
+				auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
 
 				if (skin_config.m_paint_kit != 0)
 					*weapon->get_paint_kit() = skin_config.m_paint_kit;
@@ -131,18 +134,20 @@ void c_frame_stage_notify::run_skinchanger()
 				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 				*weapon->get_original_owner_xuidhigh() = 0;
 				*weapon->get_original_owner_xuidlow() = 0;
+
 			}
 
 		}
 		else {
 
 #pragma endregion
-			auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
+			auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
 
 			if (skin_config.m_paint_kit != 0)
 				*weapon->get_paint_kit() = skin_config.m_paint_kit;
 
-			*weapon->get_fallbackseed() = skin_config.m_seed;
+			if (skin_config.m_seed != 0)
+				*weapon->get_fallbackseed() = skin_config.m_seed;
 
 			// Config Clamping.
 			if (skin_config.m_wear < FLT_MIN)
@@ -150,9 +155,6 @@ void c_frame_stage_notify::run_skinchanger()
 
 			*weapon->get_fallbackwear() = skin_config.m_wear;
 
-			//std::string custom_name = skin_config.name;
-			//if (custom_name != "")
-			//	sprintf(weapon->get_custom_name(), custom_name.c_str());
 
 			*weapon->get_accountid() = local_inf.xuid_low;
 
@@ -170,63 +172,44 @@ void c_frame_stage_notify::run_skinchanger()
 	}
 }
 
-/*
-Dump by Kite
-
-csgo/scripts/items/items_game.txt
-
-"522"
+int convert_index_id(int index)
 {
-"name"		"weapon_knife_stiletto"
-"prefab"		"melee_unusual"
-"item_name"		"#SFUI_WPNHUD_knife_stiletto"
-"item_description"		"#CSGO_Item_Desc_knife_stiletto"
-"image_inventory"		"econ/weapons/base_weapons/weapon_knife_stiletto"
-"icon_default_image"		"materials/icons/inventory_icon_weapon_knife_stiletto.vtf"
-"model_player"		"models/weapons/v_knife_stiletto.mdl"
-"model_world"		"models/weapons/w_knife_stiletto.mdl"
-"model_dropped"		"models/weapons/w_knife_stiletto_dropped.mdl"
+	switch (index) {
+	case  69:			return	0;
+	case  4:			return	1;
+	case  36:			return	2;
+	case  1:			return	3;
+	case  30:			return	4;
+	case  63:			return	5;
+	case  64:			return	6;
+	case  32:			return	7;
+	case  61:			return	8;
+	case  2:			return	9;
+	case  3:			return	10;
+	case  29:			return	11;
+	case  25:			return	12;
+	case  27:			return	13;
+	case  35:			return	14;
+	case  17:			return	15;
+	case  33:			return	16;
+	case  24:			return	17;
+	case  26:			return	18;
+	case  19:			return	19;
+	case  34:			return	20;
+	case  23:			return	21;
+	case  13:			return	22;
+	case  7:			return	23;
+	case  39:			return	24;
+	case  10:			return	25;
+	case  16:			return	26;
+	case  60:			return	27;
+	case  8:			return	28;
+	case  9:			return	29;
+	case  38:			return	30;
+	case  40:			return	31;
+	case  11:			return	32;
+	case  14:			return	33;
+	case  28:			return	34;
+	default: return 0;
+	}
 }
-
-
-
-"519"
-{
-"name"		"weapon_knife_ursus"
-"prefab"		"melee_unusual"
-"item_name"		"#SFUI_WPNHUD_knife_ursus"
-"item_description"		"#CSGO_Item_Desc_knife_ursus"
-"image_inventory"		"econ/weapons/base_weapons/weapon_knife_ursus"
-"icon_default_image"		"materials/icons/inventory_icon_weapon_knife_ursus.vtf"
-"model_player"		"models/weapons/v_knife_ursus.mdl"
-"model_world"		"models/weapons/w_knife_ursus.mdl"
-"model_dropped"		"models/weapons/w_knife_ursus_dropped.mdl"
-
-
-"523"
-{
-"name"		"weapon_knife_widowmaker"
-"prefab"		"melee_unusual"
-"item_name"		"#SFUI_WPNHUD_knife_widowmaker"
-"item_description"		"#CSGO_Item_Desc_knife_widowmaker"
-"image_inventory"		"econ/weapons/base_weapons/weapon_knife_widowmaker"
-"icon_default_image"		"materials/icons/inventory_icon_weapon_knife_widowmaker.vtf"
-"model_player"		"models/weapons/v_knife_widowmaker.mdl"
-"model_world"		"models/weapons/w_knife_widowmaker.mdl"
-"model_dropped"		"models/weapons/w_knife_widowmaker_dropped.mdl"
-
-
-"520"
-{
-"name"		"weapon_knife_gypsy_jackknife"
-"prefab"		"melee_unusual"
-"item_name"		"#SFUI_WPNHUD_knife_gypsy_jackknife"
-"item_description"		"#CSGO_Item_Desc_knife_gypsy_jackknife"
-"image_inventory"		"econ/weapons/base_weapons/weapon_knife_gypsy_jackknife"
-"icon_default_image"		"materials/icons/inventory_icon_weapon_knife_gypsy_jackknife.vtf"
-"model_player"		"models/weapons/v_knife_gypsy_jackknife.mdl"
-"model_world"		"models/weapons/w_knife_gypsy_jackknife.mdl"
-"model_dropped"		"models/weapons/w_knife_gypsy_jackknife_dropped.mdl"
-
-*/
-

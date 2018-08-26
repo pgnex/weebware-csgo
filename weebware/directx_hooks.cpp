@@ -161,9 +161,9 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 		device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
 		device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
 	}
-
-
 	return g_hooking.o_endscene(device);
+
+//	return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 }
 
 long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
@@ -200,11 +200,8 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
-	g_esp.esp_reset();
-
-	auto hr = g_hooking.o_reset(device, presentation_param);
-
-	printf("Reset\n");
+	// auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
+	 auto hr = g_hooking.o_reset(device, presentation_param);
 
 	ImGui_ImplDX9_CreateDeviceObjects();
 
@@ -343,6 +340,7 @@ std::vector<c_skinchanger::gun_type> filtered_guns()
 	return filtered_guns;
 }
 
+int convert_index_id(int index);
 
 std::vector<c_skinchanger::skin_type> filtered_skins()
 {
@@ -376,6 +374,8 @@ std::vector<c_skinchanger::skin_type> filtered_skins()
 
 	return filtered_skins;
 }
+
+int convert_index_id(int index);
 
 void imgui_main(IDirect3DDevice9* pDevice)
 {
@@ -679,9 +679,11 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::BeginChild("Existing Configs", ImVec2(0, 355), false);
 								for (auto cfg : g_config_list.config_names)
 								{
-									if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_load_name == cfg.c_str()))
-									{
-										g_config_list.cur_load_name = cfg.c_str();
+									if (!strstr(cfg.c_str(), "weebwareskins")) {
+										if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_load_name == cfg.c_str()))
+										{
+											g_config_list.cur_load_name = cfg.c_str();
+										}
 									}
 								}
 								ImGui::EndChild();
@@ -752,9 +754,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						// Enumerate skins at start of game and filter them out b4 drawing
 						for (auto gun_part : gun_list)
 						{
-							if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.skinchanger_selected_gun == gun_part.id))
+							if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
 							{
-								g_weebwarecfg.skinchanger_selected_gun = gun_part.id;
+								g_weebwarecfg.skinchanger_selected_gun = convert_index_id(gun_part.id);
+								g_weebwarecfg.selected_gun_index = gun_part.id;
 							}
 						}
 						ImGui::EndChild();
@@ -763,14 +766,21 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::BeginChild("Existing Knives", ImVec2(0, 250), false);
 						// Enumerate skins at start of game and filter them out b4 drawing
 
-						for (auto knife_part : g_weebware.g_knife_list)
-						{
-							if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife.weapon_index == knife_part.weapon_index))
+						try {
+							int loopi = 0;
+
+							for (auto knife_part : g_weebware.g_knife_list)
 							{
-								printf("Selection made\n");
-								g_weebwarecfg.selected_knife = knife_part;
+								if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife_index[0] == knife_part.weapon_index))
+								{
+									g_weebwarecfg.selected_knife_index[0] = knife_part.weapon_index;
+									g_weebwarecfg.selected_knife_index[1] = loopi;
+								}
+								++loopi;
 							}
 						}
+						catch (...) {}
+
 						ImGui::EndChild();
 
 						ImGui::EndChild();
@@ -792,9 +802,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						for (auto skin_part : skin_list)
 						{
 							std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
-							if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
+							if (ImGui::Selectable(name.c_str(), g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
 							{
-								g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
+								g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
 							}
 						}
 						ImGui::EndChild();
@@ -802,10 +812,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 						ImGui::Text("Settings");
 						ImGui::Separator();
-						ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
-						ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
-						ImGui::Text("Weapon name");
-						// ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].name, 32);
+						ImGui::InputInt("Seed", &g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
+						ImGui::InputFloat("Wear", &g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
+						// ImGui::Text("Weapon name");
+						// ImGui::InputText("##Gun Name", g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun]., 32);
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
 							g_weebwarecfg.skinchanger_apply_nxt = 1;
 

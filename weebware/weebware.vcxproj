@@ -74,12 +74,16 @@
     <IncludePath>C:\programmingbinarys\binarys;C:\programmingbinarys\curl-master;$(IncludePath)</IncludePath>
     <LibraryPath>E:\weebware\weebware\weebware\curl;C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -103,6 +107,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -145,12 +150,14 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_custom.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp" />
     <ClCompile Include="weebware_config.cpp" />
     <ClCompile Include="Legit.cpp" />
     <ClCompile Include="maths.cpp" />
@@ -199,6 +206,8 @@
     <ClInclude Include="key_values.h" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\ADetour.hpp" />
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\x86Detour.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Enums.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp" />

@@ -15,3 +15,12 @@
 *.json
 *.sqlite
 weebware/PolyHook2/PolyHook_2_0/
+*.tlog
+*.tlog
+*.tlog
+*.obj
+*.obj
+weebware/Debug/create_move.obj
+*.obj
+*.obj
+weebware/Debug/drawing.obj

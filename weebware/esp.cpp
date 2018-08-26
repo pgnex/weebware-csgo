@@ -88,7 +88,7 @@ void c_esp::esp_main()
 					// So c4 is still going!
 					if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
 
-						int offset_y = 10;
+						int offset_y = 30;
 
 						if (g_weebwarecfg.visuals_watermark) {
 							offset_y += 35.f;
@@ -133,6 +133,7 @@ void c_esp::esp_main()
 
 #pragma region players
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
+
 
 					continue;
 				}

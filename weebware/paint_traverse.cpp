@@ -8,6 +8,7 @@ c_paint_traverse g_paint_traverse;
 
 void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 {
+	// PLH::FnCast(g_hooking.paint_tramp, g_hooking.o_painttraverse)(g_weebware.g_panel, v, f, a);
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
 	try {

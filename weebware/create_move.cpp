@@ -12,6 +12,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	if (cmd->command_number == 0)
 	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
+		// return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
 	}
 
 	if (cmd && cmd->command_number)

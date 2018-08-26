@@ -189,6 +189,12 @@
     <ClCompile Include="imgui\imgui_impl_win32.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -376,6 +382,12 @@
     </ClInclude>
     <ClInclude Include="skindefs.h">
       <Filter>Source Files\hooking\Frame Stage Notify</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\x86Detour.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
+    </ClInclude>
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\ADetour.hpp">
+      <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,10 @@
 #pragma once
+#include "PolyHook2/PolyHook_2_0/headers/IHook.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Misc.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Exceptions/BreakPointHook.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
 
 #ifndef HOOKFUNCS
 #define HOOKFUNCS
@@ -16,7 +22,37 @@ namespace hook_functions
 
 class c_hooking
 {
+public:
+#if 0
+	uint64_t paint_tramp = NULL;
+	uint64_t lock_tramp = NULL;
+	uint64_t cm_tramp = NULL;
+	uint64_t reset_tramp = NULL;
+	uint64_t endscene_tramp = NULL;
+	uint64_t dme_tramp = NULL;
+	uint64_t fsn_tramp = NULL;
+
+	PLH::x86Detour* DETOUR_PAINT;
+	PLH::x86Detour* DETOUR_CM;
+	PLH::x86Detour* DETOUR_RESET;
+	PLH::x86Detour* DETOUR_FSN;
+	PLH::x86Detour* DETOUR_PRESENT;
+	PLH::x86Detour* DETOUR_ENDSCENE;
+	PLH::x86Detour* DETOUR_DME;
+	PLH::x86Detour* DETOUR_CURSORLOCK;
+#else
+	PLH::BreakPointHook* VEH_PAINT;
+	PLH::BreakPointHook* VEH_CM;
+	PLH::BreakPointHook* VEH_RESET;
+	PLH::BreakPointHook* VEH_FSN;
+	PLH::BreakPointHook* VEH_PRESENT;
+	PLH::BreakPointHook* VEH_ENDSCENE;
+	PLH::BreakPointHook* VEH_DME;
+	PLH::BreakPointHook* VEH_CURSORLOCK;
+#endif
+
 private:
+
 	LPVOID m_original_area;
 	int index = 0;
 	template<typename t>

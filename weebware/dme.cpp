@@ -152,8 +152,8 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			else {
 				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
 			}
-
 			g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+			// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}
 	}
 

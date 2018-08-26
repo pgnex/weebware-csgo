@@ -51,7 +51,7 @@ public:
 	bool triggerbot_stomach;
 	float triggerbot_hitchance;
 };
-	
+
 class override_skin_style
 {
 public:
@@ -59,12 +59,27 @@ public:
 	int m_paint_kit = 0;
 	float m_wear = FLT_MIN;
 	int m_seed = 69;
-//	char* name;
+};
+
+class c_weebwareskins_save
+{
+public:
+	override_skin_style first[10];
+	override_skin_style second[10];
+	override_skin_style third[10];
+	override_skin_style fourth[5];
+};
+
+class c_weebwareskinscfg
+{
+public:
+	override_skin_style skin_wheel[35];
 };
 
 class c_weebwarecfg
 {
 public:
+
 	int legit_cfg_index;
 	c_legit_cfg legit_cfg[8];
 
@@ -106,24 +121,23 @@ public:
 
 	bool skinchanger_enabled = false;
 
-
 	int skinchanger_selected_gun = 0;
-	c_skinchanger::knife_type selected_knife;
-
-	// Global vars for animation fixes.
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
 
 	bool visuals_name_esp = 0;
 	ImVec4 visuals_name_esp_col = ImVec4(255, 255, 255, 255);
 	ImVec4 visuals_name_esp_col_team = ImVec4(255, 255, 255, 255);
-	override_skin_style skin_wheel[100];
 	bool skinchanger_apply_nxt = 0;
 
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
+	// 0, menu index , 1 config index
+	int selected_knife_index[2] = { 0 };
+	int selected_gun_index = 0;
 };
 
+extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
 extern c_weebwarecfg g_weebwarecfg;
-
+extern c_weebwareskinscfg g_weebwareskinscfg;
 #endif
