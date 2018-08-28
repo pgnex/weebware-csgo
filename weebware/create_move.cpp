@@ -12,7 +12,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	if (cmd->command_number == 0)
 	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-		// return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+		 // return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
 	}
 
 	if (cmd && cmd->command_number)
@@ -23,7 +23,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		{
 			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-			if (g_create_move.local->is_valid_player())
+			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
 			{
 				try
 				{
@@ -36,7 +36,23 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 					g_legitbot.create_move(cmd);
 
-					g_accuracy.accuracy_boost(cmd);
+					// Updating game while doing skin changer will cause crashes!!!
+					if (g_weebwarecfg.skinchanger_apply_nxt) {
+
+						g_accuracy.clear_all_records();
+
+						if (*g_weebware.g_client_state)
+							(*g_weebware.g_client_state)->force_update();
+
+						g_accuracy.clear_all_records();
+
+						g_weebwarecfg.skinchanger_apply_nxt = 0;
+					}
+					else {
+						 g_accuracy.accuracy_boost(cmd);
+
+					}
+
 #pragma endregion
 
 					g_ai.create_move(cmd, g_create_move.local);
@@ -80,13 +96,14 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 			}
 			else
 			{
-				try {
-					g_accuracy.clear_all_records();
-				}
-				catch (...) {}
-
+				g_accuracy.clear_all_records();
 				g_Walkbot.m_target_area = nullptr;
 			}
+		}
+		else
+		{
+			g_accuracy.clear_all_records();
+			g_Walkbot.m_target_area = nullptr;
 		}
 
 	}
@@ -108,7 +125,6 @@ void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
 
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
-
 	if (!g_weebwarecfg.enable_misc)
 		return;
 

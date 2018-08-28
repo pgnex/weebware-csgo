@@ -426,27 +426,34 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 	c_accuracy_records cur_record;
 	// I guess we can store everything, not going to hurt.
 	cur_record.player = entity;
-	cur_record.m_angles = entity->GetAbsAngles();
+	// cur_record.m_angles = entity->GetAbsAngles();
 	cur_record.m_cycle = *entity->m_flCycle();
 	cur_record.m_max = *entity->m_vecMaxs();
 	cur_record.m_mins = *entity->m_vecMins();
-	cur_record.m_abs_origin = entity->get_abs_origins();
+	// cur_record.m_abs_origin = entity->get_abs_origins();
 	cur_record.m_origin = *entity->m_Origin();
 	cur_record.m_sequence = *entity->m_nSequence();
 	cur_record.m_simulation_time = *entity->m_flSimulationTime();
-	cur_record.m_head = g_legitbot.center_hitbox(entity, (int)csgohitboxid::head);
+	cur_record.m_head = entity->get_bone(8);
 	cur_record.record_tick = cmd->tick_count;
 
 	auto studiomodel = g_weebware.g_model_info->getstudiomodel(entity->getmodel());
-	cur_record.bonecount = studiomodel->numbones;
-	for (int i = 0; i < cur_record.bonecount; i++)
-	{
-		mstudiobone_t* pBone = studiomodel->GetBone(i);
 
-		if (pBone && (pBone->flags & 256) && (pBone->parent != -1))
-		{
-			cur_record.child[i] = entity->get_bone(i);
-			cur_record.parent[i] = entity->get_bone(pBone->parent);
+	if (studiomodel) {
+
+		cur_record.bonecount = studiomodel->numbones;
+
+		if (cur_record.bonecount) {
+			for (int i = 0; i < cur_record.bonecount; i++)
+			{
+				mstudiobone_t* pBone = studiomodel->GetBone(i);
+
+				if (pBone && (pBone->flags & 256) && (pBone->parent != -1))
+				{
+					cur_record.child[i] = entity->get_bone(i);
+					cur_record.parent[i] = entity->get_bone(pBone->parent);
+				}
+			}
 		}
 	}
 
@@ -455,8 +462,8 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 
 void c_legitbot::c_accuracy_boost::set_record(c_base_entity* player, c_accuracy_boost::c_accuracy_records record)
 {
-	set_abs_angles(player, record.m_angles);
-	set_abs_origins(player, record.m_abs_origin);
+	// set_abs_angles(player, record.m_angles);
+	// set_abs_origins(player, record.m_abs_origin);
 	*player->m_Origin() = record.m_origin;
 	*player->m_flCycle() = record.m_cycle;
 	*player->m_vecMaxs() = record.m_max;
@@ -547,10 +554,11 @@ void c_legitbot::c_accuracy_boost::clear_all_records()
 
 void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 {
-	if (!g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].accuracy_boost) {
+	if (!g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].accuracy_boost || !g_legitbot.m_local || !g_legitbot.m_local->m_pActiveWeapon() || !g_legitbot.m_local->m_pActiveWeapon()->is_firearm()) {
 		clear_all_records();
 		return;
 	}
+
 	// Create some records...
 	for (int i = 1; i <= 99; i++)
 	{
@@ -600,7 +608,7 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 
 	}
 
-	if (is_valid_record(m_best_record))
+	if (is_valid_record(m_best_record) && m_best_record.player->is_valid_player())
 	{
 		for (int i = 0; i < m_best_record.bonecount; i++) {
 			g_esp.m_skeleton_backtrack.child[i] = m_best_record.child[i];

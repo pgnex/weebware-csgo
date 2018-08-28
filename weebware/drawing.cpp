@@ -1,8 +1,6 @@
 #include "Header.h"
 #include "drawing.h"
 
-c_draw g_draw;
-
 c_draw::c_draw()
 {
 	g_pVB = NULL;

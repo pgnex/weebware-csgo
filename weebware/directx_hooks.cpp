@@ -163,7 +163,7 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	}
 	return g_hooking.o_endscene(device);
 
-//	return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
+	// return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 }
 
 long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
@@ -200,7 +200,7 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
-	// auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
+	 // auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
 	 auto hr = g_hooking.o_reset(device, presentation_param);
 
 	ImGui_ImplDX9_CreateDeviceObjects();

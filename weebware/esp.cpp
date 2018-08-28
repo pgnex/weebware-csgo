@@ -56,18 +56,21 @@ void c_esp::esp_main()
 					}
 #if 1
 
-					for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++)
-					{
-						if (g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], m_skeleton_backtrack.w2s_parent[i])) {
-							m_skeleton_backtrack.has_w2s_parent[i] = true;
-						}
+					if (g_accuracy.m_best_record.player->is_valid_player()) {
 
-						if (g_maths.world_to_screen(g_accuracy.m_best_record.child[i], m_skeleton_backtrack.w2s_child[i])) {
-							m_skeleton_backtrack.has_w2s_child[i] = true;
+						for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++)
+						{
+							if (g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], m_skeleton_backtrack.w2s_parent[i])) {
+								m_skeleton_backtrack.has_w2s_parent[i] = true;
+							}
+
+							if (g_maths.world_to_screen(g_accuracy.m_best_record.child[i], m_skeleton_backtrack.w2s_child[i])) {
+								m_skeleton_backtrack.has_w2s_child[i] = true;
+							}
+
 						}
 
 					}
-
 #endif
 				}
 
@@ -179,6 +182,7 @@ void c_esp::esp_main()
 	}
 }
 
+#if 0
 void c_esp::esp_reset()
 {
 	if (!has_esp_init)
@@ -195,7 +199,7 @@ void c_esp::esp_reset()
 
 	g_draw.Reset();
 }
-
+#endif
 void c_esp::calc_w2svalues()
 {
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
@@ -232,9 +236,6 @@ void c_esp::calc_w2svalues()
 				if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
 					continue;
 				}
-
-
-
 			}
 		}
 
@@ -501,24 +502,29 @@ void c_esp::display_backtrack()
 
 	// Check if we have correct dimensions...
 
-	for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
+	if (g_accuracy.m_best_record.player->is_valid_player()) {
+		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
 
-		if (m_skeleton_backtrack.w2s_parent[i].x >= max_width || m_skeleton_backtrack.w2s_parent[i].x <= 0
-			|| m_skeleton_backtrack.w2s_parent[i].y >= max_height || m_skeleton_backtrack.w2s_parent[i].y <= 0
-			|| m_skeleton_backtrack.w2s_child[i].x >= max_width || m_skeleton_backtrack.w2s_child[i].x <= 0
-			|| m_skeleton_backtrack.w2s_child[i].y >= max_height || m_skeleton_backtrack.w2s_child[i].y <= 0
-			|| !m_skeleton_backtrack.has_w2s_child[i] || !m_skeleton_backtrack.has_w2s_parent[i])
-			continue;
+			if (m_skeleton_backtrack.w2s_parent[i].x >= max_width || m_skeleton_backtrack.w2s_parent[i].x <= 0
+				|| m_skeleton_backtrack.w2s_parent[i].y >= max_height || m_skeleton_backtrack.w2s_parent[i].y <= 0
+				|| m_skeleton_backtrack.w2s_child[i].x >= max_width || m_skeleton_backtrack.w2s_child[i].x <= 0
+				|| m_skeleton_backtrack.w2s_child[i].y >= max_height || m_skeleton_backtrack.w2s_child[i].y <= 0
+				|| !m_skeleton_backtrack.has_w2s_child[i] || !m_skeleton_backtrack.has_w2s_parent[i])
+				continue;
 
-		g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-		g_weebware.g_surface->drawline(m_skeleton_backtrack.w2s_parent[i].x, m_skeleton_backtrack.w2s_parent[i].y, m_skeleton_backtrack.w2s_child[i].x, m_skeleton_backtrack.w2s_child[i].y);
+			g_weebware.g_surface->drawline(m_skeleton_backtrack.w2s_parent[i].x, m_skeleton_backtrack.w2s_parent[i].y, m_skeleton_backtrack.w2s_child[i].x, m_skeleton_backtrack.w2s_child[i].y);
+		}
 	}
 #endif
 	}
 
 bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)
 {
+	if (!local->is_valid_player())
+		return false;
+
 	trace_t Trace;
 
 	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8);

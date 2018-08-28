@@ -24,3 +24,5 @@ weebware/Debug/create_move.obj
 *.obj
 *.obj
 weebware/Debug/drawing.obj
+*.obj
+*.obj

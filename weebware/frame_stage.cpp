@@ -70,6 +70,9 @@ void c_frame_stage_notify::run_skinchanger()
 	auto weapons = g_frame_stage_notify.local->get_weapons();
 	// Skin Changer
 
+	if (!weapons)
+		return;
+
 	for (size_t i = 0; weapons[i] != 0xFFFFFFFF; i++)
 	{
 		if (weapons[i] == 0xFFFFFFFF)
@@ -111,16 +114,20 @@ void c_frame_stage_notify::run_skinchanger()
 
 				auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
 
-				*weapon->m_nModelIndex() = model_index;
+				if (model_index)
+				{
+					*weapon->m_nModelIndex() = model_index;
 
-				if (viewmodel_weapon && viewmodel_weapon == weapon) {
+					if (viewmodel_weapon && viewmodel_weapon == weapon) {
 
-					*viewmodel->m_nModelIndex() = model_index;
+						*viewmodel->m_nModelIndex() = model_index;
 
-					auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
+						auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
 
-					if (worldmodel_weapon)
-						*worldmodel_weapon->m_nModelIndex() = model_index + 1;
+						if (worldmodel_weapon)
+							*worldmodel_weapon->m_nModelIndex() = model_index + 1;
+					}
+
 				}
 
 				auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
@@ -164,16 +171,11 @@ void c_frame_stage_notify::run_skinchanger()
 
 			*weapon->get_original_owner_xuidhigh() = 0;
 			*weapon->get_original_owner_xuidlow() = 0;
-
-		}
-
-		if (g_weebwarecfg.skinchanger_apply_nxt) {
-			(*g_weebware.g_client_state)->force_update();
-			g_weebwarecfg.skinchanger_apply_nxt = 0;
 		}
 
 
 	}
+
 }
 
 int convert_index_id(int index)

@@ -41,7 +41,7 @@ bool c_weebware::init_interfaces()
 
 	// Load Our Interfaces.	
 
-	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
+	 g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
 	// g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
@@ -165,8 +165,6 @@ void c_weebware::setup_thread()
 		Sleep(250);
 	}
 	g_hooking.unhook_all_functions();
-
-label_exit:
 
 	printf("\nUnloading\n");
 

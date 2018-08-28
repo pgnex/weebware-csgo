@@ -8,7 +8,7 @@ c_hooking g_hooking;
 
 void __stdcall hk_unlock_cursor()
 {
-	auto protecc = g_hooking.VEH_CURSORLOCK->getProtectionObject();
+	 auto protecc = g_hooking.VEH_CURSORLOCK->getProtectionObject();
 
 	if (g_weebware.menu_opened) {
 
@@ -16,7 +16,7 @@ void __stdcall hk_unlock_cursor()
 
 	}
 	else {
-		// PLH::FnCast(g_hooking.lock_tramp, g_hooking.o_cursor)(g_weebware.g_surface);
+		//  PLH::FnCast(g_hooking.lock_tramp, g_hooking.o_cursor)(g_weebware.g_surface);
 		g_hooking.o_cursor(g_weebware.g_surface);
 	}
 }
@@ -30,7 +30,7 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
-	auto protecc = g_hooking.VEH_CM->getProtectionObject();
+	 auto protecc = g_hooking.VEH_CM->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
@@ -48,33 +48,38 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 	}
 	else
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-		// return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+
+	//	return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+
 }
 
 long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
-	 auto protecc = g_hooking.VEH_RESET->getProtectionObject();
+	  auto protecc = g_hooking.VEH_RESET->getProtectionObject();
 
 	return hook_functions::reset(device, presentation_param);
 }
 
 long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
-	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
+	 auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
 	return hook_functions::end_scene(device);
 }
 
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
-	auto protecc = g_hooking.VEH_DME->getProtectionObject();
+	 auto protecc = g_hooking.VEH_DME->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 	}
 	else
 		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+
 		// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+		//
+		// 
 }
 
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
@@ -86,6 +91,8 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 	else
 		g_hooking.o_fsn(curStage);
 		// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
+
+		//
 }
 
 namespace knife_changer {
@@ -432,7 +439,7 @@ void c_hooking::unhook_all_functions()
 	DETOUR_DME->unHook();
 	DETOUR_FSN->unHook();
 	DETOUR_CURSORLOCK->unHook();
-#endif
+#else
 	VEH_PAINT->unHook();
 	VEH_CM->unHook();
 	VEH_RESET->unHook();
@@ -440,7 +447,7 @@ void c_hooking::unhook_all_functions()
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
 	VEH_CURSORLOCK->unHook();
-
+#endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();
 	g_vars.g_unload.set(1.0f);

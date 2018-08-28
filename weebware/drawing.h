@@ -82,4 +82,3 @@ private:
 	LPD3DXSPRITE sSprite;
 };
 
-extern c_draw g_draw;
