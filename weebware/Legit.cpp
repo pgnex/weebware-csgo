@@ -142,7 +142,7 @@ c_base_entity* c_legitbot::closest_target_available()
 	c_base_entity * best_entity = nullptr;
 	c_base_entity * closest_ent = nullptr;
 
-	for (int i = 1; i <= 99; i++)
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
 		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
 
@@ -574,7 +574,7 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 	}
 
 	// Create some records...
-	for (int i = 1; i <= 99; i++)
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
 		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
 

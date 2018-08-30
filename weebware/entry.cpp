@@ -41,8 +41,8 @@ bool c_weebware::init_interfaces()
 
 	// Load Our Interfaces.	
 
-	// g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
-	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
+	 g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
+	//g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
 	// g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
@@ -136,7 +136,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();

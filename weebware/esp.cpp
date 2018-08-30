@@ -197,7 +197,7 @@ void c_esp::calc_w2svalues()
 		if (local)
 		{
 
-			for (int i = 1; i <= 99; i++)
+			for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 			{
 				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
 

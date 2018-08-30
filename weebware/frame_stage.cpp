@@ -4,6 +4,16 @@
 
 c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
+c_base_entity* local;
+
+void SetClanTag(const char* tag, const char* name)
+{
+	static auto pSetClanTag = (int(__fastcall*)(const char*, const char*))g_weebware.pattern_scan(("engine.dll"), "53 56 57 8B DA 8B F9 FF 15");
+
+	pSetClanTag(tag, name);
+}
+
+std::string MovingTag[10] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 
 #if 1
 void hook_functions::frame_stage_notify(clientframestage_t curStage)
@@ -14,6 +24,15 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
 		}
+
+
+		if (curStage == clientframestage_t::frame_render_start) {
+			if (local) {
+				int i = (int)fmodf((float)(g_weebware.g_global_vars->interval_per_tick * local->get_tick_base()), 10.f);
+				SetClanTag((MovingTag[i]).c_str(), (MovingTag[i]).c_str());
+			}
+	}
+
 
 #if 0
 		if (curStage == clientframestage_t::frame_render_start)
@@ -34,7 +53,7 @@ void c_frame_stage_notify::pvs_fix()
 	if (!local)
 		return;
 
-	for (int i = 1; i <= 99; i++)
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
 		if (i == local->EntIndex())
 			continue;

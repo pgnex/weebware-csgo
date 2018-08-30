@@ -197,7 +197,6 @@ public:
 	{
 		return getvfunc<const char*(__thiscall*)(PVOID)>(this, 53)(this);
 	}
-
 };
 
 //player flags
