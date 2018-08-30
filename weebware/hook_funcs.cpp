@@ -444,6 +444,8 @@ void c_hooking::hook_all_functions()
 
 void c_hooking::unhook_all_functions()
 {
+	g_weebware.g_input_system->EnableInput(true);
+
 	g_weebware.menu_opened = false;
 #if 0
 	DETOUR_PAINT->unHook();

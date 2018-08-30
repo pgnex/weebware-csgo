@@ -247,6 +247,10 @@ public:
 		return getvfunc<void(__thiscall*)(void*, int*, int*) >(this, 56)(this, m_pX, m_pY);
 	}
 
+	void EnableInput(bool bEnable)
+	{
+		return getvfunc<void(__thiscall*)(void*, bool)>(this, 11)(this, bEnable);
+	}
 };
 
 class c_convar

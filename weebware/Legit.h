@@ -39,6 +39,7 @@ public:
 			Vector parent[125] = { Vector(0,0,0) };
 			Vector child[125] = { Vector(0,0,0) };
 			int bonecount;
+			int index = 0;
 		};
 
 		c_accuracy_records m_best_record;

@@ -448,8 +448,8 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 	cur_record.m_simulation_time = *entity->m_flSimulationTime();
 	cur_record.m_head = entity->get_bone(8);
 	cur_record.record_tick = cmd->tick_count;
-
-#if 0
+	cur_record.index = entity->EntIndex();
+#if 1
 	auto studiomodel = g_weebware.g_model_info->getstudiomodel(entity->getmodel());
 
 	if (studiomodel) {
@@ -617,11 +617,11 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 
 		if (this_fov < marginal_fov)
 		{
-			m_best_record = accuracy_records[i];
 			accuracy_records[i].m_best_record = true;
-			m_best_record.m_best_record = true;
+			m_best_record = accuracy_records[i];
 			marginal_fov = this_fov;
 		}
+
 
 	}
 

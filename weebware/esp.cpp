@@ -11,9 +11,14 @@ void c_esp::esp_main()
 {
 	water_mark();
 
-#if 0
-	render_dark_overlay();
-#endif
+	if (g_weebware.menu_opened)
+	{
+		int s, h;
+		g_weebware.g_engine->get_screen_dimensions(s, h);
+		g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
+		g_weebware.g_surface->drawfilledrect(0, 0, s, h);
+	}
+
 
 	if (g_weebwarecfg.enable_visuals == 0)
 	{
@@ -416,13 +421,13 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_team)
 	g_weebware.g_engine->get_player_info(ent->EntIndex(), &playerinfo);
 
 	c_color draw_col = is_team ? c_color(g_weebwarecfg.visuals_name_esp_col_team) : c_color(g_weebwarecfg.visuals_name_esp_col);
-	
+
 	std::string player_name = playerinfo.name;
 
 	player_name.resize(15);
 
 	if (bounds.has_w2s)
-	g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x + bounds.w + 2, bounds.y + 5, draw_col, 0, player_name.c_str());
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x + bounds.w + 2, bounds.y + 5, draw_col, 0, player_name.c_str());
 }
 
 struct player_esp_info
@@ -446,36 +451,55 @@ void c_esp::draw_inaccuracy_circle()
 	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, local->m_pActiveWeapon()->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
 }
 
-#if 0
-void render_dark_overlay()
-{
-	if (g_entry.menu_opened)
-	{
-		int s, h;
-		g_entry.g_engine->get_screen_dimensions(s, h);
-
-		c_color col = c_color(g_weebwarecfg.sets_cfg.visuals_bounding_team);
-
-		g_draw.BoxFilled(0, 0, s, h, D3DCOLOR_RGBA(0, 0, 0, 150));
-}
-}
-#endif
-
 void c_esp::display_backtrack()
 {
 	if (!g_weebwarecfg.visuals_backtrack_dots)
 		return;
 
-#if 0
-	for (auto record : g_accuracy.accuracy_records)
-	{
-		if (record.m_has_w2s)
-			g_draw.Line(record.m_w2s_head.x, record.m_w2s_head.y, record.m_w2s_head.x + 1, record.m_w2s_head.y, 2, false, record.m_best_record ? D3DCOLOR_RGBA(0, 255, 0, 255) : D3DCOLOR_RGBA(255, 0, 0, 255));
-}
-#endif
+	Vector w2sParent, w2sChild;
+	// Loop thru entities and get record to draw.
+	if (g_weebwarecfg.visuals_backtrack_style == 1) {
+		// best
+		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
 
+			g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], w2sParent);
+			g_maths.world_to_screen(g_accuracy.m_best_record.child[i], w2sChild);
 
+			c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
+
+			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+
+			g_weebware.g_surface->drawline(w2sParent.x, w2sParent.y, w2sChild.x, w2sChild.y);
+		}
 	}
+	else {
+
+		for (auto record : g_accuracy.accuracy_records)
+		{
+			if (g_weebwarecfg.visuals_backtrack_style == 0) { // time
+				if (record.record_tick != g_accuracy.m_best_record.record_tick)
+					continue;
+			}
+			else if (g_weebwarecfg.visuals_backtrack_style == 3)  // all for single target
+				if (g_accuracy.m_best_record.index != record.index) {
+					continue;
+				}
+
+			// best tick to draw skeleton
+			for (int i = 0; i < record.bonecount; i++) {
+
+				g_maths.world_to_screen(record.parent[i], w2sParent);
+				g_maths.world_to_screen(record.child[i], w2sChild);
+
+				c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
+
+				g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+
+				g_weebware.g_surface->drawline(w2sParent.x, w2sParent.y, w2sChild.x, w2sChild.y);
+			}
+		}
+	}
+}
 
 bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)
 {

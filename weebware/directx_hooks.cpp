@@ -104,6 +104,7 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 	if (is_clicked)
 	{
 		g_weebware.menu_opened = !g_weebware.menu_opened;
+		g_weebware.g_input_system->EnableInput(!g_weebware.menu_opened);
 	}
 
 	if (g_weebware.menu_opened)
@@ -378,7 +379,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		imgui_setup(pDevice);
 	}
 
-	// ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
+	ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
+
 
 	ImGui_ImplDX9_NewFrame();
 
@@ -588,8 +590,15 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
-								ImGui::Checkbox("Show backtrack", &g_weebwarecfg.visuals_backtrack_dots, false);
+
+								ImGui::Separator();
+								ImGui::Text("Backtracking");
+								ImGui::Text("Style");
+								const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
+								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
+								ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
+								ImGui::Separator();
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 								ImGui::Checkbox("Bomb Information", &g_weebwarecfg.visuals_bomb_timer, false);
 

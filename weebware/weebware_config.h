@@ -136,6 +136,7 @@ public:
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
 	bool use_dynamicfov[8] = { 0 };
+	int visuals_backtrack_style = 0;
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
