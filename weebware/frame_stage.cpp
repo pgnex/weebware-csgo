@@ -4,7 +4,6 @@
 
 c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
-c_base_entity* local;
 
 void SetClanTag(const char* tag, const char* name)
 {
@@ -27,11 +26,11 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 
 		if (curStage == clientframestage_t::frame_render_start) {
-			if (local) {
-				int i = (int)fmodf((float)(g_weebware.g_global_vars->interval_per_tick * local->get_tick_base()), 10.f);
-				SetClanTag((MovingTag[i]).c_str(), (MovingTag[i]).c_str());
-			}
-	}
+			int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 10);
+	//		std::cout << "curtime:" << g_weebware.g_global_vars->curtime << std::endl;
+	//		std::cout << "curtime * 2.4:" << i << std::endl;
+			SetClanTag((MovingTag[i]).c_str(), (MovingTag[i]).c_str());
+		}
 
 
 #if 0
