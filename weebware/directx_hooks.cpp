@@ -166,32 +166,27 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	// return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 }
 
-long __stdcall hook_functions::hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
+long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
-	if (g_vars.g_unload.get() == 1.0f)
+	static auto wanted_ret_address = _ReturnAddress();
+
+	if (_ReturnAddress() == wanted_ret_address)
 	{
-		return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
+		//backup render states
+		DWORD colorwrite, srgbwrite;
+		device->GetRenderState(D3DRS_COLORWRITEENABLE, &colorwrite);
+		device->GetRenderState(D3DRS_SRGBWRITEENABLE, &srgbwrite);
+
+		//fix drawing without calling engine functons/cl_showpos
+		device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
+		//removes the source engine color correction
+		device->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
+
+		imgui_main(device);
+
+		device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
+		device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
 	}
-
-	DWORD v_state = D3DZB_TRUE; //var used to obtain the CURRENT renderstate (usefull if you want to set a texture if target is visible and not visible)
-	device->GetRenderState(D3DRS_ZENABLE, &v_state);
-	device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE); //Disable depth buffering and draw the model
-	DWORD old_color_write_enable;
-	device->GetRenderState(D3DRS_COLORWRITEENABLE, &old_color_write_enable);
-	device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xFFFFFFFF);
-	DWORD old_src_blend;
-	device->GetRenderState(D3DRS_SRCBLEND, &old_src_blend);
-	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCCOLOR);
-	DWORD old_dest_blend;
-	device->GetRenderState(D3DRS_DESTBLEND, &old_dest_blend);
-	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR);
-
-	imgui_main(device);
-
-	device->SetRenderState(D3DRS_ZENABLE, v_state);//Restore original depth buffer and set pixelshader or texture if target is really visible
-	device->SetRenderState(D3DRS_COLORWRITEENABLE, old_color_write_enable);
-	device->SetRenderState(D3DRS_SRCBLEND, old_src_blend);
-	device->SetRenderState(D3DRS_DESTBLEND, old_dest_blend);
 
 	return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
 }
@@ -474,6 +469,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #endif
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
+								
+								ImGui::Checkbox("Distance FOV", &g_weebwarecfg.use_dynamicfov[g_weebwarecfg.legit_cfg_index], false);
 
 								ImGui::Text("Maximum FOV");
 								ImGui::SliderFloat("Maximum FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].maximum_fov, 0, 30, "%.1f");

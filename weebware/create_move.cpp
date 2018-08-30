@@ -12,7 +12,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	if (cmd->command_number == 0)
 	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-		 // return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+		// return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
 	}
 
 	if (cmd && cmd->command_number)
@@ -25,44 +25,36 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
 			{
-				try
-				{
+				// shouldn't actually do anything when applying skin cause entites are all refreshed and cause nullptr issues
+				if (g_weebwarecfg.skinchanger_apply_nxt) {
+
+					g_accuracy.clear_all_records();
+
+					if (*g_weebware.g_client_state)
+						(*g_weebware.g_client_state)->force_update();
+
+					g_accuracy.clear_all_records();
+
+					g_weebwarecfg.skinchanger_apply_nxt = 0;
+				}
+				else {
+
 					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 
 					g_create_move.create_move(cmd, sendpacket);
 
-#pragma region Legit
 					g_legitbot.m_local = g_create_move.local;
 
 					g_legitbot.create_move(cmd);
 
-					// Updating game while doing skin changer will cause crashes!!!
-					if (g_weebwarecfg.skinchanger_apply_nxt) {
-
-						g_accuracy.clear_all_records();
-
-						if (*g_weebware.g_client_state)
-							(*g_weebware.g_client_state)->force_update();
-
-						g_accuracy.clear_all_records();
-
-						g_weebwarecfg.skinchanger_apply_nxt = 0;
-					}
-					else {
-						 g_accuracy.accuracy_boost(cmd);
-
-					}
-
-#pragma endregion
+					g_accuracy.accuracy_boost(cmd);
 
 					g_ai.create_move(cmd, g_create_move.local);
 
+				}
+
 #pragma region Clamping
-				}
-				catch (...)
-				{
-					printf("Exception Caught in Createmove\n");
-				}
+
 
 				QAngle cmd_view = cmd->viewangles;
 
@@ -91,22 +83,21 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 				if (cmd->sidemove < -450)
 					cmd->sidemove = -450;
-
+			}
 #pragma endregion
-			}
-			else
-			{
-				g_accuracy.clear_all_records();
-				g_Walkbot.m_target_area = nullptr;
-			}
 		}
 		else
 		{
 			g_accuracy.clear_all_records();
 			g_Walkbot.m_target_area = nullptr;
 		}
-
 	}
+	else
+	{
+		g_accuracy.clear_all_records();
+		g_Walkbot.m_target_area = nullptr;
+	}
+
 	return false;
 }
 
@@ -201,25 +192,25 @@ c_base_entity* get_best_target(c_base_entity * local)
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
 			continue;
 
-			Vector center_head = cur_entity->get_bone(8);
+		Vector center_head = cur_entity->get_bone(8);
 
-			QAngle angle_to_head;
+		QAngle angle_to_head;
 
-			g_maths.vector_qangles(center_head - local->get_vec_eyepos(), angle_to_head);
+		g_maths.vector_qangles(center_head - local->get_vec_eyepos(), angle_to_head);
 
-			QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 
-			g_weebware.g_engine->get_view_angles(view_angles);
+		g_weebware.g_engine->get_view_angles(view_angles);
 
-			view_angles += local->m_aimPunchAngle() * 2.f;
+		view_angles += local->m_aimPunchAngle() * 2.f;
 
-			float this_fov = g_maths.get_fov(view_angles, angle_to_head);
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head);
 
-			if (this_fov < best_fov)
-			{
-				best_entity = cur_entity;
-				best_fov = this_fov;
-			}
+		if (this_fov < best_fov)
+		{
+			best_entity = cur_entity;
+			best_fov = this_fov;
+		}
 	}
 	return best_entity;
 }
@@ -238,7 +229,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 	if (!(cmd->buttons & in_attack) && !send_packets) {
 
-	//	auto target = get_closest_target_available(this->local);
+		//	auto target = get_closest_target_available(this->local);
 
 		c_base_entity* target = get_best_target(this->local);
 
@@ -247,7 +238,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 		QAngle angle2Target = cmd->viewangles;
 
 		bool shouldflip = 0;
-		
+
 		if (target) {
 
 			auto hitbox = *target->m_Origin();

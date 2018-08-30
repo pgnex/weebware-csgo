@@ -30,7 +30,7 @@ bool s_bMathlibInitialized = false;
 	void qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp);
 	void vector_qangles3d(Vector& vecForward, Vector& vecAngles);
 
-	float get_fov(QAngle& viewAngle, QAngle& aimAngle);
+	float get_fov(QAngle& viewAngle, QAngle& aimAngle, bool distance_scaling = 0, float dst = 0);
 	void normalize_angle(QAngle& angle);
 	void clamp_angle(QAngle& angle);
 	void sin_cos(float value, float &sr, float &cr);

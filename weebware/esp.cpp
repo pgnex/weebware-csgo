@@ -54,24 +54,7 @@ void c_esp::esp_main()
 							g_accuracy.accuracy_records[i].m_has_w2s = true;
 						}
 					}
-#if 1
 
-					if (g_accuracy.m_best_record.player->is_valid_player()) {
-
-						for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++)
-						{
-							if (g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], m_skeleton_backtrack.w2s_parent[i])) {
-								m_skeleton_backtrack.has_w2s_parent[i] = true;
-							}
-
-							if (g_maths.world_to_screen(g_accuracy.m_best_record.child[i], m_skeleton_backtrack.w2s_child[i])) {
-								m_skeleton_backtrack.has_w2s_child[i] = true;
-							}
-
-						}
-
-					}
-#endif
 				}
 
 			}
@@ -491,33 +474,7 @@ void c_esp::display_backtrack()
 }
 #endif
 
-#if 1
-	if (!g_accuracy.m_best_record.player->is_valid_player())
-		return;
 
-	c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
-
-	int max_width, max_height;
-	g_weebware.g_engine->get_screen_dimensions(max_width, max_height);
-
-	// Check if we have correct dimensions...
-
-	if (g_accuracy.m_best_record.player->is_valid_player()) {
-		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
-
-			if (m_skeleton_backtrack.w2s_parent[i].x >= max_width || m_skeleton_backtrack.w2s_parent[i].x <= 0
-				|| m_skeleton_backtrack.w2s_parent[i].y >= max_height || m_skeleton_backtrack.w2s_parent[i].y <= 0
-				|| m_skeleton_backtrack.w2s_child[i].x >= max_width || m_skeleton_backtrack.w2s_child[i].x <= 0
-				|| m_skeleton_backtrack.w2s_child[i].y >= max_height || m_skeleton_backtrack.w2s_child[i].y <= 0
-				|| !m_skeleton_backtrack.has_w2s_child[i] || !m_skeleton_backtrack.has_w2s_parent[i])
-				continue;
-
-			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-
-			g_weebware.g_surface->drawline(m_skeleton_backtrack.w2s_parent[i].x, m_skeleton_backtrack.w2s_parent[i].y, m_skeleton_backtrack.w2s_child[i].x, m_skeleton_backtrack.w2s_child[i].y);
-		}
-	}
-#endif
 	}
 
 bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)

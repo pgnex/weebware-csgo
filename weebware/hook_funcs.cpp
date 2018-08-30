@@ -60,13 +60,21 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 	return hook_functions::reset(device, presentation_param);
 }
 
+#if 0
 long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
 	 auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
 	return hook_functions::end_scene(device);
 }
+#else
+long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
+{
+	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
+	return hook_functions::present(device, src, dest, wnd_override, dirty_region);
+}
+#endif
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
 	 auto protecc = g_hooking.VEH_DME->getProtectionObject();
@@ -382,11 +390,17 @@ void c_hooking::hook_all_functions()
 	VEH_RESET->hook();
 	o_reset = reinterpret_cast<decltype(o_reset)>(reset_addr);
 
+#if 0
 	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
 	VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
 	VEH_ENDSCENE->hook();
 	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
-
+#else
+	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
+	VEH_ENDSCENE = new PLH::BreakPointHook((char*)present_addr, (char*)&hk_present);
+	VEH_ENDSCENE->hook();
+	original_present = reinterpret_cast<decltype(original_present)>(present_addr);
+#endif
 
 	auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
 	VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);

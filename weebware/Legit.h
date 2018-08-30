@@ -17,8 +17,8 @@ public:
 	public:
 		struct c_accuracy_records
 		{
-			c_base_entity* player = nullptr;
 			float m_simulation_time = -1;
+#if 0
 			QAngle m_angles = QAngle(0, 0, 0);
 			Vector m_abs_origin = Vector(0, 0, 0);
 			Vector m_origin = Vector(0, 0, 0);
@@ -26,6 +26,7 @@ public:
 			float m_sequence = -1;
 			Vector m_mins = Vector(0, 0, 0);
 			Vector m_max = Vector(0, 0, 0);
+#endif
 			Vector m_head = Vector(0, 0, 0);
 			Vector m_w2s_head = Vector(0, 0, 0);
 			bool m_has_w2s = false;

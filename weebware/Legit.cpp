@@ -89,7 +89,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	}
 	else {
 
-		if ((cmd->buttons & in_attack) && (next_attack_queued())) 
+		if ((cmd->buttons & in_attack) && (next_attack_queued()))
 			cmd->viewangles = aim_angle;
 	}
 }
@@ -137,8 +137,10 @@ c_base_entity* c_legitbot::closest_target_available()
 {
 
 	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
+	float closest_fov = 180.f;
 
 	c_base_entity * best_entity = nullptr;
+	c_base_entity * closest_ent = nullptr;
 
 	for (int i = 1; i <= 99; i++)
 	{
@@ -150,7 +152,6 @@ c_base_entity* c_legitbot::closest_target_available()
 		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum())
 			continue;
 
-
 		if (!is_visible(cur_entity))
 			continue;
 
@@ -160,19 +161,31 @@ c_base_entity* c_legitbot::closest_target_available()
 
 		g_maths.vector_qangles(center_head - m_local->get_vec_eyepos(), angle_to_head);
 
+		g_maths.normalize_angle(angle_to_head);
+
 		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 
 		g_weebware.g_engine->get_view_angles(view_angles);
 
 		view_angles += m_local->m_aimPunchAngle() * 2.f;
 
-		float this_fov = g_maths.get_fov(view_angles, angle_to_head);
+		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head, g_weebwarecfg.use_dynamicfov[get_config_index()], Vector(m_local->get_vec_eyepos() - center_head).size());
 
-		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov && this_fov < best_fov)
+		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
+
+		if (normal_fov < closest_fov) {
+			closest_ent = cur_entity;
+			closest_fov = normal_fov;
+		}
+		
+		// prevent symmetry collision
+		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov && this_fov < best_fov && closest_ent == cur_entity)
 		{
 			best_entity = cur_entity;
 			best_fov = this_fov;
 		}
+
 	}
 
 	return best_entity;
@@ -425,18 +438,18 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 {
 	c_accuracy_records cur_record;
 	// I guess we can store everything, not going to hurt.
-	cur_record.player = entity;
 	// cur_record.m_angles = entity->GetAbsAngles();
-	cur_record.m_cycle = *entity->m_flCycle();
-	cur_record.m_max = *entity->m_vecMaxs();
-	cur_record.m_mins = *entity->m_vecMins();
-	// cur_record.m_abs_origin = entity->get_abs_origins();
-	cur_record.m_origin = *entity->m_Origin();
-	cur_record.m_sequence = *entity->m_nSequence();
+	//cur_record.m_cycle = *entity->m_flCycle();
+	//cur_record.m_max = *entity->m_vecMaxs();
+	//cur_record.m_mins = *entity->m_vecMins();
+	//// cur_record.m_abs_origin = entity->get_abs_origins();
+	//cur_record.m_origin = *entity->m_Origin();
+	//cur_record.m_sequence = *entity->m_nSequence();
 	cur_record.m_simulation_time = *entity->m_flSimulationTime();
 	cur_record.m_head = entity->get_bone(8);
 	cur_record.record_tick = cmd->tick_count;
 
+#if 0
 	auto studiomodel = g_weebware.g_model_info->getstudiomodel(entity->getmodel());
 
 	if (studiomodel) {
@@ -444,6 +457,7 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 		cur_record.bonecount = studiomodel->numbones;
 
 		if (cur_record.bonecount) {
+
 			for (int i = 0; i < cur_record.bonecount; i++)
 			{
 				mstudiobone_t* pBone = studiomodel->GetBone(i);
@@ -456,7 +470,7 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 			}
 		}
 	}
-
+#endif
 	return cur_record;
 }
 
@@ -464,11 +478,11 @@ void c_legitbot::c_accuracy_boost::set_record(c_base_entity* player, c_accuracy_
 {
 	// set_abs_angles(player, record.m_angles);
 	// set_abs_origins(player, record.m_abs_origin);
-	*player->m_Origin() = record.m_origin;
+	/**player->m_Origin() = record.m_origin;
 	*player->m_flCycle() = record.m_cycle;
 	*player->m_vecMaxs() = record.m_max;
 	*player->m_vecMins() = record.m_mins;
-	*player->m_nSequence() = record.m_sequence;
+	*player->m_nSequence() = record.m_sequence;*/
 	*player->m_flSimulationTime() = record.m_simulation_time;
 }
 
@@ -540,7 +554,7 @@ bool IsTickValid(float sim_time)
 
 bool c_legitbot::c_accuracy_boost::is_valid_record(c_accuracy_records record)
 {
-	if (!record.player->is_valid_player() || !IsTickValid(record.m_simulation_time))
+	if (!IsTickValid(record.m_simulation_time))
 	{
 		return false;
 	}
@@ -571,6 +585,9 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 			continue;
 
 		if (cur_entity->m_iTeamNum() == g_legitbot.m_local->m_iTeamNum())
+			continue;
+
+		if (cur_entity->m_bGunGameImmunity())
 			continue;
 
 		accuracy_records.push_back(create_record(cur_entity, cmd));
@@ -608,26 +625,9 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 
 	}
 
-	if (is_valid_record(m_best_record) && m_best_record.player->is_valid_player())
+	if (cmd->buttons & in_attack)
 	{
-		for (int i = 0; i < m_best_record.bonecount; i++) {
-			g_esp.m_skeleton_backtrack.child[i] = m_best_record.child[i];
-			g_esp.m_skeleton_backtrack.parent[i] = m_best_record.parent[i];
-		}
-
-		if (cmd->buttons & in_attack)
-		{
-			// invalidate_bone_cache(m_best_record.player);
-			set_record(m_best_record.player, m_best_record);
-			// m_best_record.player->UpdateClientSideAnimation();
-			cmd->tick_count = m_best_record.record_tick;
-		}
-	}
-	else {
-		for (int i = 0; i < m_best_record.bonecount; i++) {
-			g_esp.m_skeleton_backtrack.child[i] = Vector(0, 0, 0);
-			g_esp.m_skeleton_backtrack.parent[i] = Vector(0, 0, 0);
-		}
+		cmd->tick_count = m_best_record.record_tick;
 	}
 }
 

@@ -149,7 +149,7 @@ void c_frame_stage_notify::run_skinchanger()
 			}
 
 		}
-		else {
+		else if (weapon->is_firearm()) {
 
 #pragma endregion
 			auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];

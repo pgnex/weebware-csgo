@@ -3,6 +3,7 @@
 #include "paint_traverse.h"
 #include "esp.h"
 #include "hook_funcs.h"
+#include "Legit.h"
 
 c_paint_traverse g_paint_traverse;
 
@@ -12,6 +13,9 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
 	try {
+		if (!g_weebware.g_engine->is_in_game() || !g_weebware.g_engine->is_connected())
+			g_accuracy.clear_all_records();
+
 		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel")) {
 			g_esp.esp_main();
 		}

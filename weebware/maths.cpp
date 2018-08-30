@@ -219,10 +219,21 @@ void c_maths::clamp_angle(QAngle& angle)
 	angle.z = 0;
 }
 
-float c_maths::get_fov(QAngle& viewAngle, QAngle& aimAngle)
+float c_maths::get_fov(QAngle& viewAngle, QAngle& aimAngle, bool distance_scaling, float dst)
 {
-	QAngle delta = aimAngle - viewAngle;
-	normalize_angle(delta);
-	return sqrtf(powf(delta.x, 2.0f) + powf(delta.y, 2.0f));
+	if (distance_scaling) {
+		Vector delta = aimAngle - viewAngle;
+		normalize_angle(delta);
+		// delta.y = min(90, max(-90, delta.x));
+		float dx1 = std::sin(DEG2RAD(delta.y)) * dst;
+		float dx2 = std::sin(DEG2RAD(delta.x)) * dst;
+		return std::sqrt(dx1 * dx1 + dx2 * dx2);
+	}
+	else {
+		QAngle delta = aimAngle - viewAngle;
+		normalize_angle(delta);
+		return sqrtf(delta.x * delta.x + delta.y * delta.y);
+	}
+	return 0.f; // this should never happen
 }
 
