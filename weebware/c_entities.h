@@ -215,10 +215,10 @@ public:
 		return get_value<Vector>(offset);
 	}
 
-	float m_angEyeAngles()
+	QAngle* m_angEyeAngles()
 	{
 		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_angEyeAngles[0]");
-		return get_value<float>(offset);
+		return get_pointer<QAngle>(offset);
 	}
 
 	Vector m_vecVelocity()

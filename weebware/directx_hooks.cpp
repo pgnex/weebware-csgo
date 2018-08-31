@@ -648,6 +648,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Checkbox("Enabed##LegitAA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+
+								ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
+
 								ImGui::Separator();
 							}
 							ImGui::EndChild();
