@@ -109,6 +109,11 @@ struct _VECTOR : public _VECTOR2D<T>
 		return std::sqrt(size_sqr());
 	}
 
+	float Length2D() const
+	{
+		return sqrt(x*x + y * y);
+	}
+
 #pragma endregion
 
 };

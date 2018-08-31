@@ -270,7 +270,7 @@ bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
 			continue;
 
-		QAngle viewangle = *cur_entity->m_angEyeAngles();
+		QAngle viewangle = *cur_entity->eyeangle_ptr();
 
 		Vector direction;
 

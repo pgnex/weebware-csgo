@@ -215,10 +215,23 @@ public:
 		return get_value<Vector>(offset);
 	}
 
-	QAngle* m_angEyeAngles()
+	QAngle m_angEyeAngles()
+	{
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_angEyeAngles[0]");
+		return get_value<QAngle>(offset);
+	}
+
+	QAngle* eyeangle_ptr()
 	{
 		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_angEyeAngles[0]");
 		return get_pointer<QAngle>(offset);
+	}
+
+
+	float m_flLowerBodyYawTarget()
+	{
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flLowerBodyYawTarget");
+		return get_value<float>(offset);
 	}
 
 	Vector m_vecVelocity()

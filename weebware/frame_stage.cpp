@@ -13,6 +13,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
+			g_frame_stage_notify.legit_aa_resolver();
 		}
 
 
@@ -47,6 +48,41 @@ void c_frame_stage_notify::pvs_fix()
 
 		*reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ent) + 0xA30) = g_weebware.g_global_vars->framecount;
 		*reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ent) + 0xA28) = NULL;
+	}
+}
+
+void c_frame_stage_notify::legit_aa_resolver()
+{
+	if (g_weebwarecfg.misc_legit_aa_resolver)
+	{
+		if (!local)
+			return;
+
+		for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); ++i)
+		{
+			c_base_entity* player = (c_base_entity*)g_weebware.g_entlist->getcliententity(i);
+
+			if (!player)
+				continue;
+
+			if (!player->is_valid_player())
+				continue;
+
+			float delta = fabs(player->m_flLowerBodyYawTarget() - player->m_angEyeAngles().y);
+			//	std::cout << player->m_flLowerBodyYawTarget() << std::endl;
+
+			if (player->m_fFlags() & fl_onground)
+			{
+				if (player->m_vecVelocity().Length2D() < 0.f) {
+					if (delta > 35)
+						player->eyeangle_ptr()->y = delta;
+				}
+				else
+				{
+					player->eyeangle_ptr()->y = player->m_flLowerBodyYawTarget();
+				}
+			}
+		}
 	}
 }
 

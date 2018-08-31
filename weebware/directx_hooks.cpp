@@ -656,6 +656,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
 								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+								ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
 								ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
 

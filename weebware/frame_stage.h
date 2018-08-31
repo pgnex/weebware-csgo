@@ -9,6 +9,7 @@ public:
 
 	void pvs_fix();
 	void run_skinchanger();
+	void legit_aa_resolver();
 };
 
 

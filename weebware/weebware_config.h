@@ -144,6 +144,7 @@ public:
 	bool misc_chat_spammer = 0;
 	bool misc_slidewalk = 0;
 	int anti_triggerbot_key = 0;
+	bool misc_legit_aa_resolver = 0;
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
