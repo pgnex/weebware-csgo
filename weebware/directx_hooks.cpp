@@ -465,7 +465,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Activation type");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
 
-								const char* activation_type[] = { "Off", "On Fire", "On key", "Magnetic" };
+								const char* activation_type[] = { "Off", "On Fire", "On Key", "Magnetic" };
 #if 0
 								ImGui::Checkbox("Enabled", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, false);
 #endif
@@ -480,8 +480,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Sensitivity");
 								ImGui::SliderFloat("Sensitivity", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].sensitivity, 0, 100, "%.0f%%");
 
-								ImGui::Text("Reaction time");
-								ImGui::SliderFloat("Reaction time", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
+								ImGui::Text("First Shot Delay");
+								ImGui::SliderFloat("First Shot Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
 
 								ImGui::Text("Recoil compensation (P/Y)");
 								ImGui::SliderFloat("Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
@@ -547,7 +547,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Text("Activation type");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
-								const char* activation_type[] = { "Off", "Default", "On key" };
+								const char* activation_type[] = { "Off", "Default", "On Key" };
 								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
 								ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
@@ -600,7 +600,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
 								ImGui::Separator();
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
-								ImGui::Checkbox("Bomb Information", &g_weebwarecfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 
 							}
 							ImGui::EndChild();
@@ -621,7 +621,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Misc");
 								ImGui::Separator();
-								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.auto_jump, false);
+								ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 							}
@@ -633,7 +633,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Kite Ai (walkbot) - wip");
 								ImGui::Separator();
-								ImGui::Checkbox("Enabed", &g_weebwarecfg.misc_ai, false);
+								ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai, false);
 								ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
 								ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
 								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
@@ -652,7 +652,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
 								ImGui::Text("Anti Triggerbot");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
-								const char* activation[] = { "Off", "Active", "On key"};
+								const char* activation[] = { "Off", "Active", "On Key"};
 								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
 								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);

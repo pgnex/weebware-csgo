@@ -69,7 +69,6 @@ void c_frame_stage_notify::legit_aa_resolver()
 				continue;
 
 			float delta = fabs(player->m_flLowerBodyYawTarget() - player->m_angEyeAngles().y);
-			//	std::cout << player->m_flLowerBodyYawTarget() << std::endl;
 
 			if (player->m_fFlags() & fl_onground)
 			{
