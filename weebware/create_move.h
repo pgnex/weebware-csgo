@@ -10,6 +10,7 @@ public:
 	void correct_movement(Vector old_view_angles, c_usercmd* cmd);
 private:
 	void auto_jump(c_usercmd* cmd);
+	void chat_spam();
 	void run_fake(c_usercmd* cmd, bool &send_packet);
 	void run_legitAA(c_usercmd* cmd, bool send_packets);
 	bool anti_trigger(c_usercmd* cmd, bool& send_packets);

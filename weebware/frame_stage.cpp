@@ -4,6 +4,16 @@
 
 c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
+int count;
+
+void SetClanTag(const char* tag, const char* name)
+{
+	static auto pSetClanTag = (int(__fastcall*)(const char*, const char*))g_weebware.pattern_scan(("engine.dll"), "53 56 57 8B DA 8B F9 FF 15");
+
+	pSetClanTag(tag, name);
+}
+
+std::string MovingTag[16] = { "w", "we", "wee", "weeb", "weebw", "weebwa", "weebwar", "weebware", "weebware", "weebwar", "weebwa", "weebw", "weeb", "wee", "we", "w" };
 
 #if 1
 void hook_functions::frame_stage_notify(clientframestage_t curStage)
@@ -14,6 +24,20 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
 		}
+
+		if (curStage == clientframestage_t::frame_render_start) {
+			if (g_weebwarecfg.misc_clantag_changer && g_weebwarecfg.enable_misc)
+			{
+				int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 16);
+				if (count > 32)
+				{
+					SetClanTag((MovingTag[i]).c_str(), (MovingTag[i]).c_str());
+					count = 0;
+				}
+				count++;
+			}
+		}
+
 
 #if 0
 		if (curStage == clientframestage_t::frame_render_start)
@@ -34,7 +58,7 @@ void c_frame_stage_notify::pvs_fix()
 	if (!local)
 		return;
 
-	for (int i = 1; i <= 99; i++)
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
 		if (i == local->EntIndex())
 			continue;
