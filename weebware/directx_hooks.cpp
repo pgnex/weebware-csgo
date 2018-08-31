@@ -621,6 +621,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Checkbox("Enable", &g_weebwarecfg.enable_misc, false);
 								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.auto_jump, false);
+								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
+								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 							}
 							ImGui::EndChild();
 

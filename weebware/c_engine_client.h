@@ -160,7 +160,7 @@ public:
 
 	void execute_client_cmd(char const* command)
 	{
-		getvfunc<void(__thiscall*)(PVOID, char const*)>(this, 105)(this, command);
+		getvfunc<void(__thiscall*)(PVOID, char const*)>(this, 108)(this, command);
 	}
 
 	void get_view_angles(Vector& ang)

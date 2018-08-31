@@ -124,14 +124,17 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 	run_fake(cmd, sendPackets);
 
 	run_legitAA(cmd, sendPackets);
+
+	chat_spam();
 }
 
 void c_create_move::auto_jump(c_usercmd* cmd)
 {
 	if (!g_weebwarecfg.auto_jump)
-	{
 		return;
-	}
+
+	if (local->GetMoveType() == MOVETYPE_LADDER)
+		return;
 
 	// If Local is in air.
 	if (!(this->local->m_fFlags() & fl_onground))
@@ -140,6 +143,36 @@ void c_create_move::auto_jump(c_usercmd* cmd)
 		cmd->buttons &= ~in_jump;
 	}
 }
+
+std::vector<std::string> cspam_weebware = {
+	"weebware.net - premium cheating software, get weebware!",
+	"weebware.net - cheating is for cool kids, get weebware!",
+	"weebware.net - same price as an esea sub, lol, get weebware!",
+	"weebware.net - would u like some sauce with ur pasta?",
+	"weebware.net - no sir, i've never heard of ayyware b4",
+	"weebware.net - you pay for that baim?",
+	"weebware.net - fanta.trashed on",
+	"weebware.net - does it come with junkcode",
+	"weebware.net - handin out L's",
+	"weebware.net - where your security matters."
+};
+
+int chatSpamTick = 0;
+void c_create_move::chat_spam()
+{
+	if (g_weebwarecfg.misc_chat_spammer)
+	{
+		srand(time(0) + rand());
+		int selection = int(static_cast<int>(cspam_weebware.size()) * rand() / (RAND_MAX + 1.0));
+		chatSpamTick++;
+		if (chatSpamTick >= 100) {
+			g_weebware.g_engine->execute_client_cmd(("say " + cspam_weebware.at(selection)).c_str());
+			chatSpamTick = 0;
+		}
+	}
+}
+
+
 
 // I don't really want this autistic shit in here.
 #if 0

@@ -132,6 +132,8 @@ public:
 
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
+	bool misc_clantag_changer = 0;
+	bool misc_chat_spammer = 0;
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
