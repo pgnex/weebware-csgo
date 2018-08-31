@@ -17,6 +17,9 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 			g_accuracy.clear_all_records();
 
 		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel")) {
+
+			g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
+
 			g_esp.esp_main();
 		}
 	}
@@ -25,7 +28,8 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 
 void c_paint_traverse::draw_water_mark()
 {
-	draw_string(g_weebware.tahoma_font, 5, 10, c_color(255, 255, 255, 255), 0, "weebware");
+	c_color col = c_color(g_weebwarecfg.water_mark_col);
+	draw_string(g_weebware.tahoma_font, 5, 20, c_color(col.r, col.g, col.b, col.a), 0, "weebware");
 }
 
 void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color color, DWORD alignment, const char* msg, ...) // 1 is right, 0 is normal

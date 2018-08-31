@@ -90,8 +90,14 @@ public:
 	using fn_fsn = void(__stdcall*)(clientframestage_t);
 	fn_fsn o_fsn;
 
+#if 0
 	using fn_cursorlock = void(__thiscall*)(void*);
 	fn_cursorlock o_cursor;
+#else
+	typedef BOOL(WINAPI *fn_setcursorpos)(int, int);
+	fn_setcursorpos o_cursor;
+#endif
+
 #pragma endregion
 
 #pragma region DME

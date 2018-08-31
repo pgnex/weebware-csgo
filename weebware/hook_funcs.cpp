@@ -6,20 +6,27 @@
 
 c_hooking g_hooking;
 
+#if 0
+BOOL WINAPI hk_set_cursor_pos(int x, int y)
+{
+	if (g_weebware.menu_opened) {
+		return 1;
+	}
+
+	return g_hooking.o_cursor(x, y);
+}
 void __stdcall hk_unlock_cursor()
 {
-	 auto protecc = g_hooking.VEH_CURSORLOCK->getProtectionObject();
+	auto protecc = g_hooking.VEH_CURSORLOCK->getProtectionObject();
 
 	if (g_weebware.menu_opened) {
-
 		g_weebware.g_surface->unlockcursor();
-
 	}
 	else {
-		//  PLH::FnCast(g_hooking.lock_tramp, g_hooking.o_cursor)(g_weebware.g_surface);
-		g_hooking.o_cursor(g_weebware.g_surface);
+		g_weebware.g_surface->lockcursor();
 	}
 }
+#endif
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
@@ -30,7 +37,7 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
-	 auto protecc = g_hooking.VEH_CM->getProtectionObject();
+	auto protecc = g_hooking.VEH_CM->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
@@ -55,7 +62,7 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 
 long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
-	  auto protecc = g_hooking.VEH_RESET->getProtectionObject();
+	auto protecc = g_hooking.VEH_RESET->getProtectionObject();
 
 	return hook_functions::reset(device, presentation_param);
 }
@@ -63,7 +70,7 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 #if 0
 long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
-	 auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
+	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
 	return hook_functions::end_scene(device);
 }
@@ -77,7 +84,7 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 #endif
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
-	 auto protecc = g_hooking.VEH_DME->getProtectionObject();
+	auto protecc = g_hooking.VEH_DME->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
@@ -85,22 +92,22 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	else
 		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 
-		// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-		//
-		// 
+	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+	//
+	// 
 }
 
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 {
-	 auto protecc = g_hooking.VEH_FSN->getProtectionObject();
+	auto protecc = g_hooking.VEH_FSN->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		hook_functions::frame_stage_notify(curStage);
 	else
 		g_hooking.o_fsn(curStage);
-		// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
+	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
 
-		//
+	//
 }
 
 namespace knife_changer {
@@ -375,10 +382,16 @@ void c_hooking::hook_all_functions()
 	VEH_PAINT->hook();
 	o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
 
+#if 0
 	auto cursor_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_surface))[67];
 	VEH_CURSORLOCK = new PLH::BreakPointHook((char*)cursor_addr, (char*)&hk_unlock_cursor);
 	VEH_CURSORLOCK->hook();
 	o_cursor = reinterpret_cast<decltype(o_cursor)>(cursor_addr);
+	auto cursor_addr = GetProcAddress(GetModuleHandleA("user32.dll"), "SetCursorPos");
+	VEH_CURSORLOCK = new PLH::BreakPointHook((char*)cursor_addr, (char*)&hk_set_cursor_pos);
+	VEH_CURSORLOCK->hook();
+	o_cursor = reinterpret_cast<decltype(o_cursor)>(cursor_addr);
+#endif
 
 	auto cm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24];
 	VEH_CM = new PLH::BreakPointHook((char*)cm_addr, (char*)&hk_clientmode_cm);
@@ -444,9 +457,11 @@ void c_hooking::hook_all_functions()
 
 void c_hooking::unhook_all_functions()
 {
+	g_weebware.menu_opened = false;
 	g_weebware.g_input_system->EnableInput(true);
 
-	g_weebware.menu_opened = false;
+	// wait for shit to register
+	Sleep(100);
 #if 0
 	DETOUR_PAINT->unHook();
 	DETOUR_CM->unHook();
@@ -462,7 +477,6 @@ void c_hooking::unhook_all_functions()
 	VEH_ENDSCENE->unHook();
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
-	VEH_CURSORLOCK->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();

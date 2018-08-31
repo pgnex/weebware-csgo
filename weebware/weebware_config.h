@@ -85,7 +85,7 @@ public:
 
 	int enable_visuals;
 	int enable_visuals_key;
-	bool visuals_watermark;
+	bool visuals_watermark = true;
 	bool visuals_teammates;
 	bool visuals_bounding_box;
 	bool visuals_health_bars;
@@ -132,14 +132,18 @@ public:
 
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
-	bool misc_clantag_changer = 0;
-	bool misc_chat_spammer = 0;
+
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
 	bool use_dynamicfov[8] = { 0 };
 	int visuals_backtrack_style = 0;
-	bool anti_triggerbot = 0;
+	int anti_triggerbot = 0;
+
+	bool misc_clantag_changer = 0;
+	bool misc_chat_spammer = 0;
+	bool misc_slidewalk = 0;
+	int anti_triggerbot_key = 0;
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;

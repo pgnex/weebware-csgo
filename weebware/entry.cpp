@@ -96,6 +96,8 @@ bool c_weebware::init_interfaces()
 	// Load our meme database for our p netvars
 	netvar_manager::_instance()->create_database();
 
+	g_weebwarecfg = c_weebwarecfg();
+
 	// Load fonts.
 	// g_draw.GetDevice(g_direct_x);
 
@@ -136,7 +138,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();

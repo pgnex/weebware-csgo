@@ -337,4 +337,9 @@ public:
 		return getvfunc<const char* (__thiscall*)(PVOID, unsigned int)>(this, 36)(this, vguipanel);
 	}
 
+	void set_mouseinput_enabled(unsigned int panel, bool state)
+	{
+		return getvfunc<void(__thiscall *)(PVOID, int, bool)>(this, 32)(this, panel, state);
+	}
+
 };

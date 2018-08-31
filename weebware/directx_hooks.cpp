@@ -612,6 +612,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region Misc
 					if (selected_tab == tabs::misc)
 					{
+						ImGui::Checkbox("Enable", &g_weebwarecfg.enable_misc, false);
+
 						ImGui::Columns(2, "Miscs", false);
 						{
 							ImGui::SetColumnOffset(1, 290);
@@ -619,7 +621,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Misc");
 								ImGui::Separator();
-								ImGui::Checkbox("Enable", &g_weebwarecfg.enable_misc, false);
 								ImGui::Checkbox("Auto Jump", &g_weebwarecfg.auto_jump, false);
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
@@ -648,10 +649,16 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Legit Anti-Aim");
 								ImGui::Separator();
 
-								ImGui::Checkbox("Enabed##LegitAA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+								// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
+								ImGui::Text("Anti Triggerbot");
+								imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
+								const char* activation[] = { "Off", "Active", "On key"};
+								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
-								ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
+								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+								ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
+
 
 								ImGui::Separator();
 							}

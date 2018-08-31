@@ -123,7 +123,12 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 
 	run_fake(cmd, sendPackets);
 
-	run_legitAA(cmd, sendPackets);
+	if (g_weebwarecfg.misc_legit_aa_enabled)
+		run_legitAA(cmd, sendPackets);
+
+	runClanTag();
+
+	chat_spam();
 }
 
 void c_create_move::auto_jump(c_usercmd* cmd)
@@ -141,16 +146,116 @@ void c_create_move::auto_jump(c_usercmd* cmd)
 	}
 }
 
+bool c_create_move::is_visible(c_base_entity* target)
+{
+	trace_t Trace;
+
+	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8); // 8 is head. 
+
+	Ray_t ray;
+
+	ray.Init(src, dst2);
+
+	ITraceFilter traceFilter;
+
+	traceFilter.pSkip = (void*)local;
+
+	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
+
+	if (Trace.m_pEnt == target)
+		return true;
+
+	if (Trace.fraction == 1.0f)
+		return true;
+
+	return false;
+}
+
+namespace anti_trigger {
+
+	/*Credits https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not post by Alghyaline*/
+	Vector vect2d(Vector p1, Vector p2) {
+		Vector temp;
+		temp.x = (p2.x - p1.x);
+		temp.y = -1 * (p2.y - p1.y);
+
+		return temp;
+	}
+	bool pointInRectangle(Vector A, Vector B, Vector C, Vector D, Vector m) {
+		Vector AB = vect2d(A, B);  float C1 = -1 * (AB.y*A.x + AB.x*A.y); float  D1 = (AB.y*m.x + AB.x*m.y) + C1;
+		Vector AD = vect2d(A, D);  float C2 = -1 * (AD.y*A.x + AD.x*A.y); float D2 = (AD.y*m.x + AD.x*m.y) + C2;
+		Vector BC = vect2d(B, C);  float C3 = -1 * (BC.y*B.x + BC.x*B.y); float D3 = (BC.y*m.x + BC.x*m.y) + C3;
+		Vector CD = vect2d(C, D);  float C4 = -1 * (CD.y*C.x + CD.x*C.y); float D4 = (CD.y*m.x + CD.x*m.y) + C4;
+		return     0 >= D1 && 0 >= D4 && 0 <= D2 && 0 >= D3;
+	}
+	/*credits end stackoverflow*/
+	bool Checkifbetween(Vector *ViewanglePoints, Vector Viewangles)
+	{
+		if (pointInRectangle(ViewanglePoints[0], ViewanglePoints[1], ViewanglePoints[2], ViewanglePoints[3], Viewangles) //first 4 normal
+			|| pointInRectangle(ViewanglePoints[3], ViewanglePoints[2], ViewanglePoints[1], ViewanglePoints[0], Viewangles) //first 4 reverse
+			|| pointInRectangle(ViewanglePoints[4], ViewanglePoints[5], ViewanglePoints[6], ViewanglePoints[7], Viewangles) //second 4 normal
+			|| pointInRectangle(ViewanglePoints[7], ViewanglePoints[6], ViewanglePoints[5], ViewanglePoints[4], Viewangles))//second 4 reverse
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool require_fake = 0;
+
+	void run_choke(bool& sendpacket, c_usercmd* cmd)
+	{
+		if (!require_fake)
+			return;
+
+		static int ticks_choked = 0;
+
+		if (ticks_choked > 17) {
+			sendpacket = true;
+			ticks_choked = 0;
+			require_fake = 0;
+		}
+		else {
+			g_create_move.run_legitAA(cmd, sendpacket);
+			sendpacket = false;
+		}
+
+		ticks_choked++;
+	}
+}
+
+// https://www.unknowncheats.me/forum/counterstrike-global-offensive/258333-antitrigger.html
+// thanks master looser for these box tracing functions <3
+
 bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 {
-	if (!g_weebwarecfg.anti_triggerbot)
+	switch (g_weebwarecfg.anti_triggerbot) {
+	case 0:
 		return false;
 
-	bool fakelag = false;
+	case 2:
+		if (!GetAsyncKeyState(g_weebwarecfg.anti_triggerbot_key))
+			return false;
+	}
 
-	auto hpos = local->get_bone(8);
+	auto org = *local->m_Origin();
 
-	auto velocity = local->m_vecVelocity();
+	org += (local->m_vecVelocity() / 6);
+
+	auto min = *local->m_vecMins();
+	auto max = *local->m_vecMaxs();
+
+	Vector Local_Bounding[8] = { //the comments below are not accurate
+		Vector(org.x + min.x, org.y + min.y, org.z + min.z), // left buttom
+		Vector(org.x + min.x, org.y + min.y, org.z + max.z), // left top
+		Vector(org.x + max.x, org.y + max.y, org.z + max.z), // right top
+		Vector(org.x + max.x, org.y + max.y, org.z + min.z),  // right buttom
+
+		Vector(org.x + min.x, org.y + max.y, org.z + min.z), // left buttom
+		Vector(org.x + min.x, org.y + max.y, org.z + max.z), // left top
+		Vector(org.x + max.x, org.y + min.y, org.z + max.z), // right top
+		Vector(org.x + max.x, org.y + min.y, org.z + min.z)  // right buttom
+	};
 
 	for (auto i = 1; i < 99; i++) {
 
@@ -165,43 +270,50 @@ bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
 			continue;
 
-		// read angle into buffer
-		QAngle target_viewangle = *cur_entity->m_angEyeAngles();
+		QAngle viewangle = *cur_entity->m_angEyeAngles();
 
-		for (int i = 1; i <= 50; i++) {
-			QAngle target_aim_angle;
+		Vector direction;
 
-			// Predict velocity
-			g_maths.vector_qangles(hpos + (velocity * i) - cur_entity->get_vec_eyepos(), target_aim_angle);
+		g_maths.qangle_vector(viewangle, direction);
+		direction *= 8012.f;
 
-			float fov = g_maths.get_fov(target_viewangle, target_aim_angle);
+		Vector begin = cur_entity->get_vec_eyepos();
+		Vector finish = begin + direction;
 
-			// 45 fov is relatively close to crosshair
-			if (fov < 45) {
-				// Begin max fakelag
-				fakelag = true;
-				break;
-			}
-		}
+		Vector angles[8];
 
-		if (fakelag)
+		for (auto i = 0; i < 8; i++)
+			g_maths.vector_qangles(Local_Bounding[i] - begin, angles[i]);
+
+		if (!anti_trigger::Checkifbetween(angles, viewangle))
+			continue;
+
+		trace_t trace;
+		Ray_t ray;
+		ITraceFilter filter;
+		filter.pSkip = cur_entity;
+		ray.Init(begin, finish);
+		g_weebware.g_engine_trace->TraceRay(ray, 0x46004003, &filter, &trace);
+
+		if (((trace.endpos - begin).size() + 10) >= (local->get_vec_eyepos() - begin).size()) {
+
+			anti_trigger::require_fake = true;
+
 			break;
+		}
 	}
 
-	if (fakelag) {
-		// maximise fakelag
-		send_packet = (cmd->tick_count % 14 == 0);
-	}
-
-	return fakelag; 
+	return anti_trigger::require_fake;
 }
 
 void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 {
-	if (!g_weebwarecfg.misc_legit_aa_enabled)
-		return;
+	anti_trigger::run_choke(send_packet, cmd);
 
 	if (anti_trigger(cmd, send_packet))
+		return;
+
+	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
 	send_packet = (cmd->tick_count % 3 == 0);
@@ -259,9 +371,6 @@ c_base_entity* get_best_target(c_base_entity * local)
 
 void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 {
-	if (!g_weebwarecfg.misc_legit_aa_enabled)
-		return;
-
 	if (local->m_pActiveWeapon()->is_grenade())
 		return;
 
@@ -292,7 +401,6 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 			float diff = (angle2Target.y - OriginalAngle.y);
 
-			std::cout << diff << std::endl;
 			// If behind
 			if (diff > 0 && diff < 180) {
 				shouldflip = 1;
@@ -313,5 +421,89 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 		if (stage > 90)
 			stage = -90;
 
+	}
+
+	if (!g_weebwarecfg.misc_slidewalk) {
+		if (cmd->forwardmove > 0)
+		{
+			cmd->buttons |= in_back;
+			cmd->buttons &= in_forward;
+		}
+
+		if (cmd->forwardmove < 0)
+		{
+			cmd->buttons |= in_forward;
+			cmd->buttons &= in_back;
+		}
+
+		if (cmd->sidemove < 0)
+		{
+			cmd->buttons |= in_moveright;
+			cmd->buttons &= in_moveleft;
+		}
+
+		if (cmd->sidemove > 0)
+		{
+			cmd->buttons |= in_moveleft;
+			cmd->buttons &= ~in_moveright;
+		}
+	}
+}
+
+void c_create_move::chat_spam()
+{
+	static const std::vector<std::string> cspam_weebware = {
+		"weebware.net - premium cheating software, get weebware!",
+		"weebware.net - cheating is for cool kids, get weebware!",
+		"weebware.net - same price as an esea sub, lol, get weebware!",
+		"weebware.net - would u like some sauce with ur pasta?",
+		"weebware.net - no sir, i've never heard of ayyware b4",
+		"weebware.net - you pay for that baim?",
+		"weebware.net - fanta.trashed on",
+		"weebware.net - does it come with junkcode",
+		"weebware.net - handin out L's",
+		"weebware.net - where your security matters."
+	};
+
+	if (g_weebwarecfg.misc_chat_spammer)
+	{
+		static int elapsed_ticks = 0;
+
+		int selection = int(static_cast<int>(cspam_weebware.size()) * rand() / (RAND_MAX + 1.0));
+
+		elapsed_ticks++;
+
+		// calculate server tickrate
+		int tick_rate = 1 / g_weebware.g_global_vars->interval_per_tick;
+
+		// after server refresh we should be able to execute another cmd
+		if (elapsed_ticks >= tick_rate) {
+			g_weebware.g_engine->execute_client_cmd(("say " + cspam_weebware.at(selection)).c_str());
+			elapsed_ticks = 0;
+		}
+	}
+}
+
+void c_create_move::runClanTag()
+{
+	static const std::string MovingTag[16] = { "w", "we", "wee", "weeb", "weebw", "weebwa", "weebwar", "weebware", "weebware", "weebwar", "weebwa", "weebw", "weeb", "wee", "we", "w" };
+
+	if (g_weebwarecfg.misc_clantag_changer && g_weebwarecfg.enable_misc)
+	{
+		static int ticks_elapsed = 0;
+
+		static auto set_clantag = (int(__fastcall*)(const char*, const char*))g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15");
+
+		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 16);
+
+		int tick_rate = 1 / g_weebware.g_global_vars->interval_per_tick;
+
+		if (ticks_elapsed > tick_rate)
+		{
+			set_clantag(MovingTag[i].c_str(), MovingTag[i].c_str());
+			ticks_elapsed = 0;
+		}
+
+		ticks_elapsed++;
 	}
 }
