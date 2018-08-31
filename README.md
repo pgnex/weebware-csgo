@@ -12,7 +12,7 @@ The following libraries are required:
    - Polyhook https://github.com/stevemk14ebr/PolyHook_2_0  
    - Capstone https://github.com/aquynh/capstone    
 
-## injecting
+## Injecting
    Any injection method may be used - preferably manual map. 
    Simply load the .dll built into csgo.exe
 
