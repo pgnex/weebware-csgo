@@ -60,7 +60,7 @@ void c_frame_stage_notify::legit_aa_resolver()
 
 		for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); ++i)
 		{
-			c_base_entity* player = (c_base_entity*)g_weebware.g_entlist->getcliententity(i);
+			auto player = reinterpret_cast<c_base_entity*>(g_weebware.g_entlist->getcliententity(i));
 
 			if (!player)
 				continue;
@@ -72,7 +72,7 @@ void c_frame_stage_notify::legit_aa_resolver()
 
 			if (player->m_fFlags() & fl_onground)
 			{
-				if (player->m_vecVelocity().Length2D() < 0.f) {
+				if (player->m_vecVelocity().size() < 1.f) {
 					if (delta > 35)
 						player->eyeangle_ptr()->y = delta;
 				}
