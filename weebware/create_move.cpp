@@ -23,17 +23,17 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		{
 			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+			g_create_move.runClanTag();
+
+			g_create_move.chat_spam();
+
 			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
 			{
 				// shouldn't actually do anything when applying skin cause entites are all refreshed and cause nullptr issues
 				if (g_weebwarecfg.skinchanger_apply_nxt) {
 
-					g_accuracy.clear_all_records();
-
 					if (*g_weebware.g_client_state)
 						(*g_weebware.g_client_state)->force_update();
-
-					g_accuracy.clear_all_records();
 
 					g_weebwarecfg.skinchanger_apply_nxt = 0;
 				}
@@ -84,17 +84,18 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 				if (cmd->sidemove < -450)
 					cmd->sidemove = -450;
 			}
+			else {
+				g_accuracy.clear_all_records();
+			}
 #pragma endregion
 		}
 		else
 		{
-			g_accuracy.clear_all_records();
 			g_Walkbot.m_target_area = nullptr;
 		}
 	}
 	else
 	{
-		g_accuracy.clear_all_records();
 		g_Walkbot.m_target_area = nullptr;
 	}
 
@@ -126,9 +127,6 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 	if (g_weebwarecfg.misc_legit_aa_enabled)
 		run_legitAA(cmd, sendPackets);
 
-	runClanTag();
-
-	chat_spam();
 }
 
 void c_create_move::auto_jump(c_usercmd* cmd)
@@ -210,7 +208,7 @@ namespace anti_trigger {
 
 		static int ticks_choked = 0;
 
-		if (ticks_choked > 17) {
+		if (ticks_choked > 14) {
 			sendpacket = true;
 			ticks_choked = 0;
 			require_fake = 0;
@@ -310,13 +308,13 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 {
 	anti_trigger::run_choke(send_packet, cmd);
 
-	if (anti_trigger(cmd, send_packet))
+	if (anti_trigger::require_fake)
 		return;
 
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
-	send_packet = (cmd->tick_count % 3 == 0);
+	send_packet = (cmd->tick_count % 4 == 0);
 }
 
 bool can_shoot(c_base_entity* local)
@@ -377,9 +375,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 	if (local->GetMoveType() == MOVETYPE_LADDER)
 		return;
 
-	if (!(cmd->buttons & in_attack) && !send_packets) {
-
-		//	auto target = get_closest_target_available(this->local);
+	if ((!(cmd->buttons & in_attack)) && !send_packets) {
 
 		c_base_entity* target = get_best_target(this->local);
 
@@ -421,32 +417,6 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 		if (stage > 90)
 			stage = -90;
 
-	}
-
-	if (!g_weebwarecfg.misc_slidewalk) {
-		if (cmd->forwardmove > 0)
-		{
-			cmd->buttons |= in_back;
-			cmd->buttons &= in_forward;
-		}
-
-		if (cmd->forwardmove < 0)
-		{
-			cmd->buttons |= in_forward;
-			cmd->buttons &= in_back;
-		}
-
-		if (cmd->sidemove < 0)
-		{
-			cmd->buttons |= in_moveright;
-			cmd->buttons &= in_moveleft;
-		}
-
-		if (cmd->sidemove > 0)
-		{
-			cmd->buttons |= in_moveleft;
-			cmd->buttons &= ~in_moveright;
-		}
 	}
 }
 
