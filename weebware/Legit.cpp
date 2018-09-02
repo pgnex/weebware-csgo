@@ -597,7 +597,13 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 
 	for (size_t i = 0; i < accuracy_records.size(); i++)
 	{
-		if (!is_valid_record(accuracy_records[i]))
+		bool ExistingPlayer = true;
+		auto record_player = g_weebware.g_entlist->getcliententity(accuracy_records[i].index);
+
+		if (!record_player || !record_player->is_valid_player())
+			ExistingPlayer = false;
+
+		if (!is_valid_record(accuracy_records[i]) || !ExistingPlayer)
 		{
 			accuracy_records.erase(accuracy_records.begin() + i);
 			continue;
