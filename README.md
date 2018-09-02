@@ -21,5 +21,5 @@ The following libraries are required:
   A new instance of a VEH hook class is required for each function (refer to polyhook documentation)
   
 ## Dependencies
-   The guns.txt and skins.txt must be installed in C://weebware/dependencies/ failure to do so results in the skinchanger tab not working
+   The guns.txt and skins.txt must be installed in C://weebware/dependencies/ failure to do so results in the skinchanger tab not working  
    These dependencies are installed in the weebware loader.
