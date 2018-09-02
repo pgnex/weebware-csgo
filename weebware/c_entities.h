@@ -194,7 +194,7 @@ public:
 		return (*this->m_Origin() + this->m_vecViewOffset());
 	}
 
-	int GetMoveType() {
+	int get_move_type() {
 		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x258);
 	}
 

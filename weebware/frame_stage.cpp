@@ -68,11 +68,14 @@ void c_frame_stage_notify::legit_aa_resolver()
 			if (!player->is_valid_player())
 				continue;
 
+			if (player->m_iTeamNum() == local->m_iTeamNum())
+				continue;
+
 			float delta = fabs(player->m_flLowerBodyYawTarget() - player->m_angEyeAngles().y);
 
 			if (player->m_fFlags() & fl_onground)
 			{
-				if (player->m_vecVelocity().size() < 1.f) {
+				if (player->m_vecVelocity().size() < 0.f) {
 					if (delta > 35)
 						player->eyeangle_ptr()->y = delta;
 				}

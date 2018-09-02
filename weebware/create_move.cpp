@@ -138,6 +138,11 @@ void c_create_move::auto_jump(c_usercmd* cmd)
 		return;
 	}
 
+	if (local->get_move_type() == MOVETYPE_LADDER)
+	{
+		return;
+	}
+
 	// If Local is in air.
 	if (!(this->local->m_fFlags() & fl_onground))
 	{
@@ -374,7 +379,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 	if (local->m_pActiveWeapon()->is_grenade())
 		return;
 
-	if (local->GetMoveType() == MOVETYPE_LADDER)
+	if (local->get_move_type() == MOVETYPE_LADDER)
 		return;
 
 	if (!(cmd->buttons & in_attack) && !send_packets) {
@@ -423,31 +428,31 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 	}
 
-	if (!g_weebwarecfg.misc_slidewalk) {
-		if (cmd->forwardmove > 0)
-		{
-			cmd->buttons |= in_back;
-			cmd->buttons &= in_forward;
-		}
+	//if (!g_weebwarecfg.misc_slidewalk) {
+	//	if (cmd->forwardmove > 0)
+	//	{
+	//		cmd->buttons |= in_back;
+	//		cmd->buttons &= in_forward;
+	//	}
 
-		if (cmd->forwardmove < 0)
-		{
-			cmd->buttons |= in_forward;
-			cmd->buttons &= in_back;
-		}
+	//	if (cmd->forwardmove < 0)
+	//	{
+	//		cmd->buttons |= in_forward;
+	//		cmd->buttons &= in_back;
+	//	}
 
-		if (cmd->sidemove < 0)
-		{
-			cmd->buttons |= in_moveright;
-			cmd->buttons &= in_moveleft;
-		}
+	//	if (cmd->sidemove < 0)
+	//	{
+	//		cmd->buttons |= in_moveright;
+	//		cmd->buttons &= in_moveleft;
+	//	}
 
-		if (cmd->sidemove > 0)
-		{
-			cmd->buttons |= in_moveleft;
-			cmd->buttons &= ~in_moveright;
-		}
-	}
+	//	if (cmd->sidemove > 0)
+	//	{
+	//		cmd->buttons |= in_moveleft;
+	//		cmd->buttons &= ~in_moveright;
+	//	}
+	//}
 }
 
 void c_create_move::chat_spam()
