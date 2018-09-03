@@ -551,24 +551,24 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
 								if (g_weebwarecfg.visuals_teammates) {
-									imgui_custom::custom_color_inline(g_weebwarecfg.team_visible_col, g_weebwarecfg.team_hidden_col, true, "Visible Color (Team)", "Hidden Color (Team)");
+									imgui_custom::custom_color_inline(g_weebwarecfg.team_visible_col, g_weebwarecfg.team_hidden_col, true, "Visible Color (Team)##Team1", "Hidden Color (Team)##Team2");
 								}
 								ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
 
 								ImGui::Checkbox("Bounding box", &g_weebwarecfg.visuals_bounding_box, false);
 								if (g_weebwarecfg.visuals_bounding_box) {
-									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col_visible, g_weebwarecfg.visuals_bounding_col_hidden, true, "Visible Color (Enemy)", "Hidden Color (Enemy)");
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col_visible, g_weebwarecfg.visuals_bounding_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
 								}
 								ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
 
 								ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
 								if (g_weebwarecfg.visuals_name_esp) {
-									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)", "Hidden Color (Enemy)");
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)##name1", "Hidden Color (Enemy)##name2");
 								}
 
 								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 								if (g_weebwarecfg.visuals_dormant_esp) {
-									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)", "Hidden Color (Enemy)");
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)##dormant1", "Hidden Color (Enemy)##dormant2");
 								}
 
 
@@ -580,7 +580,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome", "Gloss", "Glow","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude" };
 								ImGui::Text("Material");
 								ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
-								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color", "Team Color");
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
 								ImGui::Checkbox("Render team", &g_weebwarecfg.visuals_chams_render_team, false);
 
 
@@ -750,7 +750,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Settings");
 								ImGui::Separator();
 								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark");
+								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 							}
 							ImGui::EndChild();
 

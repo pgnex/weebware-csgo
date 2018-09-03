@@ -79,7 +79,7 @@ void c_esp::esp_main()
 					// So c4 is still going!
 					if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
 
-						int offset_y = 30;
+						int offset_y = 15.f;
 
 						if (g_weebwarecfg.visuals_watermark) {
 							offset_y += 35.f;
@@ -234,8 +234,6 @@ void c_esp::calc_w2svalues()
 void c_esp::water_mark()
 {
 	if (g_weebwarecfg.visuals_watermark) {
-		/* Testing purposes. */
-
 		g_paint_traverse.draw_water_mark();
 	}
 }

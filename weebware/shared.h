@@ -9,6 +9,7 @@ typedef void* (__cdecl* create_interface)(const char*, int*);
 class c_weebware
 {
 public:
+	std::string g_user_name = "";
 	void setup_thread();
 	uint64_t pattern_scan(const char* szModule, const char* szSignature);
 	void init_fonts();

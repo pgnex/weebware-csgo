@@ -27,7 +27,9 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 void c_paint_traverse::draw_water_mark()
 {
 	c_color col = c_color(g_weebwarecfg.water_mark_col);
-	draw_string(g_weebware.tahoma_font, 5, 20, c_color(col.r, col.g, col.b, col.a), 0, "weebware");
+	std::string weebware = "weebware - " + g_weebware.g_user_name;
+	std::transform(weebware.begin(), weebware.end(), weebware.begin(), ::tolower);
+	draw_string(g_weebware.tahoma_font, 5, 15, c_color(col.r, col.g, col.b, col.a), 0, weebware.c_str());
 }
 
 void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color color, DWORD alignment, const char* msg, ...) // 1 is right, 0 is normal
