@@ -58,6 +58,9 @@ void c_frame_stage_notify::legit_aa_resolver()
 		if (!local)
 			return;
 
+		if (!local->is_valid_player())
+			return;
+
 		for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); ++i)
 		{
 			auto player = reinterpret_cast<c_base_entity*>(g_weebware.g_entlist->getcliententity(i));
