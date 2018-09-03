@@ -188,7 +188,7 @@ void imgui_custom::custom_color_inline(ImVec4& col, const char* id)
 	}
 }
 
-void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_draw_second, const char* id)
+void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_draw_second, const char* id, const char* id2)
 {
 	if (!should_draw_second)
 	{
@@ -212,7 +212,7 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 
 		ImGui::SameLine();
 
-		std::string ids = id + std::string("2");
+		std::string ids = id2;
 
 		if (ImGui::ColorButton(ids.c_str(), ConvertFromRGBA(col2)))
 		{

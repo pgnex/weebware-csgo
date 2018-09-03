@@ -145,6 +145,17 @@ public:
 	bool misc_slidewalk = 0;
 	int anti_triggerbot_key = 0;
 	bool misc_legit_aa_resolver = 0;
+
+	ImVec4 team_visible_col = ImVec4(0, 100, 255, 255);
+	ImVec4 team_hidden_col = ImVec4(255, 0, 255, 255);
+
+	// new box esp colors
+	ImVec4 visuals_bounding_col_visible = ImVec4(50, 255, 0, 255);
+	ImVec4 visuals_bounding_col_hidden = ImVec4(255, 50, 50, 255);
+
+	// new name esp colors
+	ImVec4 visuals_name_esp_col_visible = ImVec4(255, 255, 255, 255);
+	ImVec4 visuals_name_esp_col_hidden = ImVec4(255, 255, 0, 255);
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;

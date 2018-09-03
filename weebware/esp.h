@@ -40,7 +40,7 @@ private:
 	void water_mark();
 	Vector center_hitbox(c_base_entity* ent, int id);
 	s_boundaries calc_boundaries(c_base_entity* Entity);
-	void render_box(s_boundaries bounds, bool is_team);
+	void render_box(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void render_health(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void draw_inaccuracy_circle();
 	void render_name(s_boundaries bounds, c_base_entity* ent, bool is_team);

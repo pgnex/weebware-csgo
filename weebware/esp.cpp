@@ -157,11 +157,11 @@ void c_esp::esp_main()
 				if (ent->is_dormant())
 					w2s_player[i].boundary.dormant = true;
 
-				render_box(w2s_player[i].boundary, ent->m_iTeamNum() == local->m_iTeamNum());
+				render_box(w2s_player[i].boundary, ent, is_visible(local, ent));
 
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 
-				render_name(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
+				render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
 #pragma endregion
 
 			}
@@ -330,13 +330,19 @@ s_boundaries c_esp::calc_boundaries(c_base_entity* Entity)
 	return result;
 }
 
-void c_esp::render_box(s_boundaries bounds, bool is_team)
+void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {
 	if (!g_weebwarecfg.visuals_bounding_box)
 	{
 		return;
 	}
-	c_color col = is_team ? c_color(g_weebwarecfg.visuals_bounding_team_col) : c_color(g_weebwarecfg.visuals_bounding_col);
+	c_color col;
+	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
+		col = is_visible ? c_color(g_weebwarecfg.visuals_bounding_col_visible) : c_color(g_weebwarecfg.visuals_bounding_col_hidden);
+	}
+	else {
+		col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
+	}
 
 	// Box
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 60);
@@ -347,7 +353,7 @@ void c_esp::render_box(s_boundaries bounds, bool is_team)
 
 		if (bounds.dormant) {
 
-			c_color col = is_team ? c_color(g_weebwarecfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.visuals_dormant_col);
+			c_color col = is_visible ? c_color(g_weebwarecfg.visuals_dormant_col_team) : c_color(g_weebwarecfg.visuals_dormant_col);
 		}
 
 	}
@@ -408,7 +414,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 	}
 }
 
-void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_team)
+void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {
 	if (!g_weebwarecfg.visuals_name_esp)
 		return;
@@ -420,7 +426,14 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	g_weebware.g_engine->get_player_info(ent->EntIndex(), &playerinfo);
 
-	c_color draw_col = is_team ? c_color(g_weebwarecfg.visuals_name_esp_col_team) : c_color(g_weebwarecfg.visuals_name_esp_col);
+	c_color draw_col;
+
+	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
+		draw_col = is_visible ? c_color(g_weebwarecfg.visuals_name_esp_col_visible) : c_color(g_weebwarecfg.visuals_name_esp_col_hidden);
+	}
+	else {
+		draw_col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
+	}
 
 	std::string player_name = playerinfo.name;
 
