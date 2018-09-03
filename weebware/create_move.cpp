@@ -96,6 +96,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	{
 		g_accuracy.clear_all_records();
 		g_Walkbot.m_target_area = nullptr;
+		g_Walkbot.m_maploaded = false;
 	}
 
 	return false;

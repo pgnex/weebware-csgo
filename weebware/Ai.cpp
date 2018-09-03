@@ -11,14 +11,19 @@ c_ai g_ai;
 
 void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 {
+	m_localview = cmd->viewangles;
+
 	m_local = local;
 
 	m_target_ent = nullptr;
 
-	if (!g_weebwarecfg.misc_ai || cmd->buttons & in_attack) {
-		// g_Walkbot.m_target_area = nullptr;
+	if (!g_weebwarecfg.misc_ai) {
+		g_Walkbot.m_target_area = nullptr;
 		return;
 	}
+
+	if (cmd->buttons & in_attack)
+		return;
 
 	if (g_weebwarecfg.misc_ai_random) {
 		g_Walkbot.m_CurrentMode = ai_movement::random;
@@ -37,7 +42,7 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 			continue;
 
 		// We need to find if the planted bomb exists...
-		if (strstr(entity->get_client_class()->m_networkedname, "CPlantedC4"))
+		if (strstr(entity->get_client_class()->m_networkedname, "CPlantedC4") && g_weebwarecfg.misc_ai_defuse)
 		{
 			float remaining = reinterpret_cast<c_bomb*>(entity)->get_blow_time() - g_weebware.g_global_vars->curtime;
 
@@ -66,11 +71,12 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 			continue;
 		}
 
+		if (entity->m_bGunGameImmunity())
+			continue;
+
 		// check for closest player VISIBLE.
 		if (!is_visible(entity))
 			continue;
-
-		// If we get closest we wanna walk 
 
 		QAngle angle_to_head = QAngle(0.f, 0.f, 0.f);
 
@@ -85,15 +91,14 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 		float this_fov = g_maths.get_fov(view_angles, angle_to_head);
 
 		// Get the closest entity in range 
-		if (this_fov < 180.f && this_fov < m_tempt_fov)
+		if (this_fov < m_tempt_fov)
 		{
-			// We detected one or multiple... Now get closest.
 			m_target_ent = entity;
 
 			m_flags = ai_flags::aggravated;
 
 			// we need a blatant factor
-			if (this_fov <= 10.f) {
+			if (this_fov <= 25.f) {
 				m_flags = ai_flags::kill;
 			}
 
@@ -101,22 +106,25 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 		}
 	}
 
-	if (m_flags == ai_flags::aggravated) {
+	if (!m_target_ent->is_valid_player())
+		m_target_ent = nullptr;
 
-		// enemy detecc! walk
-		cmd->forwardmove = 130;
+	if (m_target_ent && g_weebwarecfg.misc_ai_nearest) {
 
-		// There is an enemy, move slowly towards kill range.
-		correct_range(cmd);
-	}
-	else if (m_flags == ai_flags::kill) {
+		if (m_flags == ai_flags::aggravated) {
 
-		// stop moving and crouch
-		g_legitbot.auto_stop(cmd);
+			// walk to increase accuray for combat
+			cmd->forwardmove = 130;
 
-		cmd->buttons |= in_duck;
+			correct_range(cmd);
+		}
+		else if (m_flags == ai_flags::kill) {
 
+			g_legitbot.auto_stop(cmd);
 
+			// Aim at head and shoot
+			this->kill(cmd);
+		}
 	}
 	else {
 		cmd->forwardmove = 450;
@@ -140,7 +148,6 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 
 	// Detect if we are CT or T.
 	g_Walkbot.create_move(cmd, local);
-
 }
 
 void c_ai::adjust_to_velocity(c_usercmd* cmd)
@@ -157,7 +164,7 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	g_maths.vector_qangles(direction, direction);
 
 	// We dont want to instanteously snap tho
-	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 30.f);
+	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 10.f);
 
 	// Only yaw
 	cmd->viewangles.y = direction.y;
@@ -167,9 +174,7 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 
 void c_ai::jump_on_low_velocity(c_usercmd* cmd)
 {
-	if (m_local->m_vecVelocity().size() <= 6.f) {
-		cmd->buttons |= in_jump;
-	}
+
 }
 
 bool c_ai::is_visible(c_base_entity* target)
@@ -208,7 +213,7 @@ void c_ai::auto_buy_weapons(c_usercmd* cmd)
 		return;
 	}
 	// get current weapon
-	
+
 	std::string console_buffer = "buy ";
 
 	bool b_ct = m_local->m_iTeamNum() == 1;
@@ -218,24 +223,26 @@ void c_ai::auto_buy_weapons(c_usercmd* cmd)
 
 void c_ai::correct_range(c_usercmd* cmd) {
 
-	if (m_tempt_fov <= 10.f)
-		return;
-
-	// create hitbox structure
-	// std::vector<csgohitboxid> structure = { csgohitboxid::head, csgohitboxid::chest, csgohitboxid::stomach};
-
 	Vector direction = g_legitbot.center_hitbox(m_target_ent, csgohitboxid::chest);
 
-	// Convert matrix to a viewangle
-	g_maths.vector_qangles(m_local->get_vec_eyepos() - direction, direction);
+	QAngle aim_dir;
+	g_maths.vector_qangles(direction - m_local->get_vec_eyepos(), aim_dir);
 
 	// rotate player to visible range
-	g_legitbot.calcute_delta(m_localview, direction, 20.f);
-
-	cmd->viewangles = direction;
+	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, 20.f);
 
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
+}
 
+void c_ai::kill(c_usercmd* cmd) {
+
+	Vector direction = g_legitbot.center_hitbox(m_target_ent, csgohitboxid::head);
+	QAngle aim_dir;
+	g_maths.vector_qangles(direction - m_local->get_vec_eyepos(), aim_dir);
+	aim_dir -= m_local->m_aimPunchAngle() * 2.f;
+	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, 40.f);
+	g_weebware.g_engine->set_view_angles(cmd->viewangles);
+	cmd->buttons |= in_attack;
 	return;
 }
 

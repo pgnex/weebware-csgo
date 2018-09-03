@@ -12,6 +12,13 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 	// PLH::FnCast(g_hooking.paint_tramp, g_hooking.o_painttraverse)(g_weebware.g_panel, v, f, a);
 	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 
+	auto ilocal = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
+
+	if (!ilocal || ilocal->m_bGunGameImmunity() || !ilocal->is_valid_player() || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+		g_Walkbot.m_target_area = nullptr;
+		g_Walkbot.m_TargetEntity = nullptr;
+	}
+
 	try {
 
 		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel")) {

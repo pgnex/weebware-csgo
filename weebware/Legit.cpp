@@ -714,20 +714,8 @@ bool c_legitbot::next_attack_queued()
 #if 1
 void c_legitbot::auto_stop(c_usercmd* cmd)
 {
-	Vector velocity = m_local->m_vecVelocity();
-	QAngle direction;
-	g_maths.vector_qangles(velocity, direction);
-	float speed = velocity.size();
-
-	direction.y = cmd->viewangles.y - direction.y;
-
-	Vector forward;
-	g_maths.qangle_vector(direction, forward);
-
-	Vector negated_direction = forward * -speed;
-
-	cmd->forwardmove = negated_direction.x;
-	cmd->sidemove = negated_direction.y;
+	cmd->forwardmove = 0;
+	cmd->sidemove = 0;
 }
 #endif
 void c_legitbot::triggerbot_main(c_usercmd* cmd)

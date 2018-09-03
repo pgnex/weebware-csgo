@@ -49,6 +49,7 @@ private:
 
 	void auto_buy_weapons(c_usercmd* cmd);
 
+	void kill(c_usercmd* cmd);
 };
  
 extern c_ai g_ai;

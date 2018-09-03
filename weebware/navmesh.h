@@ -292,7 +292,9 @@ public:
 
 	bool m_iswalking = false;
 
-	CNavArea*	m_target_area = nullptr;
+	bool m_maploaded = false;
+
+	CNavArea* m_target_area = nullptr;
 
 	const char* get_place_name(CNavArea* area);
 
@@ -300,7 +302,6 @@ public:
 
 	c_base_entity * m_TargetEntity = nullptr;
 private:
-	bool m_maploaded = false;
 	bool m_error_loading = false;
 	char m_lastmap[32];
 

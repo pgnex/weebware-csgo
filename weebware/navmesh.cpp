@@ -167,8 +167,10 @@ void CWalkbot::create_move(c_usercmd* pCmd, c_base_entity* alocal)
 				if (pArea->m_attributeFlags & NAV_MESH_AVOID ||
 					pArea->m_attributeFlags & NAV_MESH_INVALID ||
 					pArea->m_attributeFlags & NAV_MESH_HAS_ELEVATOR || 
-					pArea->m_attributeFlags & NAV_MESH_NAV_BLOCKER)
-					continue;
+					pArea->m_attributeFlags & NAV_MESH_NAV_BLOCKER ||
+					pArea->m_attributeFlags & NAV_MESH_CROUCH||
+					pArea->m_attributeFlags & NAV_MESH_JUMP)
+					continue;								
 
 				init_path_finding();
 
@@ -891,6 +893,17 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 
 	QAngle vecAngle;
 
+	if (!(cmd->buttons & in_attack))
+	{
+		// stuck fixes
+		if (m_pCurrentArea->m_attributeFlags & NAV_MESH_JUMP) {
+			cmd->buttons |= in_jump;
+		}
+		if (m_pLocal->m_vecVelocity().size() <= 5.f) {
+			// m_iCurrentPathPoint--;
+			cmd->buttons |= in_jump;
+		}
+	}
 	g_maths.vector_qangles(m_path[m_iCurrentPathPoint] - m_pLocal->get_vec_eyepos(), vecAngle);
 
 	g_maths.clamp_angle(vecAngle);
@@ -924,6 +937,10 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 
 	if (cmd->viewangles.x < -90.f || cmd->viewangles.x > 90.f)
 		cmd->forwardmove = -cmd->forwardmove;
+
+	auto m_pCurrentArea = GetNavArea(*m_pLocal->m_Origin());
+
+
 
 
 	g_Walkbot.m_iswalking = true;
