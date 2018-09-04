@@ -893,17 +893,6 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 
 	QAngle vecAngle;
 
-	if (!(cmd->buttons & in_attack))
-	{
-		// stuck fixes
-		if (m_pCurrentArea->m_attributeFlags & NAV_MESH_JUMP) {
-			cmd->buttons |= in_jump;
-		}
-		if (m_pLocal->m_vecVelocity().size() <= 5.f) {
-			// m_iCurrentPathPoint--;
-			cmd->buttons |= in_jump;
-		}
-	}
 	g_maths.vector_qangles(m_path[m_iCurrentPathPoint] - m_pLocal->get_vec_eyepos(), vecAngle);
 
 	g_maths.clamp_angle(vecAngle);

@@ -150,6 +150,26 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 	g_Walkbot.create_move(cmd, local);
 }
 
+void c_ai::jump_on_low_velocity(c_usercmd* cmd)
+{
+	int tick_rate = 1 / g_weebware.g_global_vars->interval_per_tick;
+
+	static int ticks_elpased = 0;
+
+	if (!(cmd->buttons & in_attack))
+	{
+		if (ticks_elpased > tick_rate) {
+			// stuck fixes
+			// m_pCurrentArea->m_attributeFlags & NAV_MESH_JUMP
+			if (this->m_local->m_vecVelocity().size() <= 5.f) {
+				cmd->buttons |= in_jump;
+			}
+
+			ticks_elpased = 0;
+		}
+	}
+	++ticks_elpased;
+}
 void c_ai::adjust_to_velocity(c_usercmd* cmd)
 {
 	auto direction = m_local->m_vecVelocity();
@@ -170,11 +190,6 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	cmd->viewangles.y = direction.y;
 
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
-}
-
-void c_ai::jump_on_low_velocity(c_usercmd* cmd)
-{
-
 }
 
 bool c_ai::is_visible(c_base_entity* target)
@@ -242,6 +257,7 @@ void c_ai::kill(c_usercmd* cmd) {
 	aim_dir -= m_local->m_aimPunchAngle() * 2.f;
 	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, 40.f);
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
+	// if (m_local->m_pActiveWeapon()->)
 	cmd->buttons |= in_attack;
 	return;
 }
