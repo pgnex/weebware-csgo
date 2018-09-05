@@ -747,6 +747,11 @@ public:
 		return get_value<HANDLE>(offset);
 	}
 
+	int Clip1()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iClip1");
+		return get_value<int>(offset);
+	}
 };
 
 class c_viewmodel

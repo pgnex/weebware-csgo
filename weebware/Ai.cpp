@@ -252,14 +252,21 @@ void c_ai::correct_range(c_usercmd* cmd) {
 void c_ai::kill(c_usercmd* cmd) {
 
 	Vector direction = g_legitbot.center_hitbox(m_target_ent, csgohitboxid::head);
+
 	QAngle aim_dir;
+
 	g_maths.vector_qangles(direction - m_local->get_vec_eyepos(), aim_dir);
+
 	aim_dir -= m_local->m_aimPunchAngle() * 2.f;
+
 	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, 40.f);
+
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
-	// if (m_local->m_pActiveWeapon()->)
-	cmd->buttons |= in_attack;
-	return;
+
+	if (m_local->m_pActiveWeapon()->Clip1() != 0)
+		cmd->buttons |= in_attack;
+	else
+		cmd->buttons |= in_reload;
 }
 
 
