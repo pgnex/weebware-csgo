@@ -269,8 +269,3 @@ void c_ai::kill(c_usercmd* cmd) {
 		cmd->buttons |= in_reload;
 }
 
-
-
-// ghetto walkbot i wrote, no paste
-#if 0
-#endif
