@@ -646,7 +646,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
 								ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
 								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
-								ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
+							//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
 
 								ImGui::Separator();
 

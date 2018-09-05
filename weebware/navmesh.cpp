@@ -912,6 +912,20 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 	g_Walkbot.m_bIsWalking = true;
 #endif
 
+	if (m_CurrentMode == ai_movement::defuse_bomb) {
+
+		// We are on the bomb.
+		if (m_target_area == m_pCurrentArea) {
+
+			// stop and defuse
+			cmd->forwardmove = 0;
+			cmd->sidemove = 0;
+
+			// calculate bomb angle
+
+		}
+	}
+
 	Vector vmove(cmd->forwardmove, cmd->sidemove, cmd->upmove);
 
 	float flSpeed = sqrt(vmove.x * vmove.x + vmove.y * vmove.y), flYaw;
@@ -928,9 +942,6 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 		cmd->forwardmove = -cmd->forwardmove;
 
 	auto m_pCurrentArea = GetNavArea(*m_pLocal->m_Origin());
-
-
-
 
 	g_Walkbot.m_iswalking = true;
 }
