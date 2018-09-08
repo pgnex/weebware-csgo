@@ -161,6 +161,10 @@ public:
 	float misc_ai_aimspeed = 30.f;
 	bool visuals_nightmode = 0;
 	bool visuals_chams_xqz = 0;
+	ImVec4 visuals_chams_col_xqz = ImVec4(255, 0, 0, 255);
+	ImVec4 visuals_chams_team_col_xqz = ImVec4(0, 255, 255, 255);
+	float legit_maximum_ticks[8] = { 12,12,12,12,12,12,12,12 };
+
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;

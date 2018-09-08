@@ -142,9 +142,14 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 			c_color col = c_color(entity->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
 
-			// Set material info.
-			mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
-			mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
+			if (g_weebwarecfg.visuals_chams_xqz) {
+
+				c_color xqz_col = c_color(entity->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+
+				mat_list[g_weebwarecfg.visuals_chams]->colormodulate(xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f);
+
+				mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(xqz_col.a / 255.f);
+			}
 
 			if (local->m_iTeamNum() == entity->m_iTeamNum()) {
 				if (g_weebwarecfg.visuals_chams_render_team) {
@@ -157,6 +162,10 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 						g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 					}
+
+					// Set material info.
+					mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
+					mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 
 					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
 				}
@@ -172,6 +181,11 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 				}
 
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+
+
+				// Set material info.
+				mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
+				mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 
 				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
 			}

@@ -603,11 +603,13 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 		if (!record_player || !record_player->is_valid_player())
 			ExistingPlayer = false;
 
-		if (!is_valid_record(accuracy_records[i]) || !ExistingPlayer)
+		if (!is_valid_record(accuracy_records[i]) || !ExistingPlayer 
+			|| ((cmd->tick_count - g_weebwarecfg.legit_maximum_ticks[g_weebwarecfg.legit_cfg_index]) >= accuracy_records[i].record_tick))
 		{
 			accuracy_records.erase(accuracy_records.begin() + i);
 			continue;
 		}
+
 
 		QAngle angle_to_hitbox;
 

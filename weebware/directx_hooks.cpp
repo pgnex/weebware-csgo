@@ -527,6 +527,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Backtracking");
 								const char* acc_type[] = { "Off", "Default" };
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].accuracy_boost, acc_type, ARRAYSIZE(acc_type));
+								ImGui::Text("Maximum Ticks");
+								ImGui::SliderFloat("Maximum Ticks", &g_weebwarecfg.legit_maximum_ticks[g_weebwarecfg.legit_cfg_index], 0, 30, "%.f%");
 							}
 							ImGui::EndChild();
 
@@ -583,7 +585,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
 								ImGui::Checkbox("Render team", &g_weebwarecfg.visuals_chams_render_team, false);
 
-								ImGui::Checkbox("XYZ", &g_weebwarecfg.visuals_chams_xqz, false);
+								ImGui::Checkbox("XQZ", &g_weebwarecfg.visuals_chams_xqz, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
 
 
 
