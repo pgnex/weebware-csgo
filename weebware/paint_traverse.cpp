@@ -4,6 +4,7 @@
 #include "esp.h"
 #include "hook_funcs.h"
 #include "Legit.h"
+#include "dme.h"
 
 c_paint_traverse g_paint_traverse;
 
@@ -17,6 +18,10 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 	if (!ilocal || ilocal->m_bGunGameImmunity() || !ilocal->is_valid_player() || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
 		g_Walkbot.m_target_area = nullptr;
 		g_Walkbot.m_TargetEntity = nullptr;
+	}
+
+	if (!ilocal || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+		g_dme.night_mode_update = true;
 	}
 
 	try {

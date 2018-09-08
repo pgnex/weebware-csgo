@@ -610,6 +610,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Night mode", &g_weebwarecfg.visuals_nightmode, false);
 
 							}
 							ImGui::EndChild();
@@ -648,6 +649,11 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
 							//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
 
+								ImGui::Text("Rotation Speed");
+								ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
+								ImGui::Text("Aim Speed");
+								ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
+								
 								ImGui::Separator();
 
 #if 0
@@ -845,6 +851,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						// ImGui::Text("Weapon name");
 						// ImGui::InputText("##Gun Name", g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun]., 32);
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
+
 							g_weebwarecfg.skinchanger_apply_nxt = 1;
 
 						}

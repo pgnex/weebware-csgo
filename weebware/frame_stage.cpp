@@ -127,10 +127,8 @@ void c_frame_stage_notify::run_skinchanger()
 
 		int weapon_id = convert_index_id(weapon->filtered_index());
 
-
 		if (weapon_id > 34 || weapon_id < 0)
 			continue;
-
 
 		*weapon->get_item_id_high() = -1;
 

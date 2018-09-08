@@ -32,6 +32,10 @@ public:
 	// Returns a material based on type
 	imaterial* borrow_mat(c_dme::custom_mats type);
 
+	bool night_mode_update = true;
+
+	void night_mode();
+
 private:
 
 protected:

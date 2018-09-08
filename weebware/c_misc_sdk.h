@@ -662,7 +662,25 @@ public:
 		return getvfunc<imaterial*(__thiscall*)(PVOID, const char*, const char*, bool, const char*)>(this, 84)(this, pMaterialName, pTextureGroupName, complain, pComplainPrefix);
 	}
 
-	
+	unsigned short first_material() 
+	{
+		return getvfunc<unsigned short(__thiscall*)(PVOID)>(this, 86)(this);
+	}
+
+	unsigned short next_material(unsigned short handle)
+	{
+		return getvfunc<unsigned short(__thiscall*)(PVOID, unsigned short)>(this, 87)(this, handle);
+	}
+
+	unsigned short invalid_material()
+	{
+		return getvfunc<unsigned short(__thiscall*)(PVOID)>(this, 88)(this);
+	}
+
+	imaterial* get_mat(unsigned short handle)
+	{
+		return getvfunc<imaterial*(__thiscall*)(PVOID, unsigned short)>(this, 89)(this, handle);
+	}
 };
 
 #ifndef TEXTURE_GROUP_NAMES_H
