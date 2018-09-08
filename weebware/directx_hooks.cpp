@@ -583,6 +583,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
 								ImGui::Checkbox("Render team", &g_weebwarecfg.visuals_chams_render_team, false);
 
+								ImGui::Checkbox("XYZ", &g_weebwarecfg.visuals_chams_xqz, false);
 
 
 

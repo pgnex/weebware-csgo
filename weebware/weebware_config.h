@@ -160,6 +160,7 @@ public:
 	float misc_ai_rotationspeed = 10.f;
 	float misc_ai_aimspeed = 30.f;
 	bool visuals_nightmode = 0;
+	bool visuals_chams_xqz = 0;
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
