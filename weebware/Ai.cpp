@@ -177,6 +177,7 @@ void c_ai::jump_on_low_velocity(c_usercmd* cmd)
 			g_Walkbot.m_target_area = nullptr;
 			g_Walkbot.m_TargetEntity = nullptr;
 		}
+		jumps = 0;
 	}
 }
 void c_ai::adjust_to_velocity(c_usercmd* cmd)
