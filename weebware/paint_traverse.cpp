@@ -15,7 +15,7 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 
 	auto ilocal = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
 
-	if (!ilocal || ilocal->m_bGunGameImmunity() || !ilocal->is_valid_player() || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+	if (!ilocal || ilocal->m_bGunGameImmunity() || !ilocal->is_valid_player() || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game() || ilocal->m_fFlags() & fl_frozen) {
 		g_Walkbot.m_target_area = nullptr;
 		g_Walkbot.m_TargetEntity = nullptr;
 	}

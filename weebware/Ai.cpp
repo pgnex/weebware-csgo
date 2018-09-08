@@ -180,7 +180,7 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	g_maths.vector_qangles(direction, direction);
 
 	// We dont want to instanteously snap tho
-	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 10.f);
+	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 5.f);
 
 	// Only yaw
 	cmd->viewangles.y = direction.y;
