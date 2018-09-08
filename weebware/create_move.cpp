@@ -124,7 +124,7 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 
 	run_fake(cmd, sendPackets);
 
-	if (g_weebwarecfg.misc_legit_aa_enabled)
+	if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
 		run_legitAA(cmd, sendPackets);
 
 	runClanTag();
@@ -222,7 +222,6 @@ namespace anti_trigger {
 			require_fake = 0;
 		}
 		else {
-			g_create_move.run_legitAA(cmd, sendpacket);
 			sendpacket = false;
 		}
 
@@ -322,7 +321,7 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
-	send_packet = (cmd->tick_count % 3 == 0);
+	send_packet = (cmd->tick_count % 4 == 0);
 }
 
 bool can_shoot(c_base_entity* local)
