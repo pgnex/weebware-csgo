@@ -119,10 +119,6 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 			correct_range(cmd);
 		}
 		else if (m_flags == ai_flags::kill) {
-
-			g_legitbot.auto_stop(cmd);
-
-			// Aim at head and shoot
 			this->kill(cmd);
 		}
 	}
@@ -265,6 +261,8 @@ void c_ai::kill(c_usercmd* cmd) {
 
 	if (m_local->m_pActiveWeapon()->Clip1() != 0)
 	{
+		g_legitbot.auto_stop(cmd);
+
 		if (m_local->m_pActiveWeapon()->m_flNextPrimaryAttack() <= (float)g_weebware.g_global_vars->curtime) {
 			cmd->buttons |= in_attack;
 		}
