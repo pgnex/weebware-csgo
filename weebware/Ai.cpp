@@ -264,7 +264,11 @@ void c_ai::kill(c_usercmd* cmd) {
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
 
 	if (m_local->m_pActiveWeapon()->Clip1() != 0)
-		cmd->buttons |= in_attack;
+	{
+		if (m_local->m_pActiveWeapon()->m_flNextPrimaryAttack() <= (float)g_weebware.g_global_vars->curtime) {
+			cmd->buttons |= in_attack;
+		}
+	}
 	else
 		cmd->buttons |= in_reload;
 }

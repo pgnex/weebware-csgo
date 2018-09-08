@@ -115,6 +115,58 @@ void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
 		cmd->forwardmove = -cmd->forwardmove;
 }
 
+namespace anti_trigger {
+
+	/*Credits https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not post by Alghyaline*/
+	Vector vect2d(Vector p1, Vector p2) {
+		Vector temp;
+		temp.x = (p2.x - p1.x);
+		temp.y = -1 * (p2.y - p1.y);
+
+		return temp;
+	}
+	bool pointInRectangle(Vector A, Vector B, Vector C, Vector D, Vector m) {
+		Vector AB = vect2d(A, B);  float C1 = -1 * (AB.y*A.x + AB.x*A.y); float  D1 = (AB.y*m.x + AB.x*m.y) + C1;
+		Vector AD = vect2d(A, D);  float C2 = -1 * (AD.y*A.x + AD.x*A.y); float D2 = (AD.y*m.x + AD.x*m.y) + C2;
+		Vector BC = vect2d(B, C);  float C3 = -1 * (BC.y*B.x + BC.x*B.y); float D3 = (BC.y*m.x + BC.x*m.y) + C3;
+		Vector CD = vect2d(C, D);  float C4 = -1 * (CD.y*C.x + CD.x*C.y); float D4 = (CD.y*m.x + CD.x*m.y) + C4;
+		return     0 >= D1 && 0 >= D4 && 0 <= D2 && 0 >= D3;
+	}
+	/*credits end stackoverflow*/
+	bool Checkifbetween(Vector *ViewanglePoints, Vector Viewangles)
+	{
+		if (pointInRectangle(ViewanglePoints[0], ViewanglePoints[1], ViewanglePoints[2], ViewanglePoints[3], Viewangles) //first 4 normal
+			|| pointInRectangle(ViewanglePoints[3], ViewanglePoints[2], ViewanglePoints[1], ViewanglePoints[0], Viewangles) //first 4 reverse
+			|| pointInRectangle(ViewanglePoints[4], ViewanglePoints[5], ViewanglePoints[6], ViewanglePoints[7], Viewangles) //second 4 normal
+			|| pointInRectangle(ViewanglePoints[7], ViewanglePoints[6], ViewanglePoints[5], ViewanglePoints[4], Viewangles))//second 4 reverse
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool require_fake = 0;
+
+	void run_choke(bool& sendpacket, c_usercmd* cmd)
+	{
+		if (!require_fake)
+			return;
+
+		static int ticks_choked = 0;
+
+		if (ticks_choked > 17) {
+			sendpacket = true;
+			ticks_choked = 0;
+			require_fake = 0;
+		}
+		else {
+			sendpacket = false;
+		}
+
+		ticks_choked++;
+	}
+}
+
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
 	if (!g_weebwarecfg.enable_misc)
@@ -177,57 +229,6 @@ bool c_create_move::is_visible(c_base_entity* target)
 	return false;
 }
 
-namespace anti_trigger {
-
-	/*Credits https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not post by Alghyaline*/
-	Vector vect2d(Vector p1, Vector p2) {
-		Vector temp;
-		temp.x = (p2.x - p1.x);
-		temp.y = -1 * (p2.y - p1.y);
-
-		return temp;
-	}
-	bool pointInRectangle(Vector A, Vector B, Vector C, Vector D, Vector m) {
-		Vector AB = vect2d(A, B);  float C1 = -1 * (AB.y*A.x + AB.x*A.y); float  D1 = (AB.y*m.x + AB.x*m.y) + C1;
-		Vector AD = vect2d(A, D);  float C2 = -1 * (AD.y*A.x + AD.x*A.y); float D2 = (AD.y*m.x + AD.x*m.y) + C2;
-		Vector BC = vect2d(B, C);  float C3 = -1 * (BC.y*B.x + BC.x*B.y); float D3 = (BC.y*m.x + BC.x*m.y) + C3;
-		Vector CD = vect2d(C, D);  float C4 = -1 * (CD.y*C.x + CD.x*C.y); float D4 = (CD.y*m.x + CD.x*m.y) + C4;
-		return     0 >= D1 && 0 >= D4 && 0 <= D2 && 0 >= D3;
-	}
-	/*credits end stackoverflow*/
-	bool Checkifbetween(Vector *ViewanglePoints, Vector Viewangles)
-	{
-		if (pointInRectangle(ViewanglePoints[0], ViewanglePoints[1], ViewanglePoints[2], ViewanglePoints[3], Viewangles) //first 4 normal
-			|| pointInRectangle(ViewanglePoints[3], ViewanglePoints[2], ViewanglePoints[1], ViewanglePoints[0], Viewangles) //first 4 reverse
-			|| pointInRectangle(ViewanglePoints[4], ViewanglePoints[5], ViewanglePoints[6], ViewanglePoints[7], Viewangles) //second 4 normal
-			|| pointInRectangle(ViewanglePoints[7], ViewanglePoints[6], ViewanglePoints[5], ViewanglePoints[4], Viewangles))//second 4 reverse
-		{
-			return true;
-		}
-		return false;
-	}
-
-	bool require_fake = 0;
-
-	void run_choke(bool& sendpacket, c_usercmd* cmd)
-	{
-		if (!require_fake)
-			return;
-
-		static int ticks_choked = 0;
-
-		if (ticks_choked > 17) {
-			sendpacket = true;
-			ticks_choked = 0;
-			require_fake = 0;
-		}
-		else {
-			sendpacket = false;
-		}
-
-		ticks_choked++;
-	}
-}
 
 // https://www.unknowncheats.me/forum/counterstrike-global-offensive/258333-antitrigger.html
 // thanks master looser for these box tracing functions <3
