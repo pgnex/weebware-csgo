@@ -152,6 +152,8 @@ void c_ai::jump_on_low_velocity(c_usercmd* cmd)
 
 	static int ticks_elpased = 0;
 
+	static int jumps = 0;
+
 	if (!(cmd->buttons & in_attack))
 	{
 		if (ticks_elpased > tick_rate) {
@@ -159,12 +161,23 @@ void c_ai::jump_on_low_velocity(c_usercmd* cmd)
 			// m_pCurrentArea->m_attributeFlags & NAV_MESH_JUMP
 			if (this->m_local->m_vecVelocity().size() <= 5.f) {
 				cmd->buttons |= in_jump;
+				jumps++;
 			}
 
 			ticks_elpased = 0;
 		}
 	}
 	++ticks_elpased;
+
+	if (jumps > 3) {
+		// check if we are moving slower than normal
+		if (this->m_local->m_vecVelocity().size() <= 25.f) {
+		
+			// Time to reset navmesh stuff
+			g_Walkbot.m_target_area = nullptr;
+			g_Walkbot.m_TargetEntity = nullptr;
+		}
+	}
 }
 void c_ai::adjust_to_velocity(c_usercmd* cmd)
 {
@@ -179,11 +192,14 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	// Convert direction to angles...
 	g_maths.vector_qangles(direction, direction);
 
+	direction.x = 0;
+
 	// We dont want to instanteously snap tho
 	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 5.f);
 
 	// Only yaw
 	cmd->viewangles.y = direction.y;
+	cmd->viewangles.x = direction.x;
 
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
 }
