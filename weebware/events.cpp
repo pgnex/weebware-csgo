@@ -12,10 +12,25 @@ void EventFuncs::player_hurt(i_game_event *event) {
 		if (g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker")) == g_weebware.g_engine->get_local());
 		{
 			flHurtTime = g_weebware.g_global_vars->curtime + 1.f;
-			//	PlaySoundA("C:\\weebware\\sounds\\Hitmarker.wav", NULL, SND_ASYNC);
+			if (g_weebwarecfg.hitmarker_sound > 0) {
+				switch (g_weebwarecfg.hitmarker_sound)
+				{
+				case 1:
+					PlaySoundA("C:\\weebware\\sounds\\Hitmarker.wav", NULL, SND_ASYNC);
+					break;
+				case 2:
+					PlaySoundA("C:\\weebware\\sounds\\anime.wav", NULL, SND_ASYNC);
+					break;
+				case 3:
+					PlaySoundA("C:\\weebware\\sounds\\bubble.wav", NULL, SND_ASYNC);
+					break;
+				case 4:
+					PlaySoundA("C:\\weebware\\sounds\\custom.wav", NULL, SND_ASYNC);
+					break;
+				}
+			}
 		}
 	}
-
 }
 
 // draw hitmarker

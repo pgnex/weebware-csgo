@@ -166,6 +166,7 @@ public:
 	float legit_maximum_ticks[8] = { 12,12,12,12,12,12,12,12 };
 	bool visuals_hitmarkers = 0;
 	ImVec4 visuals_hitmarker_col = ImVec4(255, 255, 255, 255);
+	int hitmarker_sound = 0;
 
 };
 

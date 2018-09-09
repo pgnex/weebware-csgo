@@ -618,6 +618,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
 
+								const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
+								ImGui::Text("Hitmarker Sound");
+								ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
+
 							}
 							ImGui::EndChild();
 

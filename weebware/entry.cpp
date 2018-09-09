@@ -41,7 +41,7 @@ bool c_weebware::init_interfaces()
 	input_fact = retrieve_interface("inputsystem.dll");
 
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
