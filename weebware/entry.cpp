@@ -38,7 +38,7 @@ bool c_weebware::init_interfaces()
 	input_fact = retrieve_interface("inputsystem.dll");
 
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
@@ -94,6 +94,8 @@ bool c_weebware::init_interfaces()
 	g_convars = reinterpret_cast<c_iconvar*>(vstd_lib_fact("VEngineCvar007", NULL));
 
 	g_effects = reinterpret_cast<i_effects*>(client_fact("IEffects001", NULL));
+
+	g_game_events = reinterpret_cast<i_game_event_manager*>(engine_fact("GAMEEVENTSMANAGER002", NULL));
 
 	// Load our meme database for our p netvars
 	netvar_manager::_instance()->create_database();

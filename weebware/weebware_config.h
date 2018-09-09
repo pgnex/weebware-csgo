@@ -164,6 +164,8 @@ public:
 	ImVec4 visuals_chams_col_xqz = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_chams_team_col_xqz = ImVec4(0, 255, 255, 255);
 	float legit_maximum_ticks[8] = { 12,12,12,12,12,12,12,12 };
+	bool visuals_hitmarkers = 0;
+	ImVec4 visuals_hitmarker_col = ImVec4(255, 255, 255, 255);
 
 };
 

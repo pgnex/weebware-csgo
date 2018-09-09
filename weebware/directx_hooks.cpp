@@ -615,6 +615,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 								ImGui::Checkbox("Night mode", &g_weebwarecfg.visuals_nightmode, false);
+								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
 
 							}
 							ImGui::EndChild();

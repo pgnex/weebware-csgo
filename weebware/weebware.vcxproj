@@ -142,11 +142,13 @@
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="esp.cpp" />
+    <ClCompile Include="events.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="frame_stage.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="gui_baserelational.cpp" />
     <ClCompile Include="authentication.cpp" />
+    <ClCompile Include="hitmarkers.cpp" />
     <ClCompile Include="imgui\dx9\imgui_dx9.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -184,6 +186,7 @@
     <ClInclude Include="dme.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />
+    <ClInclude Include="events.h" />
     <ClInclude Include="frame_stage.h" />
     <ClInclude Include="graphics.h" />
     <ClInclude Include="gui_base.h" />
@@ -195,6 +198,7 @@
     <ClInclude Include="Header.h" />
     <ClInclude Include="c_client.h" />
     <ClInclude Include="authentication.h" />
+    <ClInclude Include="hitmarkers.h" />
     <ClInclude Include="hook_funcs.h" />
     <ClInclude Include="imgui\dx9\imgui_dx9.h" />
     <ClInclude Include="imgui\imconfig.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="imgui\stb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_custom.h" />
+    <ClInclude Include="i_game_event_manager.h" />
     <ClInclude Include="key_values.h" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />

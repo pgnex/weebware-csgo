@@ -2,14 +2,17 @@
 #include "drawing.h"
 #include "Legit.h"
 #include "paint_traverse.h"
+#include "events.h"
 
 c_esp g_esp;
-
+FeatureFuncs g_event_features;
 bool has_esp_init = false;
 
 void c_esp::esp_main()
 {
 	water_mark();
+
+	if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
 
 	if (g_weebware.menu_opened)
 	{

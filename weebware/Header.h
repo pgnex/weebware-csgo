@@ -45,6 +45,7 @@
 #include "player_info.h"
 #include "net_channel.h"
 #include "key_values.h"
+#include "i_game_event_manager.h"
 #include "c_entities.h"
 #include "c_misc_sdk.h"
 #include "skindefs.h"

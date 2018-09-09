@@ -39,6 +39,7 @@ public:
 	c_mat_system* g_mat_sys;
 	c_model_render* g_model_render;
 	c_clientstate** g_client_state;
+	i_game_event_manager* g_game_events;
 
 	HWND h_window;
 	WNDPROC old_window_proc;
