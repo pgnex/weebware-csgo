@@ -201,9 +201,6 @@
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="hitmarkers.cpp">
-      <Filter>Source Files\Events\Hitmarkers</Filter>
-    </ClCompile>
     <ClCompile Include="events.cpp">
       <Filter>Source Files\Events</Filter>
     </ClCompile>
@@ -400,9 +397,6 @@
     </ClInclude>
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\ADetour.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
-    </ClInclude>
-    <ClInclude Include="hitmarkers.h">
-      <Filter>Source Files\Events\Hitmarkers</Filter>
     </ClInclude>
     <ClInclude Include="events.h">
       <Filter>Source Files\Events</Filter>

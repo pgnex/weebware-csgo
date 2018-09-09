@@ -3,6 +3,9 @@
 #include "netvars.h"
 #include "drawing.h"
 #include "hook_funcs.h"
+#include "events.h"
+
+GameEvents g_events;
 c_weebware g_weebware;
 
 unsigned __stdcall entry_thread(void* v_arg)
@@ -122,6 +125,8 @@ bool c_weebware::init_interfaces()
 
 	g_knife_list = create_knife_list();
 #pragma endregion
+
+	g_events.init();
 
 	srand(time(0));
 

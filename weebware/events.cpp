@@ -44,6 +44,7 @@ void FeatureFuncs::on_paint()
 
 // initialize our events
 void GameEvents::init() {
+
 	add_event("player_hurt", EventFuncs::player_hurt);
 
 	register_events();

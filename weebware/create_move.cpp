@@ -7,7 +7,6 @@
 #include <intrin.h>
 
 c_create_move g_create_move;
-GameEvents g_events;
 
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
@@ -175,8 +174,6 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 		return;
 
 	auto_jump(cmd);
-
-	g_events.init();
 
 	run_fake(cmd, sendPackets);
 
