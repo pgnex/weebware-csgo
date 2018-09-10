@@ -2,15 +2,17 @@
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
-int attacker, flHurtTime;
+int attacker, victim, flHurtTime;
 
 void EventFuncs::player_hurt(i_game_event *event) {
 
 	// hitmarkers
 	if (g_weebwarecfg.visuals_hitmarkers) {
 		// check if you hit a player
-		if (g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker")) == g_weebware.g_engine->get_local());
-		{
+		attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
+		c_base_entity* attacker_ent = (c_base_entity *)g_weebware.g_entlist->getcliententity(attacker);
+		if (attacker_ent == g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()))
+		{			
 			flHurtTime = g_weebware.g_global_vars->curtime + 1.f;
 			if (g_weebwarecfg.hitmarker_sound > 0) {
 				switch (g_weebwarecfg.hitmarker_sound)
