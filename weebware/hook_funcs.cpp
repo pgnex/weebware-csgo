@@ -112,13 +112,8 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 bool __fastcall hk_ShouldHideGrenadeDuringThrow(int ecx, int edx, void* animstate)
 {
 	auto protecc = g_hooking.VEH_HideGrenade->getProtectionObject();
-	std::cout << "Hi from hk_ShouldHideGrenadeDuringThrow" << std::endl;
-	if (g_weebwarecfg.misc_hidegrenade) {
-		return false;
-	}
-	// Original
-	return g_hooking.o_grenade(animstate);
 
+	return g_hooking.o_grenade(animstate);
 }
 
 namespace knife_changer {
@@ -488,7 +483,6 @@ void c_hooking::unhook_all_functions()
 	VEH_ENDSCENE->unHook();
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
-	VEH_HideGrenade->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();
