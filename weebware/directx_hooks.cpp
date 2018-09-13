@@ -196,8 +196,8 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 
-	 // auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
-	 auto hr = g_hooking.o_reset(device, presentation_param);
+	// auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
+	auto hr = g_hooking.o_reset(device, presentation_param);
 
 	ImGui_ImplDX9_CreateDeviceObjects();
 
@@ -471,7 +471,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #endif
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-								
+
 								ImGui::Checkbox("Distance FOV", &g_weebwarecfg.use_dynamicfov[g_weebwarecfg.legit_cfg_index], false);
 
 								ImGui::Text("Maximum FOV");
@@ -657,33 +657,53 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
 								ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
 								ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
-							//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
+								//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
 
 								ImGui::Text("Rotation Speed");
 								ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
 								ImGui::Text("Aim Speed");
 								ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
-								
-								ImGui::Separator();
 
 #if 0
-								ImGui::Text("Legit Factor");
-								// This is still currently a Work in Progess.
-								ImGui::SliderFloat("Legitness", &g_weebwarecfg.misc_cfg.misc_ai_legitfactor, 0, 100, "%.0f%%");
+								if (ImGui::Button("Create Lobby Button")) {
+									// v90 = sub_103AE600();
+									// if (!(*(unsigned __int8(**)(void))(*(_DWORD *)(v90 + 8) + 4))())
+									// int sub_103AE600()
+									// DWORD v90 = *(DWORD*)reinterpret_cast<int(*)()>(g_weebware.pattern_scan("client.dll", "A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3 ? ? ? ? ? ? ? ? A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3"))();
+									// (*(unsigned __int8(**)(void))(*(DWORD*)(v90 + 8) + 4))();
+									// int* v90 = reinterpret_cast<int*(*)()>(g_weebware.pattern_scan("client.dll", "A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3"))();
+									// 
+									// (*(int (__thiscall **)(int))(*(_DWORD *)(panorama + 8) + 8))(panorama + 8);
+									// reinterpret_cast<int(__stdcall*)(char* , int )>(g_weebware.pattern_scan("client.dll", "55 8B EC 8B 45 0C 85 C0 8B 0D ? ? ? ? 53 8B 1D ? ? ? ? 0F 45 D8 8B 01"))("UIPanorama.mainmenu_press_GO",0);
+									//v67 = (_DWORD *)GetSomeLobbyPointer();
+									//sub_1016A4D0((int *)v2 + 133, *((_DWORD *)v2 + 136), &v67);
+
+									uintptr_t* panorama_pointer = *(uintptr_t**)(g_weebware.pattern_scan("client.dll", "8B 3D ? ? ? ? 6A 10 8B 08 8B 01 FF 50 04 8B F0 85 F6 74 2B 6A 00 51 66 8B 0D ? ? ? ? 8B D4 66 89 0A 8B CE E8 ? ? ? ? C7 06 ? ? ? ? 8B CF 8B 07 56 FF 90 ? ? ? ? 5F 5E 5B C3 8B 07 33 F6 56 8B CF FF 90 ? ? ? ? 5F") + 0x2);
+
+									if (panorama_pointer) {
+										std::cout << panorama_pointer << std::endl;
+										// auto v0 = (uintptr_t*)(*(int(__stdcall**)(void))(*(DWORD*)panorama_pointer + 0x200))();
+										reinterpret_cast<int(__stdcall*)(char*, int)>(g_weebware.pattern_scan("client.dll", "55 8B EC 8B 45 0C 85 C0 8B 0D ? ? ? ? 53 8B 1D ? ? ? ? 0F 45 D8 8B 01"))("UIPanorama.mainmenu_press_GO", 0);
+									}
+								}
+
+								ImGui::Checkbox("Hide Grenade Throws", &g_weebwarecfg.misc_hidegrenade, false);
 #endif
+								ImGui::Separator();
+
 								ImGui::Text("Legit Anti-Aim");
 								ImGui::Separator();
 
 								// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
 								ImGui::Text("Anti Triggerbot");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
-								const char* activation[] = { "Off", "Active", "On Key"};
+								const char* activation[] = { "Off", "Active", "On Key" };
 								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
 								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
 								ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
-							//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
+								//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
 
 
 								ImGui::Separator();

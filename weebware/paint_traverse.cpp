@@ -20,7 +20,7 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 		g_Walkbot.m_TargetEntity = nullptr;
 	}
 
-	if (!ilocal || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+	if (!(g_weebware.g_engine->is_connected() &&g_weebware.g_engine->is_in_game())) {
 		g_dme.night_mode_update = true;
 	}
 

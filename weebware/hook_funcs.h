@@ -49,6 +49,8 @@ public:
 	PLH::BreakPointHook* VEH_ENDSCENE;
 	PLH::BreakPointHook* VEH_DME;
 	PLH::BreakPointHook* VEH_CURSORLOCK;
+	PLH::BreakPointHook* VEH_HideGrenade;
+
 #endif
 
 private:
@@ -98,6 +100,8 @@ public:
 	fn_setcursorpos o_cursor;
 #endif
 
+	using grenade_fn = bool(__thiscall*)(void*);
+	grenade_fn o_grenade;
 #pragma endregion
 
 #pragma region DME

@@ -41,7 +41,7 @@ bool c_weebware::init_interfaces()
 	input_fact = retrieve_interface("inputsystem.dll");
 
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
@@ -147,7 +147,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();
@@ -250,6 +250,7 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
 	tmp.push_back(knife_template("models/weapons/v_knife_gut.mdl", "Gut", 506));
 	tmp.push_back(knife_template("models/weapons/v_knife_karam.mdl", "Karambit", 507));
 	tmp.push_back(knife_template("models/weapons/v_knife_m9_bay.mdl", "M9 Bayonet", 508));
+	tmp.push_back(knife_template("models/weapons/v_knife_bayonet.mdl", "Bayonet", 500));
 	tmp.push_back(knife_template("models/weapons/v_knife_tactical.mdl", "Huntsman", 509));
 	tmp.push_back(knife_template("models/weapons/v_knife_falchion_advanced.mdl", "Falchion", 512));
 	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", 516));

@@ -169,3 +169,18 @@ void c_config_list::delete_weebware_config()
 	remove(full_config.c_str());
 	update_all_configs();
 }
+
+
+// class override_skin_style
+//{
+//public:
+//	int weapon_id = 0;
+//	int m_paint_kit = 0;
+//	float m_wear = FLT_MIN;
+//	int m_seed = 69;
+//};
+
+void write_item(std::ostream& file, override_skin_style item)
+{
+
+}

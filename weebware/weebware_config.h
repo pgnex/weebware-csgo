@@ -167,7 +167,6 @@ public:
 	bool visuals_hitmarkers = 0;
 	ImVec4 visuals_hitmarker_col = ImVec4(255, 255, 255, 255);
 	int hitmarker_sound = 0;
-
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;

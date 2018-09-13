@@ -24,6 +24,9 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		{
 			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+			g_create_move.runClanTag();
+			g_create_move.chat_spam();
+
 			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
 			{
 				// shouldn't actually do anything when applying skin cause entites are all refreshed and cause nullptr issues
@@ -42,11 +45,11 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 
-					g_create_move.create_move(cmd, sendpacket);
-
 					g_legitbot.m_local = g_create_move.local;
 
 					g_legitbot.create_move(cmd);
+
+					g_create_move.create_move(cmd, sendpacket);
 
 					g_accuracy.accuracy_boost(cmd);
 
@@ -180,9 +183,7 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 	if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
 		run_legitAA(cmd, sendPackets);
 
-	runClanTag();
 
-	chat_spam();
 }
 
 void c_create_move::auto_jump(c_usercmd* cmd)
@@ -499,7 +500,7 @@ void c_create_move::runClanTag()
 	{
 		static int ticks_elapsed = 0;
 
-		static auto set_clantag = (int(__fastcall*)(const char*, const char*))g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15");
+		static auto set_clantag = (int(__fastcall*)(const char*, const char*))((uintptr_t)GetModuleHandleA("engine.dll") + 0x886E0); // g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15");
 
 		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 16);
 
