@@ -232,7 +232,6 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 
 void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 {
-
 	if (tab == set)
 	{
 		ImGui::Separator();
@@ -256,15 +255,6 @@ void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 	if (ImGui::Button(title, ImVec2(80, 80)))
 	{
 		tab = set;
-	}
-
-	if (tab == set)
-	{
-		ImGui::Separator();
-	}
-	else
-	{
-		ImGui::Spacing();
 	}
 }
 

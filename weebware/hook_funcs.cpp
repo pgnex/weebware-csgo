@@ -454,8 +454,6 @@ void c_hooking::hook_all_functions()
 
 #endif
 
-
-
 	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
 
 	knife_changer::apply_proxyhooks();
