@@ -614,14 +614,19 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
-								ImGui::Checkbox("Night mode", &g_weebwarecfg.visuals_nightmode, false);
 								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
 
 								const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
 								ImGui::Text("Hitmarker Sound");
 								ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
-
+								ImGui::Separator();
+								ImGui::Text("Nightmode");
+								ImGui::Separator();
+								if (ImGui::Button("Apply Nightmode")) {
+									g_nightmode.night_mode();
+								}
+								imgui_custom::custom_color_inline(g_weebwarecfg.nightmode_col, "Nightmode Color");
 							}
 							ImGui::EndChild();
 
@@ -644,6 +649,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
+								ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
 							}
 							ImGui::EndChild();
 

@@ -10,6 +10,7 @@ public:
 	void run_legitAA(c_usercmd* cmd, bool send_packets);
 	void runClanTag();
 	void chat_spam();
+	void rank_reveal();
 
 private:
 	void auto_jump(c_usercmd* cmd);

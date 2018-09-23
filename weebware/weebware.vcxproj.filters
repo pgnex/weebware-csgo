@@ -82,6 +82,9 @@
     <Filter Include="Source Files\Events\Hitmarkers">
       <UniqueIdentifier>{87e0e260-855f-438c-b905-41d7568dacb1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\Draw Model Execute\nightmode">
+      <UniqueIdentifier>{75dbde77-b445-40d6-aaee-6fcd471cdfc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -203,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="events.cpp">
       <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="nightmode.cpp">
+      <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="i_game_event_manager.h">
       <Filter>Source Files\Source Development Kit</Filter>
+    </ClInclude>
+    <ClInclude Include="nightmode.h">
+      <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

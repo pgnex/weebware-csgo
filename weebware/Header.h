@@ -59,6 +59,7 @@
 #include "authentication.h"
 #include "navmesh.h"
 #include "Ai.h"
+#include "nightmode.h"
 #include "weebware_config.h"
 
 

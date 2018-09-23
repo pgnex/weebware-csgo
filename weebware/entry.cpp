@@ -10,6 +10,7 @@ c_weebware g_weebware;
 
 unsigned __stdcall entry_thread(void* v_arg)
 {
+	Sleep(5000);
 	g_weebware.setup_thread(); // run our thread
 
 	_endthreadex(0); // close thread
@@ -21,9 +22,7 @@ create_interface retrieve_interface(LPCSTR module_name);
 
 bool c_weebware::init_interfaces()
 {
-	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL)))
-		Sleep(200);
-
+	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) Sleep(250);
 	engine_fact = retrieve_interface("engine.dll");
 
 	if (GetModuleHandleA("client.dll"))
@@ -41,7 +40,7 @@ bool c_weebware::init_interfaces()
 	input_fact = retrieve_interface("inputsystem.dll");
 
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
@@ -147,7 +146,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 1
+#define debug 0
 
 #if debug
 	setup_debug_window();
