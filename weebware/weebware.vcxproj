@@ -153,6 +153,7 @@
     <ClCompile Include="imgui\imgui_draw.cpp" />
     <ClCompile Include="imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="imgui_custom.cpp" />
+    <ClCompile Include="nightmode.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp" />
@@ -209,6 +210,7 @@
     <ClInclude Include="imgui_custom.h" />
     <ClInclude Include="i_game_event_manager.h" />
     <ClInclude Include="key_values.h" />
+    <ClInclude Include="nightmode.h" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\ADetour.hpp" />
