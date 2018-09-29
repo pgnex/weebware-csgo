@@ -59,6 +59,8 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 #pragma region Clamping
 
+				if (cmd->buttons & in_attack)
+					sendpacket = true;
 
 				QAngle cmd_view = cmd->viewangles;
 
@@ -158,7 +160,7 @@ namespace anti_trigger {
 
 		static int ticks_choked = 0;
 
-		if (ticks_choked > 17) {
+		if (ticks_choked > 14) {
 			sendpacket = true;
 			ticks_choked = 0;
 			require_fake = 0;
