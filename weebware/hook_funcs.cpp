@@ -116,6 +116,25 @@ bool __fastcall hk_ShouldHideGrenadeDuringThrow(int ecx, int edx, void* animstat
 	return g_hooking.o_grenade(animstate);
 }
 
+void SetLocalPlayerReady()
+{
+	static auto SetLocalPlayerReadyFn = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
+	if (SetLocalPlayerReadyFn)
+		SetLocalPlayerReadyFn("");
+}
+
+void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, int iChannel, const char *pSoundEntry, unsigned int nSoundEntryHash, const char *pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const Vector *pOrigin, const Vector *pDirection, Vector * pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int& params)
+{
+	auto protecc = g_hooking.VEH_SOUNDS->getProtectionObject();
+
+	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
+		SetLocalPlayerReady();
+
+	printf("emit sound hooked\n");
+
+	g_hooking.o_sounds(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
+}
+
 namespace knife_changer {
 
 	RecvVarProxyFn original_sequence;
@@ -430,6 +449,11 @@ void c_hooking::hook_all_functions()
 	VEH_FSN = new PLH::BreakPointHook((char*)fsn_addr, (char*)&hk_frame_stage_notify);
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
+
+	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
+	VEH_SOUNDS->hook();
+	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 #endif
 
 #define StreamProof 0
@@ -481,6 +505,7 @@ void c_hooking::unhook_all_functions()
 	VEH_ENDSCENE->unHook();
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
+	VEH_SOUNDS->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();

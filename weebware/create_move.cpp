@@ -161,7 +161,7 @@ namespace anti_trigger {
 
 		static int ticks_choked = 0;
 
-		if (ticks_choked > 14) {
+		if (ticks_choked > 13) {
 			sendpacket = true;
 			ticks_choked = 0;
 			require_fake = 0;
@@ -344,7 +344,7 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
-	send_packet = (cmd->tick_count % 4 == 0);
+	send_packet = (cmd->tick_count % 3 == 0);
 }
 
 bool can_shoot(c_base_entity* local)

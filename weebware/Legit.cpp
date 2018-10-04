@@ -722,13 +722,16 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 #endif
 void c_legitbot::triggerbot_main(c_usercmd* cmd)
 {
+	static float m_last_delay = 0.f;
+
 	switch (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_active) {
 	case 0:
 		return;
 	case 1:
-		if (!(GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_key)))
+		if (!(GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_key))) {
+			m_last_delay = get_epoch();
 			return;
-
+		}
 		break;
 	}
 
@@ -808,12 +811,21 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 
 	if (has_hitgroup) {
+
+		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_reaction)) {
+			return;
+		}
+
 		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->range) && next_attack_queued()) {
 			cmd->buttons |= in_attack;
 		}
 		else {
 			cmd->buttons &= ~in_attack;
 		}
+	}
+	else {
+		m_last_delay = get_epoch();
+
 	}
 
 

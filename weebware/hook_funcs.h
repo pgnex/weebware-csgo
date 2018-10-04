@@ -50,6 +50,7 @@ public:
 	PLH::BreakPointHook* VEH_DME;
 	PLH::BreakPointHook* VEH_CURSORLOCK;
 	PLH::BreakPointHook* VEH_HideGrenade;
+	PLH::BreakPointHook* VEH_SOUNDS;
 
 #endif
 
@@ -68,7 +69,7 @@ private:
 
 #pragma region paint_traverse
 public:
-	typedef void(__thiscall *pt_t)(void*, unsigned int, bool, bool); 
+	typedef void(__thiscall *pt_t)(void*, unsigned int, bool, bool);
 	pt_t o_painttraverse;
 #pragma endregion
 private:
@@ -105,8 +106,13 @@ public:
 #pragma endregion
 
 #pragma region DME
-	typedef void(__thiscall* fn_dme)(void*,  c_unknownmat_class*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4*);
+	typedef void(__thiscall* fn_dme)(void*, c_unknownmat_class*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4*);
 	fn_dme o_dme;
+#pragma endregion
+
+#pragma region Sounds
+	typedef void(__fastcall* fn_sound)(void*, void*, void*, int, int, const char *, unsigned int, const char *, float, float, int nSeed, int, int, const Vector *, const Vector *, Vector *, bool, float, int, int&);
+	fn_sound o_sounds;
 #pragma endregion
 
 public:

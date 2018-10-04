@@ -50,6 +50,7 @@ public:
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
 	float triggerbot_hitchance;
+	float triggerbot_reaction;
 };
 
 class override_skin_style
@@ -169,6 +170,7 @@ public:
 	int hitmarker_sound = 0;
 	ImVec4 nightmode_col = ImVec4(12, 12, 12, 255);
 	bool rank_reveal = false;
+	bool misc_autoAccept = false;
 };
 
 extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;

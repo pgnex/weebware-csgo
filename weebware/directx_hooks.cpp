@@ -512,6 +512,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Text("Hitchance");
 								ImGui::SliderFloat("Hitchance", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_hitchance, 0, 100, "%.0f%%");
+								ImGui::Text("Reaction time");
+								ImGui::SliderFloat("Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
+
 								ImGui::Checkbox("Head", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
 								ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);
 								ImGui::Checkbox("Stomach", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach, false);
@@ -650,6 +653,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 								ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
+								ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
+
 							}
 							ImGui::EndChild();
 
