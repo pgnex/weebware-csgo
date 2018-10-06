@@ -513,7 +513,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Hitchance");
 								ImGui::SliderFloat("Hitchance", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_hitchance, 0, 100, "%.0f%%");
 								ImGui::Text("Reaction time");
-								ImGui::SliderFloat("Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
+								ImGui::SliderFloat("Delay", &g_weebwarecfg.triggerbot_reaction[g_weebwarecfg.legit_cfg_index], 0, 200, "%.0fms");
 
 								ImGui::Checkbox("Head", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
 								ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);

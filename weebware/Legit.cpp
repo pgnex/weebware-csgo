@@ -812,7 +812,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	if (has_hitgroup) {
 
-		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_reaction)) {
+		if (get_epoch() <= (m_last_delay + g_weebwarecfg.triggerbot_reaction[get_config_index()])) {
 			return;
 		}
 
