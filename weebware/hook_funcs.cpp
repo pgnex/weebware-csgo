@@ -130,8 +130,6 @@ void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, i
 	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
 		SetLocalPlayerReady();
 
-	printf("emit sound hooked\n");
-
 	g_hooking.o_sounds(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
 }
 
