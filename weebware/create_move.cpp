@@ -183,7 +183,7 @@ void c_create_move::rank_reveal()
 	static uint8_t* fnServerRankRevealAll = 0;
 
 	if (!fnServerRankRevealAll) {
-			fnServerRankRevealAll = (uint8_t*)g_weebware.pattern_scan(("client_panorama.dll"), "55 8B EC 8B 0D ? ? ? ? 85 C9 75 ? A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 ? 85 C0 74 ? 8B C8 E8 ? ? ? ? 8B C8 EB ? 33 C9 89 0D ? ? ? ? 8B 45 ? FF 70 ? E8 ? ? ? ? B0 ? 5D");
+		fnServerRankRevealAll = (uint8_t*)g_weebware.pattern_scan(("client_panorama.dll"), "55 8B EC 8B 0D ? ? ? ? 85 C9 75 ? A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 ? 85 C0 74 ? 8B C8 E8 ? ? ? ? 8B C8 EB ? 33 C9 89 0D ? ? ? ? 8B 45 ? FF 70 ? E8 ? ? ? ? B0 ? 5D");
 	}
 
 	int v[3] = { 0,0,0 };
@@ -257,14 +257,12 @@ bool c_create_move::is_visible(c_base_entity* target)
 
 bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 {
-	switch (g_weebwarecfg.anti_triggerbot) {
-	case 0:
+	if (!g_weebwarecfg.anti_triggerbot) {
 		return false;
-
-	case 2:
-		if (!GetAsyncKeyState(g_weebwarecfg.anti_triggerbot_key))
-			return false;
 	}
+
+	if (!GetAsyncKeyState(g_weebwarecfg.anti_triggerbot_key))
+		return false;
 
 	auto org = *local->m_Origin();
 
@@ -520,7 +518,7 @@ void c_create_move::runClanTag()
 	{
 		static int ticks_elapsed = 0;
 
-		static auto set_clantag = (int(__fastcall*)(const char*, const char*))((uintptr_t)GetModuleHandleA("engine.dll") + 0x886E0); // g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15");
+		static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15")); // ;
 
 		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 16);
 

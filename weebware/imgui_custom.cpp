@@ -256,6 +256,15 @@ void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 	{
 		tab = set;
 	}
+
+	if (tab == set)
+	{
+		ImGui::Separator();
+	}
+	else
+	{
+		ImGui::Spacing();
+	}
 }
 
 

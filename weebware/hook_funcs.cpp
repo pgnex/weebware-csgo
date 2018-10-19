@@ -127,10 +127,13 @@ void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, i
 {
 	auto protecc = g_hooking.VEH_SOUNDS->getProtectionObject();
 
+	if (strstr(pSample, "null"))
+		iPitch = 256;
+
 	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
 		SetLocalPlayerReady();
 
-	g_hooking.o_sounds(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
+	return g_hooking.o_sounds(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
 }
 
 namespace knife_changer {
@@ -448,10 +451,10 @@ void c_hooking::hook_all_functions()
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
 
-	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
-	VEH_SOUNDS->hook();
-	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
+	//VEH_SOUNDS->hook();
+	//o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 #endif
 
 #define StreamProof 0
@@ -503,7 +506,7 @@ void c_hooking::unhook_all_functions()
 	VEH_ENDSCENE->unHook();
 	VEH_DME->unHook();
 	VEH_FSN->unHook();
-	VEH_SOUNDS->unHook();
+//	VEH_SOUNDS->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();

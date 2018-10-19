@@ -31,7 +31,6 @@ void c_nightmode::night_mode() {
 			pMaterial->colormodulate(0.6f, 0.6f, 0.6f);
 		}
 	}
-	std::cout << "test" << std::endl;
 }
 
 

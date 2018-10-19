@@ -5,7 +5,6 @@ c_config_list g_config_list;
 
 c_weebwarecfg g_weebwarecfg;
 c_weebwareskinscfg g_weebwareskinscfg;
-c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
 #define weebware_dir "C:\\weebware\\cfgs"
 
 // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
@@ -38,42 +37,6 @@ void c_config_list::update_all_configs()
 	config_names = get_all_files_names_within_folder(weebware_dir);
 }
 
-void write_donottouch_from_config()
-{
-	for (auto i = 0; i < 35; i++) {
-		if (i < 10) {
-			g_weebwarecfg_skins_but_donottouch.first[i] = g_weebwareskinscfg.skin_wheel[i];
-		}
-		else if (i < 20) {
-			g_weebwarecfg_skins_but_donottouch.second[i] = g_weebwareskinscfg.skin_wheel[i];
-		}
-		else if (i < 30) {
-			g_weebwarecfg_skins_but_donottouch.third[i] = g_weebwareskinscfg.skin_wheel[i];
-		}
-		else if (i < 35) {
-			g_weebwarecfg_skins_but_donottouch.fourth[i] = g_weebwareskinscfg.skin_wheel[i];
-		}
-	}
-}
-
-void write_cfgs_from_donottouch_toreal()
-{
-	for (auto i = 0; i < 35; i++) {
-		if (i < 10) {
-			g_weebwareskinscfg.skin_wheel[i] = g_weebwarecfg_skins_but_donottouch.first[i];
-		}
-		else if (i < 20) {
-			g_weebwareskinscfg.skin_wheel[i] = g_weebwarecfg_skins_but_donottouch.second[i];
-		}
-		else if (i < 30) {
-			g_weebwareskinscfg.skin_wheel[i] = g_weebwarecfg_skins_but_donottouch.third[i];
-		}
-		else if (i < 35) {
-			g_weebwareskinscfg.skin_wheel[i] = g_weebwarecfg_skins_but_donottouch.fourth[i];
-		}
-	}
-}
-
 void c_config_list::save_weebware_config()
 {
 	// Make sure we have a config for the first time.
@@ -89,16 +52,15 @@ void c_config_list::save_weebware_config()
 	configfile << full_config;
 	std::ofstream out(configfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
 	// Write to file
-	out.write((char*)(&g_weebwarecfg), sizeof(c_weebwarecfg));
+	g_weebwarecfg.save_cfg(out);
 	// Finish up
 	out.close();
-	write_donottouch_from_config();
 	full_config.append("skins");
 	std::stringstream skinfile;
 	skinfile << full_config;
 	std::ofstream out2(skinfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
 	// Write to file
-	out2.write((char*)(&g_weebwarecfg_skins_but_donottouch), sizeof(c_weebwareskins_save));
+	g_weebwareskinscfg.save_cfg(out2);
 	// Finish up
 	out2.close();
 
@@ -116,16 +78,15 @@ void c_config_list::save_existing_weebware()
 	configfile << full_config;
 	std::ofstream out(configfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
 	// Write to file
-	out.write((char*)(&g_weebwarecfg), sizeof(c_weebwarecfg));
+	g_weebwarecfg.save_cfg(out);
 	// Finish up
 	out.close();
-	write_donottouch_from_config();
 	full_config.append("skins");
 	std::stringstream skinfile;
 	skinfile << full_config;
 	std::ofstream out2(skinfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
 	// Write to file
-	out2.write((char*)(&g_weebwarecfg_skins_but_donottouch), sizeof(c_weebwareskins_save));
+	g_weebwareskinscfg.save_cfg(out2);
 	// Finish up
 	out2.close();
 
@@ -142,7 +103,7 @@ void c_config_list::load_weebware_config()
 	configfile << full_config;
 	std::ifstream infile;
 	infile.open(configfile.str().c_str(), std::ios::in);
-	while (infile.read((char*)&g_weebwarecfg, sizeof(c_weebwarecfg)));
+	g_weebwarecfg.load_cfg(infile);
 	infile.close();
 
 	full_config.append("skins");
@@ -150,11 +111,8 @@ void c_config_list::load_weebware_config()
 	skinfile << full_config;
 	std::ifstream infile2;
 	infile2.open(skinfile.str().c_str(), std::ios::in);
-	while (infile2.read((char*)&g_weebwarecfg_skins_but_donottouch, sizeof(c_weebwareskins_save)));
+	g_weebwareskinscfg.load_cfg(infile2);
 	infile2.close();
-
-	write_cfgs_from_donottouch_toreal();
-
 	update_all_configs();
 }
 

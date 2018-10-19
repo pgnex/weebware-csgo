@@ -170,8 +170,7 @@ c_base_entity* c_legitbot::closest_target_available()
 		view_angles += m_local->m_aimPunchAngle() * 2.f;
 
 		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
-		float this_fov = g_maths.get_fov(view_angles, angle_to_head, g_weebwarecfg.use_dynamicfov[get_config_index()], Vector(m_local->get_vec_eyepos() - center_head).size());
-
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head, g_weebwarecfg.legit_cfg[get_config_index()].use_dynamicfov, Vector(m_local->get_vec_eyepos() - center_head).size());
 		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
 
 		if (normal_fov < closest_fov) {
@@ -604,7 +603,7 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 			ExistingPlayer = false;
 
 		if (!is_valid_record(accuracy_records[i]) || !ExistingPlayer 
-			|| ((cmd->tick_count - g_weebwarecfg.legit_maximum_ticks[g_legitbot.get_config_index()]) >= accuracy_records[i].record_tick))
+			|| ((cmd->tick_count - g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].legit_maximum_ticks) >= accuracy_records[i].record_tick))
 		{
 			accuracy_records.erase(accuracy_records.begin() + i);
 			continue;
@@ -812,7 +811,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	if (has_hitgroup) {
 
-		if (get_epoch() <= (m_last_delay + g_weebwarecfg.triggerbot_reaction[get_config_index()])) {
+		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction)) {
 			return;
 		}
 

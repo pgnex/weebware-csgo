@@ -209,6 +209,7 @@
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_custom.h" />
     <ClInclude Include="i_game_event_manager.h" />
+    <ClInclude Include="json.h" />
     <ClInclude Include="key_values.h" />
     <ClInclude Include="nightmode.h" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />

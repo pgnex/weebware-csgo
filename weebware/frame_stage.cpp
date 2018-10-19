@@ -55,6 +55,9 @@ void c_frame_stage_notify::legit_aa_resolver()
 {
 	if (g_weebwarecfg.misc_legit_aa_resolver)
 	{
+		if (GetAsyncKeyState(g_weebwarecfg.anti_triggerbot_key))
+			return;
+
 		if (!local)
 			return;
 

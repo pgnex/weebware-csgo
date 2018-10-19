@@ -3,6 +3,9 @@
 #define CONFIGS
 
 #include "shared.h"
+#include "json.h"
+
+using nlohmann::json;
 
 class c_config_list
 {
@@ -43,13 +46,78 @@ public:
 	float standalone_rcs_power = 60.f;
 	int accuracy_boost;
 	bool silent_aim;
-
 	int triggerbot_active;
 	int triggerbot_key;
 	bool triggerbot_head;
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
 	float triggerbot_hitchance;
+	float legit_maximum_ticks = 12;
+	bool use_dynamicfov;
+	float triggerbot_reaction;
+
+	json convert()
+	{
+		json tmp;
+		tmp["maximum_fov"] = maximum_fov;
+		tmp["enable_legitbot"] = enable_legitbot;
+		tmp["legitbot_activation_key"] = legitbot_activation_key;
+		tmp["sensitivity"] = sensitivity;
+		tmp["reaction_time"] = reaction_time;
+		tmp["pitch_rcs"] = pitch_rcs;
+		tmp["yaw_rcs"] = yaw_rcs;
+		tmp["quick_stop"] = quick_stop;
+		tmp["aim_through_smoke"] = aim_through_smoke;
+		tmp["aim_while_blind"] = aim_while_blind;
+		tmp["hitbox_head"] = hitbox_head;
+		tmp["hitbox_chest"] = hitbox_chest;
+		tmp["hitbox_stomach"] = hitbox_stomach;
+		tmp["standalone_rcs"] = standalone_rcs;
+		tmp["standalone_rcs_power"] = standalone_rcs_power;
+		tmp["accuracy_boost"] = accuracy_boost;
+		tmp["silent_aim"] = silent_aim;
+		tmp["triggerbot_active"] = triggerbot_active;
+		tmp["triggerbot_key"] = triggerbot_key;
+		tmp["triggerbot_head"] = triggerbot_head;
+		tmp["triggerbot_chest"] = triggerbot_chest;
+		tmp["triggerbot_stomach"] = triggerbot_stomach;
+		tmp["triggerbot_hitchance"] = triggerbot_hitchance;
+		tmp["legit_maximum_ticks"] = legit_maximum_ticks;
+		tmp["use_dynamicfov"] = use_dynamicfov;
+		tmp["triggerbot_reaction"] = triggerbot_reaction;
+		return tmp;
+	}
+
+	void convert(json data)
+	{
+		maximum_fov = data["maximum_fov"];
+		enable_legitbot = data["enable_legitbot"];
+		legitbot_activation_key = data["legitbot_activation_key"];
+		sensitivity = data["sensitivity"];
+		reaction_time = data["reaction_time"];
+		pitch_rcs = data["pitch_rcs"];
+		yaw_rcs = data["yaw_rcs"];
+		quick_stop = data["quick_stop"];
+		aim_through_smoke = data["aim_through_smoke"];
+		aim_while_blind = data["aim_while_blind"];
+		hitbox_head = data["hitbox_head"];
+		hitbox_chest = data["hitbox_chest"];
+		hitbox_stomach = data["hitbox_stomach"];
+		standalone_rcs = data["standalone_rcs"];
+		standalone_rcs_power = data["standalone_rcs_power"];
+		accuracy_boost = data["accuracy_boost"];
+		silent_aim = data["silent_aim"];
+		triggerbot_active = data["triggerbot_active"];
+		triggerbot_key = data["triggerbot_key"];
+		triggerbot_head = data["triggerbot_head"];
+		triggerbot_chest = data["triggerbot_chest"];
+		triggerbot_stomach = data["triggerbot_stomach"];
+		triggerbot_hitchance = data["triggerbot_hitchance"];
+		legit_maximum_ticks = data["legit_maximum_ticks"];
+		use_dynamicfov = data["use_dynamicfov"];
+		triggerbot_reaction = data["triggerbot_reaction"];
+	}
+
 };
 
 class override_skin_style
@@ -59,26 +127,85 @@ public:
 	int m_paint_kit = 0;
 	float m_wear = FLT_MIN;
 	int m_seed = 69;
-};
 
-class c_weebwareskins_save
-{
-public:
-	override_skin_style first[10];
-	override_skin_style second[10];
-	override_skin_style third[10];
-	override_skin_style fourth[5];
+	json convert()
+	{
+		json tmp;
+		tmp["weapon_id"] = weapon_id;
+		tmp["m_paint_kit"] = m_paint_kit;
+		tmp["m_wear"] = m_wear;
+		tmp["m_seed"] = m_seed;
+		return tmp;
+	}
+
+	void convert(json data)
+	{
+		weapon_id = data["weapon_id"];
+		m_paint_kit = data["m_paint_kit"];
+		m_wear = data["m_wear"];
+		m_seed = data["m_seed"];
+	}
 };
 
 class c_weebwareskinscfg
 {
 public:
 	override_skin_style skin_wheel[35];
+
+	void save_cfg(std::ostream& file)
+	{
+		try {
+			json main;
+
+			for (auto i = 0; i < 35; i++) {
+				main[i] = skin_wheel[i].convert();
+			}
+
+			file << main;
+
+		}
+		catch (...) {
+
+		}
+	}
+
+	void load_cfg(std::istream& file)
+	{
+		try {
+
+			json main;
+
+			main << file;
+
+			for (auto i = 0; i < 35; i++) {
+				 skin_wheel[i].convert(main[i]);
+			}
+		}
+		catch (...) {
+
+		}
+	}
+
 };
 
 class c_weebwarecfg
 {
 public:
+	void save_color(ImVec4& color, json& data, std::string var_name)
+	{
+		data[var_name + "r"] = color.x;
+		data[var_name + "g"] = color.y;
+		data[var_name + "b"] = color.z;
+		data[var_name + "a"] = color.w;
+	}
+
+	void read_color(ImVec4& color, json& data, std::string var_name)
+	{
+		color.x = data[var_name + "r"];
+		color.y = data[var_name + "g"];
+		color.z = data[var_name + "b"];
+		color.w = data[var_name + "a"];
+	}
 
 	int legit_cfg_index;
 	c_legit_cfg legit_cfg[8];
@@ -96,7 +223,6 @@ public:
 	bool visuals_bomb_timer;
 	bool visuals_dormant_esp;
 	int visuals_chams;
-
 	bool enable_misc;
 	bool auto_jump;
 	bool misc_ai;
@@ -105,6 +231,33 @@ public:
 	bool misc_ai_nearest;
 	bool misc_ai_defuse;
 	bool misc_ai_defend;
+	bool visuals_chams_render_team = false;
+	bool skinchanger_enabled = false;
+	int skinchanger_selected_gun = 0;
+	int previous_knife_index = 0;
+	int next_knife_index = 0;
+	bool visuals_name_esp = 0;
+	bool skinchanger_apply_nxt = 0;
+	bool misc_legit_aa_enabled = 0;
+	bool misc_legit_aa_jitter = 0;
+	// 0, menu index , 1 config index
+	int selected_knife_index[2] = { 0 };
+	int selected_gun_index = 0;
+	int visuals_backtrack_style = 0;
+	int anti_triggerbot = 0;
+	bool misc_clantag_changer = 0;
+	bool misc_chat_spammer = 0;
+	bool misc_slidewalk = 0;
+	int anti_triggerbot_key = 0;
+	bool misc_legit_aa_resolver = 0;
+	float misc_ai_rotationspeed = 10.f;
+	float misc_ai_aimspeed = 30.f;
+	bool visuals_nightmode = 0;
+	bool visuals_chams_xqz = 0;
+	bool visuals_hitmarkers = 0;
+	int hitmarker_sound = 0;
+	bool rank_reveal = false;
+	bool misc_autoAccept = false;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
@@ -117,34 +270,8 @@ public:
 	ImVec4 visuals_chams_col = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_chams_team_col = ImVec4(0, 255, 255, 255);
 
-	bool visuals_chams_render_team = false;
-
-	bool skinchanger_enabled = false;
-
-	int skinchanger_selected_gun = 0;
-	int previous_knife_index = 0;
-	int next_knife_index = 0;
-
-	bool visuals_name_esp = 0;
 	ImVec4 visuals_name_esp_col = ImVec4(255, 255, 255, 255);
 	ImVec4 visuals_name_esp_col_team = ImVec4(255, 255, 255, 255);
-	bool skinchanger_apply_nxt = 0;
-
-	bool misc_legit_aa_enabled = 0;
-	bool misc_legit_aa_jitter = 0;
-
-	// 0, menu index , 1 config index
-	int selected_knife_index[2] = { 0 };
-	int selected_gun_index = 0;
-	bool use_dynamicfov[8] = { 0 };
-	int visuals_backtrack_style = 0;
-	int anti_triggerbot = 0;
-
-	bool misc_clantag_changer = 0;
-	bool misc_chat_spammer = 0;
-	bool misc_slidewalk = 0;
-	int anti_triggerbot_key = 0;
-	bool misc_legit_aa_resolver = 0;
 
 	ImVec4 team_visible_col = ImVec4(0, 100, 255, 255);
 	ImVec4 team_hidden_col = ImVec4(255, 0, 255, 255);
@@ -156,24 +283,205 @@ public:
 	// new name esp colors
 	ImVec4 visuals_name_esp_col_visible = ImVec4(255, 255, 255, 255);
 	ImVec4 visuals_name_esp_col_hidden = ImVec4(255, 255, 0, 255);
-
-	float misc_ai_rotationspeed = 10.f;
-	float misc_ai_aimspeed = 30.f;
-	bool visuals_nightmode = 0;
-	bool visuals_chams_xqz = 0;
 	ImVec4 visuals_chams_col_xqz = ImVec4(0, 255, 0, 255);
 	ImVec4 visuals_chams_team_col_xqz = ImVec4(0, 0, 255, 255);
-	float legit_maximum_ticks[8] = { 12,12,12,12,12,12,12,12 };
-	bool visuals_hitmarkers = 0;
 	ImVec4 visuals_hitmarker_col = ImVec4(255, 255, 255, 255);
-	int hitmarker_sound = 0;
 	ImVec4 nightmode_col = ImVec4(12, 12, 12, 255);
-	bool rank_reveal = false;
-	float triggerbot_reaction[8] = {};
-	bool misc_autoAccept = false;
+
+	json convert()
+	{
+		// const char* weapon_groups[] = { "Pistols", "Rifles", "SMG","Shotguns", "Heavy", "Auto-Snipers", "AWP", "SSG08" };
+
+		json tmp;
+		tmp["pistols"] = legit_cfg[0].convert();
+		tmp["rifle"] = legit_cfg[1].convert();
+		tmp["smg"] = legit_cfg[2].convert();
+		tmp["shotgun"] = legit_cfg[3].convert();
+		tmp["heavy"] = legit_cfg[4].convert();
+		tmp["auto"] = legit_cfg[5].convert();
+		tmp["awp"] = legit_cfg[6].convert();
+		tmp["scout"] = legit_cfg[7].convert();
+		tmp["legit_cfg_index"] = legit_cfg_index;
+
+		tmp["enable_visuals"] = enable_visuals;
+		tmp["enable_visuals_key"] = enable_visuals_key;
+		tmp["visuals_watermark"] = visuals_watermark;
+		tmp["visuals_teammates"] = visuals_teammates;
+		tmp["visuals_bounding_box"] = visuals_bounding_box;
+		tmp["visuals_health_bars"] = visuals_health_bars;
+		tmp["visuals_inacc_circle"] = visuals_inacc_circle;
+		tmp["visuals_backtrack_dots"] = visuals_backtrack_dots;
+		tmp["visuals_visible_only"] = visuals_visible_only;
+		tmp["visuals_bspotted"] = visuals_bspotted;
+		tmp["visuals_bomb_timer"] = visuals_bomb_timer;
+		tmp["visuals_dormant_esp"] = visuals_dormant_esp;
+		tmp["visuals_chams"] = visuals_chams;
+		tmp["enable_misc"] = enable_misc;
+		tmp["auto_jump"] = auto_jump;
+		tmp["misc_ai"] = misc_ai;
+		tmp["misc_ai_legitfactor"] = misc_ai_legitfactor;
+		tmp["misc_ai_random"] = misc_ai_random;
+		tmp["misc_ai_nearest"] = misc_ai_nearest;
+		tmp["misc_ai_defuse"] = misc_ai_defuse;
+		tmp["misc_ai_defend"] = misc_ai_defend;
+		tmp["visuals_chams_render_team"] = visuals_chams_render_team;
+		tmp["skinchanger_enabled"] = skinchanger_enabled;
+		tmp["skinchanger_selected_gun"] = skinchanger_selected_gun;
+		tmp["previous_knife_index"] = previous_knife_index;
+		tmp["next_knife_index"] = next_knife_index;
+		tmp["visuals_name_esp"] = visuals_name_esp;
+		tmp["skinchanger_apply_nxt"] = skinchanger_apply_nxt;
+		tmp["misc_legit_aa_enabled"] = misc_legit_aa_enabled;
+		tmp["misc_legit_aa_jitter"] = misc_legit_aa_jitter;
+		tmp["selected_knife_index0"] = selected_knife_index[0];
+		tmp["selected_knife_index1"] = selected_knife_index[1];
+		tmp["selected_gun_index"] = selected_gun_index;
+		tmp["visuals_backtrack_style"] = visuals_backtrack_style;
+		tmp["anti_triggerbot"] = anti_triggerbot;
+		tmp["misc_clantag_changer"] = misc_clantag_changer;
+		tmp["misc_chat_spammer"] = misc_chat_spammer;
+		tmp["misc_slidewalk"] = misc_slidewalk;
+		tmp["anti_triggerbot_key"] = anti_triggerbot_key;
+		tmp["misc_legit_aa_resolver"] = misc_legit_aa_resolver;
+		tmp["misc_ai_rotationspeed"] = misc_ai_rotationspeed;
+		tmp["misc_ai_aimspeed"] = misc_ai_aimspeed;
+		tmp["visuals_nightmode"] = visuals_nightmode;
+		tmp["visuals_chams_xqz"] = visuals_chams_xqz;
+		tmp["visuals_hitmarkers"] = visuals_hitmarkers;
+		tmp["hitmarker_sound"] = hitmarker_sound;
+		tmp["rank_reveal"] = rank_reveal;
+		tmp["misc_autoAccept"] = misc_autoAccept;
+		save_color(water_mark_col, tmp, "water_mark_col");
+		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
+		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
+		save_color(visuals_innacc_circle_col, tmp, "visuals_innacc_circle_col");
+		save_color(visuals_backtrack_col, tmp, "visuals_backtrack_col");
+		save_color(visuals_dormant_col, tmp, "visuals_dormant_col");
+		save_color(visuals_dormant_col_team, tmp, "visuals_dormant_col_team");
+		save_color(visuals_chams_col, tmp, "visuals_chams_col");
+		save_color(visuals_chams_team_col, tmp, "visuals_chams_team_col");
+		save_color(visuals_name_esp_col, tmp, "visuals_name_esp_col");
+		save_color(visuals_name_esp_col_team, tmp, "visuals_name_esp_col_team");
+		save_color(team_visible_col, tmp, "team_visible_col");
+		save_color(team_hidden_col, tmp, "team_hidden_col");
+		save_color(visuals_bounding_col_visible, tmp, "visuals_bounding_col_visible");
+		save_color(visuals_bounding_col_hidden, tmp, "visuals_bounding_col_hidden");
+		save_color(visuals_name_esp_col_visible, tmp, "visuals_name_esp_col_visible");
+		save_color(visuals_name_esp_col_hidden, tmp, "visuals_name_esp_col_hidden");
+		save_color(visuals_chams_col_xqz, tmp, "visuals_chams_col_xqz");
+		save_color(visuals_chams_team_col_xqz, tmp, "visuals_chams_team_col_xqz");
+		save_color(visuals_hitmarker_col, tmp, "visuals_hitmarker_col");
+		save_color(nightmode_col, tmp, "nightmode_col");
+		return tmp;
+	}
+
+	void convert(json data)
+	{
+		legit_cfg[0].convert(data["pistols"]);
+		legit_cfg[1].convert(data["rifle"]);
+		legit_cfg[2].convert(data["smg"]);
+		legit_cfg[3].convert(data["shotgun"]);
+		legit_cfg[4].convert(data["heavy"]);
+		legit_cfg[5].convert(data["auto"]);
+		legit_cfg[6].convert(data["awp"]);
+		legit_cfg[7].convert(data["scout"]);
+
+		enable_visuals = data["enable_visuals"];
+		enable_visuals_key = data["enable_visuals_key"];
+		visuals_watermark = data["visuals_watermark"];
+		visuals_teammates = data["visuals_teammates"];
+		visuals_bounding_box = data["visuals_bounding_box"];
+		visuals_health_bars = data["visuals_health_bars"];
+		visuals_inacc_circle = data["visuals_inacc_circle"];
+		visuals_backtrack_dots = data["visuals_backtrack_dots"];
+		visuals_visible_only = data["visuals_visible_only"];
+		visuals_bspotted = data["visuals_bspotted"];
+		visuals_bomb_timer = data["visuals_bomb_timer"];
+		visuals_dormant_esp = data["visuals_dormant_esp"];
+		visuals_chams = data["visuals_chams"];
+		enable_misc = data["enable_misc"];
+		auto_jump = data["auto_jump"];
+		misc_ai = data["misc_ai"];
+		misc_ai_legitfactor = data["misc_ai_legitfactor"];
+		misc_ai_random = data["misc_ai_random"];
+		misc_ai_nearest = data["misc_ai_nearest"];
+		misc_ai_defuse = data["misc_ai_defuse"];
+		misc_ai_defend = data["misc_ai_defend"];
+		visuals_chams_render_team = data["visuals_chams_render_team"];
+		skinchanger_enabled = data["skinchanger_enabled"];
+		skinchanger_selected_gun = data["skinchanger_selected_gun"];
+		previous_knife_index = data["previous_knife_index"];
+		next_knife_index = data["next_knife_index"];
+		visuals_name_esp = data["visuals_name_esp"];
+		skinchanger_apply_nxt = data["skinchanger_apply_nxt"];
+		misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
+		misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
+		selected_knife_index[0] = data["selected_knife_index0"];
+		selected_knife_index[1] = data["selected_knife_index1"];
+		selected_gun_index = data["selected_gun_index"];
+		visuals_backtrack_style = data["visuals_backtrack_style"];
+		anti_triggerbot = data["anti_triggerbot"];
+		misc_clantag_changer = data["misc_clantag_changer"];
+		misc_chat_spammer = data["misc_chat_spammer"];
+		misc_slidewalk = data["misc_slidewalk"];
+		anti_triggerbot_key = data["anti_triggerbot_key"];
+		misc_legit_aa_resolver = data["misc_legit_aa_resolver"];
+		misc_ai_rotationspeed = data["misc_ai_rotationspeed"];
+		misc_ai_aimspeed = data["misc_ai_aimspeed"];
+		visuals_nightmode = data["visuals_nightmode"];
+		visuals_chams_xqz = data["visuals_chams_xqz"];
+		visuals_hitmarkers = data["visuals_hitmarkers"];
+		hitmarker_sound = data["hitmarker_sound"];
+		rank_reveal = data["rank_reveal"];
+		misc_autoAccept = data["misc_autoAccept"];
+		read_color(water_mark_col, data, "water_mark_col");
+		read_color(visuals_bounding_col, data, "visuals_bounding_col");
+		read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
+		read_color(visuals_innacc_circle_col, data, "visuals_innacc_circle_col");
+		read_color(visuals_backtrack_col, data, "visuals_backtrack_col");
+		read_color(visuals_dormant_col, data, "visuals_dormant_col");
+		read_color(visuals_dormant_col_team, data, "visuals_dormant_col_team");
+		read_color(visuals_chams_col, data, "visuals_chams_col");
+		read_color(visuals_chams_team_col, data, "visuals_chams_team_col");
+		read_color(visuals_name_esp_col, data, "visuals_name_esp_col");
+		read_color(visuals_name_esp_col_team, data, "visuals_name_esp_col_team");
+		read_color(team_visible_col, data, "team_visible_col");
+		read_color(team_hidden_col, data, "team_hidden_col");
+		read_color(visuals_bounding_col_visible, data, "visuals_bounding_col_visible");
+		read_color(visuals_bounding_col_hidden, data, "visuals_bounding_col_hidden");
+		read_color(visuals_name_esp_col_visible, data, "visuals_name_esp_col_visible");
+		read_color(visuals_name_esp_col_hidden, data, "visuals_name_esp_col_hidden");
+		read_color(visuals_chams_col_xqz, data, "visuals_chams_col_xqz");
+		read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
+		read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
+		read_color(nightmode_col, data, "nightmode_col");
+
+	}
+
+	void save_cfg(std::ostream& file)
+	{
+		try {		
+			file << convert();
+		}
+		catch (...) {
+
+		}
+	}
+
+	void load_cfg(std::istream& file)
+	{
+		try {
+			json main;
+			main << file;
+			convert(main);
+		}
+		catch (...) {
+
+		}
+	}
+
 };
 
-extern c_weebwareskins_save g_weebwarecfg_skins_but_donottouch;
 extern c_weebwarecfg g_weebwarecfg;
 extern c_weebwareskinscfg g_weebwareskinscfg;
 #endif

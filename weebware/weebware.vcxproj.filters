@@ -168,9 +168,6 @@
     <ClCompile Include="navmesh.cpp">
       <Filter>Source Files\hooking\CreateMove\AI</Filter>
     </ClCompile>
-    <ClCompile Include="weebware_config.cpp">
-      <Filter>Source Files\Config</Filter>
-    </ClCompile>
     <ClCompile Include="authentication.cpp">
       <Filter>Source Files\Authentication</Filter>
     </ClCompile>
@@ -209,6 +206,9 @@
     </ClCompile>
     <ClCompile Include="nightmode.cpp">
       <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
+    </ClCompile>
+    <ClCompile Include="weebware_config.cpp">
+      <Filter>Source Files\Config</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="nightmode.h">
       <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
+    </ClInclude>
+    <ClInclude Include="json.h">
+      <Filter>Source Files\Config</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
