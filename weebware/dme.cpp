@@ -129,6 +129,60 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 		init = true;
 	}
 
+	if (g_weebwarecfg.visuals_glow_enabled) {
+
+		auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+		c_color col;
+
+		for (auto i = 0; i < g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions.Count(); i++)	
+		{
+			auto& glowObject = g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions[i];
+			auto entity = reinterpret_cast<c_base_entity*>(glowObject.m_pEntity);
+			// nullptr check
+			if (!entity)
+				continue;
+			// make sure isnt being used already
+			if (glowObject.IsUnused())
+				continue;
+			// check dormant, not valid player because i want to glow on objects
+			if (entity->is_dormant())
+				continue;
+			// apply based on type of entity
+			auto class_id = entity->get_client_class()->m_ClassID;
+			switch (class_id) {
+			case 35:
+				if (!g_weebwarecfg.visuals_glow_player) continue;
+				col = g_weebwarecfg.visuals_glow_player_col;
+				break;
+			case 108: 
+				if (!g_weebwarecfg.visuals_glow_c4) continue;
+				col = g_weebwarecfg.visuals_glow_c4_col;
+				break;
+			case 31:
+				if (!g_weebwarecfg.visuals_glow_chicken) continue;
+				col = g_weebwarecfg.visuals_glow_chicken_col;
+					break;
+			default:
+				continue;
+			}
+
+			// only apply to enemy, chicken is enemy
+			if (entity->m_iTeamNum() == local->m_iTeamNum())
+				continue;
+
+			glowObject.m_flRed = col.r / 255.0f;
+			glowObject.m_flGreen = col.g / 255.0f;
+			glowObject.m_flBlue = col.b / 255.0f;
+			glowObject.m_flAlpha = col.a / 255.0f;
+			glowObject.m_bRenderWhenOccluded = true;
+			glowObject.m_nGlowStyle = 0;
+			glowObject.m_bFullBloomRender = false;
+		}
+	}
+
+
+
+
 	if (g_weebwarecfg.visuals_chams > 0) {
 
 		// Get players only

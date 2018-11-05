@@ -116,10 +116,13 @@ struct csurface_t
 class CGameTrace : public CBaseTrace
 {
 public:
-	bool                    DidHitWorld() const;
+	inline bool DidHit() const
+	{
+		return fraction < 1.0f || allsolid || startsolid;
+	}
+
 	bool                    DidHitNonWorldEntity() const;
 	int                     GetEntityIndex() const;
-	bool                    DidHit() const;
 	bool					IsVisible() const;
 
 public:

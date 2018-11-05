@@ -394,6 +394,70 @@ c_base_entity* get_best_target(c_base_entity * local)
 	return best_entity;
 }
 
+void edge_aa(Vector &edgeang, bool& willedge, c_base_entity* local)
+{
+	ITraceFilter filter;
+	filter.pSkip = local;
+	Ray_t ray;
+	trace_t tr;
+	for (int i = 0; i < 8; i++)
+	{
+		bool d2 = false;
+		Vector End = local->get_vec_eyepos();
+		int value = 30;
+
+		switch (i)
+		{
+		case 0: End.y += value;
+			edgeang.y = 90;
+			break;
+		case 1: End.y -= value;
+			edgeang.y = -90;
+			break;
+		case 2: End.x += value;
+			edgeang.y = 180;
+			break;
+		case 3: End.x -= value;
+			edgeang.y = 0;
+			break;
+		case 4: End.y += value;
+			End.x += value;
+			edgeang.y = 30;
+			break;
+		case 5: End.y -= value;
+			End.x += value;
+			edgeang.y = -150;
+			break;
+		case 6: End.y += value;
+			End.x -= value;
+			edgeang.y = 150;
+			d2 = true;
+			break;
+		case 7: End.y -= value;
+			End.x -= value;
+			edgeang.y = -30;
+			break;
+		}
+		ray.Init(local->get_vec_eyepos(), End);
+		g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, (ITraceFilter*)&filter, &tr);
+		if (tr.DidHit())
+		{
+			QAngle angle_towall;
+			g_maths.calc_angle(local->get_vec_eyepos(), End, angle_towall);
+
+			edgeang.y = angle_towall.y;
+
+			if (d2)
+				edgeang.y = 180;
+
+			willedge = true;
+
+			break;
+		}
+	}
+
+}
+
 
 void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 {
@@ -447,33 +511,18 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 		if (stage > 90)
 			stage = -90;
 
+		if (g_weebwarecfg.misc_legit_aa_edge)
+		{
+			QAngle edge_angle = cmd->viewangles;
+			bool should_edge = false;
+			edge_aa(edge_angle, should_edge, local);
+
+			if (should_edge) {
+				cmd->viewangles.y = edge_angle.y;
+			}
+		}
+
 	}
-
-	//if (!g_weebwarecfg.misc_slidewalk) {
-	//	if (cmd->forwardmove > 0)
-	//	{
-	//		cmd->buttons |= in_back;
-	//		cmd->buttons &= in_forward;
-	//	}
-
-	//	if (cmd->forwardmove < 0)
-	//	{
-	//		cmd->buttons |= in_forward;
-	//		cmd->buttons &= in_back;
-	//	}
-
-	//	if (cmd->sidemove < 0)
-	//	{
-	//		cmd->buttons |= in_moveright;
-	//		cmd->buttons &= in_moveleft;
-	//	}
-
-	//	if (cmd->sidemove > 0)
-	//	{
-	//		cmd->buttons |= in_moveleft;
-	//		cmd->buttons &= ~in_moveright;
-	//	}
-	//}
 }
 
 void c_create_move::chat_spam()
@@ -510,18 +559,15 @@ void c_create_move::chat_spam()
 	}
 }
 
+bool disabled = false;
+static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
 void c_create_move::runClanTag()
 {
-	static const std::string MovingTag[16] = { "w", "we", "wee", "weeb", "weebw", "weebwa", "weebwar", "weebware", "weebware", "weebwar", "weebwa", "weebw", "weeb", "wee", "we", "w" };
-
+	static const std::string MovingTag[18] = { "", "w", "we", "wee", "weeb", "weebw", "weebwa", "weebwar", "weebware", "weebware", "weebwar", "weebwa", "weebw", "weeb", "wee", "we", "w", "" };
 	if (g_weebwarecfg.misc_clantag_changer && g_weebwarecfg.enable_misc)
 	{
 		static int ticks_elapsed = 0;
-
-		static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15")); // ;
-
-		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 16);
-
+		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 18);
 		int tick_rate = 1 / g_weebware.g_global_vars->interval_per_tick;
 
 		if (ticks_elapsed > tick_rate)
@@ -529,7 +575,11 @@ void c_create_move::runClanTag()
 			set_clantag(MovingTag[i].c_str(), MovingTag[i].c_str());
 			ticks_elapsed = 0;
 		}
-
 		ticks_elapsed++;
+		disabled = false;
+	}
+	else if (!g_weebwarecfg.misc_clantag_changer && !disabled) {
+		set_clantag("", "");
+		disabled = true;
 	}
 }

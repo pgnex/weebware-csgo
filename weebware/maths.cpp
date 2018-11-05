@@ -68,6 +68,15 @@ bool c_maths::world_to_screen(Vector& origin, Vector& screen)
 	return false;
 }
 
+void c_maths::calc_angle(Vector src, Vector dst, Vector& angles)
+{
+	Vector delta = src - dst;
+	double hyp = delta.size();
+	angles.y = (atan(delta.y / delta.x) * 57.295779513082f);
+	angles.x = (atan(delta.z / hyp) * 57.295779513082f);
+	if (delta.x >= 0.0) angles.y += 180.0f;
+}
+
 void c_maths::vector_qangles(Vector forward, QAngle& angles)
 {
 	float tmp, yaw, pitch;

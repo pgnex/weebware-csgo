@@ -5,12 +5,16 @@
 #include "hook_funcs.h"
 #include "events.h"
 
+#define WEEBWARE_RELEASE 0
+
 GameEvents g_events;
 c_weebware g_weebware;
 
 unsigned __stdcall entry_thread(void* v_arg)
 {
+#if WEEBWARE_RELEASE
 	Sleep(5000);
+#endif
 	g_weebware.setup_thread(); // run our thread
 
 	_endthreadex(0); // close thread
@@ -42,7 +46,6 @@ bool c_weebware::init_interfaces()
 	input_fact = retrieve_interface("inputsystem.dll");
 
 
-#define WEEBWARE_RELEASE 1
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
@@ -63,6 +66,8 @@ bool c_weebware::init_interfaces()
 	g_surface = reinterpret_cast<c_surface*>(surface_fact("VGUI_Surface031", NULL));
 
 	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan("shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
+
+	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan("client.dll", "0F 11 05 ? ? ? ? 83 C8 01") + 3);
 
 	g_input_system = reinterpret_cast<c_input_system*>(input_fact("InputSystemVersion001", NULL));
 

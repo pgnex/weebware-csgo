@@ -576,6 +576,27 @@ void imgui_main(IDirect3DDevice9* pDevice)
 									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)##dormant1", "Hidden Color (Enemy)##dormant2");
 								}
 
+								ImGui::Separator();
+								ImGui::Text("Glow");
+								ImGui::Separator();
+
+								ImGui::Checkbox("Enabled##Glow", &g_weebwarecfg.visuals_glow_enabled, false);
+
+								ImGui::Checkbox("Players", &g_weebwarecfg.visuals_glow_player, false);
+								if (g_weebwarecfg.visuals_glow_player) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_player_col, g_weebwarecfg.visuals_glow_player_col, false, "Glow Color", "##glow2");
+								}
+
+								ImGui::Checkbox("Bomb", &g_weebwarecfg.visuals_glow_c4, false);
+								if (g_weebwarecfg.visuals_glow_c4) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_c4_col, g_weebwarecfg.visuals_glow_c4_col, false, "Bomb Color", "##glow2");
+								}
+
+								ImGui::Checkbox("Chicken", &g_weebwarecfg.visuals_glow_chicken, false);
+								if (g_weebwarecfg.visuals_glow_chicken) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_chicken_col, g_weebwarecfg.visuals_glow_chicken_col, false, "Chicken Color", "##glow2");
+								}
+
 
 
 								ImGui::Separator();
@@ -606,6 +627,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 
 								ImGui::Separator();
 								ImGui::Text("Backtracking");
@@ -662,7 +685,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::BeginChild("Misc 2", ImVec2(0, 0), true);
 							{
-								ImGui::Text("Kite Ai (walkbot) - wip");
+								ImGui::Text("Smartbot");
 								ImGui::Separator();
 								ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai, false);
 								ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
@@ -674,31 +697,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Aim Speed");
 								ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
 
-#if 0
-								if (ImGui::Button("Create Lobby Button")) {
-									// v90 = sub_103AE600();
-									// if (!(*(unsigned __int8(**)(void))(*(_DWORD *)(v90 + 8) + 4))())
-									// int sub_103AE600()
-									// DWORD v90 = *(DWORD*)reinterpret_cast<int(*)()>(g_weebware.pattern_scan("client.dll", "A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3 ? ? ? ? ? ? ? ? A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3"))();
-									// (*(unsigned __int8(**)(void))(*(DWORD*)(v90 + 8) + 4))();
-									// int* v90 = reinterpret_cast<int*(*)()>(g_weebware.pattern_scan("client.dll", "A1 ? ? ? ? 85 C0 75 2E A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 0D 8B C8 E8 ? ? ? ? A3 ? ? ? ? C3 C7 05 ? ? ? ? ? ? ? ? 33 C0 C3"))();
-									// 
-									// (*(int (__thiscall **)(int))(*(_DWORD *)(panorama + 8) + 8))(panorama + 8);
-									// reinterpret_cast<int(__stdcall*)(char* , int )>(g_weebware.pattern_scan("client.dll", "55 8B EC 8B 45 0C 85 C0 8B 0D ? ? ? ? 53 8B 1D ? ? ? ? 0F 45 D8 8B 01"))("UIPanorama.mainmenu_press_GO",0);
-									//v67 = (_DWORD *)GetSomeLobbyPointer();
-									//sub_1016A4D0((int *)v2 + 133, *((_DWORD *)v2 + 136), &v67);
 
-									uintptr_t* panorama_pointer = *(uintptr_t**)(g_weebware.pattern_scan("client.dll", "8B 3D ? ? ? ? 6A 10 8B 08 8B 01 FF 50 04 8B F0 85 F6 74 2B 6A 00 51 66 8B 0D ? ? ? ? 8B D4 66 89 0A 8B CE E8 ? ? ? ? C7 06 ? ? ? ? 8B CF 8B 07 56 FF 90 ? ? ? ? 5F 5E 5B C3 8B 07 33 F6 56 8B CF FF 90 ? ? ? ? 5F") + 0x2);
-
-									if (panorama_pointer) {
-										std::cout << panorama_pointer << std::endl;
-										// auto v0 = (uintptr_t*)(*(int(__stdcall**)(void))(*(DWORD*)panorama_pointer + 0x200))();
-										reinterpret_cast<int(__stdcall*)(char*, int)>(g_weebware.pattern_scan("client.dll", "55 8B EC 8B 45 0C 85 C0 8B 0D ? ? ? ? 53 8B 1D ? ? ? ? 0F 45 D8 8B 01"))("UIPanorama.mainmenu_press_GO", 0);
-									}
-								}
-
-								ImGui::Checkbox("Hide Grenade Throws", &g_weebwarecfg.misc_hidegrenade, false);
-#endif
 								ImGui::Separator();
 
 								ImGui::Text("Legit Anti-Aim");
@@ -713,6 +712,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
 								ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
+								ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);
 								//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
 
 
@@ -795,8 +795,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Settings");
 								ImGui::Separator();
-								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 							}
 							ImGui::EndChild();
 

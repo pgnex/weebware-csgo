@@ -180,6 +180,7 @@
     <ClInclude Include="create_move.h" />
     <ClInclude Include="c_engine_client.h" />
     <ClInclude Include="c_entities.h" />
+    <ClInclude Include="c_glow_object_manager.h" />
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />
@@ -212,6 +213,7 @@
     <ClInclude Include="json.h" />
     <ClInclude Include="key_values.h" />
     <ClInclude Include="nightmode.h" />
+    <ClInclude Include="platform.h" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Detour\ADetour.hpp" />
@@ -227,6 +229,8 @@
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
     <ClInclude Include="skindefs.h" />
+    <ClInclude Include="UtlMemory.h" />
+    <ClInclude Include="UtlVector.hpp" />
     <ClInclude Include="weebware_config.h" />
     <ClInclude Include="Legit.h" />
     <ClInclude Include="maths.h" />

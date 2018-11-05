@@ -223,6 +223,10 @@ public:
 	bool visuals_bomb_timer;
 	bool visuals_dormant_esp;
 	int visuals_chams;
+	bool visuals_glow_enabled;
+	bool visuals_glow_player;
+	bool visuals_glow_c4;
+	bool visuals_glow_chicken;
 	bool enable_misc;
 	bool auto_jump;
 	bool misc_ai;
@@ -240,6 +244,7 @@ public:
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
+	bool misc_legit_aa_edge = false;
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
@@ -288,6 +293,11 @@ public:
 	ImVec4 visuals_hitmarker_col = ImVec4(255, 255, 255, 255);
 	ImVec4 nightmode_col = ImVec4(12, 12, 12, 255);
 
+	// glow esp color
+	ImVec4 visuals_glow_player_col = ImVec4(45, 65, 123, 255);
+	ImVec4 visuals_glow_c4_col = ImVec4(45, 65, 123, 255);
+	ImVec4 visuals_glow_chicken_col = ImVec4(45, 65, 123, 255);
+
 	json convert()
 	{
 		// const char* weapon_groups[] = { "Pistols", "Rifles", "SMG","Shotguns", "Heavy", "Auto-Snipers", "AWP", "SSG08" };
@@ -333,6 +343,7 @@ public:
 		tmp["skinchanger_apply_nxt"] = skinchanger_apply_nxt;
 		tmp["misc_legit_aa_enabled"] = misc_legit_aa_enabled;
 		tmp["misc_legit_aa_jitter"] = misc_legit_aa_jitter;
+		tmp["misc_legit_aa_edge"] = misc_legit_aa_edge;
 		tmp["selected_knife_index0"] = selected_knife_index[0];
 		tmp["selected_knife_index1"] = selected_knife_index[1];
 		tmp["selected_gun_index"] = selected_gun_index;
@@ -416,6 +427,7 @@ public:
 		skinchanger_apply_nxt = data["skinchanger_apply_nxt"];
 		misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
 		misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
+		misc_legit_aa_edge = data["misc_legit_aa_edge"];
 		selected_knife_index[0] = data["selected_knife_index0"];
 		selected_knife_index[1] = data["selected_knife_index1"];
 		selected_gun_index = data["selected_gun_index"];

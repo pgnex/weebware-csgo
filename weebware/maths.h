@@ -29,6 +29,7 @@ bool s_bMathlibInitialized = false;
 	void qangle_vector(const QAngle& angles, Vector& forward);
 	void qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp);
 	void vector_qangles3d(Vector& vecForward, Vector& vecAngles);
+	void calc_angle(Vector src, Vector dst, Vector& angles);
 
 	float get_fov(QAngle& viewAngle, QAngle& aimAngle, bool distance_scaling = 0, float dst = 0);
 	void normalize_angle(QAngle& angle);
