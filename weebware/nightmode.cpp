@@ -3,33 +3,39 @@
 
 c_nightmode g_nightmode;
 
+bool done = false;
+
 void c_nightmode::night_mode() {
+	done = false;
 	c_convar* prop_var = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
 	if (prop_var->fValue != 0) {
 		prop_var->SetValue("1");
 	}
-	for (auto i = g_weebware.g_mat_sys->first_material(); i != g_weebware.g_mat_sys->invalid_material(); i = g_weebware.g_mat_sys->next_material(i)) {
-		auto *pMaterial = g_weebware.g_mat_sys->get_mat(i);
+	if (!done) {
+		for (auto i = g_weebware.g_mat_sys->first_material(); i != g_weebware.g_mat_sys->invalid_material(); i = g_weebware.g_mat_sys->next_material(i)) {
+			auto *pMaterial = g_weebware.g_mat_sys->get_mat(i);
 
-		if (!pMaterial)
-			continue;
+			if (!pMaterial)
+				continue;
 
-		c_color col = g_weebwarecfg.nightmode_col;
+			c_color col = g_weebwarecfg.nightmode_col;
 
-		if (strstr(pMaterial->gettexturegroupname(), "World"))
-		{
-			pMaterial->colormodulate(col.r / 255.0f, col.g / 255.0f, col.b / 255.0f);
+			if (strstr(pMaterial->gettexturegroupname(), "World"))
+			{
+				pMaterial->colormodulate(col.r / 255.0f, col.g / 255.0f, col.b / 255.0f);
 
-			pMaterial->setmaterialvarflag(material_var_translucent, false);
+				pMaterial->setmaterialvarflag(material_var_translucent, false);
+			}
+			if (strstr(pMaterial->gettexturegroupname(), "StaticProp"))
+			{
+				pMaterial->colormodulate(0.3f, 0.3f, 0.3f);
+			}
+			if (strstr(pMaterial->gettexturegroupname(), "Model"))
+			{
+				pMaterial->colormodulate(0.6f, 0.6f, 0.6f);
+			}
 		}
-		if (strstr(pMaterial->gettexturegroupname(), "StaticProp"))
-		{
-			pMaterial->colormodulate(0.3f, 0.3f, 0.3f);
-		}
-		if (strstr(pMaterial->gettexturegroupname(), "Model"))
-		{
-			pMaterial->colormodulate(0.6f, 0.6f, 0.6f);
-		}
+		done = true;
 	}
 }
 

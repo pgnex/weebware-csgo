@@ -12,7 +12,9 @@ void c_esp::esp_main()
 {
 	water_mark();
 
-	if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+	}
 
 	if (g_weebware.menu_opened)
 	{

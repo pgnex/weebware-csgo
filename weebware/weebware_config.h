@@ -295,8 +295,8 @@ public:
 
 	// glow esp color
 	ImVec4 visuals_glow_player_col = ImVec4(45, 65, 123, 255);
-	ImVec4 visuals_glow_c4_col = ImVec4(45, 65, 123, 255);
-	ImVec4 visuals_glow_chicken_col = ImVec4(45, 65, 123, 255);
+	ImVec4 visuals_glow_c4_col = ImVec4(204, 54, 46, 255);
+	ImVec4 visuals_glow_chicken_col = ImVec4(73, 244, 82, 255);
 
 	json convert()
 	{
@@ -313,6 +313,7 @@ public:
 		tmp["scout"] = legit_cfg[7].convert();
 		tmp["legit_cfg_index"] = legit_cfg_index;
 
+		// visuals
 		tmp["enable_visuals"] = enable_visuals;
 		tmp["enable_visuals_key"] = enable_visuals_key;
 		tmp["visuals_watermark"] = visuals_watermark;
@@ -326,6 +327,12 @@ public:
 		tmp["visuals_bomb_timer"] = visuals_bomb_timer;
 		tmp["visuals_dormant_esp"] = visuals_dormant_esp;
 		tmp["visuals_chams"] = visuals_chams;
+		tmp["visuals_glow_enabled"] = visuals_glow_enabled;
+		tmp["visuals_glow_player"] = visuals_glow_player;
+		tmp["visuals_glow_c4"] = visuals_glow_c4;
+		tmp["visuals_glow_chicken"] = visuals_glow_chicken;
+
+		// misc
 		tmp["enable_misc"] = enable_misc;
 		tmp["auto_jump"] = auto_jump;
 		tmp["misc_ai"] = misc_ai;
@@ -383,6 +390,10 @@ public:
 		save_color(visuals_chams_team_col_xqz, tmp, "visuals_chams_team_col_xqz");
 		save_color(visuals_hitmarker_col, tmp, "visuals_hitmarker_col");
 		save_color(nightmode_col, tmp, "nightmode_col");
+		save_color(visuals_glow_player_col, tmp, "visuals_glow_player_col");
+		save_color(visuals_glow_c4_col, tmp, "visuals_glow_c4_col");
+		save_color(visuals_glow_chicken_col, tmp, "visuals_glow_chicken_col");
+
 		return tmp;
 	}
 
@@ -410,6 +421,12 @@ public:
 		visuals_bomb_timer = data["visuals_bomb_timer"];
 		visuals_dormant_esp = data["visuals_dormant_esp"];
 		visuals_chams = data["visuals_chams"];
+		visuals_glow_enabled = data["visuals_glow_enabled"];
+		visuals_glow_player = data["visuals_glow_player"];
+		visuals_glow_c4 = data["visuals_glow_c4"];
+		visuals_glow_chicken = data["visuals_glow_chicken"];
+
+		// misc
 		enable_misc = data["enable_misc"];
 		auto_jump = data["auto_jump"];
 		misc_ai = data["misc_ai"];
@@ -467,6 +484,9 @@ public:
 		read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
 		read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
 		read_color(nightmode_col, data, "nightmode_col");
+		read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
+		read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
+		read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
 
 	}
 
