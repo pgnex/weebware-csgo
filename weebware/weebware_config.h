@@ -7,6 +7,14 @@
 
 using nlohmann::json;
 
+
+static bool check(std::string key, json data) {
+	if (data.count(key) > 0) {
+		return true;
+	}
+	return false;
+}
+
 class c_config_list
 {
 public:
@@ -90,35 +98,36 @@ public:
 
 	void convert(json data)
 	{
-		maximum_fov = data["maximum_fov"];
-		enable_legitbot = data["enable_legitbot"];
-		legitbot_activation_key = data["legitbot_activation_key"];
-		sensitivity = data["sensitivity"];
-		reaction_time = data["reaction_time"];
-		pitch_rcs = data["pitch_rcs"];
-		yaw_rcs = data["yaw_rcs"];
-		quick_stop = data["quick_stop"];
-		aim_through_smoke = data["aim_through_smoke"];
-		aim_while_blind = data["aim_while_blind"];
-		hitbox_head = data["hitbox_head"];
-		hitbox_chest = data["hitbox_chest"];
-		hitbox_stomach = data["hitbox_stomach"];
-		standalone_rcs = data["standalone_rcs"];
-		standalone_rcs_power = data["standalone_rcs_power"];
-		accuracy_boost = data["accuracy_boost"];
-		silent_aim = data["silent_aim"];
-		triggerbot_active = data["triggerbot_active"];
-		triggerbot_key = data["triggerbot_key"];
-		triggerbot_head = data["triggerbot_head"];
-		triggerbot_chest = data["triggerbot_chest"];
-		triggerbot_stomach = data["triggerbot_stomach"];
-		triggerbot_hitchance = data["triggerbot_hitchance"];
-		legit_maximum_ticks = data["legit_maximum_ticks"];
-		use_dynamicfov = data["use_dynamicfov"];
-		triggerbot_reaction = data["triggerbot_reaction"];
+		if (check("maximum_fov", data)) maximum_fov = data["maximum_fov"];
+		if (check("enable_legitbot", data)) enable_legitbot = data["enable_legitbot"];
+		if (check("legitbot_activation_key", data)) legitbot_activation_key = data["legitbot_activation_key"];
+		if (check("sensitivity", data)) sensitivity = data["sensitivity"];
+		if (check("reaction_time", data)) reaction_time = data["reaction_time"];
+		if (check("pitch_rcs", data)) pitch_rcs = data["pitch_rcs"];
+		if (check("yaw_rcs", data)) yaw_rcs = data["yaw_rcs"];
+		if (check("quick_stop", data)) quick_stop = data["quick_stop"];
+		if (check("aim_through_smoke", data)) aim_through_smoke = data["aim_through_smoke"];
+		if (check("aim_while_blind", data)) aim_while_blind = data["aim_while_blind"];
+		if (check("hitbox_head", data)) hitbox_head = data["hitbox_head"];
+		if (check("hitbox_chest", data)) hitbox_chest = data["hitbox_chest"];
+		if (check("hitbox_stomach", data)) hitbox_stomach = data["hitbox_stomach"];
+		if (check("standalone_rcs", data)) standalone_rcs = data["standalone_rcs"];
+		if (check("standalone_rcs_power", data)) standalone_rcs_power = data["standalone_rcs_power"];
+		if (check("accuracy_boost", data)) accuracy_boost = data["accuracy_boost"];
+		if (check("silent_aim", data)) silent_aim = data["silent_aim"];
+		if (check("triggerbot_active", data)) triggerbot_active = data["triggerbot_active"];
+		if (check("triggerbot_key", data)) triggerbot_key = data["triggerbot_key"];
+		if (check("triggerbot_head", data)) triggerbot_head = data["triggerbot_head"];
+		if (check("triggerbot_chest", data)) triggerbot_chest = data["triggerbot_chest"];
+		if (check("triggerbot_stomach", data)) triggerbot_stomach = data["triggerbot_stomach"];
+		if (check("triggerbot_hitchance", data)) triggerbot_hitchance = data["triggerbot_hitchance"];
+		if (check("legit_maximum_ticks", data)) legit_maximum_ticks = data["legit_maximum_ticks"];
+		if (check("use_dynamicfov", data)) use_dynamicfov = data["use_dynamicfov"];
+		if (check("triggerbot_reaction", data)) triggerbot_reaction = data["triggerbot_reaction"];
 	}
 
 };
+
 
 class override_skin_style
 {
@@ -140,10 +149,10 @@ public:
 
 	void convert(json data)
 	{
-		weapon_id = data["weapon_id"];
-		m_paint_kit = data["m_paint_kit"];
-		m_wear = data["m_wear"];
-		m_seed = data["m_seed"];
+		if (check("weapon_id", data)) weapon_id = data["weapon_id"];
+		if (check("m_paint_kit", data)) m_paint_kit = data["m_paint_kit"];
+		if (check("m_wear", data)) m_wear = data["m_wear"];
+		if (check("m_seed", data)) m_seed = data["m_seed"];
 	}
 };
 
@@ -399,95 +408,94 @@ public:
 
 	void convert(json data)
 	{
-		legit_cfg[0].convert(data["pistols"]);
-		legit_cfg[1].convert(data["rifle"]);
-		legit_cfg[2].convert(data["smg"]);
-		legit_cfg[3].convert(data["shotgun"]);
-		legit_cfg[4].convert(data["heavy"]);
-		legit_cfg[5].convert(data["auto"]);
-		legit_cfg[6].convert(data["awp"]);
-		legit_cfg[7].convert(data["scout"]);
+		if (check("pistols", data)) legit_cfg[0].convert(data["pistols"]);
+		if (check("rifle", data)) legit_cfg[1].convert(data["rifle"]);
+		if (check("smg", data)) legit_cfg[2].convert(data["smg"]);
+		if (check("shotgun", data)) legit_cfg[3].convert(data["shotgun"]);
+		if (check("heavy", data)) legit_cfg[4].convert(data["heavy"]);
+		if (check("auto", data)) legit_cfg[5].convert(data["auto"]);
+		if (check("awp", data)) legit_cfg[6].convert(data["awp"]);
+		if (check("scout", data)) legit_cfg[7].convert(data["scout"]);
 
-		enable_visuals = data["enable_visuals"];
-		enable_visuals_key = data["enable_visuals_key"];
-		visuals_watermark = data["visuals_watermark"];
-		visuals_teammates = data["visuals_teammates"];
-		visuals_bounding_box = data["visuals_bounding_box"];
-		visuals_health_bars = data["visuals_health_bars"];
-		visuals_inacc_circle = data["visuals_inacc_circle"];
-		visuals_backtrack_dots = data["visuals_backtrack_dots"];
-		visuals_visible_only = data["visuals_visible_only"];
-		visuals_bspotted = data["visuals_bspotted"];
-		visuals_bomb_timer = data["visuals_bomb_timer"];
-		visuals_dormant_esp = data["visuals_dormant_esp"];
-		visuals_chams = data["visuals_chams"];
-		visuals_glow_enabled = data["visuals_glow_enabled"];
-		visuals_glow_player = data["visuals_glow_player"];
-		visuals_glow_c4 = data["visuals_glow_c4"];
-		visuals_glow_chicken = data["visuals_glow_chicken"];
+		if (check("enable_visuals", data)) enable_visuals = data["enable_visuals"];
+		if (check("enable_visuals_key", data)) enable_visuals_key = data["enable_visuals_key"];
+		if (check("visuals_watermark", data)) visuals_watermark = data["visuals_watermark"];
+		if (check("visuals_teammates", data)) visuals_teammates = data["visuals_teammates"];
+		if (check("visuals_bounding_box", data)) visuals_bounding_box = data["visuals_bounding_box"];
+		if (check("visuals_health_bars", data)) visuals_health_bars = data["visuals_health_bars"];
+		if (check("visuals_inacc_circle", data)) visuals_inacc_circle = data["visuals_inacc_circle"];
+		if (check("visuals_backtrack_dots", data)) visuals_backtrack_dots = data["visuals_backtrack_dots"];
+		if (check("visuals_visible_only", data)) visuals_visible_only = data["visuals_visible_only"];
+		if (check("visuals_bspotted", data)) visuals_bspotted = data["visuals_bspotted"];
+		if (check("visuals_bomb_timer", data)) visuals_bomb_timer = data["visuals_bomb_timer"];
+		if (check("visuals_dormant_esp", data)) visuals_dormant_esp = data["visuals_dormant_esp"];
+		if (check("visuals_chams", data)) visuals_chams = data["visuals_chams"];
+		if (check("visuals_glow_enabled", data)) visuals_glow_enabled = data["visuals_glow_enabled"];
+		if (check("visuals_glow_player", data)) visuals_glow_player = data["visuals_glow_player"];
+		if (check("visuals_glow_c4", data)) visuals_glow_c4 = data["visuals_glow_c4"];
+		if (check("visuals_glow_chicken", data)) visuals_glow_chicken = data["visuals_glow_chicken"];
 
 		// misc
-		enable_misc = data["enable_misc"];
-		auto_jump = data["auto_jump"];
-		misc_ai = data["misc_ai"];
-		misc_ai_legitfactor = data["misc_ai_legitfactor"];
-		misc_ai_random = data["misc_ai_random"];
-		misc_ai_nearest = data["misc_ai_nearest"];
-		misc_ai_defuse = data["misc_ai_defuse"];
-		misc_ai_defend = data["misc_ai_defend"];
-		visuals_chams_render_team = data["visuals_chams_render_team"];
-		skinchanger_enabled = data["skinchanger_enabled"];
-		skinchanger_selected_gun = data["skinchanger_selected_gun"];
-		previous_knife_index = data["previous_knife_index"];
-		next_knife_index = data["next_knife_index"];
-		visuals_name_esp = data["visuals_name_esp"];
-		skinchanger_apply_nxt = data["skinchanger_apply_nxt"];
-		misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
-		misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
-		misc_legit_aa_edge = data["misc_legit_aa_edge"];
-		selected_knife_index[0] = data["selected_knife_index0"];
-		selected_knife_index[1] = data["selected_knife_index1"];
-		selected_gun_index = data["selected_gun_index"];
-		visuals_backtrack_style = data["visuals_backtrack_style"];
-		anti_triggerbot = data["anti_triggerbot"];
-		misc_clantag_changer = data["misc_clantag_changer"];
-		misc_chat_spammer = data["misc_chat_spammer"];
-		misc_slidewalk = data["misc_slidewalk"];
-		anti_triggerbot_key = data["anti_triggerbot_key"];
-		misc_legit_aa_resolver = data["misc_legit_aa_resolver"];
-		misc_ai_rotationspeed = data["misc_ai_rotationspeed"];
-		misc_ai_aimspeed = data["misc_ai_aimspeed"];
-		visuals_nightmode = data["visuals_nightmode"];
-		visuals_chams_xqz = data["visuals_chams_xqz"];
-		visuals_hitmarkers = data["visuals_hitmarkers"];
-		hitmarker_sound = data["hitmarker_sound"];
-		rank_reveal = data["rank_reveal"];
-		misc_autoAccept = data["misc_autoAccept"];
-		read_color(water_mark_col, data, "water_mark_col");
-		read_color(visuals_bounding_col, data, "visuals_bounding_col");
-		read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
-		read_color(visuals_innacc_circle_col, data, "visuals_innacc_circle_col");
-		read_color(visuals_backtrack_col, data, "visuals_backtrack_col");
-		read_color(visuals_dormant_col, data, "visuals_dormant_col");
-		read_color(visuals_dormant_col_team, data, "visuals_dormant_col_team");
-		read_color(visuals_chams_col, data, "visuals_chams_col");
-		read_color(visuals_chams_team_col, data, "visuals_chams_team_col");
-		read_color(visuals_name_esp_col, data, "visuals_name_esp_col");
-		read_color(visuals_name_esp_col_team, data, "visuals_name_esp_col_team");
-		read_color(team_visible_col, data, "team_visible_col");
-		read_color(team_hidden_col, data, "team_hidden_col");
-		read_color(visuals_bounding_col_visible, data, "visuals_bounding_col_visible");
-		read_color(visuals_bounding_col_hidden, data, "visuals_bounding_col_hidden");
-		read_color(visuals_name_esp_col_visible, data, "visuals_name_esp_col_visible");
-		read_color(visuals_name_esp_col_hidden, data, "visuals_name_esp_col_hidden");
-		read_color(visuals_chams_col_xqz, data, "visuals_chams_col_xqz");
-		read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
-		read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
-		read_color(nightmode_col, data, "nightmode_col");
-		read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
-		read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
-		read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
-
+		if (check("misc_legit_aa_edge", data)) enable_misc = data["enable_misc"];
+		if (check("auto_jump", data)) auto_jump = data["auto_jump"];
+		if (check("misc_ai", data)) misc_ai = data["misc_ai"];
+		if (check("misc_ai_legitfactor", data)) misc_ai_legitfactor = data["misc_ai_legitfactor"];
+		if (check("misc_ai_random", data)) misc_ai_random = data["misc_ai_random"];
+		if (check("misc_ai_nearest", data)) misc_ai_nearest = data["misc_ai_nearest"];
+		if (check("misc_ai_defuse", data)) misc_ai_defuse = data["misc_ai_defuse"];
+		if (check("misc_ai_defend", data)) misc_ai_defend = data["misc_ai_defend"];
+		if (check("visuals_chams_render_team", data)) visuals_chams_render_team = data["visuals_chams_render_team"];
+		if (check("skinchanger_enabled", data)) skinchanger_enabled = data["skinchanger_enabled"];
+		if (check("skinchanger_selected_gun", data)) skinchanger_selected_gun = data["skinchanger_selected_gun"];
+		if (check("previous_knife_index", data)) previous_knife_index = data["previous_knife_index"];
+		if (check("next_knife_index", data)) next_knife_index = data["next_knife_index"];
+		if (check("visuals_name_esp", data)) visuals_name_esp = data["visuals_name_esp"];
+		if (check("skinchanger_apply_nxt", data)) skinchanger_apply_nxt = data["skinchanger_apply_nxt"];
+		if (check("misc_legit_aa_enabled", data)) misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
+		if (check("misc_legit_aa_jitter", data)) misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
+		if (check("misc_legit_aa_edge", data)) misc_legit_aa_edge = data["misc_legit_aa_edge"];
+		if (check("selected_knife_index0", data)) selected_knife_index[0] = data["selected_knife_index0"];
+		if (check("selected_knife_index1", data)) selected_knife_index[1] = data["selected_knife_index1"];
+		if (check("selected_gun_index", data)) selected_gun_index = data["selected_gun_index"];
+		if (check("visuals_backtrack_style", data)) visuals_backtrack_style = data["visuals_backtrack_style"];
+		if (check("anti_triggerbot", data)) anti_triggerbot = data["anti_triggerbot"];
+		if (check("misc_clantag_changer", data)) misc_clantag_changer = data["misc_clantag_changer"];
+		if (check("misc_chat_spammer", data)) misc_chat_spammer = data["misc_chat_spammer"];
+		if (check("misc_slidewalk", data)) misc_slidewalk = data["misc_slidewalk"];
+		if (check("anti_triggerbot_key", data)) anti_triggerbot_key = data["anti_triggerbot_key"];
+		if (check("misc_legit_aa_resolver", data)) misc_legit_aa_resolver = data["misc_legit_aa_resolver"];
+		if (check("misc_ai_rotationspeed", data)) misc_ai_rotationspeed = data["misc_ai_rotationspeed"];
+		if (check("misc_ai_aimspeed", data)) misc_ai_aimspeed = data["misc_ai_aimspeed"];
+		if (check("visuals_nightmode", data)) visuals_nightmode = data["visuals_nightmode"];
+		if (check("visuals_chams_xqz", data)) visuals_chams_xqz = data["visuals_chams_xqz"];
+		if (check("visuals_hitmarkers", data)) visuals_hitmarkers = data["visuals_hitmarkers"];
+		if (check("hitmarker_sound", data)) hitmarker_sound = data["hitmarker_sound"];
+		if (check("rank_reveal", data)) rank_reveal = data["rank_reveal"];
+		if (check("misc_autoAccept", data)) misc_autoAccept = data["misc_autoAccept"];
+		if (check("water_mark_col", data)) read_color(water_mark_col, data, "water_mark_col");
+		if (check("visuals_bounding_col", data)) read_color(visuals_bounding_col, data, "visuals_bounding_col");
+		if (check("misc_autoAccept", data)) read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
+		if (check("visuals_bounding_team_col", data)) read_color(visuals_innacc_circle_col, data, "visuals_innacc_circle_col");
+		if (check("visuals_backtrack_col", data)) read_color(visuals_backtrack_col, data, "visuals_backtrack_col");
+		if (check("visuals_dormant_col", data)) read_color(visuals_dormant_col, data, "visuals_dormant_col");
+		if (check("visuals_dormant_col_team", data)) read_color(visuals_dormant_col_team, data, "visuals_dormant_col_team");
+		if (check("visuals_chams_col", data)) read_color(visuals_chams_col, data, "visuals_chams_col");
+		if (check("visuals_chams_team_col", data)) read_color(visuals_chams_team_col, data, "visuals_chams_team_col");
+		if (check("visuals_name_esp_col", data)) read_color(visuals_name_esp_col, data, "visuals_name_esp_col");
+		if (check("visuals_name_esp_col_team", data)) read_color(visuals_name_esp_col_team, data, "visuals_name_esp_col_team");
+		if (check("team_visible_col", data)) read_color(team_visible_col, data, "team_visible_col");
+		if (check("team_hidden_col", data)) read_color(team_hidden_col, data, "team_hidden_col");
+		if (check("visuals_bounding_col_visible", data)) read_color(visuals_bounding_col_visible, data, "visuals_bounding_col_visible");
+		if (check("visuals_bounding_col_hidden", data)) read_color(visuals_bounding_col_hidden, data, "visuals_bounding_col_hidden");
+		if (check("visuals_name_esp_col_visible", data)) read_color(visuals_name_esp_col_visible, data, "visuals_name_esp_col_visible");
+		if (check("visuals_name_esp_col_hidden", data)) read_color(visuals_name_esp_col_hidden, data, "visuals_name_esp_col_hidden");
+		if (check("visuals_chams_col_xqz", data)) read_color(visuals_chams_col_xqz, data, "visuals_chams_col_xqz");
+		if (check("visuals_chams_team_col_xqz", data)) read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
+		if (check("visuals_hitmarker_col", data)) read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
+		if (check("nightmode_col", data)) read_color(nightmode_col, data, "nightmode_col");
+		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
+		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
+		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
 	}
 
 	void save_cfg(std::ostream& file)
@@ -506,6 +514,7 @@ public:
 			json main;
 			main << file;
 			convert(main);
+			std::cout << "loaded" << std::endl;
 		}
 		catch (...) {
 

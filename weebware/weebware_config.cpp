@@ -93,6 +93,11 @@ void c_config_list::save_existing_weebware()
 	update_all_configs();
 }
 
+bool file_exists(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
+
 void c_config_list::load_weebware_config()
 {
 	// Build the file.
@@ -107,13 +112,15 @@ void c_config_list::load_weebware_config()
 	infile.close();
 
 	full_config.append("skins");
-	std::stringstream skinfile;
-	skinfile << full_config;
-	std::ifstream infile2;
-	infile2.open(skinfile.str().c_str(), std::ios::in);
-	g_weebwareskinscfg.load_cfg(infile2);
-	infile2.close();
-	update_all_configs();
+	if (file_exists(full_config)) {
+		std::stringstream skinfile;
+		skinfile << full_config;
+		std::ifstream infile2;
+		infile2.open(skinfile.str().c_str(), std::ios::in);
+		g_weebwareskinscfg.load_cfg(infile2);
+		infile2.close();
+		update_all_configs();
+	}
 }
 
 void c_config_list::delete_weebware_config()
