@@ -5,16 +5,13 @@
 #include "hook_funcs.h"
 #include "events.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
 
 unsigned __stdcall entry_thread(void* v_arg)
 {
-#if WEEBWARE_RELEASE
-	Sleep(5000);
-#endif
 	g_weebware.setup_thread(); // run our thread
 
 	_endthreadex(0); // close thread

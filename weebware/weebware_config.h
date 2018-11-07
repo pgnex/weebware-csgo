@@ -514,7 +514,6 @@ public:
 			json main;
 			main << file;
 			convert(main);
-			std::cout << "loaded" << std::endl;
 		}
 		catch (...) {
 
