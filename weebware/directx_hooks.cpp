@@ -653,6 +653,11 @@ void imgui_main(IDirect3DDevice9* pDevice)
 									g_nightmode.night_mode();
 								}
 								imgui_custom::custom_color_inline(g_weebwarecfg.nightmode_col, "Nightmode Color");
+
+								if (ImGui::Button("Fix FPS")) {
+									c_convar* prop_var = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
+									prop_var->SetValue("-1");
+								}
 							}
 							ImGui::EndChild();
 

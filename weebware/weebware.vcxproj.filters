@@ -85,6 +85,9 @@
     <Filter Include="Source Files\hooking\Draw Model Execute\nightmode">
       <UniqueIdentifier>{75dbde77-b445-40d6-aaee-6fcd471cdfc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\Frame Stage Notify\Skinchanger">
+      <UniqueIdentifier>{8ec71b90-1b1b-40a3-96b0-3ac320b0e7e5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -209,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="weebware_config.cpp">
       <Filter>Source Files\Config</Filter>
+    </ClCompile>
+    <ClCompile Include="skinchanger.cpp">
+      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -427,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="platform.h">
       <Filter>Source Files\Source Development Kit</Filter>
+    </ClInclude>
+    <ClInclude Include="skinchanger.h">
+      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

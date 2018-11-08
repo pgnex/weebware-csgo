@@ -518,7 +518,22 @@ public:
 		catch (...) {
 
 		}
+		override_skin_style skin_wheel[35];
+		try {
+
+			json main;
+
+			main << file;
+
+			for (auto i = 0; i < 35; i++) {
+				skin_wheel[i].convert(main[i]);
+			}
+		}
+		catch (...) {
+
+		}
 	}
+	
 
 };
 

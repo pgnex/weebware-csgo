@@ -162,6 +162,7 @@
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp" />
+    <ClCompile Include="skinchanger.cpp" />
     <ClCompile Include="weebware_config.cpp" />
     <ClCompile Include="Legit.cpp" />
     <ClCompile Include="maths.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\MemProtector.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
+    <ClInclude Include="skinchanger.h" />
     <ClInclude Include="skindefs.h" />
     <ClInclude Include="UtlMemory.h" />
     <ClInclude Include="UtlVector.hpp" />

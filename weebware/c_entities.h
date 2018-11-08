@@ -742,6 +742,12 @@ public:
 		return get_pointer<int>(offset);
 	}
 
+	int* m_iViewModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iViewModelIndex");
+		return get_pointer<int>(offset);
+	}
+
 	HANDLE GetWeaponWorldModelHandle() {
 		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_hWeaponWorldModel");
 		return get_value<HANDLE>(offset);

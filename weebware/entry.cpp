@@ -152,7 +152,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();
@@ -250,7 +250,7 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
 
 	tmp.push_back(knife_template("models/weapons/v_knife_default_t.mdl", "Terrorist Knife", 59));
 	tmp.push_back(knife_template("models/weapons/v_knife_default_ct.mdl", "Counter-Terrorist Knife", 42));
-	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", 515));
+//	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", 515));
 	tmp.push_back(knife_template("models/weapons/v_knife_flip.mdl", "Flip", 505));
 	tmp.push_back(knife_template("models/weapons/v_knife_gut.mdl", "Gut", 506));
 	tmp.push_back(knife_template("models/weapons/v_knife_karam.mdl", "Karambit", 507));
@@ -258,8 +258,8 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
 	tmp.push_back(knife_template("models/weapons/v_knife_bayonet.mdl", "Bayonet", 500));
 	tmp.push_back(knife_template("models/weapons/v_knife_tactical.mdl", "Huntsman", 509));
 	tmp.push_back(knife_template("models/weapons/v_knife_falchion_advanced.mdl", "Falchion", 512));
-	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", 516));
-	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", 514));
+//	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", 516));
+//	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", 514));
 	tmp.push_back(knife_template("models/weapons/v_knife_stiletto.mdl", "Stiletto", 522));
 	tmp.push_back(knife_template("models/weapons/v_knife_ursus.mdl", "Ursus", 519));
 	tmp.push_back(knife_template("models/weapons/v_knife_gypsy_jackknife.mdl", "Navaja", 520));

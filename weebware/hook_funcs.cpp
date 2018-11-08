@@ -207,23 +207,6 @@ namespace knife_changer {
 							}
 
 						}
-						if (g_weebwarecfg.selected_knife_index[0] == 512) {
-
-							switch (current_seq)
-							{
-							case SEQUENCE_DEFAULT_IDLE2:
-								current_seq = SEQUENCE_FALCHION_IDLE1;
-							case SEQUENCE_DEFAULT_HEAVY_MISS1:
-								current_seq = random_sequence(SEQUENCE_FALCHION_HEAVY_MISS1, SEQUENCE_FALCHION_HEAVY_MISS1_NOFLIP);
-							case SEQUENCE_DEFAULT_LOOKAT01:
-								current_seq = random_sequence(SEQUENCE_FALCHION_LOOKAT01, SEQUENCE_FALCHION_LOOKAT02);
-							case SEQUENCE_DEFAULT_DRAW:
-							case SEQUENCE_DEFAULT_IDLE1:
-								current_seq = current_seq;
-							default:
-								current_seq--;
-							}
-						}
 						if (g_weebwarecfg.selected_knife_index[0] == 516) {
 
 							switch (current_seq)
