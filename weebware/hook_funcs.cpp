@@ -97,6 +97,17 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	// 
 }
 
+MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
+{
+	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
+
+	if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
+	{
+		sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
+	}
+	return g_hooking.o_mdl(ecx, edx, FilePath);
+}
+
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 {
 	auto protecc = g_hooking.VEH_FSN->getProtectionObject();
@@ -433,6 +444,11 @@ void c_hooking::hook_all_functions()
 	VEH_FSN = new PLH::BreakPointHook((char*)fsn_addr, (char*)&hk_frame_stage_notify);
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
+
+	auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
+	VEH_MDL = new PLH::BreakPointHook((char*)mdl_addr, (char*)&hk_findmdl);
+	VEH_MDL->hook();
+	o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
 
 	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
 	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);

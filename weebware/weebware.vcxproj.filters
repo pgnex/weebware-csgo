@@ -88,6 +88,9 @@
     <Filter Include="Source Files\hooking\Frame Stage Notify\Skinchanger">
       <UniqueIdentifier>{8ec71b90-1b1b-40a3-96b0-3ac320b0e7e5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\findmdl">
+      <UniqueIdentifier>{cd2b8e46-b86a-407f-a85b-c3f72f72de34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -436,6 +439,9 @@
     </ClInclude>
     <ClInclude Include="skinchanger.h">
       <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
+    </ClInclude>
+    <ClInclude Include="imdlcache.h">
+      <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

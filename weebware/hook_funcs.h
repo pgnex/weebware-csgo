@@ -51,6 +51,7 @@ public:
 	PLH::BreakPointHook* VEH_CURSORLOCK;
 	PLH::BreakPointHook* VEH_HideGrenade;
 	PLH::BreakPointHook* VEH_SOUNDS;
+	PLH::BreakPointHook* VEH_MDL;
 
 #endif
 
@@ -113,6 +114,11 @@ public:
 #pragma region Sounds
 	typedef void(__fastcall* fn_sound)(void*, void*, void*, int, int, const char *, unsigned int, const char *, float, float, int nSeed, int, int, const Vector *, const Vector *, Vector *, bool, float, int, int&);
 	fn_sound o_sounds;
+#pragma endregion
+
+#pragma region findmdl
+	typedef MDLHandle_t(__fastcall* fn_mdl)(void* ecx, void* edx, char* FilePath);
+	fn_mdl o_mdl;
 #pragma endregion
 
 public:

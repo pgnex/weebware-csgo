@@ -201,6 +201,7 @@
     <ClInclude Include="c_client.h" />
     <ClInclude Include="authentication.h" />
     <ClInclude Include="hook_funcs.h" />
+    <ClInclude Include="imdlcache.h" />
     <ClInclude Include="imgui\dx9\imgui_dx9.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />

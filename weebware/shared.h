@@ -42,6 +42,7 @@ public:
 	i_game_event_manager* g_game_events;
 	CGlowObjectManager* g_glow_obj_manager;
 	uintptr_t* g_enginesound;
+	IMDLCache* g_mdlcache;
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;
@@ -75,7 +76,6 @@ private:
 	create_interface cache_fact;
 	create_interface phys_fact;
 	create_interface input_fact;
-
 };
 
 extern c_weebware g_weebware;

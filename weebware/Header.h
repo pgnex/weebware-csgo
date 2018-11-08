@@ -40,6 +40,7 @@
 #include "netvars.h"
 #include "maths.h"
 #include "c_glow_object_manager.h"
+#include "imdlcache.h"
 #include "configuration.h"
 #include "c_engine_client.h"
 #include "vector.h"

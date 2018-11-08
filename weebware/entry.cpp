@@ -55,37 +55,23 @@ bool c_weebware::init_interfaces()
 	//g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
 
 	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
-
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
-
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact("VGUI_Panel009", NULL));
-
 	g_surface = reinterpret_cast<c_surface*>(surface_fact("VGUI_Surface031", NULL));
-
 	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan("shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
-
 	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan("client.dll", "0F 11 05 ? ? ? ? 83 C8 01") + 3);
-
 	g_input_system = reinterpret_cast<c_input_system*>(input_fact("InputSystemVersion001", NULL));
-
 	g_model_info = reinterpret_cast<iv_model_info*>(engine_fact("VModelInfoClient004", NULL));
-
 	g_engine_trace = reinterpret_cast<i_engine_trace*>(engine_fact("EngineTraceClient004", NULL));
-
 	g_debug_overlay = reinterpret_cast<c_debug_overlay*>(engine_fact("VDebugOverlay004", NULL));
-
 	g_global_vars = *reinterpret_cast<c_global_vars**>(((*(PDWORD*)g_client)[0]) + 0x1B);
 	g_global_vars = reinterpret_cast<c_global_vars*>(*(PDWORD)g_global_vars);
-
 	g_render_view = reinterpret_cast<c_render_view*>(engine_fact("VEngineRenderView014", NULL));
-
 	g_mat_sys = reinterpret_cast<c_mat_system*>(mat_system_fact("VMaterialSystem080", NULL));
-
 	g_client_state = *reinterpret_cast<c_clientstate***>(getvfunc<std::uintptr_t>(g_engine, 12) + 0x10);
-
 	g_model_render = reinterpret_cast<c_model_render*>(engine_fact("VEngineModel016", NULL));
-
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
+	g_mdlcache = reinterpret_cast<IMDLCache*>(cache_fact("MDLCache004", NULL));
 
 	//int __stdcall reset_replacement(int a1, int a2)
 	// This is the first reset func
