@@ -540,6 +540,27 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 #pragma endregion
 
+
+#pragma region modelstuff
+					if (selected_tab == tabs::rage)
+					{
+						ImGui::Columns(2, "models", false);
+						{
+							ImGui::SetColumnOffset(1, 290);
+
+							ImGui::BeginChild("models gay 1", ImVec2(0, 0), true);
+							{
+								ImGui::Text("Knife Models");
+								ImGui::Separator();
+								ImGui::Checkbox("Minecraft Pickaxe", false, &g_weebwarecfg.minecraft_pickaxe);
+
+							}
+							ImGui::EndChild();
+
+						}
+					}
+#pragma endregion
+
 #pragma region Visuals
 					if (selected_tab == tabs::vis)
 					{

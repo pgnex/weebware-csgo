@@ -101,10 +101,22 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 {
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
 
-	if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
-	{
-		sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
+	if (g_weebwarecfg.minecraft_pickaxe) {
+		if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
+		{
+			sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
+		}
 	}
+	//if (strstr(FilePath, "tm_") && strstr(FilePath, ".mdl") && !strstr(FilePath, "ctm_"))
+	//{
+	//sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");
+	//}
+	//if (strstr(FilePath, "ctm_") && strstr(FilePath, ".mdl"))
+	//{
+	//	sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");
+	//}
+
+	std::cout << "1";
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }
 
