@@ -2,19 +2,24 @@
 #include "Header.h"
 #include "shared.h"
 #include "skinchanger.h"
+#include "thirdperson.h"
 
 c_frame_stage_notify g_frame_stage_notify;
 knife_changer g_knife_changer;
+thirdperson g_tp;
 int convert_index_id(int index);
 
 #if 1
 void hook_functions::frame_stage_notify(clientframestage_t curStage)
 {
+
 	try {
 		g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
+			g_tp.fsn(g_frame_stage_notify.local);
 		//	g_knife_changer.frame_stage_notify();
 			g_frame_stage_notify.legit_aa_resolver();
 

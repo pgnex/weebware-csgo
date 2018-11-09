@@ -272,7 +272,8 @@ public:
 	int hitmarker_sound = 0;
 	bool rank_reveal = false;
 	bool misc_autoAccept = false;
-	int minecraft_pickaxe = false;
+	bool minecraft_pickaxe = false;
+	bool thirdperson = false;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);

@@ -116,7 +116,7 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	//	sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");
 	//}
 
-	std::cout << "1";
+	//std::cout << "1";
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }
 
