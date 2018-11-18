@@ -43,6 +43,7 @@ public:
 	CGlowObjectManager* g_glow_obj_manager;
 	uintptr_t* g_enginesound;
 	IMDLCache* g_mdlcache;
+	CNetworkStringTableContainer* g_NetworkContainer;
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;

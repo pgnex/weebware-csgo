@@ -187,7 +187,7 @@ public:
 			main << file;
 
 			for (auto i = 0; i < 35; i++) {
-				 skin_wheel[i].convert(main[i]);
+				skin_wheel[i].convert(main[i]);
 			}
 		}
 		catch (...) {
@@ -273,6 +273,7 @@ public:
 	bool rank_reveal = false;
 	bool misc_autoAccept = false;
 	bool minecraft_pickaxe = false;
+	bool reina_model = false;
 	bool thirdperson = false;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
@@ -380,6 +381,8 @@ public:
 		tmp["hitmarker_sound"] = hitmarker_sound;
 		tmp["rank_reveal"] = rank_reveal;
 		tmp["misc_autoAccept"] = misc_autoAccept;
+		tmp["minecraft_pickaxe"] = minecraft_pickaxe;
+		tmp["reina_model"] = reina_model;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -474,6 +477,8 @@ public:
 		if (check("hitmarker_sound", data)) hitmarker_sound = data["hitmarker_sound"];
 		if (check("rank_reveal", data)) rank_reveal = data["rank_reveal"];
 		if (check("misc_autoAccept", data)) misc_autoAccept = data["misc_autoAccept"];
+		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
+		if (check("reina_model", data))reina_model = data["reina_model"];
 		if (check("water_mark_col", data)) read_color(water_mark_col, data, "water_mark_col");
 		if (check("visuals_bounding_col", data)) read_color(visuals_bounding_col, data, "visuals_bounding_col");
 		if (check("misc_autoAccept", data)) read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
@@ -498,11 +503,12 @@ public:
 		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
 		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
+
 	}
 
 	void save_cfg(std::ostream& file)
 	{
-		try {		
+		try {
 			file << convert();
 		}
 		catch (...) {
@@ -535,7 +541,7 @@ public:
 
 		}
 	}
-	
+
 
 };
 

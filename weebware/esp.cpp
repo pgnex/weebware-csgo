@@ -129,9 +129,17 @@ void c_esp::esp_main()
 
 #pragma region players
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
-
-
 					continue;
+				}
+
+				if (g_weebwarecfg.reina_model) {
+
+					if (ent->m_iTeamNum() == local->m_iTeamNum()) {
+						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
+					}
+					else {
+						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+					}
 				}
 
 				if (!g_weebwarecfg.visuals_dormant_esp) {
@@ -167,6 +175,7 @@ void c_esp::esp_main()
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 
 				render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
+
 #pragma endregion
 
 			}

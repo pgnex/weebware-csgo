@@ -97,9 +97,28 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	// 
 }
 
+bool PrecacheModel(const char* szModelName)
+{
+	INetworkStringTable* m_pModelPrecacheTable = g_weebware.g_NetworkContainer->FindTable("modelprecache");
+
+	if (m_pModelPrecacheTable)
+	{
+		g_weebware.g_model_info->findorloadmodel(szModelName);
+		int idx = m_pModelPrecacheTable->AddString(false, szModelName);
+		if (idx == (unsigned short)-1)
+			return false;
+	}
+	return true;
+}
+
+
 MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 {
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
+
+	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
+	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
+	PrecacheModel("models/weapons/v_minecraft_pickaxe.mdl");
 
 	if (g_weebwarecfg.minecraft_pickaxe) {
 		if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
@@ -107,6 +126,18 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 			sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
 		}
 	}
+
+#if 0
+	if (g_weebwarecfg.reina_model) {
+		if (strstr(FilePath, "models/player") && !strstr(FilePath, "w_") && strstr(FilePath, ".mdl"))
+		{
+			if (strstr(FilePath, "tm_"))
+				sprintf(FilePath, "models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
+			else
+				sprintf(FilePath, "models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
+		}
+	}
+#endif
 	//if (strstr(FilePath, "tm_") && strstr(FilePath, ".mdl") && !strstr(FilePath, "ctm_"))
 	//{
 	//sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");

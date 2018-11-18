@@ -544,7 +544,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region modelstuff
 					if (selected_tab == tabs::rage)
 					{
-						ImGui::Columns(2, "models", false);
+						ImGui::Columns(2, "MODELCOL", false);
 						{
 							ImGui::SetColumnOffset(1, 290);
 
@@ -552,8 +552,19 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Knife Models");
 								ImGui::Separator();
-								ImGui::Checkbox("Minecraft Pickaxe", false, &g_weebwarecfg.minecraft_pickaxe);
+								ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
 
+								ImGui::Separator();
+								ImGui::Text("Player Models");
+								ImGui::Checkbox("Reina Kousaka", &g_weebwarecfg.reina_model, false);
+
+							}
+							ImGui::EndChild();
+
+							ImGui::NextColumn();
+
+							ImGui::BeginChild("models gay 2", ImVec2(0, 0), true);
+							{
 							}
 							ImGui::EndChild();
 

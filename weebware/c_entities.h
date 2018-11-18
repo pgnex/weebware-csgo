@@ -381,6 +381,12 @@ public:
 		return get_value<HANDLE>(offset);
 	}
 
+	int* m_nModelIndex()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_nModelIndex");
+		return get_pointer<int>(offset);
+	}
+
 	// Weapons.
 	c_basecombat_weapon* m_pActiveWeapon();
 };
