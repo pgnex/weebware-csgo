@@ -132,14 +132,17 @@ void c_esp::esp_main()
 					continue;
 				}
 
-				if (g_weebwarecfg.reina_model) {
+				if (g_weebwarecfg.anime_model == 0) {
 
 					if (ent->m_iTeamNum() == local->m_iTeamNum()) {
 						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
 					}
 					else {
 						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
-					}
+					} 
+				}
+				else if (g_weebwarecfg.anime_model == 1) {
+					*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
 				}
 
 				if (!g_weebwarecfg.visuals_dormant_esp) {

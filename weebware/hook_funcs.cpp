@@ -119,6 +119,9 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
 	PrecacheModel("models/weapons/v_minecraft_pickaxe.mdl");
+	PrecacheModel("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
+
+	
 
 	if (g_weebwarecfg.minecraft_pickaxe) {
 		if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))

@@ -556,8 +556,15 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Separator();
 								ImGui::Text("Player Models");
-								ImGui::Checkbox("Reina Kousaka", &g_weebwarecfg.reina_model, false);
+								const char* models[] = { "Reina Kousaka", "Yuno Gasai"};
+								ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
+								// https://gamebanana.com/skins/148058
 
+								if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
+
+									g_weebwarecfg.skinchanger_apply_nxt = 1;
+
+								}
 							}
 							ImGui::EndChild();
 
