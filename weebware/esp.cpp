@@ -39,6 +39,7 @@ void c_esp::esp_main()
 					}
 				}
 				else if (g_weebwarecfg.anime_model == 2) {
+
 					*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
 				}
 
