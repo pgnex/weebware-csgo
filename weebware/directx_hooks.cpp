@@ -556,7 +556,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Separator();
 								ImGui::Text("Player Models");
-								const char* models[] = { "Reina Kousaka", "Yuno Gasai"};
+								const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai"};
 								ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
 								// https://gamebanana.com/skins/148058
 

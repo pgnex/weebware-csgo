@@ -11,9 +11,40 @@ bool has_esp_init = false;
 void c_esp::esp_main()
 {
 	water_mark();
+	
+	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); 
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+
 		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+		if (local) {
+			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+			{
+				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
+
+				if (!ent || ent == nullptr)
+					continue;
+
+				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
+					continue;
+				}
+
+				if (g_weebwarecfg.anime_model == 1) {
+
+					if (ent->m_iTeamNum() == local->m_iTeamNum()) {
+						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
+					}
+					else {
+						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+					}
+				}
+				else if (g_weebwarecfg.anime_model == 2) {
+					*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
+				}
+
+			}
+		}
+
 	}
 
 	if (g_weebware.menu_opened)
@@ -23,7 +54,6 @@ void c_esp::esp_main()
 		g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
 		g_weebware.g_surface->drawfilledrect(0, 0, s, h);
 	}
-
 
 	if (g_weebwarecfg.enable_visuals == 0)
 	{
@@ -40,7 +70,6 @@ void c_esp::esp_main()
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 	{
-		local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
 
 		if (local)
 		{
@@ -130,19 +159,6 @@ void c_esp::esp_main()
 #pragma region players
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
 					continue;
-				}
-
-				if (g_weebwarecfg.anime_model == 0) {
-
-					if (ent->m_iTeamNum() == local->m_iTeamNum()) {
-						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
-					}
-					else {
-						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
-					} 
-				}
-				else if (g_weebwarecfg.anime_model == 1) {
-					*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
 				}
 
 				if (!g_weebwarecfg.visuals_dormant_esp) {
