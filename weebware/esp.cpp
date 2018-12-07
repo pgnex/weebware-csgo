@@ -25,7 +25,7 @@ void c_esp::esp_main()
 				if (!ent || ent == nullptr)
 					continue;
 
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
+				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
 					continue;
 				}
 
@@ -157,7 +157,7 @@ void c_esp::esp_main()
 
 
 #pragma region players
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
+				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
 					continue;
 				}
 

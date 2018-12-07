@@ -182,7 +182,7 @@ public:
 	}
 	bool is_dormant()
 	{
-		return get_value<bool>(0xE9);
+		return get_value<bool>(0xED);
 	}
 	bool* b_spotted()
 	{
@@ -200,7 +200,7 @@ public:
 
 	bool is_valid_player()
 	{
-		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 35);
+		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 38);
 	}
 
 	Vector* m_Origin()
@@ -676,7 +676,7 @@ public:
 
 	c_weapon_info* get_weapon_info()
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 444)(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 441)(this);
 	}
 
 	int* get_paint_kit()

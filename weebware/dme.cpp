@@ -150,15 +150,15 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			// apply based on type of entity
 			auto class_id = entity->get_client_class()->m_ClassID;
 			switch (class_id) {
-			case 35:
+			case 38:
 				if (!g_weebwarecfg.visuals_glow_player) continue;
 				col = g_weebwarecfg.visuals_glow_player_col;
 				break;
-			case 108: 
+			case 126:
 				if (!g_weebwarecfg.visuals_glow_c4) continue;
 				col = g_weebwarecfg.visuals_glow_c4_col;
 				break;
-			case 31:
+			case 34:
 				if (!g_weebwarecfg.visuals_glow_chicken) continue;
 				col = g_weebwarecfg.visuals_glow_chicken_col;
 					break;

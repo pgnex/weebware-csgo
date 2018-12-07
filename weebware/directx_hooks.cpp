@@ -565,6 +565,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 									g_weebwarecfg.skinchanger_apply_nxt = 1;
 
 								}
+
+								ImGui::Text("DONT FUCKING USE THIS AND COMPLAIN \n WHEN IT DOESNT WORK FFS YOU NEED THE \n MODELS INSTALLED.\n IF YOU WANT IT SO BADLY\n https://penguware.xyz/dependencies");
 							}
 							ImGui::EndChild();
 
