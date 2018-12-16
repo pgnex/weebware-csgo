@@ -566,7 +566,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								}
 
-								ImGui::Text("DONT FUCKING USE THIS AND COMPLAIN \n WHEN IT DOESNT WORK FFS YOU NEED THE \n MODELS INSTALLED.\n IF YOU WANT IT SO BADLY\n https://penguware.xyz/dependencies");
+								ImGui::Text("DONT FUCKING USE THIS AND COMPLAIN \n WHEN IT DOESNT WORK FFS YOU NEED THE \n MODELS INSTALLED.\n IF YOU WANT IT SO BADLY\n https://penguware.xyz/dependencies.html");
 							}
 							ImGui::EndChild();
 
@@ -821,6 +821,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								if (ImGui::Button("Load", ImVec2(80, 20), ImGuiButtonFlags_Outlined))
 								{
 									g_config_list.load_weebware_config();
+									g_weebwarecfg.skinchanger_apply_nxt = 1;
 								}
 								ImGui::NextColumn();
 								if (ImGui::Button("Delete", ImVec2(80, 20), ImGuiButtonFlags_Outlined))

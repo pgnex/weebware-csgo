@@ -477,8 +477,6 @@ public:
 		if (check("hitmarker_sound", data)) hitmarker_sound = data["hitmarker_sound"];
 		if (check("rank_reveal", data)) rank_reveal = data["rank_reveal"];
 		if (check("misc_autoAccept", data)) misc_autoAccept = data["misc_autoAccept"];
-		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
-		if (check("reina_model", data))anime_model = data["reina_model"];
 		if (check("water_mark_col", data)) read_color(water_mark_col, data, "water_mark_col");
 		if (check("visuals_bounding_col", data)) read_color(visuals_bounding_col, data, "visuals_bounding_col");
 		if (check("misc_autoAccept", data)) read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
@@ -503,7 +501,8 @@ public:
 		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
 		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
-
+		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
+		if (check("reina_model", data))anime_model = data["reina_model"];
 	}
 
 	void save_cfg(std::ostream& file)
@@ -522,24 +521,12 @@ public:
 			json main;
 			main << file;
 			convert(main);
+
 		}
 		catch (...) {
 
 		}
-		override_skin_style skin_wheel[35];
-		try {
 
-			json main;
-
-			main << file;
-
-			for (auto i = 0; i < 35; i++) {
-				skin_wheel[i].convert(main[i]);
-			}
-		}
-		catch (...) {
-
-		}
 	}
 
 
