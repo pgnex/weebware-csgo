@@ -747,19 +747,19 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Separator();
 
-								ImGui::Text("Legit Anti-Aim");
-								ImGui::Separator();
+							//	ImGui::Text("Legit Anti-Aim");
+							//	ImGui::Separator();
 
 								// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
 								ImGui::Text("Anti Triggerbot");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
 								const char* activation[] = { "Off", "On Key" };
-								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
+								ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
-								ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-								ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
-								ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
-								ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);
+							//	ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+							//	ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+							//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
+							//	ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);
 								//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
 
 
