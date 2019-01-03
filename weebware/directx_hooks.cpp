@@ -471,7 +471,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #endif
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-
+								ImGui::Checkbox("Target teammates", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
 								ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov, false);
 
 								ImGui::Text("Maximum FOV");

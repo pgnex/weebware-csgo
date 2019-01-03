@@ -63,6 +63,7 @@ public:
 	float legit_maximum_ticks = 12;
 	bool use_dynamicfov;
 	float triggerbot_reaction;
+	bool target_teammates;
 
 	json convert()
 	{
@@ -93,6 +94,7 @@ public:
 		tmp["legit_maximum_ticks"] = legit_maximum_ticks;
 		tmp["use_dynamicfov"] = use_dynamicfov;
 		tmp["triggerbot_reaction"] = triggerbot_reaction;
+		tmp["target_teammates"] = target_teammates;
 		return tmp;
 	}
 
@@ -124,6 +126,7 @@ public:
 		if (check("legit_maximum_ticks", data)) legit_maximum_ticks = data["legit_maximum_ticks"];
 		if (check("use_dynamicfov", data)) use_dynamicfov = data["use_dynamicfov"];
 		if (check("triggerbot_reaction", data)) triggerbot_reaction = data["triggerbot_reaction"];
+		if (check("target_teammates", data)) target_teammates = data["target_teammates"];
 	}
 
 };

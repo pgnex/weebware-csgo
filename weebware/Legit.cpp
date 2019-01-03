@@ -149,7 +149,7 @@ c_base_entity* c_legitbot::closest_target_available()
 		if (!cur_entity->is_valid_player())
 			continue;
 
-		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum())
+		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum() && !g_weebwarecfg.legit_cfg[get_config_index()].target_teammates)
 			continue;
 
 		if (!is_visible(cur_entity))
