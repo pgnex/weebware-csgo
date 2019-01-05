@@ -11,6 +11,9 @@ public:
 
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
 
+	bool is_visible(c_base_entity* target);
+
+
 	enum custom_mats : int
 	{
 		plain = 1,

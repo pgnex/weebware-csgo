@@ -309,7 +309,8 @@ public:
 	ImVec4 nightmode_col = ImVec4(12, 12, 12, 255);
 
 	// glow esp color
-	ImVec4 visuals_glow_player_col = ImVec4(45, 65, 123, 255);
+	ImVec4 visuals_glow_player_col_visible = ImVec4(45, 65, 123, 255);
+	ImVec4 visuals_glow_player_col_hidden = ImVec4(255, 65, 123, 255);
 	ImVec4 visuals_glow_c4_col = ImVec4(204, 54, 46, 255);
 	ImVec4 visuals_glow_chicken_col = ImVec4(73, 244, 82, 255);
 
@@ -407,7 +408,7 @@ public:
 		save_color(visuals_chams_team_col_xqz, tmp, "visuals_chams_team_col_xqz");
 		save_color(visuals_hitmarker_col, tmp, "visuals_hitmarker_col");
 		save_color(nightmode_col, tmp, "nightmode_col");
-		save_color(visuals_glow_player_col, tmp, "visuals_glow_player_col");
+		save_color(visuals_glow_player_col_visible, tmp, "visuals_glow_player_col");
 		save_color(visuals_glow_c4_col, tmp, "visuals_glow_c4_col");
 		save_color(visuals_glow_chicken_col, tmp, "visuals_glow_chicken_col");
 
@@ -501,7 +502,7 @@ public:
 		if (check("visuals_chams_team_col_xqz", data)) read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
 		if (check("visuals_hitmarker_col", data)) read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
 		if (check("nightmode_col", data)) read_color(nightmode_col, data, "nightmode_col");
-		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col, data, "visuals_glow_player_col");
+		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col_visible, data, "visuals_glow_player_col");
 		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
 		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];

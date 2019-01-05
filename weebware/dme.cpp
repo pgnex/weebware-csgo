@@ -95,6 +95,33 @@ imaterial* generate_material(bool ignore, bool lit, bool wire_frame)
 	return created_mat;
 }
 
+bool c_dme::is_visible(c_base_entity* target)
+{
+	trace_t Trace;
+
+	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8); // 8 is head. 
+
+	Ray_t ray;
+
+	ray.Init(src, dst2);
+
+	ITraceFilter traceFilter;
+
+	traceFilter.pSkip = reinterpret_cast<decltype(traceFilter.pSkip)>(local);
+
+	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
+
+	if (Trace.m_pEnt == target)
+		return true;
+
+	if (Trace.fraction == 1.0f)
+		return true;
+
+	return false;
+}
+
 imaterial* c_dme::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
@@ -138,6 +165,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 		{
 			auto& glowObject = g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions[i];
 			auto entity = reinterpret_cast<c_base_entity*>(glowObject.m_pEntity);
+
 			// nullptr check
 			if (!entity)
 				continue;
@@ -147,12 +175,13 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			// check dormant, not valid player because i want to glow on objects
 			if (entity->is_dormant())
 				continue;
+
 			// apply based on type of entity
 			auto class_id = entity->get_client_class()->m_ClassID;
 			switch (class_id) {
 			case 38:
 				if (!g_weebwarecfg.visuals_glow_player) continue;
-				col = g_weebwarecfg.visuals_glow_player_col;
+				col = is_visible(entity) ? c_color(g_weebwarecfg.visuals_glow_player_col_visible) : c_color(g_weebwarecfg.visuals_glow_player_col_hidden);
 				break;
 			case 126:
 				if (!g_weebwarecfg.visuals_glow_c4) continue;
