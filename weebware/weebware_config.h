@@ -409,6 +409,7 @@ public:
 		save_color(visuals_hitmarker_col, tmp, "visuals_hitmarker_col");
 		save_color(nightmode_col, tmp, "nightmode_col");
 		save_color(visuals_glow_player_col_visible, tmp, "visuals_glow_player_col");
+		save_color(visuals_glow_player_col_hidden, tmp, "visuals_glow_player_col_hidden");
 		save_color(visuals_glow_c4_col, tmp, "visuals_glow_c4_col");
 		save_color(visuals_glow_chicken_col, tmp, "visuals_glow_chicken_col");
 
@@ -503,6 +504,7 @@ public:
 		if (check("visuals_hitmarker_col", data)) read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
 		if (check("nightmode_col", data)) read_color(nightmode_col, data, "nightmode_col");
 		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col_visible, data, "visuals_glow_player_col");
+		if (check("visuals_glow_player_col_hidden", data)) read_color(visuals_glow_player_col_hidden, data, "visuals_glow_player_col_hidden");
 		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
 		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
