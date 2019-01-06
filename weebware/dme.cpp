@@ -181,7 +181,8 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			switch (class_id) {
 			case 38:
 				if (!g_weebwarecfg.visuals_glow_player) continue;
-				col = is_visible(entity) ? c_color(g_weebwarecfg.visuals_glow_player_col_visible) : c_color(g_weebwarecfg.visuals_glow_player_col_hidden);
+				if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
+				else col = g_weebwarecfg.visuals_glow_player_col_visible;
 				break;
 			case 126:
 				if (!g_weebwarecfg.visuals_glow_c4) continue;

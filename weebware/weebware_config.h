@@ -237,6 +237,7 @@ public:
 	int visuals_chams;
 	bool visuals_glow_enabled;
 	bool visuals_glow_player;
+	bool visuals_glow_hidden_col;
 	bool visuals_glow_c4;
 	bool visuals_glow_chicken;
 	bool enable_misc;

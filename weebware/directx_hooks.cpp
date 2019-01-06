@@ -625,7 +625,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 								ImGui::Checkbox("Players", &g_weebwarecfg.visuals_glow_player, false);
 								if (g_weebwarecfg.visuals_glow_player) {
-									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_player_col_visible, g_weebwarecfg.visuals_glow_player_col_hidden, true, "Glow Color (Visible)", "Glow Color (Hidden)");
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_player_col_visible, g_weebwarecfg.visuals_glow_player_col_hidden, g_weebwarecfg.visuals_glow_hidden_col, "Glow Color (Visible)", "Glow Color (Hidden)");
+									ImGui::Checkbox("Hidden Color", &g_weebwarecfg.visuals_glow_hidden_col, false);
 								}
 
 								ImGui::Checkbox("Bomb", &g_weebwarecfg.visuals_glow_c4, false);
