@@ -278,7 +278,7 @@ public:
 	bool misc_autoAccept = false;
 	bool minecraft_pickaxe = false;
 	int anime_model = false;
-	bool thirdperson = false;
+	int thirdperson;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);

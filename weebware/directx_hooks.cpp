@@ -723,7 +723,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 								ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
-								ImGui::Checkbox("Thirdperson", &g_weebwarecfg.thirdperson, false);
+								ImGui::Text("Thirdperson key");
+								imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson, key_counter);
 								// ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 
 							}
