@@ -203,7 +203,7 @@ Vector c_legitbot::center_hitbox(c_base_entity* ent, int id)
 
 	if (!ent->setup_bones(matrix, 128, 0x00000100, g_weebware.g_global_vars->curtime))
 	{
-		return Vector(0, 0, 0);
+		return Vector(0, 0, 0); 
 	}
 
 	const model_t* mod = ent->get_model();

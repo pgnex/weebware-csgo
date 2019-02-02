@@ -37,11 +37,11 @@ void init_key_vals(KeyValues* keyValues, char* name)
 	}
 }
 
-void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *pBuffer, class IBaseFileSystem* pFileSystem, const char *pPathID, void* pUnknown)
+void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *pBuffer, class IBaseFileSystem* pFileSystem, const char *pPathID, void* pUnknown, void* uu)
 {
 	static  DWORD dwFunction = 0;
 
-	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89 4C 24 04");
+	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
 
 	if (!dwFunction) {
 		return;
@@ -49,6 +49,7 @@ void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *p
 
 	__asm
 	{
+		push uu
 		push pUnknown
 		push pPathID
 		push pFileSystem
@@ -89,7 +90,7 @@ imaterial* generate_material(bool ignore, bool lit, bool wire_frame)
 	++created;
 	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
 	init_key_vals(keyValues, baseType);
-	load_from_buf(keyValues, name, material, 0, 0, 0);
+	load_from_buf(keyValues, name, material, 0, 0, 0, 0);
 	imaterial* created_mat = g_weebware.g_mat_sys->create_mat(name, keyValues);
 	created_mat->incrementreferencecount();
 	return created_mat;

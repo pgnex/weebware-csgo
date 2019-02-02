@@ -348,6 +348,7 @@ public:
 		tmp["visuals_glow_player"] = visuals_glow_player;
 		tmp["visuals_glow_c4"] = visuals_glow_c4;
 		tmp["visuals_glow_chicken"] = visuals_glow_chicken;
+		tmp["visuals_glow_hidden_col"] = visuals_glow_hidden_col;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -445,6 +446,7 @@ public:
 		if (check("visuals_glow_player", data)) visuals_glow_player = data["visuals_glow_player"];
 		if (check("visuals_glow_c4", data)) visuals_glow_c4 = data["visuals_glow_c4"];
 		if (check("visuals_glow_chicken", data)) visuals_glow_chicken = data["visuals_glow_chicken"];
+		if (check("visuals_glow_hidden_col", data)) visuals_glow_hidden_col = data["visuals_glow_hidden_col"];
 
 		// misc
 		if (check("misc_legit_aa_edge", data)) enable_misc = data["enable_misc"];
