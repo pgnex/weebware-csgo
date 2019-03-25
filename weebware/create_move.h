@@ -17,6 +17,8 @@ private:
 	void run_fake(c_usercmd* cmd, bool &send_packet);
 	bool anti_trigger(c_usercmd* cmd, bool& send_packets);
 	bool is_visible(c_base_entity* target);
+	void auto_strafe(c_usercmd* cmd);
+	void auto_queue();
 };
 
 extern c_create_move g_create_move;

@@ -15,6 +15,13 @@ static bool check(std::string key, json data) {
 	return false;
 }
 
+static bool check_color(std::string key, json data) {
+	if (data.count(key + "a") > 0) {
+		return true;
+	}
+	return false;
+}
+
 class c_config_list
 {
 public:
@@ -56,7 +63,6 @@ public:
 	bool silent_aim;
 	int triggerbot_active;
 	int triggerbot_key;
-	bool triggerbot_head;
 	bool triggerbot_head = true;
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
@@ -252,6 +258,7 @@ public:
 	bool visuals_glow_chicken;
 	bool enable_misc;
 	bool auto_jump;
+	int auto_strafe = 0;
 	bool misc_ai;
 	float misc_ai_legitfactor;
 	bool misc_ai_random;
@@ -495,31 +502,31 @@ public:
 		if (check("hitmarker_sound", data)) hitmarker_sound = data["hitmarker_sound"];
 		if (check("rank_reveal", data)) rank_reveal = data["rank_reveal"];
 		if (check("misc_autoAccept", data)) misc_autoAccept = data["misc_autoAccept"];
-		if (check("water_mark_col", data)) read_color(water_mark_col, data, "water_mark_col");
-		if (check("visuals_bounding_col", data)) read_color(visuals_bounding_col, data, "visuals_bounding_col");
+		if (check_color("water_mark_col", data)) read_color(water_mark_col, data, "water_mark_col");
+		if (check_color("visuals_bounding_col", data)) read_color(visuals_bounding_col, data, "visuals_bounding_col");
 		if (check("misc_autoAccept", data)) read_color(visuals_bounding_team_col, data, "visuals_bounding_team_col");
-		if (check("visuals_bounding_team_col", data)) read_color(visuals_innacc_circle_col, data, "visuals_innacc_circle_col");
-		if (check("visuals_backtrack_col", data)) read_color(visuals_backtrack_col, data, "visuals_backtrack_col");
-		if (check("visuals_dormant_col", data)) read_color(visuals_dormant_col, data, "visuals_dormant_col");
-		if (check("visuals_dormant_col_team", data)) read_color(visuals_dormant_col_team, data, "visuals_dormant_col_team");
-		if (check("visuals_chams_col", data)) read_color(visuals_chams_col, data, "visuals_chams_col");
-		if (check("visuals_chams_team_col", data)) read_color(visuals_chams_team_col, data, "visuals_chams_team_col");
-		if (check("visuals_name_esp_col", data)) read_color(visuals_name_esp_col, data, "visuals_name_esp_col");
-		if (check("visuals_name_esp_col_team", data)) read_color(visuals_name_esp_col_team, data, "visuals_name_esp_col_team");
-		if (check("team_visible_col", data)) read_color(team_visible_col, data, "team_visible_col");
-		if (check("team_hidden_col", data)) read_color(team_hidden_col, data, "team_hidden_col");
-		if (check("visuals_bounding_col_visible", data)) read_color(visuals_bounding_col_visible, data, "visuals_bounding_col_visible");
-		if (check("visuals_bounding_col_hidden", data)) read_color(visuals_bounding_col_hidden, data, "visuals_bounding_col_hidden");
-		if (check("visuals_name_esp_col_visible", data)) read_color(visuals_name_esp_col_visible, data, "visuals_name_esp_col_visible");
-		if (check("visuals_name_esp_col_hidden", data)) read_color(visuals_name_esp_col_hidden, data, "visuals_name_esp_col_hidden");
-		if (check("visuals_chams_col_xqz", data)) read_color(visuals_chams_col_xqz, data, "visuals_chams_col_xqz");
-		if (check("visuals_chams_team_col_xqz", data)) read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
-		if (check("visuals_hitmarker_col", data)) read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
-		if (check("nightmode_col", data)) read_color(nightmode_col, data, "nightmode_col");
-		if (check("visuals_glow_player_col", data)) read_color(visuals_glow_player_col_visible, data, "visuals_glow_player_col");
-		if (check("visuals_glow_player_col_hidden", data)) read_color(visuals_glow_player_col_hidden, data, "visuals_glow_player_col_hidden");
-		if (check("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
-		if (check("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
+		if (check_color("visuals_bounding_team_col", data)) read_color(visuals_innacc_circle_col, data, "visuals_innacc_circle_col");
+		if (check_color("visuals_backtrack_col", data)) read_color(visuals_backtrack_col, data, "visuals_backtrack_col");
+		if (check_color("visuals_dormant_col", data)) read_color(visuals_dormant_col, data, "visuals_dormant_col");
+		if (check_color("visuals_dormant_col_team", data)) read_color(visuals_dormant_col_team, data, "visuals_dormant_col_team");
+		if (check_color("visuals_chams_col", data)) read_color(visuals_chams_col, data, "visuals_chams_col");
+		if (check_color("visuals_chams_team_col", data)) read_color(visuals_chams_team_col, data, "visuals_chams_team_col");
+		if (check_color("visuals_name_esp_col", data)) read_color(visuals_name_esp_col, data, "visuals_name_esp_col");
+		if (check_color("visuals_name_esp_col_team", data)) read_color(visuals_name_esp_col_team, data, "visuals_name_esp_col_team");
+		if (check_color("team_visible_col", data)) read_color(team_visible_col, data, "team_visible_col");
+		if (check_color("team_hidden_col", data)) read_color(team_hidden_col, data, "team_hidden_col");
+		if (check_color("visuals_bounding_col_visible", data)) read_color(visuals_bounding_col_visible, data, "visuals_bounding_col_visible");
+		if (check_color("visuals_bounding_col_hidden", data)) read_color(visuals_bounding_col_hidden, data, "visuals_bounding_col_hidden");
+		if (check_color("visuals_name_esp_col_visible", data)) read_color(visuals_name_esp_col_visible, data, "visuals_name_esp_col_visible");
+		if (check_color("visuals_name_esp_col_hidden", data)) read_color(visuals_name_esp_col_hidden, data, "visuals_name_esp_col_hidden");
+		if (check_color("visuals_chams_col_xqz", data)) read_color(visuals_chams_col_xqz, data, "visuals_chams_col_xqz");
+		if (check_color("visuals_chams_team_col_xqz", data)) read_color(visuals_chams_team_col_xqz, data, "visuals_chams_team_col_xqz");
+		if (check_color("visuals_hitmarker_col", data)) read_color(visuals_hitmarker_col, data, "visuals_hitmarker_col");
+		if (check_color("nightmode_col", data)) read_color(nightmode_col, data, "nightmode_col");
+		if (check_color("visuals_glow_player_col", data)) read_color(visuals_glow_player_col_visible, data, "visuals_glow_player_col");
+		if (check_color("visuals_glow_player_col_hidden", data)) read_color(visuals_glow_player_col_hidden, data, "visuals_glow_player_col_hidden");
+		if (check_color("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
+		if (check_color("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
 		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
 		if (check("reina_model", data))anime_model = data["reina_model"];
 	}

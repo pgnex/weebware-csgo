@@ -200,6 +200,8 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 
 	auto_jump(cmd);
 
+	auto_strafe(cmd);
+
 	run_fake(cmd, sendPackets);
 
 	if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
@@ -227,6 +229,75 @@ void c_create_move::auto_jump(c_usercmd* cmd)
 		cmd->buttons &= ~in_jump;
 	}
 }
+
+void c_create_move::auto_strafe(c_usercmd* cmd)
+{
+
+	if (g_weebwarecfg.auto_strafe <= 0)
+		return;
+
+	if (this->local->m_fFlags() & fl_onground)
+		return;
+
+	int selection = g_weebwarecfg.auto_strafe;
+
+
+	switch (selection) {
+	case 0:
+		break;
+
+	case 1:
+		if (cmd->mousedx > 1 || cmd->mousedx < -1)
+			cmd->mousedx > 0 ? cmd->sidemove = 450 : cmd->sidemove = -450;
+		break;
+
+	case 2:
+		if (cmd->mousedx > 1 || cmd->mousedx < -1)
+			cmd->mousedx > 0 ? cmd->sidemove = 450 : cmd->sidemove = -450;
+		else
+		{
+			cmd->forwardmove = 5850.f / this->local->m_vecVelocity().size();
+			cmd->sidemove = (cmd->command_number % 2) == 0 ? -450.f : 450.f;
+		}
+		break;
+
+	default:
+		// should be off
+		break;
+	}
+}
+
+//void c_create_move::auto_queue() {
+//	using handle_match_start_fn = bool(__thiscall*)(void*, const char*, char*, char*, char*);
+//	using create_session_fn = void*(__stdcall*)(void);
+//
+//	static auto singleton = *(uint8_t**)(g_weebware.pattern_scan("client_panorama.dll", "8B C8 89 0D ? ? ? ? 8D 41 08") + 4);
+//	static auto handle_match_start = (handle_match_start_fn)g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 51 53 56 57 8B F9 8B 0D ? ? ? ? 8B 01 FF 50 34");
+//	static auto create_session = (create_session_fn)g_weebware.pattern_scan("client_panorama.dll", "E8 ? ? ? ? 83 EC 14 E8");
+//
+//	static auto search_started = []() {
+//		if (!singleton)
+//			return false;
+//		if (auto ls = *(uint8_t**)singleton; ls) {
+//			return *(uint32_t*)(ls + 0x10) != 0;
+//		}
+//		return false;
+//	};
+//
+//	if (auto match_session = g_match_framework->get_match_session()) {
+//		if (!search_started()) {
+//			auto session_settings = match_session->get_session_settings();
+//			session_settings->set_string("game/type", "classic");
+//			session_settings->set_string("game/mode", "casual");
+//			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
+//			match_session->update_session_settings(session_settings);
+//			handle_match_start(*(uint8_t**)singleton, "", "", "", "");
+//		}
+//	}
+//	else {
+//		create_session();
+//	}
+//}
 
 bool c_create_move::is_visible(c_base_entity* target)
 {

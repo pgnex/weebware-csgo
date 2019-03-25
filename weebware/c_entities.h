@@ -195,7 +195,7 @@ public:
 	}
 
 	int get_move_type() {
-		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x258);
+		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x25C);
 	}
 
 	bool is_valid_player()

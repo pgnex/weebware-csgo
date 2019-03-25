@@ -515,9 +515,17 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Reaction time");
 								ImGui::SliderFloat("Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
 
-								ImGui::Checkbox("Head", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
-								ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);
-								ImGui::Checkbox("Stomach", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach, false);
+								ImGui::Checkbox("Head##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
+								ImGui::Checkbox("Chest##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);
+								ImGui::Checkbox("Stomach##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach, false);
+								ImGui::Separator();
+								ImGui::Text("Magnet Triggerbot");
+								ImGui::Separator();
+								ImGui::Checkbox("Enable##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled, false);
+								ImGui::Text("Maximum FOV");
+								ImGui::SliderFloat("FOV##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
+								ImGui::Text("Sensitivity");
+								ImGui::SliderFloat("Smooth##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
 
 							}
 							ImGui::EndChild();
@@ -726,7 +734,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Thirdperson key");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson, key_counter);
 								// ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
-
+								ImGui::Text("Auto Strafe");
+								const char* strafe_type[] = { "Off", "Legit", "Fast" };
+								ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
 							}
 							ImGui::EndChild();
 

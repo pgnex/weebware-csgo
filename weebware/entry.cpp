@@ -5,7 +5,7 @@
 #include "hook_funcs.h"
 #include "events.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -28,10 +28,8 @@ bool c_weebware::init_interfaces()
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) Sleep(250);
 	engine_fact = retrieve_interface("engine.dll");
 
-	if (GetModuleHandleA("client.dll"))
-		client_fact = retrieve_interface("client.dll");
-	else
-		client_fact = retrieve_interface("client_panorama.dll");
+
+	client_fact = retrieve_interface("client_panorama.dll");
 
 	surface_fact = retrieve_interface("vguimatsurface.dll");
 	vgui2_fact = retrieve_interface("vgui2.dll");
@@ -139,7 +137,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();
