@@ -63,10 +63,11 @@ public:
 	};
 
 	void triggerbot_main(c_usercmd* cmd);
-
+	void magnet_triggerbot(c_usercmd* cmd);
+	QAngle magnet_hitbox(c_base_entity* target);
 	int get_config_index();
-
 	void auto_stop(c_usercmd* cmd);
+	c_base_entity* closest_target_triggerbot();
 
 
 private:

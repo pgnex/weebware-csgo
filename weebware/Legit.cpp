@@ -286,6 +286,57 @@ bool c_legitbot::is_visible(c_base_entity* target)
 	return false;
 }
 
+QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
+{
+	if (!target->is_valid_player())
+		return QAngle(0, 0, 0);
+
+	std::vector<int> aim_spots;
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_head)
+	{
+		aim_spots.push_back(csgohitboxid::head);
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_chest)
+	{
+		aim_spots.push_back(csgohitboxid::chest);
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_stomach)
+	{
+		aim_spots.push_back(csgohitboxid::stomach);
+	}
+
+	float marginal_fov = 180;
+
+	QAngle closest_hitbox = QAngle(0, 0, 0);
+
+	for (auto potential_hitbox : aim_spots)
+	{
+		Vector hitbox = center_hitbox(target, potential_hitbox);
+
+		QAngle angle_to_hitbox;
+
+		g_maths.vector_qangles(hitbox - m_local->get_vec_eyepos(), angle_to_hitbox);
+
+		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+
+		g_weebware.g_engine->get_view_angles(view_angles);
+
+		float this_fov = g_maths.get_fov(view_angles, angle_to_hitbox);
+
+		if (this_fov < marginal_fov)
+		{
+			closest_hitbox = angle_to_hitbox;
+
+			marginal_fov = this_fov;
+		}
+	}
+
+	return closest_hitbox;
+}
+
 QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 {
 	if (!target->is_valid_player())
@@ -719,6 +770,103 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 	cmd->sidemove = 0;
 }
 #endif
+
+c_base_entity* c_legitbot::closest_target_triggerbot()
+{
+
+	float best_fov = g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov;
+	float closest_fov = 180.f;
+
+	c_base_entity * best_entity = nullptr;
+	c_base_entity * closest_ent = nullptr;
+
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
+	{
+		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
+
+		if (!cur_entity->is_valid_player())
+			continue;
+
+		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum())
+			continue;
+
+		if (!is_visible(cur_entity))
+			continue;
+
+		Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
+
+		QAngle angle_to_head;
+
+		g_maths.vector_qangles(center_head - m_local->get_vec_eyepos(), angle_to_head);
+
+		g_maths.normalize_angle(angle_to_head);
+
+		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+
+		g_weebware.g_engine->get_view_angles(view_angles);
+
+		view_angles += m_local->m_aimPunchAngle() * 2.f;
+
+		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head, 0, Vector(m_local->get_vec_eyepos() - center_head).size());
+
+		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
+
+		if (normal_fov < closest_fov) {
+			closest_ent = cur_entity;
+			closest_fov = normal_fov;
+		}
+
+		// prevent symmetry collision
+		if (this_fov < g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov && this_fov < best_fov && closest_ent == cur_entity)
+		{
+			best_entity = cur_entity;
+			best_fov = this_fov;
+		}
+
+	}
+
+	return best_entity;
+}
+
+void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
+	if (!g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled)
+		return;
+
+	std::cout << "enabled" << std::endl;
+
+	c_base_entity* target = closest_target_triggerbot();
+
+	if (!target->is_valid_player())
+		return;
+
+	std::cout << "valid" << std::endl;
+
+	if (!is_visible(target))
+		return;
+
+	std::cout << "visible" << std::endl;
+
+	if (target) {
+		std::cout << "not null" << std::endl;
+
+		auto aim_angle = magnet_hitbox(target);
+
+		g_maths.normalize_angle(aim_angle);
+		
+		g_maths.clamp_angle(aim_angle);
+
+		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+		g_weebware.g_engine->get_view_angles(view_angles);
+
+		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth);
+
+		cmd->viewangles = delta;
+
+		g_weebware.g_engine->set_view_angles(cmd->viewangles);
+	}
+}
+
 void c_legitbot::triggerbot_main(c_usercmd* cmd)
 {
 	static float m_last_delay = 0.f;
@@ -733,6 +881,8 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		}
 		break;
 	}
+
+	magnet_triggerbot(cmd);
 
 	//g_legitbot.g_local
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);

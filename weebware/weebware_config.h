@@ -57,6 +57,7 @@ public:
 	int triggerbot_active;
 	int triggerbot_key;
 	bool triggerbot_head;
+	bool triggerbot_head = true;
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
 	float triggerbot_hitchance;
@@ -64,6 +65,9 @@ public:
 	bool use_dynamicfov;
 	float triggerbot_reaction;
 	bool target_teammates;
+	bool magnet_triggerbot_enabled;
+	float magnet_trigger_smooth;
+	float magnet_trigger_fov;
 
 	json convert()
 	{
@@ -95,6 +99,9 @@ public:
 		tmp["use_dynamicfov"] = use_dynamicfov;
 		tmp["triggerbot_reaction"] = triggerbot_reaction;
 		tmp["target_teammates"] = target_teammates;
+		tmp["magnet_triggerbot_enabled"] = magnet_triggerbot_enabled;
+		tmp["magnet_trigger_smooth"] = magnet_trigger_smooth;
+		tmp["magnet_trigger_fov"] = magnet_trigger_fov;
 		return tmp;
 	}
 
@@ -127,6 +134,9 @@ public:
 		if (check("use_dynamicfov", data)) use_dynamicfov = data["use_dynamicfov"];
 		if (check("triggerbot_reaction", data)) triggerbot_reaction = data["triggerbot_reaction"];
 		if (check("target_teammates", data)) target_teammates = data["target_teammates"];
+		if (check("magnet_triggerbot_enabled", data)) magnet_triggerbot_enabled = data["magnet_triggerbot_enabled"];
+		if (check("magnet_trigger_smooth", data)) magnet_trigger_smooth = data["magnet_trigger_smooth"];
+		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
 	}
 
 };
