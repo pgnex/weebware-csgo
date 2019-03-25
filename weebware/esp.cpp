@@ -392,16 +392,6 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 
 	g_weebware.g_surface->drawoutlinedrect(bounds.x, bounds.y, bounds.w + bounds.x, bounds.h + bounds.y);
 
-#if 0
-	// Top
-	g_draw.Line(bounds.x + (bounds.w / 3), bounds.y, bounds.x + (bounds.w / 3 * 2), bounds.y, 3, true, D3DCOLOR_RGBA(255, 0, 0, 255));
-	// Left
-	g_draw.Line(bounds.x, bounds.y + (bounds.h / 3), bounds.x, bounds.y + (bounds.h / 3 * 2), 3, true, D3DCOLOR_RGBA(255, 0, 0, 255));
-	// Right
-	g_draw.Line(bounds.x + bounds.w, bounds.y + (bounds.h / 3), bounds.x + bounds.w, bounds.y + (bounds.h / 3 * 2), 3, true, D3DCOLOR_RGBA(255, 0, 0, 255));
-	// Bottom
-	g_draw.Line(bounds.x + (bounds.w / 3), bounds.y + bounds.h, bounds.x + (bounds.w / 3 * 2), bounds.y + bounds.h, 3, true, D3DCOLOR_RGBA(255, 0, 0, 255));
-#endif
 }
 
 void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
