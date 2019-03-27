@@ -690,6 +690,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
 								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
 
@@ -731,8 +732,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 								ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 								ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
-								ImGui::Text("Thirdperson key");
-								imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson, key_counter);
+								ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
+								ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
 								// ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 								ImGui::Text("Auto Strafe");
 								const char* strafe_type[] = { "Off", "Legit", "Fast" };

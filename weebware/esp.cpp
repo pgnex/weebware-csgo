@@ -464,6 +464,42 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x + bounds.w + 2, bounds.y + 5, draw_col, 0, player_name.c_str());
 }
 
+void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
+	const model_t *model;
+	studiohdr_t	  *hdr;
+	matrix3x4	  bone_matrix[128];
+	mstudiobone_t *bone;
+	int			  parent_bone;
+	Vector        bone_world_pos, parent_bone_world_pos, bone_screen_pos, parent_bone_screen_pos;
+
+	model = ent->getmodel();
+	if (!model)
+		return;
+
+	hdr = g_weebware.g_model_info->getstudiomodel(model);
+	if (!hdr)
+		return;
+
+	ent->setupbones(bone_matrix, 128, 0x00000100, 0.f);
+
+	for (int i = 0; i < hdr->numbones; i++) {
+		bone = hdr->GetBone(i);
+		if (!bone)
+			continue;
+
+		if (!bone->flags & 0x00000100)
+		continue;
+
+		parent_bone = bone->parent;
+		if (parent_bone == -1)
+			continue;
+
+		bone_world_pos = bone_matrix[i][0][3];
+		parent_bone_world_pos = bone_matrix[parent_bone].at(3);
+
+	}
+}
+
 struct player_esp_info
 {
 	std::string name;

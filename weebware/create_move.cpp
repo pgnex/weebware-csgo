@@ -24,7 +24,6 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		{
 			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-			g_create_move.runClanTag();
 			g_create_move.chat_spam();
 			g_create_move.rank_reveal();
 
@@ -629,30 +628,5 @@ void c_create_move::chat_spam()
 			g_weebware.g_engine->execute_client_cmd(("say " + cspam_weebware.at(selection)).c_str());
 			elapsed_ticks = 0;
 		}
-	}
-}
-
-bool disabled = false;
-static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
-void c_create_move::runClanTag()
-{
-	static const std::string MovingTag[18] = { "", "w", "we", "wee", "weeb", "weebw", "weebwa", "weebwar", "weebware", "weebware", "weebwar", "weebwa", "weebw", "weeb", "wee", "we", "w", "" };
-	if (g_weebwarecfg.misc_clantag_changer && g_weebwarecfg.enable_misc)
-	{
-		static int ticks_elapsed = 0;
-		int i = (int(g_weebware.g_global_vars->curtime * 2.4) % 18);
-		int tick_rate = 1 / g_weebware.g_global_vars->interval_per_tick;
-
-		if (ticks_elapsed > tick_rate)
-		{
-			set_clantag(MovingTag[i].c_str(), MovingTag[i].c_str());
-			ticks_elapsed = 0;
-		}
-		ticks_elapsed++;
-		disabled = false;
-	}
-	else if (!g_weebwarecfg.misc_clantag_changer && !disabled) {
-		set_clantag("", "");
-		disabled = true;
 	}
 }

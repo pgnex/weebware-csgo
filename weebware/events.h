@@ -7,6 +7,7 @@ using eventfunc_t = void(__cdecl *)(i_game_event *);
 // all of our event funcs.
 namespace EventFuncs {
 	void player_hurt(i_game_event *event);
+	void player_death(i_game_event *event);
 }
 
 class FeatureFuncs {

@@ -2,14 +2,13 @@
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
-int attacker, victim, flHurtTime;
+int flHurtTime;
 
 void EventFuncs::player_hurt(i_game_event *event) {
-
 	// hitmarkers
 	if (g_weebwarecfg.visuals_hitmarkers) {
 		// check if you hit a player
-		attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
+		int attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
 		c_base_entity* attacker_ent = (c_base_entity *)g_weebware.g_entlist->getcliententity(attacker);
 		if (attacker_ent == g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()))
 		{			
@@ -59,10 +58,35 @@ void FeatureFuncs::on_paint()
 	g_weebware.g_surface->drawline(x + 8, y - 8, x + (8 / 4), y - (8 / 4));
 };
 
+static const std::vector<std::string> killsay_messaes = {
+	"sit dog",
+	"refund",
+	"would you like some sauce with that pasta",
+	"get fucked nigger",
+	"aim next time",
+	"can you atleast try to shoot back",
+	"wyd my heads up here"
+};
+
+void EventFuncs::player_death(i_game_event *event) {
+
+	if (!g_weebwarecfg.killsay)
+		return;
+
+	int attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
+	c_base_entity* attacker_ent = (c_base_entity *)g_weebware.g_entlist->getcliententity(attacker);
+
+	if (attacker_ent == g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local())) {
+		int selection = int(static_cast<int>(killsay_messaes.size()) * rand() / (RAND_MAX + 1.0));
+		g_weebware.g_engine->execute_client_cmd(("say " + killsay_messaes.at(selection)).c_str());
+	}
+}
+
 // initialize our events
 void GameEvents::init() {
 
 	add_event("player_hurt", EventFuncs::player_hurt);
+	add_event("player_death", EventFuncs::player_death);
 
 	register_events();
 }

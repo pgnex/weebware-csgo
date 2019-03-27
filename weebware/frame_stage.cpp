@@ -6,7 +6,6 @@
 
 c_frame_stage_notify g_frame_stage_notify;
 knife_changer g_knife_changer;
-thirdperson g_tp;
 int convert_index_id(int index);
 
 #if 1
@@ -19,19 +18,15 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
-			g_tp.fsn(g_frame_stage_notify.local);
-		//	g_knife_changer.frame_stage_notify();
+			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.legit_aa_resolver();
-
 		}
 
-
-#if 0
-		if (curStage == clientframestage_t::frame_render_start)
+		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		{
-			g_frame_stage_notify.pvs_fix();
+			g_frame_stage_notify.run_clantag();
+			g_frame_stage_notify.wireframe_smoke();
 		}
-#endif
 	}
 	catch (...) {}
 
@@ -39,6 +34,68 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
 }
 #endif
+
+std::vector<const char*> vistasmoke_mats =
+{
+	"particle/vistasmokev1/vistasmokev1_fire",
+	"particle/vistasmokev1/vistasmokev1_smokegrenade",
+	"particle/vistasmokev1/vistasmokev1_emods",
+	"particle/vistasmokev1/vistasmokev1_emods_impactdust",
+};
+
+static bool wireframe_disabled = false;
+void c_frame_stage_notify::wireframe_smoke() {
+
+	if (!g_weebwarecfg.wireframe_smoke && wireframe_disabled == true)
+		return;
+
+	if (g_weebwarecfg.wireframe_smoke && wireframe_disabled) {
+		for (auto mat_s : vistasmoke_mats) {
+			imaterial* mat = g_weebware.g_mat_sys->find_material(mat_s, TEXTURE_GROUP_OTHER);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_ignorez, false);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_wireframe, true);
+		}
+		wireframe_disabled = false;
+	}
+	else if (!g_weebwarecfg.wireframe_smoke && !wireframe_disabled) {
+		for (auto mat_s : vistasmoke_mats) {
+			imaterial* mat = g_weebware.g_mat_sys->find_material(mat_s, TEXTURE_GROUP_OTHER);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_ignorez, false);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_wireframe, false);
+		}
+		wireframe_disabled = true;
+	}
+}
+
+
+static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
+bool clantag_done = false;
+void c_frame_stage_notify::run_clantag()
+{
+
+	if (!g_weebwarecfg.misc_clantag_changer && clantag_done) {
+		set_clantag("", "");
+		clantag_done = false;
+		return;
+	}
+
+	if (!g_weebwarecfg.misc_clantag_changer) {
+		return;
+	}
+
+
+	const char* stages[] = { u8"\u2800\u2800\u2800\u2800w", u8"\u2800\u2800\u2800w\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800e", u8"w\u2800\u2800\u2800e\u2800", u8"w\u2800\u2800e\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800e", u8"we\u2800\u2800\u2800e\u2800", u8"we\u2800\u2800e\u2800\u2800", u8"we\u2800e\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800b", u8"wee\u2800\u2800b\u2800", u8"wee\u2800b\u2800\u2800", u8"weeb\u2800\u2800\u2800", u8"weeb\u2800\u2800w", u8"weeb\u2800w\u2800", u8"weebw\u2800a\u2800", u8"weebwa\u2800\u2800", u8"weebwar\u2800", u8"weebware", u8"weebware", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"weebware", u8"weebware" };
+
+	static int current;
+	int serverTime = g_weebware.g_global_vars->interval_per_tick * (float)this->local->get_tick_base() * 2.5;
+	int value = serverTime % 33;
+
+	if (value != current) {
+		set_clantag(stages[value], stages[value]);
+		clantag_done = true;
+	}
+	current = value;
+}
 
 void c_frame_stage_notify::pvs_fix()
 {
@@ -57,6 +114,24 @@ void c_frame_stage_notify::pvs_fix()
 
 		*reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ent) + 0xA30) = g_weebware.g_global_vars->framecount;
 		*reinterpret_cast<int*>(reinterpret_cast<uintptr_t>(ent) + 0xA28) = NULL;
+	}
+}
+
+bool tp_done = false;
+void c_frame_stage_notify::third_person() {
+	if (g_weebwarecfg.thirdperson && !tp_done) {
+		if (local && local->is_valid_player()) {
+			c_convar* tp = g_weebware.g_convars->find_cvar("thirdperson");
+			tp->SetValue("1");
+			tp_done = true;
+		}
+	}
+	else if (!g_weebwarecfg.thirdperson && tp_done) {
+		if (local && local->is_valid_player()) {
+			c_convar* fp = g_weebware.g_convars->find_cvar("firstperson");
+			fp->SetValue("1");
+			tp_done = false;
+		}
 	}
 }
 

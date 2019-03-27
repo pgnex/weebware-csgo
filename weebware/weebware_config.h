@@ -288,6 +288,7 @@ public:
 	float misc_ai_rotationspeed = 10.f;
 	float misc_ai_aimspeed = 30.f;
 	bool visuals_nightmode = 0;
+	bool wireframe_smoke = 0;
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
 	int hitmarker_sound = 0;
@@ -295,7 +296,8 @@ public:
 	bool misc_autoAccept = false;
 	bool minecraft_pickaxe = false;
 	int anime_model = false;
-	int thirdperson;
+	bool thirdperson;
+	bool killsay;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
@@ -406,6 +408,10 @@ public:
 		tmp["misc_autoAccept"] = misc_autoAccept;
 		tmp["minecraft_pickaxe"] = minecraft_pickaxe;
 		tmp["reina_model"] = anime_model;
+		tmp["auto_strafe"] = auto_strafe;
+		tmp["thirdperson"] = thirdperson;
+		tmp["killsay"] = killsay;
+		tmp["wireframe_smoke"] = wireframe_smoke;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -527,8 +533,12 @@ public:
 		if (check_color("visuals_glow_player_col_hidden", data)) read_color(visuals_glow_player_col_hidden, data, "visuals_glow_player_col_hidden");
 		if (check_color("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check_color("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
-		if (check("minecraft_pickaxe", data))minecraft_pickaxe = data["minecraft_pickaxe"];
-		if (check("reina_model", data))anime_model = data["reina_model"];
+		if (check("minecraft_pickaxe", data)) minecraft_pickaxe = data["minecraft_pickaxe"];
+		if (check("reina_model", data)) anime_model = data["reina_model"];
+		if (check("auto_strafe", data)) auto_strafe = data["auto_strafe"];
+		if (check("thirdperson", data)) thirdperson = data["thirdperson"];
+		if (check("killsay", data)) thirdperson = data["killsay"];
+		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
 	}
 
 	void save_cfg(std::ostream& file)

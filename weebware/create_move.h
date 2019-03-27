@@ -8,7 +8,6 @@ public:
 	void create_move(c_usercmd* cmd, bool& sendPackets);
 	void correct_movement(Vector old_view_angles, c_usercmd* cmd);
 	void run_legitAA(c_usercmd* cmd, bool send_packets);
-	void runClanTag();
 	void chat_spam();
 	void rank_reveal();
 
