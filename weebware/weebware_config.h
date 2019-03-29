@@ -256,8 +256,12 @@ public:
 	bool visuals_glow_hidden_col;
 	bool visuals_glow_c4;
 	bool visuals_glow_chicken;
+	bool visuals_skeleton;
 	bool enable_misc;
+	bool enable_bullet_tracers;
+	float bullet_tracer_expire = 1.f;
 	bool auto_jump;
+
 	int auto_strafe = 0;
 	bool misc_ai;
 	float misc_ai_legitfactor;
@@ -319,6 +323,11 @@ public:
 	// new box esp colors
 	ImVec4 visuals_bounding_col_visible = ImVec4(50, 255, 0, 255);
 	ImVec4 visuals_bounding_col_hidden = ImVec4(255, 50, 50, 255);
+
+	// skeleton esp colors
+	ImVec4 visuals_skeleton_col_visible = ImVec4(50, 255, 0, 255);
+	ImVec4 visuals_skeleton_col_hidden = ImVec4(255, 50, 50, 255);
+
 
 	// new name esp colors
 	ImVec4 visuals_name_esp_col_visible = ImVec4(255, 255, 255, 255);
@@ -412,6 +421,7 @@ public:
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
 		tmp["wireframe_smoke"] = wireframe_smoke;
+		tmp["visuals_skeleton"] = visuals_skeleton;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -437,6 +447,8 @@ public:
 		save_color(visuals_glow_player_col_hidden, tmp, "visuals_glow_player_col_hidden");
 		save_color(visuals_glow_c4_col, tmp, "visuals_glow_c4_col");
 		save_color(visuals_glow_chicken_col, tmp, "visuals_glow_chicken_col");
+		save_color(visuals_skeleton_col_visible, tmp, "visuals_skeleton_col_visible");
+		save_color(visuals_skeleton_col_hidden, tmp, "visuals_skeleton_col_hidden");
 
 		return tmp;
 	}
@@ -533,12 +545,15 @@ public:
 		if (check_color("visuals_glow_player_col_hidden", data)) read_color(visuals_glow_player_col_hidden, data, "visuals_glow_player_col_hidden");
 		if (check_color("visuals_glow_c4_col", data)) read_color(visuals_glow_c4_col, data, "visuals_glow_c4_col");
 		if (check_color("visuals_glow_chicken_col", data)) read_color(visuals_glow_chicken_col, data, "visuals_glow_chicken_col");
+		if (check_color("visuals_skeleton_col_visible", data)) read_color(visuals_skeleton_col_visible, data, "visuals_skeleton_col_visible");
+		if (check_color("visuals_skeleton_col_hidden", data)) read_color(visuals_skeleton_col_hidden, data, "visuals_skeleton_col_hidden");
 		if (check("minecraft_pickaxe", data)) minecraft_pickaxe = data["minecraft_pickaxe"];
 		if (check("reina_model", data)) anime_model = data["reina_model"];
 		if (check("auto_strafe", data)) auto_strafe = data["auto_strafe"];
 		if (check("thirdperson", data)) thirdperson = data["thirdperson"];
-		if (check("killsay", data)) thirdperson = data["killsay"];
+		if (check("killsay", data)) killsay = data["killsay"];
 		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
+		if (check("visuals_skeleton", data)) visuals_skeleton = data["visuals_skeleton"];
 	}
 
 	void save_cfg(std::ostream& file)

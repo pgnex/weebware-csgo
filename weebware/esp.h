@@ -46,6 +46,7 @@ private:
 	void render_health(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void draw_inaccuracy_circle();
 	void render_name(s_boundaries bounds, c_base_entity* ent, bool is_team);
+	void bomb_timer(c_base_entity* ent);
 
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack();

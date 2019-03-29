@@ -3,6 +3,7 @@
 #define SHARED
 
 #include "Header.h"
+#include "IViewRenderBeams.h"
 
 typedef void* (__cdecl* create_interface)(const char*, int*);
 
@@ -43,6 +44,7 @@ public:
 	CGlowObjectManager* g_glow_obj_manager;
 	uintptr_t* g_enginesound;
 	IMDLCache* g_mdlcache;
+	IViewRenderBeams* g_beams;
 	CNetworkStringTableContainer* g_NetworkContainer;
 	HWND h_window;
 	WNDPROC old_window_proc;

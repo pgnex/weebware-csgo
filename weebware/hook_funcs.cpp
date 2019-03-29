@@ -130,27 +130,6 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 		}
 	}
 
-#if 0
-	if (g_weebwarecfg.reina_model) {
-		if (strstr(FilePath, "models/player") && !strstr(FilePath, "w_") && strstr(FilePath, ".mdl"))
-		{
-			if (strstr(FilePath, "tm_"))
-				sprintf(FilePath, "models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
-			else
-				sprintf(FilePath, "models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
-		}
-	}
-#endif
-	//if (strstr(FilePath, "tm_") && strstr(FilePath, ".mdl") && !strstr(FilePath, "ctm_"))
-	//{
-	//sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");
-	//}
-	//if (strstr(FilePath, "ctm_") && strstr(FilePath, ".mdl"))
-	//{
-	//	sprintf(FilePath, "models/player/ubneptune/neptune_zise/ubneptune.mdl");
-	//}
-
-	//std::cout << "1";
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }
 
