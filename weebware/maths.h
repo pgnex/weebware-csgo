@@ -82,7 +82,7 @@ bool s_bMathlibInitialized = false;
 
 	float dot_product(Vector a,  Vector b);
 
-	void VectorTransform2(Vector& in1, float in2[3][4], Vector& out);
+	void VectorTransform2(Vector& in1, const matrix3x4_t& in2, Vector& out);
 
 	matrix3x4* w2smatrix;
 	void w2s_fixed_calcations();

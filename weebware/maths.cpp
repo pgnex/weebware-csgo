@@ -10,7 +10,7 @@ float c_maths::dot_product(Vector a, Vector b)
 	return (a.x * b.x + a.y * b.y + a.z * b.z);
 }
 
-void c_maths::VectorTransform2(Vector& in1, float in2[3][4], Vector& out)
+void c_maths::VectorTransform2(Vector& in1, const matrix3x4_t& in2, Vector& out)
 {
 	out.x = dot_product(in1, Vector(in2[0][0], in2[0][1], in2[0][2])) + in2[0][3];
 	out.y = dot_product(in1, Vector(in2[1][0], in2[1][1], in2[1][2])) + in2[1][3];

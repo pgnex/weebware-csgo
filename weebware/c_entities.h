@@ -54,7 +54,7 @@ public:
 	virtual int getbody() = 0;
 	virtual void getcolormodulation(float* color) = 0;
 	virtual bool lodtest() = 0;
-	virtual bool setupbones(matrix3x4* pbonetoworldout, int nmaxbones, int bonemask, float currenttime) = 0;
+	virtual bool setupbones(matrix3x4_t* pbonetoworldout, int nmaxbones, int bonemask, float currenttime) = 0;
 	virtual void setupweights(const matrix3x4* pbonetoworld, int nflexweightcount, float* pflexweights, float* pflexdelayedweights) = 0;
 	virtual void doanimationevents(void) = 0;
 	virtual void* /*ipvsnotify*/ getpvsnotifyinterface() = 0;
@@ -173,7 +173,7 @@ public:
 
 	Vector get_bone(int i)
 	{
-		matrix3x4 bone_matrix[128];
+		matrix3x4_t bone_matrix[128];
 		if (this->setupbones(bone_matrix, 128, 0x0007FF00, 0.0f))
 		{
 			return Vector(bone_matrix[i][0][3], bone_matrix[i][1][3], bone_matrix[i][2][3]);
@@ -294,7 +294,7 @@ public:
 	}
 
 
-	bool setup_bones(matrix3x4* bone_to_world_out, int max_bones, int bonemask, float curtime)
+	bool setup_bones(matrix3x4_t* bone_to_world_out, int max_bones, int bonemask, float curtime)
 	{
 #if 0
 		__asm

@@ -211,6 +211,7 @@
     <ClInclude Include="imgui\stb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_custom.h" />
+    <ClInclude Include="IViewRenderBeams.h" />
     <ClInclude Include="i_game_event_manager.h" />
     <ClInclude Include="json.h" />
     <ClInclude Include="key_values.h" />
