@@ -1,8 +1,87 @@
 #include "events.h"
+#include "frame_stage.h"
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
 int flHurtTime;
+
+void EventFuncs::bullet_impact(i_game_event *event) {
+	static int          old_tickbase{ -1 };
+	static bool         insert_once{ false };
+	static ImpactData_t *entry{ nullptr };
+
+	c_base_entity *player;
+	int          tickbase;
+	float        curtime;
+	Vector       impact_pos;
+
+	int local_player_index = g_weebware.g_engine->get_local();
+	c_base_entity* local_player = g_weebware.g_entlist->getcliententity(local_player_index);
+
+	// invalid local player data, don't do anything more.
+	if (!local_player)
+		return;
+
+	if (!local_player->is_valid_player())
+		return;
+
+	// filter out everyone except the local player.
+	player = (c_base_entity *)g_weebware.g_entlist->getcliententity(g_weebware.g_engine->GetPlayerForUserID(event->GetInt("userid")));
+	if (!player)
+		return;
+
+	if (player != local_player)
+		return;
+
+	// get main impact vector.
+	auto vis_impact_data_main = &vis_impact_data;
+
+	// get the localplayer's tickbase.
+	tickbase = player->get_tick_base();
+
+	// tickbase changed, this means new impact(s) happened.
+	// note; the server does impact event code during penetration... this means you will receive multiple impacts with the same time.
+	if (tickbase != old_tickbase) {
+
+		// allocate new empty entry...
+		vis_impact_data_main->push_back(ImpactData_t());
+
+		// now get the back.
+		entry = &vis_impact_data_main->back();
+
+		// reset other data.
+		insert_once = false;
+
+		// mark the last tickbase.
+		old_tickbase = tickbase;
+	}
+
+	// this should never happen...
+	if (!entry)
+		return;
+
+	// get the time this impact happened.
+	curtime = (float)tickbase * g_weebware.g_global_vars->interval_per_tick;
+
+	// get impact position.
+	impact_pos = Vector(event->GetFloat("x"), event->GetFloat("y"), event->GetFloat("z"));
+
+	// only store this data once.
+	if (!insert_once) {
+		entry->m_shoot_pos = local_player->get_vec_eyepos();
+		entry->m_tickbase = tickbase;
+		entry->m_curtime = curtime;
+
+		insert_once = true;
+	}
+
+	// new impact happened... unmark old impacts as the final impact.
+	for (auto &i : entry->m_impacts)
+		i.m_is_last_impact = false;
+
+	// insert this impact... mark it as the 'final'.
+	entry->m_impacts.push_back(ImpactEntry_t(impact_pos, true));
+}
 
 void EventFuncs::player_hurt(i_game_event *event) {
 	// hitmarkers
@@ -86,6 +165,7 @@ void EventFuncs::player_death(i_game_event *event) {
 void GameEvents::init() {
 
 	add_event("player_hurt", EventFuncs::player_hurt);
+	add_event("bullet_impact", EventFuncs::bullet_impact);
 	add_event("player_death", EventFuncs::player_death);
 
 	register_events();

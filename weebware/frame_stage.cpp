@@ -3,6 +3,7 @@
 #include "shared.h"
 #include "skinchanger.h"
 #include "thirdperson.h"
+#include "IViewRenderBeams.h"
 
 c_frame_stage_notify g_frame_stage_notify;
 knife_changer g_knife_changer;
@@ -26,6 +27,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 		{
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
+			g_frame_stage_notify.bullet_tracers();
 		}
 	}
 	catch (...) {}
@@ -131,6 +133,78 @@ void c_frame_stage_notify::third_person() {
 			c_convar* fp = g_weebware.g_convars->find_cvar("firstperson");
 			fp->SetValue("1");
 			tp_done = false;
+		}
+	}
+}
+
+std::vector<ImpactData_t> vis_impact_data;
+void c_frame_stage_notify::bullet_tracers() {
+
+	if (!g_weebwarecfg.enable_bullet_tracers)
+		return;
+
+	float curtime;
+	BeamInfo_t beam_info;
+	Beam_t *beam;
+
+	if (!g_frame_stage_notify.local)
+		return;
+
+	if (g_frame_stage_notify.local->m_iHealth() <= 0) {
+		vis_impact_data.clear();
+		return;
+	}
+
+	if (vis_impact_data.empty())
+		return;
+
+	curtime = (float)g_frame_stage_notify.local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
+
+	// iterate all stored impact data.
+	for (size_t i = 0u; i < vis_impact_data.size(); ++i) {
+		// get current impact data.
+		const auto impact_data = &vis_impact_data[i];
+		if (!impact_data)
+			continue;
+
+		if (impact_data->m_skip)
+			continue;
+		// impact batch is too old... just erase it.
+		if ((curtime - impact_data->m_curtime) > (float)g_weebwarecfg.bullet_tracer_expire) {
+			vis_impact_data.erase(vis_impact_data.begin() + i);
+			continue;
+		}
+		// no impacts...
+		if (impact_data->m_impacts.empty())
+			continue;
+
+		// iterate this batch of impacts.
+		for (const auto &impact : impact_data->m_impacts) {
+			// not the final impact? skip it.
+			if (!impact.m_is_last_impact)
+				continue;
+			//// ...
+			g_weebware.g_beams->CreateBeamPoints(
+				impact_data->m_shoot_pos,
+				impact.m_pos,
+				g_weebware.g_model_info->getmodelindex("sprites/physbeam.vmt"),
+				-1,                                        // haloIndex
+				0.f,                                       // haloScale
+				(float)g_weebwarecfg.bullet_tracer_expire, // life
+				2.f,                                       // width
+				2.f,                                       // endWidth
+				0.f,                                       // fadeLength
+				0.f,                                       // amplitude
+				255.f,                                     // brightness
+				0.5f,                                      // speed
+				0,
+				0.f,
+				138.f,
+				43.f,
+				226.f
+			);
+
+			impact_data->m_skip = true;
 		}
 	}
 }
