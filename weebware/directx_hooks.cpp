@@ -536,7 +536,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("RCS Factor");
 								ImGui::SliderFloat("RCS Factor", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs_power, 0, 100, "%.0f%%");
 								ImGui::Text("Backtracking");
-								const char* acc_type[] = { "Off", "Default" };
+								const char* acc_type[] = { "Off", "Enabled" };
 								ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].accuracy_boost, acc_type, ARRAYSIZE(acc_type));
 								ImGui::Text("Maximum Ticks");
 								ImGui::SliderFloat("Maximum Ticks", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legit_maximum_ticks, 0, 30, "%.f%");
@@ -601,7 +601,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Separator();
 								ImGui::Text("Activation type");
 								imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
-								const char* activation_type[] = { "Off", "Default", "On Key" };
+								const char* activation_type[] = { "Off", "Enabled", "On Key" };
 								ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
 								ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
 								if (g_weebwarecfg.visuals_teammates) {
@@ -613,6 +613,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								if (g_weebwarecfg.visuals_bounding_box) {
 									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col_visible, g_weebwarecfg.visuals_bounding_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
 								}
+
+								ImGui::Checkbox("Skeleton", &g_weebwarecfg.visuals_skeleton, false);
+								if (g_weebwarecfg.visuals_skeleton) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
+								}
+
+
 								ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
 
 								ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
@@ -620,10 +627,12 @@ void imgui_main(IDirect3DDevice9* pDevice)
 									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)##name1", "Hidden Color (Enemy)##name2");
 								}
 
+
 								ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 								if (g_weebwarecfg.visuals_dormant_esp) {
 									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)##dormant1", "Hidden Color (Enemy)##dormant2");
 								}
+								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
 
 								ImGui::Separator();
 								ImGui::Text("Glow");
@@ -671,7 +680,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::BeginChild("Visuals 2", ImVec2(0, 0), true);
 							{
-								ImGui::Text("Other ESP");
+								ImGui::Text("Other Visuals");
 								ImGui::Separator();
 
 
@@ -679,36 +688,39 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
 								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
+								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
+								ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
+								ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
+								if (g_weebwarecfg.enable_bullet_tracers) {
+									ImGui::Text("Bullet Tracer Expire");
+									ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.0f");
+								}
 
+								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
+								const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
+								ImGui::Text("Hitmarker Sound");
+								ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
 								ImGui::Separator();
+
 								ImGui::Text("Backtracking");
+								ImGui::Separator();
 								ImGui::Text("Style");
 								const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
 								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
 								ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
-								ImGui::Separator();
-								ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
-								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
-								ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
-								ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
+								//ImGui::Text("Nightmode");
+								//ImGui::Separator();
+								//if (ImGui::Button("Apply Nightmode")) {
+								//	g_nightmode.night_mode();
+								//}
+								//imgui_custom::custom_color_inline(g_weebwarecfg.nightmode_col, "Nightmode Color");
 
-								const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
-								ImGui::Text("Hitmarker Sound");
-								ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
-								ImGui::Separator();
-								ImGui::Text("Nightmode");
-								ImGui::Separator();
-								if (ImGui::Button("Apply Nightmode")) {
-									g_nightmode.night_mode();
-								}
-								imgui_custom::custom_color_inline(g_weebwarecfg.nightmode_col, "Nightmode Color");
-
-								if (ImGui::Button("Fix FPS")) {
-									c_convar* prop_var = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
-									prop_var->SetValue("-1");
-								}
+								//if (ImGui::Button("Fix FPS")) {
+								//	c_convar* prop_var = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
+								//	prop_var->SetValue("-1");
+								//}
 							}
 							ImGui::EndChild();
 
