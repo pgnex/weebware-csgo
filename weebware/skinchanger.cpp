@@ -49,6 +49,5 @@ void knife_changer::frame_stage_notify() {
 		*weapon->m_nViewModelIndex() = model_index;
 		*weapon->get_fallbackwear() = 1;
 		*weapon->m_iItemDefinitionIndexPtr() = 516;
-		std::cout << "set" << std::endl;
 	}
 }

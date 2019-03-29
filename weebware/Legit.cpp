@@ -199,7 +199,7 @@ Vector c_legitbot::center_hitbox(c_base_entity* ent, int id)
 		return Vector(0, 0, 0);
 	}
 
-	matrix3x4 matrix[128];
+	matrix3x4_t matrix[128];
 
 	if (!ent->setup_bones(matrix, 128, 0x00000100, g_weebware.g_global_vars->curtime))
 	{
@@ -833,22 +833,18 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 	if (!g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled)
 		return;
 
-	std::cout << "enabled" << std::endl;
 
 	c_base_entity* target = closest_target_triggerbot();
 
 	if (!target->is_valid_player())
 		return;
 
-	std::cout << "valid" << std::endl;
 
 	if (!is_visible(target))
 		return;
 
-	std::cout << "visible" << std::endl;
 
 	if (target) {
-		std::cout << "not null" << std::endl;
 
 		auto aim_angle = magnet_hitbox(target);
 
