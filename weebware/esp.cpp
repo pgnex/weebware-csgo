@@ -11,19 +11,29 @@ bool has_esp_init = false;
 void c_esp::esp_main()
 {
 	water_mark();
-	
-	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); 
+
+	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
 		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+
 		if (local) {
+
+			// call things here for visual stuff before gay checks..
+			draw_inaccuracy_circle();
+
 			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
 			{
 				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
 
 				if (!ent || ent == nullptr)
 					continue;
+
+				// check if bomb timer is enabled, if it is check for entity
+				if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4")) {
+					bomb_timer(ent);
+				}
 
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
 					continue;
@@ -46,6 +56,7 @@ void c_esp::esp_main()
 		}
 
 	}
+
 
 	if (g_weebware.menu_opened)
 	{
@@ -105,56 +116,6 @@ void c_esp::esp_main()
 				if (!ent || ent == nullptr)
 					continue;
 
-				// We need to find if the planted bomb exists...
-				if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
-				{
-					float remaining = reinterpret_cast<c_bomb*>(ent)->get_blow_time() - g_weebware.g_global_vars->curtime;
-
-					// So c4 is still going!
-					if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
-
-						int offset_y = 15.f;
-
-						if (g_weebwarecfg.visuals_watermark) {
-							offset_y += 35.f;
-						}
-
-						int Damage = 500;
-						float BombRadius = 1750;
-
-						auto vecToTarget = ent->get_vec_eyepos() - local->get_vec_eyepos();
-
-						// + 1 to account for imprecision, also magic number btw.
-
-						float predicted_damage = 500.f * exp(-((vecToTarget.size() * vecToTarget.size()) / 680555.582778f));
-
-						if ((local->m_ArmorValue() > 0)) {
-
-							predicted_damage *= 0.5f;
-
-
-							if ((predicted_damage / 2) > local->m_ArmorValue())
-							{
-								predicted_damage += (local->m_ArmorValue() * 2);
-							}
-						}
-						predicted_damage += 1.f;
-
-						predicted_damage = ceilf(predicted_damage);
-
-						char timer_s[55];
-
-						sprintf(timer_s, "Time till explosion: %.2f\nDamage: %.0f", remaining, floor(predicted_damage));
-
-						g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
-
-						// Okay now lets check if we have defuse on the bomb..
-						// m_flDefuseCountDown // interesting netvar let see what it returns...
-
-					}
-
-				}
-
 
 #pragma region players
 				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
@@ -194,6 +155,8 @@ void c_esp::esp_main()
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 
 				render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
+
+				render_skeleton(ent, is_visible(local, ent));
 
 #pragma endregion
 
@@ -279,7 +242,7 @@ Vector c_esp::center_hitbox(c_base_entity* ent, int id)
 		return Vector(0, 0, 0);
 	}
 
-	matrix3x4 matrix[128];
+	matrix3x4_t matrix[128];
 
 	if (!ent->setup_bones(matrix, 128, 0x00000100, GetTickCount64()))
 	{
@@ -359,6 +322,53 @@ s_boundaries c_esp::calc_boundaries(c_base_entity* Entity)
 		result.has_w2s = false;
 	}
 	return result;
+}
+
+void c_esp::bomb_timer(c_base_entity* ent) {
+	float remaining = reinterpret_cast<c_bomb*>(ent)->get_blow_time() - g_weebware.g_global_vars->curtime;
+
+	// So c4 is still going!
+	if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
+
+		int offset_y = 15.f;
+
+		if (g_weebwarecfg.visuals_watermark) {
+			offset_y += 35.f;
+		}
+
+		int Damage = 500;
+		float BombRadius = 1750;
+
+		auto vecToTarget = ent->get_vec_eyepos() - local->get_vec_eyepos();
+
+		// + 1 to account for imprecision, also magic number btw.
+
+		float predicted_damage = 500.f * exp(-((vecToTarget.size() * vecToTarget.size()) / 680555.582778f));
+
+		if ((local->m_ArmorValue() > 0)) {
+
+			predicted_damage *= 0.5f;
+
+
+			if ((predicted_damage / 2) > local->m_ArmorValue())
+			{
+				predicted_damage += (local->m_ArmorValue() * 2);
+			}
+		}
+		predicted_damage += 1.f;
+
+		predicted_damage = ceilf(predicted_damage);
+
+		char timer_s[55];
+
+		sprintf(timer_s, "Time till explosion: %.2f\nDamage: %.0f", remaining, floor(predicted_damage));
+
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
+
+		// Okay now lets check if we have defuse on the bomb..
+		// m_flDefuseCountDown // interesting netvar let see what it returns...
+
+	}
 }
 
 void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
@@ -465,9 +475,13 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 }
 
 void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
+
+	if (!g_weebwarecfg.visuals_skeleton)
+		return;
+
 	const model_t *model;
 	studiohdr_t	  *hdr;
-	matrix3x4	  bone_matrix[128];
+	matrix3x4_t	  bone_matrix[128];
 	mstudiobone_t *bone;
 	int			  parent_bone;
 	Vector        bone_world_pos, parent_bone_world_pos, bone_screen_pos, parent_bone_screen_pos;
@@ -482,21 +496,35 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 
 	ent->setupbones(bone_matrix, 128, 0x00000100, 0.f);
 
+	c_color col;
+	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
+		col = is_visible ? c_color(g_weebwarecfg.visuals_skeleton_col_visible) : c_color(g_weebwarecfg.visuals_skeleton_col_hidden);
+	}
+	else {
+		col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
+	}
+
 	for (int i = 0; i < hdr->numbones; i++) {
 		bone = hdr->GetBone(i);
+
 		if (!bone)
 			continue;
 
 		if (!bone->flags & 0x00000100)
-		continue;
+			continue;
 
 		parent_bone = bone->parent;
 		if (parent_bone == -1)
 			continue;
 
-		bone_world_pos = bone_matrix[i][0][3];
+		bone_world_pos = bone_matrix[i].at(3);
 		parent_bone_world_pos = bone_matrix[parent_bone].at(3);
 
+
+		if (g_maths.world_to_screen(bone_world_pos, bone_screen_pos) && g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos)) {
+			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+			g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
+		}
 	}
 }
 
