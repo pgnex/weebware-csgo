@@ -19,43 +19,46 @@ void c_esp::esp_main()
 		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
 
 		if (local) {
+			if (local->is_valid_player()) {
 
-			// call things here for visual stuff before gay checks..
-			draw_inaccuracy_circle();
-			draw_crosshair();
-			
-			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
-			{
-				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
 
-				if (!ent || ent == nullptr)
-					continue;
+				// call things here for visual stuff before gay checks..
+				draw_inaccuracy_circle();
+				draw_crosshair();
 
-				// check if bomb timer is enabled, if it is check for entity
-				if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4")) {
-					bomb_timer(ent);
-				}
+				for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+				{
+					c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
 
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
-					continue;
-				}
+					if (!ent || ent == nullptr)
+						continue;
 
-				if (g_weebwarecfg.anime_model == 1) {
-
-					if (ent->m_iTeamNum() == local->m_iTeamNum()) {
-						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
+					// check if bomb timer is enabled, if it is check for entity
+					if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4")) {
+						bomb_timer(ent);
 					}
-					else {
-						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
-					}
-				}
-				else if (g_weebwarecfg.anime_model == 2) {
-					*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
-				}
 
+					if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
+						continue;
+					}
+
+					if (g_weebwarecfg.anime_model == 1) {
+
+						if (ent->m_iTeamNum() == local->m_iTeamNum()) {
+							*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
+						}
+						else {
+							*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+						}
+					}
+					else if (g_weebwarecfg.anime_model == 2) {
+						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
+					}
+
+				}
 			}
-		}
 
+		}
 	}
 
 
@@ -573,6 +576,7 @@ void c_esp::draw_inaccuracy_circle()
 {
 	if (!g_weebwarecfg.visuals_inacc_circle)
 		return;
+
 
 	int x, y;
 	g_weebware.g_engine->get_screen_dimensions(x, y);

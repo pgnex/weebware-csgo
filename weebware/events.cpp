@@ -145,12 +145,12 @@ static const std::vector<std::string> killsay_messaes = {
 	"What the desu did you just kawaii say about me, you little baka",
 	"wigglez booty n' squirms",
 	"please punish me licks lips nyea~",
-	"notices buldge OwO what’s that",
+	"notices buldge OwO what's that",
 	"that's a penis UwU you towd me you wewe a giww!!",
 	"Cummy desu, you are my senpai",
 	"uguu desu desu kawaii neee~~~~~ <3",
 	"wiww shit fuwwies aww ovew you and you wiww dwown in them",
-	"AYAYA!",
+	"AYAYA!~ >__<",
 	"Nani the fuck did omae just fucking iimasu about watashi, you chiisai bitch desuka?",
 	"Uhm by the way MOM They're not Chinese cartoons it's called ANIME!!"
 };
