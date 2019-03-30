@@ -33,7 +33,7 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 			g_esp.esp_main();
 		}
 	}
-	catch(...) {}
+	catch(...) { }
 }
 
 void c_paint_traverse::draw_water_mark()
@@ -75,6 +75,3 @@ void c_paint_traverse::draw_string(unsigned long font, int x, int y, c_color col
 	g_weebware.g_surface->drawsettextpos(x, y - height / 2);
 	g_weebware.g_surface->drawprinttext(wbuf, wcslen(wbuf));
 }
-
-
-

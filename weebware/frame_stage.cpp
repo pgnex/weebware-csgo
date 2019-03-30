@@ -178,6 +178,8 @@ void c_frame_stage_notify::bullet_tracers() {
 		if (impact_data->m_impacts.empty())
 			continue;
 
+		c_color col = (g_weebwarecfg.visuals_bullet_tracer_col);
+
 		// iterate this batch of impacts.
 		for (const auto &impact : impact_data->m_impacts) {
 			// not the final impact? skip it.
@@ -199,9 +201,9 @@ void c_frame_stage_notify::bullet_tracers() {
 				0.5f,                                      // speed
 				0,
 				0.f,
-				138.f,
-				43.f,
-				226.f
+				(float)col.r,
+				(float)col.g,
+				(float)col.b
 			);
 
 			impact_data->m_skip = true;

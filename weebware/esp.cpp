@@ -22,7 +22,8 @@ void c_esp::esp_main()
 
 			// call things here for visual stuff before gay checks..
 			draw_inaccuracy_circle();
-
+			draw_crosshair();
+			
 			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
 			{
 				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
@@ -81,7 +82,6 @@ void c_esp::esp_main()
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 	{
-
 		if (local)
 		{
 			if (local->is_valid_player())
@@ -184,6 +184,7 @@ void c_esp::esp_reset()
 	g_draw.Reset();
 }
 #endif
+
 void c_esp::calc_w2svalues()
 {
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
@@ -233,6 +234,7 @@ void c_esp::water_mark()
 		g_paint_traverse.draw_water_mark();
 	}
 }
+
 // Returns the center of a hitbox
 // Could have globalised legitbots one and used it
 Vector c_esp::center_hitbox(c_base_entity* ent, int id)
@@ -536,6 +538,36 @@ struct player_esp_info
 	int armor;
 	int ammo;
 };
+
+void c_esp::draw_crosshair() {
+
+	if (!g_weebwarecfg.visuals_sniper_crosshair)
+		return;
+
+	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
+
+	if (!weapon || weapon == nullptr)
+		return;
+
+	if (!weapon->is_firearm())
+		return;
+
+	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())
+		return;
+
+	int x, y;
+	g_weebware.g_engine->get_screen_dimensions(x, y);
+
+	int cx = x / 2;
+	int cy = y / 2;
+
+	c_color col = g_weebwarecfg.visuals_sniper_crosshair_col;
+
+	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+	g_weebware.g_surface->drawline(cx - 8, cy - 0, cx + 8, cy + 0);
+	g_weebware.g_surface->drawline(cx + 0, cy - 8, cx - 0, cy + 8);
+
+}
 
 void c_esp::draw_inaccuracy_circle()
 {

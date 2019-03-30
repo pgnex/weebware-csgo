@@ -194,8 +194,6 @@ void c_create_move::rank_reveal()
 
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
-	if (!g_weebwarecfg.enable_misc)
-		return;
 
 	auto_jump(cmd);
 

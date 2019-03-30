@@ -682,16 +682,17 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							{
 								ImGui::Text("Other Visuals");
 								ImGui::Separator();
-
-
 								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+								ImGui::Checkbox("Sniper Crosshair", &g_weebwarecfg.visuals_sniper_crosshair, false);
+								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");
 								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 								ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
 								ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 								if (g_weebwarecfg.enable_bullet_tracers) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
 									ImGui::Text("Bullet Tracer Expire");
 									ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.0f");
 								}
@@ -710,17 +711,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
 								ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
-								//ImGui::Text("Nightmode");
-								//ImGui::Separator();
-								//if (ImGui::Button("Apply Nightmode")) {
-								//	g_nightmode.night_mode();
-								//}
-								//imgui_custom::custom_color_inline(g_weebwarecfg.nightmode_col, "Nightmode Color");
 
-								//if (ImGui::Button("Fix FPS")) {
-								//	c_convar* prop_var = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
-								//	prop_var->SetValue("-1");
-								//}
 							}
 							ImGui::EndChild();
 
@@ -731,8 +722,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region Misc
 					if (selected_tab == tabs::misc)
 					{
-						ImGui::Checkbox("Enable", &g_weebwarecfg.enable_misc, false);
-
 						ImGui::Columns(2, "Miscs", false);
 						{
 							ImGui::SetColumnOffset(1, 290);
