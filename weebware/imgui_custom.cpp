@@ -229,6 +229,29 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 	}
 }
 
+void imgui_custom::create_button_tab(int& tab, int set, const char* title) {
+
+	auto& style = ImGui::GetStyle();
+
+	if (tab == set)
+	{
+		style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
+		style.Colors[ImGuiCol_Button] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
+		style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
+	}
+	else
+	{
+		style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.1f, 0.1f, 0.1f, 0.45f);
+		style.Colors[ImGuiCol_Button] = ImVec4(0.1f, 0.1f, 0.1f, 0.45f);
+	}
+
+
+	if (ImGui::Button(title, ImVec2(67, 20)))
+	{
+		tab = set;
+	}
+}
+
 
 void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 {

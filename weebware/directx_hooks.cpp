@@ -396,7 +396,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		io.MousePos.x = (float)(pX);
 		io.MousePos.y = (float)(pY);
 
-		ImGui::Begin(("weebware priv 2.0"), &g_weebware.menu_opened, ImVec2(700, 615), 1.f, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+		ImGui::Begin(("weebware"), &g_weebware.menu_opened, ImVec2(700, 615), 1.f, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
 		{
 			auto& style = ImGui::GetStyle();
 			static int selected_tab = 0;
@@ -446,10 +446,35 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region Legit
 					if (selected_tab == tabs::legit)
 					{
-						ImGui::Text("Weapon Type");
-						ImGui::BeginChild("Type Sizing", ImVec2(ImGui::GetContentRegionAvailWidth() / 2, 20), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+						ImGui::BeginChild("Type Sizing", ImVec2(ImGui::GetContentRegionAvailWidth(), 20), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 						const char* weapon_groups[] = { "Pistols", "Rifles", "SMG","Shotguns", "Heavy", "Auto-Snipers", "AWP", "SSG08" };
-						ImGui::Combo("", &g_weebwarecfg.legit_cfg_index, weapon_groups, ARRAYSIZE(weapon_groups));
+					//	ImGui::Combo("", &g_weebwarecfg.legit_cfg_index, weapon_groups, ARRAYSIZE(weapon_groups));
+						
+						//if (ImGui::Button("Pistols", ImVec2(67, 20))) {
+						//	g_weebwarecfg.legit_cfg_index = 0;
+						//}
+
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 0, "Pistols");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 1, "Rifles");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 2, "SMG");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 3, "Shotguns");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 4, "Heavy");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 5, "Auto");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 6, "AWP");
+						ImGui::SameLine();
+						imgui_custom::create_button_tab(g_weebwarecfg.legit_cfg_index, 7, "SSG08");
+						ImGui::SameLine();
+
+						// restore colors
+						style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(20.f, 20.f, 20.f, 255.f));
+						style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(20.f, 20.f, 20.f, 255.f));
+						style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(20.f, 20.f, 20.f, 255.f));
 						ImGui::EndChild();
 
 
@@ -516,8 +541,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::SliderFloat("Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
 
 								ImGui::Checkbox("Head##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
+								ImGui::SameLine();
 								ImGui::Checkbox("Chest##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);
+								ImGui::SameLine();
 								ImGui::Checkbox("Stomach##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach, false);
+								ImGui::Checkbox("Arms##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms, false);
+								ImGui::SameLine();
+								ImGui::Checkbox("Legs##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs, false);
 								ImGui::Separator();
 								ImGui::Text("Magnet Triggerbot");
 								ImGui::Separator();
@@ -855,7 +885,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::BeginChild("colors", ImVec2(0, 0), true);
 							{
-								ImGui::Text("Settings");
+								ImGui::Text("Menu Colors");
 								ImGui::Separator();
 							}
 							ImGui::EndChild();

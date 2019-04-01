@@ -66,6 +66,8 @@ public:
 	bool triggerbot_head = true;
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
+	bool triggerbot_arms;
+	bool triggerbot_legs;
 	float triggerbot_hitchance;
 	float legit_maximum_ticks = 12;
 	bool use_dynamicfov;
@@ -100,6 +102,8 @@ public:
 		tmp["triggerbot_head"] = triggerbot_head;
 		tmp["triggerbot_chest"] = triggerbot_chest;
 		tmp["triggerbot_stomach"] = triggerbot_stomach;
+		tmp["triggerbot_arms"] = triggerbot_arms;
+		tmp["triggerbot_legs"] = triggerbot_legs;
 		tmp["triggerbot_hitchance"] = triggerbot_hitchance;
 		tmp["legit_maximum_ticks"] = legit_maximum_ticks;
 		tmp["use_dynamicfov"] = use_dynamicfov;
@@ -135,6 +139,8 @@ public:
 		if (check("triggerbot_head", data)) triggerbot_head = data["triggerbot_head"];
 		if (check("triggerbot_chest", data)) triggerbot_chest = data["triggerbot_chest"];
 		if (check("triggerbot_stomach", data)) triggerbot_stomach = data["triggerbot_stomach"];
+		if (check("triggerbot_arms", data)) triggerbot_arms = data["triggerbot_arms"];
+		if (check("triggerbot_legs", data)) triggerbot_legs = data["triggerbot_legs"];
 		if (check("triggerbot_hitchance", data)) triggerbot_hitchance = data["triggerbot_hitchance"];
 		if (check("legit_maximum_ticks", data)) legit_maximum_ticks = data["legit_maximum_ticks"];
 		if (check("use_dynamicfov", data)) use_dynamicfov = data["use_dynamicfov"];

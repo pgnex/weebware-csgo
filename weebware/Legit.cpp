@@ -942,6 +942,17 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_stomach)
 		hitboxes.push_back(3);
 
+	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_arms) {
+		hitboxes.push_back(4);
+		hitboxes.push_back(5);
+	}
+
+	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_legs) {
+		hitboxes.push_back(6);
+		hitboxes.push_back(7);
+	}
+
+
 	bool has_hitgroup = false;
 
 	for (auto hitbox : hitboxes)
