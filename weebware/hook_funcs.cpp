@@ -121,14 +121,13 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	PrecacheModel("models/weapons/v_minecraft_pickaxe.mdl");
 	PrecacheModel("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
 
-	
 
-	if (g_weebwarecfg.minecraft_pickaxe) {
-		if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
-		{
-			sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
-		}
-	}
+	//if (g_weebwarecfg.minecraft_pickaxe) {
+	//	if (strstr(FilePath, "knife_default_ct.mdl") || strstr(FilePath, "knife_default_t.mdl"))
+	//	{
+	//		sprintf(FilePath, "models/weapons/v_minecraft_pickaxe.mdl");
+	//	}
+	//}
 
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }

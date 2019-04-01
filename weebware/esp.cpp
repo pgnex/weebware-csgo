@@ -25,6 +25,7 @@ void c_esp::esp_main()
 				// call things here for visual stuff before gay checks..
 				draw_inaccuracy_circle();
 				draw_crosshair();
+				recoil_crosshair();
 
 				for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
 				{
@@ -45,14 +46,14 @@ void c_esp::esp_main()
 					if (g_weebwarecfg.anime_model == 1) {
 
 						if (ent->m_iTeamNum() == local->m_iTeamNum()) {
-							*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl"));
+							*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
 						}
 						else {
-							*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+							*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
 						}
 					}
 					else if (g_weebwarecfg.anime_model == 2) {
-						*ent->m_nModelIndex() = (g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl"));
+						*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
 					}
 
 				}
@@ -231,11 +232,46 @@ void c_esp::calc_w2svalues()
 	}
 }
 
-void c_esp::water_mark()
-{
-	if (g_weebwarecfg.visuals_watermark) {
-		g_paint_traverse.draw_water_mark();
+void c_esp::recoil_crosshair() {
+
+	if (!g_weebwarecfg.visuals_recoil_crosshair)
+		return;
+
+	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	if (!local)
+		return;
+
+	if (!local->is_valid_player())
+		return;
+
+	Vector view_angles;
+	g_weebware.g_engine->get_view_angles(view_angles);
+
+	view_angles += local->m_aimPunchAngle() * 2;
+
+	Vector forward_vec;
+	g_maths.qangle_vector(view_angles, forward_vec);
+	forward_vec *= 10000;
+
+	Vector start = local->get_vec_eyepos();
+	Vector end = start + forward_vec, end_screen;
+
+	c_color col = g_weebwarecfg.visuals_recoil_crosshair_col;
+
+	if (g_maths.world_to_screen(end, end_screen)) {
+		g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+		g_weebware.g_surface->drawline(end_screen.x - 10, end_screen.y, end_screen.x + 10, end_screen.y);
+		g_weebware.g_surface->drawline(end_screen.x, end_screen.y - 10, end_screen.x, end_screen.y + 10);
 	}
+}
+
+void c_esp::water_mark() {
+
+	if (!g_weebwarecfg.visuals_watermark)
+		return;
+
+	g_paint_traverse.draw_water_mark();
 }
 
 // Returns the center of a hitbox

@@ -252,6 +252,7 @@ public:
 	bool visuals_health_bars;
 	bool visuals_inacc_circle;
 	bool visuals_sniper_crosshair;
+	bool visuals_recoil_crosshair;
 	bool visuals_backtrack_dots;
 	bool visuals_visible_only;
 	bool visuals_bspotted;
@@ -320,6 +321,7 @@ public:
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_bullet_tracer_col = ImVec4(138, 43, 226, 255);
 	ImVec4 visuals_sniper_crosshair_col = ImVec4(255, 0, 0, 255);
+	ImVec4 visuals_recoil_crosshair_col = ImVec4(255, 0, 255, 255);
 
 	ImVec4 visuals_chams_col = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_chams_team_col = ImVec4(0, 255, 255, 255);
@@ -432,6 +434,8 @@ public:
 		tmp["killsay"] = killsay;
 		tmp["wireframe_smoke"] = wireframe_smoke;
 		tmp["visuals_skeleton"] = visuals_skeleton;
+		tmp["visuals_recoil_crosshair"] = visuals_recoil_crosshair;
+		tmp["visuals_sniper_crosshair"] = visuals_sniper_crosshair;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -461,6 +465,7 @@ public:
 		save_color(visuals_skeleton_col_hidden, tmp, "visuals_skeleton_col_hidden");
 		save_color(visuals_bullet_tracer_col, tmp, "visuals_bullet_tracer_col");
 		save_color(visuals_sniper_crosshair_col, tmp, "visuals_sniper_crosshair_col");
+		save_color(visuals_recoil_crosshair_col, tmp, "visuals_recoil_crosshair_col");
 
 		return tmp;
 	}
@@ -494,6 +499,8 @@ public:
 		if (check("visuals_glow_c4", data)) visuals_glow_c4 = data["visuals_glow_c4"];
 		if (check("visuals_glow_chicken", data)) visuals_glow_chicken = data["visuals_glow_chicken"];
 		if (check("visuals_glow_hidden_col", data)) visuals_glow_hidden_col = data["visuals_glow_hidden_col"];
+		if (check("visuals_recoil_crosshair", data)) visuals_recoil_crosshair = data["visuals_recoil_crosshair"];
+		if (check("visuals_sniper_crosshair", data)) visuals_sniper_crosshair = data["visuals_sniper_crosshair"];
 
 		// misc
 		if (check("enable_misc", data)) enable_misc = data["enable_misc"];
@@ -571,6 +578,8 @@ public:
 		if (check_color("visuals_skeleton_col_hidden", data)) read_color(visuals_skeleton_col_hidden, data, "visuals_skeleton_col_hidden");
 		if (check_color("visuals_bullet_tracer_col", data)) read_color(visuals_bullet_tracer_col, data, "visuals_bullet_tracer_col");
 		if (check_color("visuals_sniper_crosshair_col", data)) read_color(visuals_sniper_crosshair_col, data, "visuals_sniper_crosshair_col");
+		if (check_color("visuals_recoil_crosshair_col", data)) read_color(visuals_recoil_crosshair_col, data, "visuals_recoil_crosshair_col");
+		
 	}
 
 	void save_cfg(std::ostream& file)

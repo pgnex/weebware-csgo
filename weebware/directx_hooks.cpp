@@ -588,23 +588,27 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::BeginChild("models gay 1", ImVec2(0, 0), true);
 							{
-								ImGui::Text("Knife Models");
-								ImGui::Separator();
-								ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
+								if (g_weebware.models_installed) {
 
-								ImGui::Separator();
-								ImGui::Text("Player Models");
-								const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai"};
-								ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
-								// https://gamebanana.com/skins/148058
+									ImGui::Text("Knife Models");
+									ImGui::Separator();
+									ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
 
-								if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
+									ImGui::Separator();
+									ImGui::Text("Player Models");
+									const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai" };
+									ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
+									// https://gamebanana.com/skins/148058
 
-									g_weebwarecfg.skinchanger_apply_nxt = 1;
+									if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
 
+										g_weebwarecfg.skinchanger_apply_nxt = 1;
+
+									}
 								}
-
-								ImGui::Text("DONT FUCKING USE THIS AND COMPLAIN \n WHEN IT DOESNT WORK FFS YOU NEED THE \n MODELS INSTALLED.\n IF YOU WANT IT SO BADLY\n https://penguware.xyz/dependencies.html");
+								else {
+									ImGui::Text("Please properly install models");
+								}
 							}
 							ImGui::EndChild();
 
@@ -713,9 +717,17 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Other Visuals");
 								ImGui::Separator();
 								ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+								if (g_weebwarecfg.visuals_inacc_circle) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+								}							
 								ImGui::Checkbox("Sniper Crosshair", &g_weebwarecfg.visuals_sniper_crosshair, false);
-								imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");
+								if (g_weebwarecfg.visuals_sniper_crosshair) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");
+								}
+								ImGui::Checkbox("Recoil Crosshair", &g_weebwarecfg.visuals_recoil_crosshair, false);
+								if (g_weebwarecfg.visuals_recoil_crosshair) {
+									imgui_custom::custom_color_inline(g_weebwarecfg.visuals_recoil_crosshair_col, "Recoil Crosshair Color");
+								}							
 								ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
 								imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 								ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);

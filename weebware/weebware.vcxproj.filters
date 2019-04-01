@@ -123,9 +123,6 @@
     <ClCompile Include="gui_baserelational.cpp">
       <Filter>Source Files\GI\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="c_entities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\imgui.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
@@ -218,6 +215,9 @@
     </ClCompile>
     <ClCompile Include="skinchanger.cpp">
       <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
+    </ClCompile>
+    <ClCompile Include="c_entities.cpp">
+      <Filter>Source Files\Source Development Kit</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,7 @@ public:
 	void setup_thread();
 	uint64_t pattern_scan(const char* szModule, const char* szSignature);
 	void init_fonts();
+	bool models_installed = false;
 
 
 	HMODULE h_module;
