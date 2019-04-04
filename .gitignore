@@ -28,3 +28,5 @@ weebware/Debug/drawing.obj
 *.obj
 *.enc
 *.rar
+Release/weebware.lib
+Release/weebware.exp
