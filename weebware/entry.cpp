@@ -5,7 +5,7 @@
 #include "hook_funcs.h"
 #include "events.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -28,7 +28,6 @@ bool c_weebware::init_interfaces()
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) Sleep(250);
 	engine_fact = retrieve_interface("engine.dll");
 
-
 	client_fact = retrieve_interface("client_panorama.dll");
 
 	surface_fact = retrieve_interface("vguimatsurface.dll");
@@ -50,7 +49,12 @@ bool c_weebware::init_interfaces()
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
 #endif
 
-	//g_client_mode = *(unsigned long**)((*(uintptr_t**)g_client)[10] + 0x5);
+	std::string path = std::filesystem::current_path().string();
+	if (std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl") &&
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_red.mdl")) {
+		models_installed = true;
+	}
 
 	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
@@ -138,7 +142,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();
