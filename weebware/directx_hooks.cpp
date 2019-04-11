@@ -1319,7 +1319,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		}
 #pragma endregion
 		if (tab_selection == tabs::skins) {
-			ImGui::Checkbox("Enabled", &g_weebwarecfg.skinchanger_enabled, false);
+
+			ImGui::BeginChild("skinchangetshit");
+
+			ImGui::Checkbox("Enabled##skin", &g_weebwarecfg.skinchanger_enabled, false);
 
 			ImGui::Columns(2, "SkinChanger", false);
 
@@ -1402,6 +1405,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				g_weebwarecfg.skinchanger_apply_nxt = 1;
 
 			}
+
+			ImGui::EndChild();
 
 			ImGui::EndChild();
 		}
