@@ -32,7 +32,7 @@ std::string auth::GetServerVariable(std::string key) {
 	curl = curl_easy_init();
 	if (curl) {
 		std::string requestData = ("key=") + key;
-		curl_easy_setopt(curl, CURLOPT_URL, base64_decode("aHR0cHM6Ly9hdXRoLndlZWJ3YXJlLm5ldC93ZWVid2FyZXgvaXBfbG9nLnBocA=="));
+		curl_easy_setopt(curl, CURLOPT_URL, base64_decode("aHR0cDovL2F1dGgud2VlYndhcmUubmV0L2lwX2xvZy5waHA="));
 		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, requestData.c_str());
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
