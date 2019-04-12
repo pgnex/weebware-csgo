@@ -29,7 +29,6 @@ bool c_weebware::init_interfaces()
 	engine_fact = retrieve_interface("engine.dll");
 
 	client_fact = retrieve_interface("client_panorama.dll");
-
 	surface_fact = retrieve_interface("vguimatsurface.dll");
 	vgui2_fact = retrieve_interface("vgui2.dll");
 	mat_system_fact = retrieve_interface("materialsystem.dll");
@@ -142,7 +141,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 1
+#define debug 0
 
 #if debug
 	setup_debug_window();

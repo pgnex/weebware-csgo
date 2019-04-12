@@ -1437,7 +1437,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 					ImGui::Checkbox("Skeleton", &g_weebwarecfg.visuals_skeleton, false);
 					if (g_weebwarecfg.visuals_skeleton) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##skele1", "Hidden Color (Enemy)##skele2");
 					}
 
 
