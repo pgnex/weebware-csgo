@@ -194,8 +194,6 @@ void c_create_move::rank_reveal()
 
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
-	sendPackets = true;
-
 	auto_jump(cmd);
 
 	auto_strafe(cmd);
@@ -411,10 +409,7 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
-	static bool bsend_packet = true;
-
-	bsend_packet = !bsend_packet;
-	send_packet = bsend_packet;
+	send_packet = (cmd->tick_count % 3 == 0);
 }
 
 bool can_shoot(c_base_entity* local)
