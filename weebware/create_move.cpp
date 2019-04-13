@@ -559,39 +559,9 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 			g_maths.normalize_angle(OriginalAngle);
 
-			float diff = (angle2Target.y - OriginalAngle.y);
-
-			// If behind
-			if (diff > 0 && diff < 180) {
-				shouldflip = 1;
-			}
 		}
 
-		float reversed = shouldflip ? -90 : 90;
-
-		static int stage = -90;
-
-		stage += 10;
-
-		if (!g_weebwarecfg.misc_legit_aa_jitter)
-			cmd->viewangles.y = (angle2Target.y - reversed);
-		else
-			cmd->viewangles.y = (angle2Target.y - reversed - stage);
-
-		if (stage > 90)
-			stage = -90;
-
-		if (g_weebwarecfg.misc_legit_aa_edge)
-		{
-			QAngle edge_angle = cmd->viewangles;
-			bool should_edge = false;
-			edge_aa(edge_angle, should_edge, local);
-
-			if (should_edge) {
-				cmd->viewangles.y = edge_angle.y;
-			}
-		}
-
+		cmd->viewangles.y = (angle2Target.y + (58 * cmd->command_number == 0 ? -1 : 1));
 	}
 }
 
