@@ -46,6 +46,7 @@ public:
 	uintptr_t* g_enginesound;
 	IMDLCache* g_mdlcache;
 	IViewRenderBeams* g_beams;
+	uintptr_t g_animoffset;
 	CNetworkStringTableContainer* g_NetworkContainer;
 	HWND h_window;
 	WNDPROC old_window_proc;

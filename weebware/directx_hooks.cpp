@@ -1612,8 +1612,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 					ImGui::Separator();
 
-					//	ImGui::Text("Legit Anti-Aim");
-					//	ImGui::Separator();
+						ImGui::Text("Legit Anti-Aim");
+						ImGui::Separator();
 
 						// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
 					ImGui::Text("Anti Triggerbot");
@@ -1621,7 +1621,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					const char* activation[] = { "Off", "On Key" };
 					ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
-					//	ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+						ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 					//	ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
 					//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 					//	ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);

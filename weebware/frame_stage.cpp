@@ -237,19 +237,13 @@ void c_frame_stage_notify::legit_aa_resolver()
 			if (player->m_iTeamNum() == local->m_iTeamNum())
 				continue;
 
-			float delta = fabs(player->m_flLowerBodyYawTarget() - player->m_angEyeAngles().y);
+			static bool flip = true;
+			flip = !flip;
 
-			if (player->m_fFlags() & fl_onground)
-			{
-				if (player->m_vecVelocity().size() < 0.f) {
-					if (delta > 35)
-						player->eyeangle_ptr()->y = delta;
-				}
-				else
-				{
-					player->eyeangle_ptr()->y = player->m_flLowerBodyYawTarget();
-				}
-			}
+			float offset = 58.f  * (flip == 0 ? -1 : 1);
+
+			player->eyeangle_ptr()->y = player->m_flLowerBodyYawTarget() + offset;
+			
 		}
 	}
 }

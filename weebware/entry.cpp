@@ -75,6 +75,7 @@ bool c_weebware::init_interfaces()
 	g_mdlcache = reinterpret_cast<IMDLCache*>(cache_fact("MDLCache004", NULL));
 	g_NetworkContainer = reinterpret_cast<CNetworkStringTableContainer*>(engine_fact("VEngineClientStringTable001", NULL));
 	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan("client.dll", "8D 04 24 50 A1 ? ? ? ? B9") + 5);
+	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan("client.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9") + 0x2);
 
 	//int __stdcall reset_replacement(int a1, int a2)
 	// This is the first reset func VEngineClientStringTable0

@@ -194,6 +194,7 @@ void c_create_move::rank_reveal()
 
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
+	sendPackets = true;
 
 	auto_jump(cmd);
 
@@ -203,8 +204,6 @@ void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 
 	if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
 		run_legitAA(cmd, sendPackets);
-
-
 }
 
 void c_create_move::auto_jump(c_usercmd* cmd)
@@ -412,7 +411,10 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
-	send_packet = (cmd->tick_count % 3 == 0);
+	static bool bsend_packet = true;
+
+	bsend_packet = !bsend_packet;
+	send_packet = bsend_packet;
 }
 
 bool can_shoot(c_base_entity* local)
@@ -543,25 +545,15 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 		c_base_entity* target = get_best_target(this->local);
 
-		QAngle OriginalAngle = cmd->viewangles;
-
 		QAngle angle2Target = cmd->viewangles;
 
-		bool shouldflip = 0;
+		auto animstate = *(uintptr_t**)((uintptr_t)this->local + g_weebware.g_animoffset);
 
-		if (target) {
+		float offset = 58.f  * (cmd->command_number % 2 == 0 ? -1 : 1);
 
-			auto hitbox = *target->m_Origin();
+		float feet_yaw = *(float*)((uintptr_t)animstate + 0x84);
 
-			g_maths.vector_qangles(hitbox - this->local->get_vec_eyepos(), angle2Target);
-
-			g_maths.normalize_angle(angle2Target);
-
-			g_maths.normalize_angle(OriginalAngle);
-
-		}
-
-		cmd->viewangles.y = (angle2Target.y + (58 * cmd->command_number % 2 == 0 ? -1 : 1));
+		cmd->viewangles.y = feet_yaw + offset;
 	}
 }
 
