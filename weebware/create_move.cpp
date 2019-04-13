@@ -537,7 +537,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 	if (local->get_move_type() == MOVETYPE_LADDER)
 		return;
 
-	if (!(cmd->buttons & in_attack) && !send_packets) {
+	if (!(cmd->buttons & in_attack) && send_packets) {
 
 		//	auto target = get_closest_target_available(this->local);
 
