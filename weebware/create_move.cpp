@@ -561,7 +561,7 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 		}
 
-		cmd->viewangles.y = (angle2Target.y + (58 * cmd->command_number == 0 ? -1 : 1));
+		cmd->viewangles.y = (angle2Target.y + (58 * cmd->command_number % 2 == 0 ? -1 : 1));
 	}
 }
 
