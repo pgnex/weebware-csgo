@@ -536,17 +536,17 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 
 	if (!(cmd->buttons & in_attack) && send_packets) {
 
-		//	auto target = get_closest_target_available(this->local);
-
 		c_base_entity* target = get_best_target(this->local);
 
 		QAngle angle2Target = cmd->viewangles;
 
 		auto animstate = *(uintptr_t**)((uintptr_t)this->local + g_weebware.g_animoffset);
 
-		float offset = 58.f  * (cmd->command_number % 2 == 0 ? -1 : 1);
+		float offset = 58.f;
 
 		float feet_yaw = *(float*)((uintptr_t)animstate + 0x84);
+
+		std::cout << feet_yaw << std::endl;
 
 		cmd->viewangles.y = feet_yaw + offset;
 	}

@@ -142,7 +142,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 0
+#define debug 1
 
 #if debug
 	setup_debug_window();

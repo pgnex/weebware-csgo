@@ -1590,6 +1590,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Text("Auto Strafe");
 					const char* strafe_type[] = { "Off", "Legit", "Fast" };
 					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
+
+					ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 				}
 				ImGui::EndChild();
 
