@@ -200,7 +200,7 @@ public:
 
 	bool is_valid_player()
 	{
-		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 38);
+		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 40);
 	}
 
 	Vector* m_Origin()
@@ -439,8 +439,9 @@ public:
 
 enum weapon_type_id
 {
-	weapon_deagle = 1,
-	weapon_dualberetta,
+	weapon_none = 0,
+	weapon_deagle,
+	weapon_elite,
 	weapon_fiveseven,
 	weapon_glock,
 	weapon_ak47 = 7,
@@ -453,7 +454,7 @@ enum weapon_type_id
 	weapon_m4a4 = 16,
 	weapon_mac10,
 	weapon_p90 = 19,
-	weapon_mp5 = 23,
+	weapon_mp5sd = 23,
 	weapon_ump45,
 	weapon_xm1014,
 	weapon_bizon,
@@ -461,16 +462,18 @@ enum weapon_type_id
 	weapon_negev,
 	weapon_sawedoff,
 	weapon_tec9,
-	weapon_zeusx27,
+	weapon_zeus,
 	weapon_p2000,
 	weapon_mp7,
 	weapon_mp9,
 	weapon_nova,
 	weapon_p250,
-	weapon_scar20 = 38,
+	weapon_shield,
+	weapon_scar20,
 	weapon_sg553,
 	weapon_ssg08,
-	weapon_knife = 42,
+	weapon_knifegg,
+	weapon_knife,
 	weapon_flashbang,
 	weapon_hegrenade,
 	weapon_smokegrenade,
@@ -478,43 +481,122 @@ enum weapon_type_id
 	weapon_decoy,
 	weapon_inc,
 	weapon_c4,
-	weapon_m4a1s = 60,
+	weapon_healthshot = 57,
+	weapon_knife_t = 59,
+	weapon_m4a1s,
 	weapon_usps,
 	weapon_cz75 = 63,
-	weapon_revolver = 64
+	weapon_revolver,
+	weapon_tagrenade = 68,
+	weapon_fists,
+	weapon_breachcharge,
+	weapon_tablet = 72,
+	weapon_melee = 74,
+	weapon_axe,
+	weapon_hammer,
+	weapon_spanner = 78,
+	weapon_knife_ghost = 80,
+	weapon_firebomb,
+	weapon_diversion,
+	weapon_frag_grenade,
+	weapon_snowball,
+	weapon_bumpmine,
+	weapon_knife_bayonet = 500,
+	weapon_knife_flip = 505,
+	weapon_knife_gut,
+	weapon_knife_karambit,
+	weapon_knife_m9_bayonet,
+	weapon_knife_tactical,
+	weapon_knife_falchion = 512,
+	weapon_knife_survival_bowie = 514,
+	weapon_knife_butterfly,
+	weapon_knife_push,
+	weapon_knife_ursus = 519,
+	weapon_knife_gypsy_jackknife,
+	weapon_knife_stiletto = 522,
+	weapon_knife_widowmaker,
+	glove_studded_bloodhound = 5027,
+	glove_t_side = 5028,
+	glove_ct_side = 5029,
+	glove_sporty = 5030,
+	glove_slick = 5031,
+	glove_leather_wrap = 5032,
+	glove_motorcycle = 5033,
+	glove_specialist = 5034,
+	glove_hydra = 5035
 };
 
 class c_weapon_info
 {
 public:
-	char _0x0000[20];
-	__int32 max_clip;			//0x0014 
-	char _0x0018[12];
-	__int32 max_reserved_ammo;	//0x0024 
-	char _0x0028[96];
-	char* hud_name;				//0x0088 
-	char* weapon_name;			//0x008C 
-	char _0x0090[60];
-	__int32 type;				//0x00CC 
-	__int32 price;				//0x00D0 
-	__int32 reward;				//0x00D4 
-	char _0x00D8[20];
-	BYTE full_auto;				//0x00EC 
-	char _0x00ED[3];
-	__int32 damage;				//0x00F0 
-	float armor_ratio;			//0x00F4 
-	__int32 bullets;			//0x00F8 
-	float penetration;			//0x00FC 
-	char _0x0100[8];
-	float range;				//0x0108 
-	float range_modifier;		//0x010C 
-	char _0x0110[16];
-	BYTE silencer;				//0x0120 
-	char _0x0121[15];
-	float max_speed;			//0x0130 
-	float max_speed_alt;		//0x0134 
-	char _0x0138[76];
-	__int32 recoil_seed;		//0x0184
+	char pad_0x0000[0x4]; //0x0000
+	char* m_WeaponName; //0x0004 
+	char pad_0x0008[0xC]; //0x0008
+	__int32 m_MaxClip; //0x0014 
+	char pad_0x0018[0xC]; //0x0018
+	__int32 m_MaxReservedAmmo; //0x0024 
+	char pad_0x0028[0x4]; //0x0028
+	char* m_WeaponMdlPath; //0x002C 
+	char pad_0x0030[0x4]; //0x0030
+	char* m_DropWeaponMdlPath; //0x0034 
+	char pad_0x0038[0x48]; //0x0038
+	char* m_BulletType; //0x0080 
+	char pad_0x0084[0x4]; //0x0084
+	char* m_WeaponHudName; //0x0088 
+	char pad_0x008C[0x40]; //0x008C
+	__int32 m_WeaponType; //0x00CC 
+	__int32 m_WeaponPrice; //0x00D0 
+	__int32 m_WeaponReward; //0x00D4 
+	char* m_WeaponGroupName; //0x00D8 
+	char pad_0x00DC[0x10]; //0x00DC
+	unsigned char m_FullAuto; //0x00EC 
+	char pad_0x00ED[0x3]; //0x00ED
+	__int32 m_WeaponDamage; //0x00F0 
+	float m_ArmorRatio; //0x00F4 
+	__int32 m_iBullets;
+	float m_Penetration; //0x00F8
+	char pad_0x00F8[0x8]; //0x00FC
+	float range; //0x0108 
+	float range_modifier; //0x010C 
+	char pad_0x0110[0x10]; //0x0110
+	unsigned char m_HasSilencer; //0x0120 
+	char pad_0x0121[0xF]; //0x0121
+	float m_MaxSpeed; //0x0130 
+	float m_MaxSpeed2; //0x0134 
+	char pad_0x0138[0x4C]; //0x0138
+	__int32 m_RecoilSeed; //0x0184 
+	char pad_0x0188[0x68]; //0x0188
+	char* m_WeaponTracesType; //0x01F0 
+	char pad_0x01F4[0x638]; //0x01F4
+
+	//char _0x0000[20];
+	//__int32 max_clip;			//0x0014 
+	//char _0x0018[12];
+	//__int32 max_reserved_ammo;	//0x0024 
+	//char _0x0028[96];
+	//char* hud_name;				//0x0088 
+	//char* weapon_name;			//0x008C 
+	//char _0x0090[60];
+	//__int32 type;				//0x00CC 
+	//__int32 price;				//0x00D0 
+	//__int32 reward;				//0x00D4 
+	//char _0x00D8[20];
+	//BYTE full_auto;				//0x00EC 
+	//char _0x00ED[3];
+	//__int32 damage;				//0x00F0 
+	//float armor_ratio;			//0x00F4 
+	//__int32 bullets;			//0x00F8 
+	//float penetration;			//0x00FC 
+	//char _0x0100[8];
+	//float range;				//0x0108 
+	//float range_modifier;		//0x010C 
+	//char _0x0110[16];
+	//BYTE silencer;				//0x0120 
+	//char _0x0121[15];
+	//float max_speed;			//0x0130 
+	//float max_speed_alt;		//0x0134 
+	//char _0x0138[76];
+	//__int32 recoil_seed;		//0x0184
 };
 
 class c_basecombat_weapon : public c_base_entity 
@@ -550,22 +632,22 @@ public:
 
 	float Get_Innacuracy()
 	{
-		return getvfunc<float(__thiscall*)(void*)>(this, 471)(this);
+		return getvfunc<float(__thiscall*)(void*)>(this, 476)(this);
 	}
 
 	float GetSpread()
 	{
-		return getvfunc<float(__thiscall*)(void*)>(this, 440)(this);
+		return getvfunc<float(__thiscall*)(void*)>(this, 446)(this);
 	}
 
 	void Update_Accuracy_Penalty()
 	{
-		getvfunc<void(__thiscall*)(void*)>(this, 472)(this);
+		getvfunc<void(__thiscall*)(void*)>(this, 477)(this);
 	}
 
 	bool is_zeus()
 	{
-		return this->m_iItemDefinitionIndex() == weapon_type_id::weapon_zeusx27;
+		return this->m_iItemDefinitionIndex() == weapon_type_id::weapon_zeus;
 	}
 
 	bool is_knife()
@@ -587,7 +669,7 @@ public:
 
 		return (weapon_id == weapon_type_id::weapon_glock || weapon_id == weapon_type_id::weapon_p2000
 			|| weapon_id == weapon_type_id::weapon_p250 || weapon_id == weapon_type_id::weapon_deagle
-			|| weapon_id == weapon_type_id::weapon_revolver || weapon_id == weapon_type_id::weapon_dualberetta
+			|| weapon_id == weapon_type_id::weapon_revolver || weapon_id == weapon_type_id::weapon_elite
 			|| weapon_id == weapon_type_id::weapon_tec9 || weapon_id == weapon_type_id::weapon_fiveseven
 			|| weapon_id == weapon_type_id::weapon_usps || weapon_id == weapon_type_id::weapon_cz75);
 	}
@@ -612,7 +694,7 @@ public:
 		return weapon_id == weapon_type_id::weapon_mac10 || weapon_id == weapon_type_id::weapon_mp7
 			|| weapon_id == weapon_type_id::weapon_mp9 || weapon_id == weapon_type_id::weapon_p90 ||
 			weapon_id == weapon_type_id::weapon_bizon || weapon_id == weapon_type_id::weapon_ump45 ||
-			weapon_id == weapon_type_id::weapon_mp5;
+			weapon_id == weapon_type_id::weapon_mp5sd;
 	}
 
 	bool is_autosniper()
@@ -676,7 +758,7 @@ public:
 
 	c_weapon_info* get_weapon_info()
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 448)(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 454)(this);
 	}
 
 	int* get_paint_kit()

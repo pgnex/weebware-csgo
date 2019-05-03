@@ -5,7 +5,7 @@
 #include "hook_funcs.h"
 #include "events.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -142,7 +142,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 1
+#define debug 0
 
 #if debug
 	setup_debug_window();

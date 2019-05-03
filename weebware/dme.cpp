@@ -180,16 +180,16 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			// apply based on type of entity
 			auto class_id = entity->get_client_class()->m_ClassID;
 			switch (class_id) {
-			case 38:
+			case 40:
 				if (!g_weebwarecfg.visuals_glow_player) continue;
 				if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
 				else col = g_weebwarecfg.visuals_glow_player_col_visible;
 				break;
-			case 126:
+			case 128:
 				if (!g_weebwarecfg.visuals_glow_c4) continue;
 				col = g_weebwarecfg.visuals_glow_c4_col;
 				break;
-			case 34:
+			case 36:
 				if (!g_weebwarecfg.visuals_glow_chicken) continue;
 				col = g_weebwarecfg.visuals_glow_chicken_col;
 					break;

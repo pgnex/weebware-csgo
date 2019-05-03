@@ -1591,8 +1591,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					const char* strafe_type[] = { "Off", "Legit", "Fast" };
 					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
 
-					ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-					ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
+				//	ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+				//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 				}
 				ImGui::EndChild();
 
@@ -1613,18 +1613,18 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
 
 
-					ImGui::Separator();
+					//ImGui::Separator();
 
-						ImGui::Text("Legit Anti-Aim");
-						ImGui::Separator();
+					//	ImGui::Text("Legit Anti-Aim");
+					//	ImGui::Separator();
 
-						// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
-					ImGui::Text("Anti Triggerbot");
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
-					const char* activation[] = { "Off", "On Key" };
-					ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
+					//	// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
+					//ImGui::Text("Anti Triggerbot");
+					//imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
+					//const char* activation[] = { "Off", "On Key" };
+					//ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
 
-						ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					//	ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 					//	ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
 					//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 					//	ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);

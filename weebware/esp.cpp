@@ -39,7 +39,7 @@ void c_esp::esp_main()
 						bomb_timer(ent);
 					}
 
-					if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
+					if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
 						continue;
 					}
 
@@ -122,7 +122,7 @@ void c_esp::esp_main()
 
 
 #pragma region players
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 38) {
+				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
 					continue;
 				}
 
@@ -202,7 +202,7 @@ void c_esp::calc_w2svalues()
 			{
 				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
 
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 35) {
+				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
 					continue;
 				}
 
@@ -415,9 +415,8 @@ void c_esp::bomb_timer(c_base_entity* ent) {
 void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {
 	if (!g_weebwarecfg.visuals_bounding_box)
-	{
 		return;
-	}
+
 	c_color col;
 	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
 		col = is_visible ? c_color(g_weebwarecfg.visuals_bounding_col_visible) : c_color(g_weebwarecfg.visuals_bounding_col_hidden);
