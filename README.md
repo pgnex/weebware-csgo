@@ -1,9 +1,12 @@
-# WEEBWARE
+# weebware
 Game enhancing software by Kite & Nex.  
 
-![legitbot](https://cdn.discordapp.com/attachments/457750635916427284/484954439363592204/a7a48497fcadf4ed02808f06b8eb72d7.png)
-![skins](https://cdn.discordapp.com/attachments/457750635916427284/484954440147664896/afd2f10fb4d229ca1e52e4ce905c59d6.png)
-![configs](https://cdn.discordapp.com/attachments/457750635916427284/484954441431384084/fd4f902d5986741c2e675e5f797ada36.png)
+![legitbot](https://i.imgur.com/SQJdkom.jpg)
+![visuals](https://i.imgur.com/KWl49fX.jpg)
+![skins](https://i.imgur.com/i3qnaMm.jpg)
+![misc](https://i.imgur.com/8KyHHv0.jpg)
+![configs](https://i.imgur.com/oI9sgza.jpg)
+
 
 ## Compiling
 The following libraries are required:  
