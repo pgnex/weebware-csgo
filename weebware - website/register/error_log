@@ -1,0 +1,2 @@
+[14-Mar-2019 04:56:44 UTC] PHP Fatal error:  Cannot redeclare secret_directory() (previously declared in /home/weebware/public_html/register/server.php:82) in /home/weebware/public_html/register/server.php on line 82
+[14-Mar-2019 04:56:45 UTC] PHP Fatal error:  Cannot redeclare secret_directory() (previously declared in /home/weebware/public_html/register/server.php:82) in /home/weebware/public_html/register/server.php on line 82
