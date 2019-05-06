@@ -25,9 +25,10 @@ create_interface retrieve_interface(LPCSTR module_name);
 
 bool c_weebware::init_interfaces()
 {
-	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) Sleep(250);
+	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) 
+		Sleep(250);
+	
 	engine_fact = retrieve_interface("engine.dll");
-
 	client_fact = retrieve_interface("client_panorama.dll");
 	surface_fact = retrieve_interface("vguimatsurface.dll");
 	vgui2_fact = retrieve_interface("vgui2.dll");
