@@ -24,7 +24,16 @@
             return true;
         else
             return false;
-    }
+	}
+	
+	function create_user($username, $password, $email) {
+		global $db;
+		$create_account = $db->prepare("INSERT INTO users (id, username, password, email, hwid) VALUES ('', :username, :password, :email, 0);");
+		$create_account->bindValue(':username', $username);
+		$create_account->bindValue(':email', $email);
+		$create_account->bindValue(':password', password_hash($password, PASSWORD_BCRYPT));
+		$create_account->execute();
+	}
     
     function get_user_data($username) {
         global $db;

@@ -1,7 +1,60 @@
 <?php
 	require '../inc/utils.php';
 
-	
+
+	if (isset($_POST['email']) && isset($_POST['username']) && isset($_POST['password']) && isset($_POST['password2'])) {
+
+		// check that values are set
+
+		if (empty($_POST['email'])) {
+			$issue = "Please fill out all fields";
+			goto failed_register;
+		}
+
+		if (empty($_POST['username'])) {
+			$issue = "Please fill out all fields";
+			goto failed_register;
+		}
+
+		if (empty($_POST['password'])) {
+			$issue = "Please fill out all fields";
+			goto failed_register;
+		}
+
+		if (empty($_POST['password2'])) {
+			$issue = "Please fill out all fields";
+			goto failed_register;
+		}
+
+		// make sure passwords match
+		if (!($_POST['password'] == $_POST['password2'])) {
+			$issue = "Passwords do not match";
+			goto failed_register;
+		}
+
+		// initialize db connection
+		db_connect();
+
+		if (check_user_exists($_POST['username'])) {
+			$issue = "Username already exists";
+			goto failed_register;
+		}
+
+		if (check_email_exists($_POST['email'])) {
+			$issue = "Email already exists";
+			goto failed_register;
+		}
+
+		// ok everything checks out, lets insert the new user now.
+		create_user($_POST['username'], $_POST['password'], $_POST['email']);
+		session_start();
+		$_SESSION['username'] = $_POST['username'];
+		header('location: ../home');
+
+	}
+
+	// meh we failed what can we do
+	failed_register:
 
 ?>
 
@@ -41,6 +94,16 @@
 		<div class="container-login100" style="background: #2b333c">
 			<div class="wrap-login100" style="background: #1b2026">
 				<form class="login100-form" method="post" target="">
+
+					<? if (isset($issue)) { ?>
+
+					<span class="login100-form-title p-b-48">
+          				<div class="txt1" style="margin: auto; color: red"><?=$issue?></div>
+					</span>
+
+					<? } ?>	
+
+
 					<span class="login100-form-title p-b-48">
           				<div class="site-logo" style="margin: auto"><img src="../images/weebware_logo.png" alt="Image" style="height: auto;"></div>
 					</span>
@@ -56,13 +119,13 @@
 					</div>
 
 					<div class="wrap-input100">
-						<input class="input100" type="password" name="pass">
+						<input class="input100" type="password" name="password">
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
 
 					<div class="wrap-input100">
-						<input class="input100" type="password" name="pass2">
+						<input class="input100" type="password" name="password2">
 						<span class="focus-input100" data-placeholder="Confirm Password"></span>
 					</div>
 
