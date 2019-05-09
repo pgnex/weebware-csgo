@@ -12,6 +12,18 @@
             return true;
         else
             return false;
+	}
+	
+    function check_email_exists($email) {
+        global $db;
+        $get_email = $db->prepare('SELECT * FROM users WHERE email=:email');
+        $get_email->bindValue(':email', $email);
+        $get_email->execute();
+        
+        if ($get_email->rowCount() > 0)
+            return true;
+        else
+            return false;
     }
     
     function get_user_data($username) {
