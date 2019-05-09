@@ -5,7 +5,7 @@
 #include "hook_funcs.h"
 #include "events.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
