@@ -43,26 +43,17 @@
 					</div>
 
 					<div class="wrap-input100">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
 						<input class="input100" type="text" name="username">
-						<span class="focus-input100" data-placeholder="username"></span>
+						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
 
 					<div class="wrap-input100">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
 						<input class="input100" type="password" name="pass">
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
 
 					<div class="wrap-input100">
-						<span class="btn-show-pass">
-							<i class="zmdi zmdi-eye"></i>
-						</span>
 						<input class="input100" type="password" name="pass2">
 						<span class="focus-input100" data-placeholder="Confirm Password"></span>
 					</div>

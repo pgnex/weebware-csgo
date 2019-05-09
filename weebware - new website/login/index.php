@@ -1,3 +1,9 @@
+<?php
+
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,8 +44,8 @@
 					</span>
 
 					<div class="wrap-input100">
-						<input class="input100" type="text" name="email">
-						<span class="focus-input100" data-placeholder="Email"></span>
+						<input class="input100" type="text" name="username">
+						<span class="focus-input100" data-placeholder="Username"></span>
 					</div>
 
 					<div class="wrap-input100">
@@ -64,7 +70,7 @@
 							Don’t have an account?
 						</span>
 
-						<a class="txt2" href="#" style="color: white">
+						<a class="txt2" href="../register" style="color: white">
 							Sign Up
 						</a>
 					</div>
