@@ -1,5 +1,23 @@
 <?php
+	require '../inc/utils.php';
 
+	// make sure the username and password is set
+	if (isset($_POST['username']) && isset($_POST['password'])) {
+
+		// initialize db connection
+		db_connect();
+
+
+		// check if valid login, if it is, store the username in session
+		if (!login($_POST['username'], $_POST['password'])) {
+			$issue = "Invalid username or password";
+		} else {
+			session_start();
+			$_SESSION['username'] = $_POST['username'];
+			header('location: ../home');
+		}
+
+	}
 
 ?>
 
@@ -39,6 +57,15 @@
 		<div class="container-login100" style="background: #2b333c">
 			<div class="wrap-login100" style="background: #1b2026">
 				<form class="login100-form" method="post" target="">
+
+					<? if (isset($issue)) { ?>
+
+					<span class="login100-form-title p-b-48">
+          				<div class="txt1" style="margin: auto; color: red"><?=$issue?></div>
+					</span>
+
+					<? } ?>
+
 					<span class="login100-form-title p-b-48">
           				<div class="site-logo" style="margin: auto"><img src="../images/weebware_logo.png" alt="Image" style="height: auto;"></div>
 					</span>
@@ -52,7 +79,7 @@
 						<span class="btn-show-pass">
 							<i class="zmdi zmdi-eye"></i>
 						</span>
-						<input class="input100" type="password" name="pass">
+						<input class="input100" type="password" name="password">
 						<span class="focus-input100" data-placeholder="Password"></span>
 					</div>
 
