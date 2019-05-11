@@ -179,6 +179,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 			// apply based on type of entity
 			auto class_id = entity->get_client_class()->m_ClassID;
+
 			switch (class_id) {
 			case 40:
 				if (!g_weebwarecfg.visuals_glow_player) continue;
@@ -283,6 +284,6 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 
-	g_weebware.g_model_render->forcedmaterialoverride(0, overridetype_t::override_normal);
+	// g_weebware.g_model_render->forcedmaterialoverride(0, overridetype_t::override_normal);
 
 }
