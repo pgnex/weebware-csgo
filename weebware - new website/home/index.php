@@ -33,7 +33,7 @@
 		<!--Particle stuff (background)-->
 		<script src="js/particle.js" defer="defer"></script>
 		<div id="particles-js"></div>
-		<script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 		<script>
 			// tab control stuff
 			function openTab(evt, tabID) {
@@ -62,9 +62,11 @@
             </script>
 		<div class="tab">
                 <button type="submit" class="quickicon" onclick="redirectTo('?logout=1')"><i class="fas fa-power-off"></i></button>
+				<button type="submit" class="quickicon" onclick="redirectTo('../discord')"><i class="fas fa-question"></i></button>
                 <img src="../images/weebware_logo.png" class="header_img_dashboard">
   			    <a class="tablinks" id="tabAccountBtn" onclick="openTab(event, 'tabAccount')"><i class="fas fa-user-tie" style="padding: 3px;"></i> Account</a>
   			    <a class="tablinks" onclick="openTab(event, 'tabShoutbox')"><i class="fas fa-comment" style="padding: 3px;"></i> Shoutbox</a>
+				<a class="tablinks" onclick="openTab(event, 'tabChangelog')"><i class="fas fa-newspaper" style="padding: 3px;"></i> Change log</a>
 		<? if ($data['rank'] == 2) { ?> <a class="tablinks" onclick="openTab(event, 'tabAdmin')"><i class="fas fa-user-shield" style="padding: 3px;"></i> Admin</a> <? } ?>
         </div>
 
@@ -74,7 +76,7 @@
  	 		<p class="information"><?=$data['username']?> [<?=$data['id']?>]</p>
  	 		<br>
  	 		<p class="preinformation">HWID:</p> 
- 	 		<p class="information"><?=$data['hwid']?> [reset]</p>
+ 	 		<p class="information"><?=$data['hwid']?> <a href="../discord" style="color: #6f7072; font-size: 12px">[request reset]</a></p>
  	 		<br><br>
  	 		<h3>Subscription</h3>
  	 		<p class="preinformation">Active: </p> 
@@ -93,10 +95,14 @@
         </div>
 
 		<div id="tabShoutbox" class="tabcontent">
-  			<h3>Shoutbox</h3>
-              <p class="preinformation">You have 0 unused invite codes.</p><br>
+			<h3>Coming soon</h3>
         </div>
 
+
+		<div id="tabChangelog" class="tabcontent">
+		<p class="preinformation">[May 11th 2019] - </p> 
+		<p class="information">Glow Fixed</p> 
+        </div>
 
 		<div id="tabAdmin" class="tabcontent">
   			<h3>Admin</h3>
