@@ -70,7 +70,9 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	if (aim_angle.x == 0 && aim_angle.y == 0)
 		return;
 
-	aim_angle = rcs_scaled(aim_angle);
+	if (m_local->m_iShotsFired() > 1) {
+		aim_angle = rcs_scaled(aim_angle);
+	}
 
 	g_maths.normalize_angle(aim_angle);
 
@@ -435,6 +437,9 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 
 	g_maths.clamp_angle(delta);
 
+	if (!m_local->m_iShotsFired() > 1)
+		return;
+
 	if (cmd->buttons & in_attack) {
 
 		cmd->viewangles = delta;
@@ -477,7 +482,7 @@ void c_legitbot::c_accuracy_boost::set_abs_angles(c_base_entity* a1, const Vecto
 
 void c_legitbot::c_accuracy_boost::invalidate_bone_cache(c_base_entity* entity)
 {
-	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client.dll", "80 3D ? ? ? ? ? 74 16 A1 ? ? ? ? 48 C7 81");
+	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client.dll", "80 3D ?? ?? ?? ?? ?? 74 16 A1 ?? ?? ?? ?? 48 C7 81");
 	uintptr_t iModelBoneCounter = **(uintptr_t**)(dwBoneCache + 10);
 	*(uintptr_t*)((DWORD)entity + 0x2914) = 0xFF7FFFFF;
 	*(uintptr_t*)((DWORD)entity + 0x2680) = (iModelBoneCounter - 1);

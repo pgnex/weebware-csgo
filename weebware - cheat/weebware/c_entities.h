@@ -288,6 +288,12 @@ public:
 		return get_value<bool>(offset);
 	}
 
+	int m_iShotsFired()
+	{
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "cslocaldata", "m_iShotsFired");
+		return get_value<int>(offset);
+	}
+
 	void UpdateClientSideAnimation()
 	{
 		return getvfunc<void(__thiscall*)(void*)>(this, 218)(this);
