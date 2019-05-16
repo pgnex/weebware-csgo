@@ -13,6 +13,8 @@
 	if (isset($_GET['reset']) && $data['rank'] == 2 && check_user_exists($_GET['reset'])) {
 		update_hwid($_GET['reset'], 0);
 	}
+
+	$filename = generate_random_string(16);
 	
 ?>
 
@@ -85,7 +87,9 @@
  	 		<p class="preinformation">Expires:</p> 
  	 		<p class="information"><?=$data['expire'] >= 2000000000 ? 'Never' : date("F d, Y h:i A", $data['expire'])?></p>
  	 		<br>
-
+			<br>
+			<br>
+			<?php if ($data['expire'] > time()) {  ?> <p class="preinformation"> <a href="https://weebware.net/download/loader.exe" download="<?=$filename?>.exe">Download</a> <? } ?> </p> 
 
 		<? if (!($data['expire'] >= 2000000000)) { ?> 
 			<button type="submit" class="extend" onclick="openTab(event, 'tabExtendSubscription')">Extend Subscription</button> 
