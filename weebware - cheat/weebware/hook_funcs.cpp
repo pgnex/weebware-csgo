@@ -75,6 +75,7 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	return hook_functions::end_scene(device);
 }
 #else
+
 long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
@@ -82,6 +83,7 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 	return hook_functions::present(device, src, dest, wnd_override, dirty_region);
 }
 #endif
+
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
 	auto protecc = g_hooking.VEH_DME->getProtectionObject();
@@ -95,6 +97,18 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	//
 	// 
+}
+
+void __fastcall hk_scene_end(void* thisptr, void* edx) {
+
+	auto protecc = g_hooking.VEH_SCENEEND->getProtectionObject();
+
+	g_hooking.o_sceneend(thisptr, edx);
+
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+		hook_functions::scene_end(thisptr, edx);
+	}
+
 }
 
 bool PrecacheModel(const char* szModelName)
@@ -459,10 +473,15 @@ void c_hooking::hook_all_functions()
 	original_present = reinterpret_cast<decltype(original_present)>(present_addr);
 #endif
 
-	auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
-	VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);
-	VEH_DME->hook();
-	o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
+	//auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
+	//VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);
+	//VEH_DME->hook();
+	//o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
+
+	auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
+	VEH_SCENEEND = new PLH::BreakPointHook((char*)scene_end_addr, (char*)&hk_scene_end);
+	VEH_SCENEEND->hook();
+	o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
 
 	auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[37];
 	VEH_FSN = new PLH::BreakPointHook((char*)fsn_addr, (char*)&hk_frame_stage_notify);
@@ -527,8 +546,9 @@ void c_hooking::unhook_all_functions()
 	VEH_CM->unHook();
 	VEH_RESET->unHook();
 	VEH_ENDSCENE->unHook();
-	VEH_DME->unHook();
+//	VEH_DME->unHook();
 	VEH_FSN->unHook();
+	VEH_SCENEEND->unHook();
 //	VEH_SOUNDS->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
