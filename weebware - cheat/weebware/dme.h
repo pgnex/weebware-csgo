@@ -10,9 +10,8 @@ class c_dme
 public:
 
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
-
 	bool is_visible(c_base_entity* target);
-
+	void glow();
 
 	enum custom_mats : int
 	{
@@ -22,8 +21,6 @@ public:
 		crystal,
 		gold,
 		dark_chrome,
-		plastic,
-		glow,
 		glow_rim3d,
 		wildfire_gold,
 		crystal_blue,
@@ -34,10 +31,6 @@ public:
 
 	// Returns a material based on type
 	imaterial* borrow_mat(c_dme::custom_mats type);
-
-	bool night_mode_update = true;
-
-	void night_mode();
 
 private:
 

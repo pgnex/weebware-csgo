@@ -126,7 +126,7 @@ bool c_dme::is_visible(c_base_entity* target)
 imaterial* c_dme::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "models/inventory_items/trophy_majors/gloss", "vgui/achievements/glow", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail" };
+	const char* material_list[] = { "", "", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
 	return g_weebware.g_mat_sys->find_material(material_list[type], nullptr);
@@ -158,62 +158,8 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 	}
 
 	if (g_weebwarecfg.visuals_glow_enabled) {
-
-		auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-		c_color col;
-
-		for (auto i = 0; i < g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions.Count(); i++)	
-		{
-			auto& glowObject = g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions[i];
-			auto entity = reinterpret_cast<c_base_entity*>(glowObject.m_pEntity);
-
-			// nullptr check
-			if (!entity)
-				continue;
-			// make sure isnt being used already
-			if (glowObject.IsUnused())
-				continue;
-			// check dormant, not valid player because i want to glow on objects
-			if (entity->is_dormant())
-				continue;
-
-			// apply based on type of entity
-			auto class_id = entity->get_client_class()->m_ClassID;
-
-			switch (class_id) {
-			case 40:
-				if (!g_weebwarecfg.visuals_glow_player) continue;
-				if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
-				else col = g_weebwarecfg.visuals_glow_player_col_visible;
-				break;
-			case 128:
-				if (!g_weebwarecfg.visuals_glow_c4) continue;
-				col = g_weebwarecfg.visuals_glow_c4_col;
-				break;
-			case 36:
-				if (!g_weebwarecfg.visuals_glow_chicken) continue;
-				col = g_weebwarecfg.visuals_glow_chicken_col;
-					break;
-			default:
-				continue;
-			}
-
-			// only apply to enemy, chicken is enemy
-			if (entity->m_iTeamNum() == local->m_iTeamNum())
-				continue;
-
-			glowObject.m_flRed = col.r / 255.0f;
-			glowObject.m_flGreen = col.g / 255.0f;
-			glowObject.m_flBlue = col.b / 255.0f;
-			glowObject.m_flAlpha = col.a / 255.0f;
-			glowObject.m_bRenderWhenOccluded = true;
-			glowObject.m_nGlowStyle = 0;
-			glowObject.m_bFullBloomRender = false;
-		}
+	//	g_dme.glow();
 	}
-
-
-
 
 	if (g_weebwarecfg.visuals_chams > 0) {
 
@@ -245,16 +191,16 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 						mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 
-						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 
-						g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+					//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 					}
 
 					// Set material info.
 					mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
 					mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 
-					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 				}
 			}
 			else {
@@ -262,9 +208,9 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 
-					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 
-					g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+			//		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 				}
 
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
@@ -274,16 +220,70 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 				mat_list[g_weebwarecfg.visuals_chams]->colormodulate(col.r / 255.f, col.g / 255.f, col.b / 255.f);
 				mat_list[g_weebwarecfg.visuals_chams]->alphamodulate(col.a / 255.f);
 
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams], overridetype_t::override_normal);
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 			}
-			g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+		//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 			// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}
 	}
 
 	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+	//g_weebware.g_model_render->forcedmaterialoverride(NULL);
+}
 
-	// g_weebware.g_model_render->forcedmaterialoverride(0, overridetype_t::override_normal);
 
+void c_dme::glow() {
+
+	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	c_color col;
+
+	for (auto i = 0; i < g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions.Count(); i++)
+	{
+		auto& glowObject = g_weebware.g_glow_obj_manager->m_GlowObjectDefinitions[i];
+		auto entity = reinterpret_cast<c_base_entity*>(glowObject.m_pEntity);
+
+		// nullptr check
+		if (!entity)
+			continue;
+		// make sure isnt being used already
+		if (glowObject.IsUnused())
+			continue;
+		// check dormant, not valid player because i want to glow on objects
+		if (entity->is_dormant())
+			continue;
+
+		// apply based on type of entity
+		auto class_id = entity->get_client_class()->m_ClassID;
+
+		switch (class_id) {
+		case 40:
+			if (!g_weebwarecfg.visuals_glow_player) continue;
+			if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
+			else col = g_weebwarecfg.visuals_glow_player_col_visible;
+			break;
+		case 128:
+			if (!g_weebwarecfg.visuals_glow_c4) continue;
+			col = g_weebwarecfg.visuals_glow_c4_col;
+			break;
+		case 36:
+			if (!g_weebwarecfg.visuals_glow_chicken) continue;
+			col = g_weebwarecfg.visuals_glow_chicken_col;
+			break;
+		default:
+			continue;
+		}
+
+		// only apply to enemy, chicken is enemy
+		if (entity->m_iTeamNum() == local->m_iTeamNum())
+			continue;
+
+		glowObject.m_flRed = col.r / 255.0f;
+		glowObject.m_flGreen = col.g / 255.0f;
+		glowObject.m_flBlue = col.b / 255.0f;
+		glowObject.m_flAlpha = col.a / 255.0f;
+		glowObject.m_bRenderWhenOccluded = true;
+		glowObject.m_nGlowStyle = 0;
+		glowObject.m_bFullBloomRender = false;
+	}
 }
