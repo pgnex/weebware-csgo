@@ -198,11 +198,6 @@ public:
 		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x25C);
 	}
 
-	int draw_model(int flags, uint8_t alpha) {
-		auto client_renderable = reinterpret_cast<void*>((uintptr_t)this + 0x4);
-		return getvfunc<int(__thiscall*)(void*, int, uint8_t)>(client_renderable, 9)(client_renderable, flags, alpha);
-	}
-
 	bool is_valid_player()
 	{
 		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 40);
