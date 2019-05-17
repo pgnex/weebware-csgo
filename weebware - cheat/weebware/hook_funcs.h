@@ -1,10 +1,10 @@
 #pragma once
-#include "PolyHook2/PolyHook_2_0/headers/IHook.hpp"
-#include "PolyHook2/PolyHook_2_0/headers/Misc.hpp"
-#include "PolyHook2/PolyHook_2_0/headers/Exceptions/BreakPointHook.hpp"
-#include "PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
-#include "PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
-#include "PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/IHook.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Misc.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Exceptions/BreakPointHook.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
+#include "../../weebware/PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
 
 #ifndef HOOKFUNCS
 #define HOOKFUNCS
@@ -18,6 +18,7 @@ namespace hook_functions
 	long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
+	void scene_end(void* thisptr, void* edx);
 }
 
 class c_hooking
@@ -48,6 +49,7 @@ public:
 	PLH::BreakPointHook* VEH_PRESENT;
 	PLH::BreakPointHook* VEH_ENDSCENE;
 	PLH::BreakPointHook* VEH_DME;
+	PLH::BreakPointHook* VEH_SCENEEND;
 	PLH::BreakPointHook* VEH_CURSORLOCK;
 	PLH::BreakPointHook* VEH_HideGrenade;
 	PLH::BreakPointHook* VEH_SOUNDS;
@@ -109,6 +111,11 @@ public:
 #pragma region DME
 	typedef void(__thiscall* fn_dme)(void*, c_unknownmat_class*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4*);
 	fn_dme o_dme;
+#pragma endregion
+
+#pragma region SceneEnd
+	typedef void(__fastcall* sceneend_fn)(void*, void*);
+	sceneend_fn o_sceneend;
 #pragma endregion
 
 #pragma region Sounds

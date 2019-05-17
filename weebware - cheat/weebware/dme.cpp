@@ -6,6 +6,10 @@
 
 c_dme g_dme;
 
+void hook_functions::scene_end(void* thisptr, void* edx) {
+	g_dme.scene_end();
+}
+
 void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
 	if (!ctx)
@@ -134,9 +138,90 @@ imaterial* c_dme::borrow_mat(custom_mats type)
 
 // change all return false to original calls.
 
+void c_dme::scene_end() {
+
+	static bool init = false;
+
+	static imaterial* mat_list[custom_mats::max];
+
+	// Setting up mats
+	if (!init) {
+		// Grab pre-generated materials
+		for (auto i = 2; i < custom_mats::max; i++) {
+			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
+		}
+		// Make our own materials
+		mat_list[custom_mats::plain] = generate_material(0, 1, 0);
+		init = true;
+	}
+
+	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	if (g_weebwarecfg.visuals_chams > 0) {
+
+		for (int i = 1; i <= g_weebware.g_global_vars->maxclients; i++) {
+			auto player = g_weebware.g_entlist->getcliententity(i);
+
+			if (player->is_valid_player() && local) {
+
+				c_color col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
+				float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+
+				if (g_weebwarecfg.visuals_chams_xqz) {
+
+					c_color xqz_col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+					float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
+					g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+					g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+				}
+
+				if (local->m_iTeamNum() == player->m_iTeamNum()) {
+
+					if (g_weebwarecfg.visuals_chams_render_team) {
+						if (g_weebwarecfg.visuals_chams_xqz) {
+							mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+							g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+							player->draw_model(1, 255);
+							g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+						}
+
+						// Set material info.
+						g_weebware.g_render_view->SetBlend(col.a / 255.f);
+						g_weebware.g_render_view->SetColorModulation(col_blend);
+
+						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+						player->draw_model(1, 255);
+						g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+					}
+				}
+				else {
+					if (g_weebwarecfg.visuals_chams_xqz) {
+						mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+						player->draw_model(1, 255);
+						g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+					}
+
+					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+
+					// Set material info.
+					g_weebware.g_render_view->SetBlend(col.a / 255.f);
+					g_weebware.g_render_view->SetColorModulation(col_blend);
+
+					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+					player->draw_model(1, 255);
+					g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+				}
+
+			}
+		}
+	}
+
+}
+
 void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
-//	g_dme.night_mode();
+	//	g_dme.night_mode();
 
 	static bool init = false;
 
@@ -158,20 +243,18 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 	}
 
 	if (g_weebwarecfg.visuals_glow_enabled) {
-	//	g_dme.glow();
+		//	g_dme.glow();
 	}
 
 	if (g_weebwarecfg.visuals_chams > 0) {
-
 		// Get players only
 		auto entity = g_weebware.g_entlist->getcliententity(pInfo.entity_index);
-
 		// Get local
 		auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-
 		// Filtering out players only
 		if (entity && entity->is_valid_player() && local && local->is_valid_player() && strstr(g_weebware.g_model_info->getmodelname((model_t*)pInfo.pModel), "models/player")) {
+
+			auto model_name = g_weebware.g_model_info->getmodelname((model_t*)pInfo.pModel);
 
 			c_color col = c_color(entity->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
 
@@ -185,6 +268,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 			}
 
 			if (local->m_iTeamNum() == entity->m_iTeamNum()) {
+
 				if (g_weebwarecfg.visuals_chams_render_team) {
 
 					if (g_weebwarecfg.visuals_chams_xqz) {
@@ -193,7 +277,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 
-					//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+						//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 					}
 
 					// Set material info.
@@ -210,7 +294,7 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 
-			//		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+					//		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 				}
 
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
@@ -222,8 +306,8 @@ void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, 
 
 				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 			}
-		//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-			// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+			//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+				// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}
 	}
 
