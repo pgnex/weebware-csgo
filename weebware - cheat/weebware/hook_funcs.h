@@ -1,10 +1,10 @@
 #pragma once
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/IHook.hpp"
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Misc.hpp"
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Exceptions/BreakPointHook.hpp"
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
-#include "../../weebware/PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/IHook.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Misc.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Exceptions/BreakPointHook.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
+#include "PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
 
 #ifndef HOOKFUNCS
 #define HOOKFUNCS

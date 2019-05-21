@@ -89,7 +89,7 @@
       <UniqueIdentifier>{cd2b8e46-b86a-407f-a85b-c3f72f72de34}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\hooking\Poly">
-      <UniqueIdentifier>{82aaa1ec-8e92-47a9-b2e3-3f5f522b148c}</UniqueIdentifier>
+      <UniqueIdentifier>{8edc7071-5731-45d1-bc30-5b85bb541a84}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -195,40 +195,40 @@
     <ClCompile Include="c_entities.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\ADetour.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\AVehHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\IatHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\IatHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\MemProtector.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\VFuncSwapHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VFuncSwapHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\VTableSwapHook.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VTableSwapHook.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\x64Detour.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x64Detour.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\weebware\PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClCompile>
   </ItemGroup>
@@ -416,40 +416,40 @@
     <ClInclude Include="IViewRenderBeams.h">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Enums.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Enums.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\IHook.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\IHook.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Instruction.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Instruction.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\MemProtector.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\MemProtector.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Misc.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\UID.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Exceptions\BreakPointHook.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\BreakPointHook.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\weebware\PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp">
+    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp">
       <Filter>Source Files\hooking\Poly</Filter>
     </ClInclude>
   </ItemGroup>
@@ -457,7 +457,7 @@
     <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\d3dx9.lib">
       <Filter>Source Files</Filter>
     </Library>
-    <Library Include="..\..\weebware\Polyhook\Capstone\msvc_vs2017\x86\Release\capstone.lib">
+    <Library Include="Polyhook\Capstone\msvc_vs2017\x86\Release\capstone.lib">
       <Filter>Resource Files</Filter>
     </Library>
   </ItemGroup>

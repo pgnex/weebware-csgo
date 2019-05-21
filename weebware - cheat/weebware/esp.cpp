@@ -506,12 +506,19 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 		draw_col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
 	}
 
+	wchar_t buf[128];
 	std::string player_name = playerinfo.name;
 
-	player_name.resize(15);
+	if (MultiByteToWideChar(CP_UTF8, 0, playerinfo.name, -1, buf, 128) > 0)
+	{
+		int tw, th;
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
 
-	if (bounds.has_w2s)
-		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x + bounds.w + 2, bounds.y + 5, draw_col, 0, player_name.c_str());
+		if (bounds.has_w2s)
+			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), bounds.y - 5, draw_col, 0, player_name.c_str());
+	}
+
+
 }
 
 void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
