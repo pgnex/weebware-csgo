@@ -1,24 +1,24 @@
 #include "Header.h"
 #include "shared.h"
-#include "dme.h"
+#include "scene_end.h"
 #include "hook_funcs.h"
 #include <iostream>
 
-c_dme g_dme;
+c_sceneend g_sceneend;
 
 void hook_functions::scene_end(void* thisptr, void* edx) {
-	g_dme.scene_end();
+	g_sceneend.scene_end();
 }
 
-void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
-{
-	if (!ctx)
-		return;
-	try {
-		g_dme.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
-	}
-	catch (...) {}
-}
+//void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
+//{
+//	if (!ctx)
+//		return;
+//	try {
+//		g_sceneend.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+//	}
+//	catch (...) {}
+//}
 
 void init_key_vals(KeyValues* keyValues, char* name)
 {
@@ -100,7 +100,7 @@ imaterial* generate_material(bool ignore, bool lit, bool wire_frame)
 	return created_mat;
 }
 
-bool c_dme::is_visible(c_base_entity* target)
+bool c_sceneend::is_visible(c_base_entity* target)
 {
 	trace_t Trace;
 
@@ -127,7 +127,7 @@ bool c_dme::is_visible(c_base_entity* target)
 	return false;
 }
 
-imaterial* c_dme::borrow_mat(custom_mats type)
+imaterial* c_sceneend::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
 	const char* material_list[] = { "", "", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail" };
@@ -138,11 +138,19 @@ imaterial* c_dme::borrow_mat(custom_mats type)
 
 // change all return false to original calls.
 
-void c_dme::scene_end() {
+void c_sceneend::scene_end() {
 
 	if (g_weebwarecfg.visuals_glow_enabled) {
-		g_dme.glow();
+		g_sceneend.glow();
 	}
+
+	if (g_weebwarecfg.visuals_chams > 0) {
+		g_sceneend.chams();
+	}
+
+}
+
+void c_sceneend::chams() {
 
 	static bool init = false;
 
@@ -159,83 +167,95 @@ void c_dme::scene_end() {
 		init = true;
 	}
 
+	// get localplayer
 	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (g_weebwarecfg.visuals_chams > 0) {
+	for (int i = 1; i <= g_weebware.g_global_vars->maxclients; i++) {
+		auto player = g_weebware.g_entlist->getcliententity(i);
 
-		for (int i = 1; i <= g_weebware.g_global_vars->maxclients; i++) {
-			auto player = g_weebware.g_entlist->getcliententity(i);
+		// make sure ent is a valid player
+		if (!player->is_valid_player())
+			continue;
 
-			if (player->is_valid_player() && local) {
+		// nullptr check localplayer
+		if (!local)
+			continue;
 
-				c_color col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
-				float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+		// if player is behind smoke and we dont have xqz on, go next
+		if (player->trace_from_smoke(*local->m_Origin()) && !g_weebwarecfg.visuals_chams_xqz) 
+			continue;
 
+		// setup our colors here..
+		c_color col;
+
+		if (player->trace_from_smoke(*local->m_Origin()) && g_weebwarecfg.visuals_chams_xqz) {
+			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+		}
+		else {
+			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
+		}
+
+		float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+
+		if (g_weebwarecfg.visuals_chams_xqz) {
+			c_color xqz_col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+			float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
+			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+		}
+
+		// skip if team chams is off and entity is teammate
+		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
+			continue;
+
+		if (g_weebwarecfg.visuals_chams_xqz) {
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+			player->draw_model(1, 255);
+			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+		}
+
+		if (local->m_iTeamNum() == player->m_iTeamNum()) {
+			if (g_weebwarecfg.visuals_chams_render_team) {
 				if (g_weebwarecfg.visuals_chams_xqz) {
-
-					c_color xqz_col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
-					float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
-					g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
-					g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
-				}
-
-				if (local->m_iTeamNum() == player->m_iTeamNum()) {
-
-					if (g_weebwarecfg.visuals_chams_render_team) {
-						if (g_weebwarecfg.visuals_chams_xqz) {
-							mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
-							g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-							player->draw_model(1, 255);
-							g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-						}
-
-						// Set material info.
-						g_weebware.g_render_view->SetBlend(col.a / 255.f);
-						g_weebware.g_render_view->SetColorModulation(col_blend);
-
-						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-						player->draw_model(1, 255);
-						g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-					}
-				}
-				else {
-					if (g_weebwarecfg.visuals_chams_xqz) {
-						mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
-						g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-						player->draw_model(1, 255);
-						g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-					}
-
-					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-
-					// Set material info.
-					g_weebware.g_render_view->SetBlend(col.a / 255.f);
-					g_weebware.g_render_view->SetColorModulation(col_blend);
-
+					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 					player->draw_model(1, 255);
 					g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 				}
 
+				// Set material info.
+				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+				g_weebware.g_render_view->SetColorModulation(col_blend);
+
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+				player->draw_model(1, 255);
+				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 			}
 		}
-	}
+		else {
+			if (g_weebwarecfg.visuals_chams_xqz) {
+				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+				player->draw_model(1, 255);
+				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+			}
 
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+
+			// Set material info.
+			g_weebware.g_render_view->SetBlend(col.a / 255.f);
+			g_weebware.g_render_view->SetColorModulation(col_blend);
+
+			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+			player->draw_model(1, 255);
+			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+		}
+
+	}
 }
 
-void c_dme::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
-{
-	//	g_dme.night_mode();
-
-	if (g_weebwarecfg.visuals_glow_enabled) {
-		g_dme.glow();
-	}
-
-	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-}
-
-
-void c_dme::glow() {
+void c_sceneend::glow() {
 
 	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 	c_color col;
