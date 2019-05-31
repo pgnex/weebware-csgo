@@ -9,19 +9,18 @@
 
 GameEvents g_events;
 c_weebware g_weebware;
+create_interface retrieve_interface(LPCSTR module_name);
 
 unsigned __stdcall entry_thread(void* v_arg)
 {
-	g_weebware.setup_thread(); // run our thread
+	// run our thread
+	g_weebware.setup_thread();
 
-	_endthreadex(0); // close thread
+	// close thread
+	_endthreadex(0);
 
-	return 0; // return 0.
+	return 0;
 }
-
-
-
-create_interface retrieve_interface(LPCSTR module_name);
 
 bool c_weebware::init_interfaces()
 {
@@ -49,6 +48,7 @@ bool c_weebware::init_interfaces()
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
 #endif
 
+	// lets make sure models are installed to display on menu
 	std::string path = std::filesystem::current_path().string();
 	if (std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
 		std::filesystem::exists(path + "/csgo/models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl") &&
@@ -77,32 +77,19 @@ bool c_weebware::init_interfaces()
 	g_NetworkContainer = reinterpret_cast<CNetworkStringTableContainer*>(engine_fact("VEngineClientStringTable001", NULL));
 	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan("client.dll", "8D 04 24 50 A1 ? ? ? ? B9") + 5);
 	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan("client.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9") + 0x2);
-
-	//int __stdcall reset_replacement(int a1, int a2)
-	// This is the first reset func VEngineClientStringTable0
 	g_reset_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 FF 78 18 85 F6 74 14 FF 75 E0 8B CE 53 FF 75 EC E8 ? ? ? ? 8A 45 E1 88 46 4D") + 0x2;
-
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact("GameMovement001", NULL));
-
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact("VClientPrediction001", NULL));
-
 	g_move_helper = **(c_move_helper***)(pattern_scan("client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 0x2);
-
 	g_convars = reinterpret_cast<c_iconvar*>(vstd_lib_fact("VEngineCvar007", NULL));
-
 	g_effects = reinterpret_cast<i_effects*>(client_fact("IEffects001", NULL));
-
 	g_game_events = reinterpret_cast<i_game_event_manager*>(engine_fact("GAMEEVENTSMANAGER002", NULL));
-	
 	g_enginesound = reinterpret_cast<uintptr_t*>(engine_fact("IEngineSoundClient003", NULL));
 
 	// Load our meme database for our p netvars
 	netvar_manager::_instance()->create_database();
 
 	g_weebwarecfg = c_weebwarecfg();
-
-	// Load fonts.
-	// g_draw.GetDevice(g_direct_x);
 
 	init_fonts();
 
@@ -116,9 +103,7 @@ bool c_weebware::init_interfaces()
 	}
 
 	g_skin_list = create_skin_list();
-
 	g_gun_list = create_gun_list();
-
 	g_knife_list = create_knife_list();
 #pragma endregion
 
