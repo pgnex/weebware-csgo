@@ -25,11 +25,23 @@ static bool check_color(std::string key, json data) {
 class c_config_list
 {
 public:
+	// config browser
+	std::vector<std::string> config_browser_info;
+	json config_browser_buffer;
+	void update_config_browser();
+	void load_browser_config();
+	void save_browser_config();
+	std::string cur_secret = "";
+	std::string cur_desc = "Description: ";
+	std::string cur_creator = "Created by: ";
+	std::string cur_config_browser_name = "";
+
+	// configs
 	std::vector<std::string> config_names;
 	void update_all_configs();
 	void save_weebware_config();
 	void save_existing_weebware();
-	void load_weebware_config();
+	void load_weebware_config(std::string load_name);
 	void delete_weebware_config();
 	char cur_save_name[256];
 	std::string cur_load_name = "";

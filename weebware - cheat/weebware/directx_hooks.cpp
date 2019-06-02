@@ -1040,7 +1040,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::SameLine();
 					if (ImGui::Button("Load", ImVec2(ImGui::GetContentRegionAvailWidth() / 3, 20), ImGuiButtonFlags_Outlined))
 					{
-						g_config_list.load_weebware_config();
+						g_config_list.load_weebware_config(g_config_list.cur_load_name);
 						g_weebwarecfg.skinchanger_apply_nxt = 1;
 					}
 					ImGui::SameLine();
@@ -1054,10 +1054,50 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 				ImGui::NextColumn();
 
-				ImGui::BeginChild("colors", ImVec2(0, 0), true);
+				ImGui::BeginChild("Browser", ImVec2(0, 0), true);
 				{
-					ImGui::Text("Menu Colors");
+					ImGui::Text("Config Browser");
 					ImGui::Separator();
+
+					ImGui::BeginChild("Configs", ImVec2(0, new_height - 123), false);
+					for (auto cfg : g_config_list.config_browser_info)
+					{
+						if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_name == cfg.c_str()))
+						{
+							g_config_list.cur_config_browser_name = cfg.c_str();
+							auto last = std::find(std::begin(g_config_list.config_browser_info), std::end(g_config_list.config_browser_info), g_config_list.cur_config_browser_name);
+							int index = std::distance(std::begin(g_config_list.config_browser_info), last);
+							g_config_list.cur_creator = "Created by: " + (std::string)g_config_list.config_browser_buffer.at("username")[index];
+							g_config_list.cur_desc = "Description: " + (std::string)g_config_list.config_browser_buffer.at("description")[index];
+							g_config_list.cur_secret = (std::string)g_config_list.config_browser_buffer.at("secret")[index];
+							g_config_list.cur_config_browser_name = (std::string)g_config_list.config_browser_buffer.at("name")[index];
+						}
+					}
+					ImGui::EndChild();
+					ImGui::Separator();
+					ImGui::Text(g_config_list.cur_creator.c_str());
+					ImGui::Text(g_config_list.cur_desc.c_str());
+					ImGui::Separator();
+					ImGui::BeginChild("Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+					ImGui::Columns(3, "LoadSettings", false);
+					ImGui::SetColumnOffset(1, 85);
+					ImGui::SetColumnOffset(2, 180);
+					if (ImGui::Button("Refresh", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+						// load config info from server
+						g_config_list.update_config_browser();
+					}
+
+					ImGui::NextColumn();
+					if (ImGui::Button("Load", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+						// load config from server
+						g_config_list.load_browser_config();
+					}
+				//	ImGui::NextColumn();
+				//	if (ImGui::Button("Save", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+				//		// save config from server
+				////		g_config_list.save_browser_config();
+				//	}
+					ImGui::EndChild();
 				}
 				ImGui::EndChild();
 			}
