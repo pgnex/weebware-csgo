@@ -30,31 +30,24 @@ void c_engine_prediction::begin(c_usercmd *userCMD, c_base_entity* player)
 {
 	static bool init = false;
 
+	if (!player)
+		return;
+
 	if (!init)
 	{
 		predictionRandomSeed = *reinterpret_cast<int**>(g_weebware.pattern_scan("client.dll", "8B 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 83 C4 04") + 0x2);
-		predictionPlayer = *reinterpret_cast<c_base_entity**>(g_weebware.pattern_scan("client.dll", "89 3D ? ? ? ? F3 0F 10 47") + 0x2);
+		//predictionPlayer = *reinterpret_cast<c_base_entity**>(g_weebware.pattern_scan("client.dll", "89 3D ? ? ? ? F3 0F 10 47") + 0x2);
 
 		init = true;
 	}
 
 	*predictionRandomSeed = MD5_PseudoRandom(userCMD->command_number) & 0x7FFFFFFF;
 
-	predictionPlayer = player;
-
 	old_curtime = g_weebware.g_global_vars->curtime;
 	old_frametime = g_weebware.g_global_vars->frametime;
 	g_weebware.g_global_vars->curtime = (float)((float)(corrected_tickbase(userCMD, player)) * ((float)g_weebware.g_global_vars->interval_per_tick));
-	//g_entry.g_global_vars->curtime = player->get_tick_base() * g_entry.g_global_vars->interval_per_tick;
 	g_weebware.g_global_vars->frametime = g_weebware.g_global_vars->interval_per_tick;
 
-	//Here we're doing CBasePlayer::UpdateButtonState // NOTE: hard to tell when offsets changed, think of more longterm solution or just dont do this.
-	move_data.m_nButtons = userCMD->buttons;
-	int buttonsChanged = userCMD->buttons ^ *reinterpret_cast<int*>(uintptr_t(player) + 0x31E8);
-	*reinterpret_cast<int*>(uintptr_t(player) + 0x31DC) = (uintptr_t(player) + 0x31E8);
-	*reinterpret_cast<int*>(uintptr_t(player) + 0x31E8) = userCMD->buttons;
-	*reinterpret_cast<int*>(uintptr_t(player) + 0x31E0) = userCMD->buttons & buttonsChanged;  //m_afButtonPressed ~ The changed ones still down are "pressed"
-	*reinterpret_cast<int*>(uintptr_t(player) + 0x31E4) = buttonsChanged & ~userCMD->buttons; //m_afButtonReleased ~ The ones not down are "released"
 
 	g_weebware.g_game_movement->starttrackpredictionerrors(player);
 

@@ -299,6 +299,12 @@ public:
 		return get_value<int>(offset);
 	}
 
+	bool m_bIsScoped() {
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_bIsScoped");
+		return get_value<bool>(offset);
+	}
+
+
 	void UpdateClientSideAnimation()
 	{
 		return getvfunc<void(__thiscall*)(void*)>(this, 218)(this);
@@ -375,10 +381,22 @@ public:
 
 	bool trace_from_smoke(Vector src);
 
+	void no_flash(float duration)
+	{
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flFlashDuration");
+		*(float*)(this + offset) = duration;
+	}
+
 	bool is_flashed()
 	{
 		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flFlashDuration");
 		return get_value<float>(offset) > 0;
+	}
+
+	bool flash_duration()
+	{
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flFlashDuration");
+		return get_value<float>(offset);
 	}
 
 	int* get_weapons()

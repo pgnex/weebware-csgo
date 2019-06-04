@@ -54,6 +54,7 @@ public:
 	PLH::BreakPointHook* VEH_HideGrenade;
 	PLH::BreakPointHook* VEH_SOUNDS;
 	PLH::BreakPointHook* VEH_MDL;
+	PLH::BreakPointHook* VEH_VM;
 
 #endif
 

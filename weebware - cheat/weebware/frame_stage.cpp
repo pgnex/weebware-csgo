@@ -19,7 +19,6 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
-			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.legit_aa_resolver();
 		}
 
@@ -28,6 +27,8 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
 			g_frame_stage_notify.bullet_tracers();
+		//	g_frame_stage_notify.third_person();
+		//	g_frame_stage_notify.remove_flash();
 		}
 	}
 	catch (...) {}
@@ -119,22 +120,10 @@ void c_frame_stage_notify::pvs_fix()
 	}
 }
 
-bool tp_done = false;
 void c_frame_stage_notify::third_person() {
-	if (g_weebwarecfg.thirdperson && !tp_done) {
-		if (local && local->is_valid_player()) {
-			c_convar* tp = g_weebware.g_convars->find_cvar("thirdperson");
-			tp->SetValue("1");
-			tp_done = true;
-		}
-	}
-	else if (!g_weebwarecfg.thirdperson && tp_done) {
-		if (local && local->is_valid_player()) {
-			c_convar* fp = g_weebware.g_convars->find_cvar("firstperson");
-			fp->SetValue("1");
-			tp_done = false;
-		}
-	}
+
+	if (!local)
+		return;
 }
 
 std::vector<ImpactData_t> vis_impact_data;

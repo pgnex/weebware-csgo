@@ -281,8 +281,13 @@ public:
 	bool enable_bullet_tracers;
 	float bullet_tracer_expire = 1.f;
 	bool auto_jump;
+	bool night_sky;
+	bool remove_flash;
 
 	int auto_strafe = 0;
+	bool edge_jump;
+	int edge_jump_key = 0;
+	bool duck_in_air;
 	bool misc_ai;
 	float misc_ai_legitfactor;
 	bool misc_ai_random;
@@ -323,6 +328,9 @@ public:
 	bool thirdperson;
 	bool killsay;
 	//bool disable_post_processing = true;
+
+	bool viewmodel_changer;
+	int viewmodel_offset = 0;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
@@ -448,6 +456,12 @@ public:
 		tmp["visuals_skeleton"] = visuals_skeleton;
 		tmp["visuals_recoil_crosshair"] = visuals_recoil_crosshair;
 		tmp["visuals_sniper_crosshair"] = visuals_sniper_crosshair;
+		tmp["viewmodel_changer"] = viewmodel_changer;
+		tmp["viewmodel_offset"] = viewmodel_offset;
+		tmp["edge_jump"] = edge_jump;
+		tmp["edge_jump_key "] = edge_jump_key;
+		tmp["duck_in_air"] = duck_in_air;
+		tmp["night_sky"] = night_sky;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -513,6 +527,10 @@ public:
 		if (check("visuals_glow_hidden_col", data)) visuals_glow_hidden_col = data["visuals_glow_hidden_col"];
 		if (check("visuals_recoil_crosshair", data)) visuals_recoil_crosshair = data["visuals_recoil_crosshair"];
 		if (check("visuals_sniper_crosshair", data)) visuals_sniper_crosshair = data["visuals_sniper_crosshair"];
+		if (check("night_sky", data)) night_sky = data["night_sky"];
+		if (check("viewmodel_changer", data)) viewmodel_changer = data["viewmodel_changer"];
+		if (check("viewmodel_offset", data)) viewmodel_offset = data["viewmodel_offset"];
+
 
 		// misc
 		if (check("enable_misc", data)) enable_misc = data["enable_misc"];
@@ -558,6 +576,10 @@ public:
 		if (check("killsay", data)) killsay = data["killsay"];
 		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
 		if (check("visuals_skeleton", data)) visuals_skeleton = data["visuals_skeleton"];
+		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
+		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];
+		if (check("duck_in_air", data)) duck_in_air = data["duck_in_air"];
+
 
 		// colors
 

@@ -88,7 +88,7 @@
     <Filter Include="Source Files\hooking\Scene End">
       <UniqueIdentifier>{7a637797-5f3b-4461-8f99-798e18e7aad6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hooking\Scene End\nightmode">
+    <Filter Include="Source Files\hooking\CreateMove\nightmode">
       <UniqueIdentifier>{75dbde77-b445-40d6-aaee-6fcd471cdfc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -181,7 +181,7 @@
       <Filter>Source Files\Events</Filter>
     </ClCompile>
     <ClCompile Include="nightmode.cpp">
-      <Filter>Source Files\hooking\Scene End\nightmode</Filter>
+      <Filter>Source Files\hooking\CreateMove\nightmode</Filter>
     </ClCompile>
     <ClCompile Include="weebware_config.cpp">
       <Filter>Source Files\Config</Filter>
@@ -387,7 +387,7 @@
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
     <ClInclude Include="nightmode.h">
-      <Filter>Source Files\hooking\Scene End\nightmode</Filter>
+      <Filter>Source Files\hooking\CreateMove\nightmode</Filter>
     </ClInclude>
     <ClInclude Include="json.h">
       <Filter>Source Files\Config</Filter>

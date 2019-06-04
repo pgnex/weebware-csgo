@@ -873,6 +873,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 					ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 					ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
+					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
+					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 					if (g_weebwarecfg.enable_bullet_tracers) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
@@ -934,13 +936,28 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				{
 					ImGui::Text("Misc");
 					ImGui::Separator();
-					ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
 					ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 					ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
-					ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
+				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
 					// ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
+					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
+					if (g_weebwarecfg.viewmodel_changer) {
+						ImGui::SliderInt("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
+					}
+					ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
+
+					ImGui::Separator();
+					ImGui::Text("Movement");
+					ImGui::Separator();
+
+					ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
+					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
+					if (g_weebwarecfg.edge_jump) {
+						ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air, false);
+					}
 					ImGui::Text("Auto Strafe");
 					const char* strafe_type[] = { "Off", "Legit", "Fast" };
 					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
@@ -965,7 +982,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
 					ImGui::Text("Aim Speed");
 					ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
-
 
 					//ImGui::Separator();
 

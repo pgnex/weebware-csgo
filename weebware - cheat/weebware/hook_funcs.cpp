@@ -146,6 +146,23 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }
 
+float __stdcall hk_viewmodel() {
+
+	auto protecc = g_hooking.VEH_VM->getProtectionObject();
+
+	if (!g_weebwarecfg.viewmodel_changer)
+		return 68.f;
+
+	auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	if (local_player && local_player->is_valid_player()) {
+		return 68.f + g_weebwarecfg.viewmodel_offset;
+	}
+	else {
+		return 68.f;
+	}
+}
+
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 {
 	auto protecc = g_hooking.VEH_FSN->getProtectionObject();
@@ -493,6 +510,11 @@ void c_hooking::hook_all_functions()
 	VEH_MDL->hook();
 	o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
 
+	auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
+	VEH_VM = new PLH::BreakPointHook((char*)vm_addr, (char*)&hk_viewmodel);
+	VEH_VM->hook();
+	
+
 	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
 	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
 	//VEH_SOUNDS->hook();
@@ -550,6 +572,7 @@ void c_hooking::unhook_all_functions()
 	VEH_FSN->unHook();
 	VEH_SCENEEND->unHook();
 //	VEH_SOUNDS->unHook();
+	VEH_VM->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	knife_changer::remove_proxyhooks();

@@ -7,6 +7,7 @@
 #include <intrin.h>
 
 c_create_move g_create_move;
+c_nightmode g_nightmode;
 
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
@@ -24,8 +25,21 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		{
 			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+			g_create_move.skybox_changer();
+			g_create_move.auto_jump(cmd);
+			g_create_move.auto_strafe(cmd);
+
+			g_create_move.edge_jump_pre_prediction(cmd);
+			g_engine_prediction.begin(cmd, g_create_move.local);
+
+
+			g_engine_prediction.end(g_create_move.local);
+			g_create_move.edge_jump_post_prediction(cmd);
+
 			g_create_move.chat_spam();
 			g_create_move.rank_reveal();
+
+			g_nightmode.run();
 
 			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
 			{
@@ -49,7 +63,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 
 					g_legitbot.create_move(cmd);
 
-					g_create_move.create_move(cmd, sendpacket);
+				//	g_create_move.create_move(cmd, sendpacket);
 
 					g_accuracy.accuracy_boost(cmd);
 
@@ -105,7 +119,72 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		g_Walkbot.m_maploaded = false;
 	}
 
+	g_create_move.real_angle = cmd->viewangles;
+
 	return false;
+}
+
+
+void load_named_sky(const char* sky_name) {
+	using Fn = void(__fastcall*)(const char*);
+	static auto load_named_sky_fn = reinterpret_cast<Fn>(g_weebware.pattern_scan(("engine.dll"), "55 8B EC 81 EC ? ? ? ? 56 57 8B F9 C7 45"));
+	load_named_sky_fn(sky_name);
+}
+
+bool is_sky_set = false;
+void c_create_move::skybox_changer() {
+
+	c_convar* old_sky_name = g_weebware.g_convars->find_cvar("sv_skyname");
+
+	if (g_weebwarecfg.night_sky && !is_sky_set) {
+		load_named_sky("sky_csgo_night02");
+		is_sky_set = true;
+	}
+	else if (!g_weebwarecfg.night_sky && is_sky_set) {
+		load_named_sky(old_sky_name->strString);
+		is_sky_set = false;
+	}
+}
+
+auto flags_backup = 0;
+
+void c_create_move::edge_jump_pre_prediction(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.edge_jump)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.edge_jump_key))
+		return;
+
+	if (!local)
+		return;
+
+	if (local->get_move_type() == MOVETYPE_LADDER || local->get_move_type() == MOVETYPE_NOCLIP)
+		return;
+
+	flags_backup = local->m_fFlags();
+}
+
+void c_create_move::edge_jump_post_prediction(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.edge_jump)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.edge_jump_key))
+		return;
+
+	if (!local)
+		return;
+
+	if (local->get_move_type() == MOVETYPE_LADDER || local->get_move_type() == MOVETYPE_NOCLIP)
+		return;
+
+	if (flags_backup & fl_onground && !(local->m_fFlags() & fl_onground) && !(cmd->buttons & in_jump)) {
+		cmd->buttons |= in_jump;
+	}
+
+	if (!(local->m_fFlags() & fl_onground) && g_weebwarecfg.duck_in_air)
+		cmd->buttons |= in_duck;
 }
 
 void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
@@ -194,15 +273,14 @@ void c_create_move::rank_reveal()
 
 void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
 {
-	auto_jump(cmd);
 
-	auto_strafe(cmd);
+	//run_fake(cmd, sendPackets);
 
-	run_fake(cmd, sendPackets);
+	//if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
+	//	run_legitAA(cmd, sendPackets);
 
-	if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
-		run_legitAA(cmd, sendPackets);
 }
+
 
 void c_create_move::auto_jump(c_usercmd* cmd)
 {

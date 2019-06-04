@@ -650,6 +650,12 @@ public:
 	virtual void			GetVisibleFogVolume(const Vector& eyePoint, void *pInfo) = 0;
 };
 
+struct view_setup_t {
+	char __pad0[0xB0];
+	float fov;
+	float viewmodel_fov;
+};
+
 class c_global_vars
 {
 public:
