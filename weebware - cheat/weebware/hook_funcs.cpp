@@ -151,15 +151,15 @@ float __stdcall hk_viewmodel() {
 	auto protecc = g_hooking.VEH_VM->getProtectionObject();
 
 	if (!g_weebwarecfg.viewmodel_changer)
-		return 68.f;
+		return g_hooking.o_vm();
 
 	auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	if (local_player && local_player->is_valid_player()) {
-		return 68.f + g_weebwarecfg.viewmodel_offset;
+		return g_hooking.o_vm() + g_weebwarecfg.viewmodel_offset;
 	}
 	else {
-		return 68.f;
+		return g_hooking.o_vm();
 	}
 }
 
@@ -513,6 +513,8 @@ void c_hooking::hook_all_functions()
 	auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
 	VEH_VM = new PLH::BreakPointHook((char*)vm_addr, (char*)&hk_viewmodel);
 	VEH_VM->hook();
+	o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
+
 	
 
 	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];

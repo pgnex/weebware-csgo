@@ -16,11 +16,15 @@ void c_esp::esp_main()
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
+
+		if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
+			return;
+		}
+
 		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
 
 		if (local) {
 			if (local->is_valid_player()) {
-
 
 				// call things here for visual stuff before gay checks..
 				draw_inaccuracy_circle();
@@ -155,6 +159,8 @@ void c_esp::esp_main()
 					w2s_player[i].boundary.dormant = true;
 
 				render_box(w2s_player[i].boundary, ent, is_visible(local, ent));
+
+				render_box_corners(w2s_player[i].boundary, ent, is_visible(local, ent));
 
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 
@@ -411,6 +417,52 @@ void c_esp::bomb_timer(c_base_entity* ent) {
 
 	}
 }
+
+
+void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_visible) {
+
+	if (!g_weebwarecfg.visuals_corner_box)
+		return;
+
+	c_color col;
+	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
+		col = is_visible ? c_color(g_weebwarecfg.visuals_corner_col_visible) : c_color(g_weebwarecfg.visuals_corner_col_hidden);
+	}
+	else {
+		col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
+	}
+
+
+	int x = bounds.x;
+	int y = bounds.y;
+	int w = bounds.w;
+	int h = bounds.h;
+
+	float line_w = (w / 5);
+	float line_h = (h / 6);
+	float line_t = 1;
+
+	g_weebware.g_surface->drawsetcolor(0, 0, 0, 255);
+	g_weebware.g_surface->drawline(x - line_t, y - line_t, x + line_w, y - line_t); //top left
+	g_weebware.g_surface->drawline(x - line_t, y - line_t, x - line_t, y + line_h);
+	g_weebware.g_surface->drawline(x - line_t, y + h - line_h, x - line_t, y + h + line_t); //bot left
+	g_weebware.g_surface->drawline(x - line_t, y + h + line_t, x + line_w, y + h + line_t);
+	g_weebware.g_surface->drawline(x + w - line_w, y - line_t, x + w + line_t, y - line_t); // top right
+	g_weebware.g_surface->drawline(x + w + line_t, y - line_t, x + w + line_t, y + line_h);
+	g_weebware.g_surface->drawline(x + w + line_t, y + h - line_h, x + w + line_t, y + h + line_t); // bot right
+	g_weebware.g_surface->drawline(x + w - line_w, y + h + line_t, x + w + line_t, y + h + line_t);
+
+	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+	g_weebware.g_surface->drawline(x, y, x, y + line_h);//top left
+	g_weebware.g_surface->drawline(x, y, x + line_w, y);
+	g_weebware.g_surface->drawline(x + w - line_w, y, x + w, y); //top right
+	g_weebware.g_surface->drawline(x + w, y, x + w, y + line_h);
+	g_weebware.g_surface->drawline(x, y + h - line_h, x, y + h); //bot left
+	g_weebware.g_surface->drawline(x, y + h, x + line_w, y + h);
+	g_weebware.g_surface->drawline(x + w - line_w, y + h, x + w, y + h);//bot right
+	g_weebware.g_surface->drawline(x + w, y + h - line_h, x + w, y + h);
+}
+
 
 void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {

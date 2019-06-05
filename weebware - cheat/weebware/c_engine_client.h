@@ -197,6 +197,10 @@ public:
 	{
 		return getvfunc<const char*(__thiscall*)(PVOID)>(this, 53)(this);
 	}
+
+	bool is_taking_screenshot() {
+		return getvfunc<bool(__thiscall*)(PVOID)>(this, 92)(this);
+	}
 };
 
 //player flags

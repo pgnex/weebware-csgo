@@ -41,7 +41,7 @@ private:
 	Vector center_hitbox(c_base_entity* ent, int id);
 	s_boundaries calc_boundaries(c_base_entity* Entity);
 	void render_box(s_boundaries bounds, c_base_entity* ent, bool is_team);
-	void render_box_corners();
+	void render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_visible);
 	void render_skeleton(c_base_entity* ent, bool is_team);
 	void render_health(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void draw_inaccuracy_circle();

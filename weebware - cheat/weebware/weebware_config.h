@@ -261,6 +261,7 @@ public:
 	bool visuals_watermark = true;
 	bool visuals_teammates;
 	bool visuals_bounding_box;
+	bool visuals_corner_box;
 	bool visuals_health_bars;
 	bool visuals_inacc_circle;
 	bool visuals_sniper_crosshair;
@@ -276,6 +277,7 @@ public:
 	bool visuals_glow_hidden_col;
 	bool visuals_glow_c4;
 	bool visuals_glow_chicken;
+	bool visuals_glow_weapon;
 	bool visuals_skeleton;
 	bool enable_misc;
 	bool enable_bullet_tracers;
@@ -283,6 +285,7 @@ public:
 	bool auto_jump;
 	bool night_sky;
 	bool remove_flash;
+	bool screenshot_proof;
 
 	int auto_strafe = 0;
 	bool edge_jump;
@@ -356,6 +359,10 @@ public:
 	ImVec4 visuals_bounding_col_visible = ImVec4(50, 255, 0, 255);
 	ImVec4 visuals_bounding_col_hidden = ImVec4(255, 50, 50, 255);
 
+	// corner box esp colors
+	ImVec4 visuals_corner_col_visible = ImVec4(104, 66, 244, 255);
+	ImVec4 visuals_corner_col_hidden = ImVec4(214, 57, 89, 255);
+
 	// skeleton esp colors
 	ImVec4 visuals_skeleton_col_visible = ImVec4(50, 255, 0, 255);
 	ImVec4 visuals_skeleton_col_hidden = ImVec4(255, 50, 50, 255);
@@ -374,6 +381,7 @@ public:
 	ImVec4 visuals_glow_player_col_hidden = ImVec4(255, 65, 123, 255);
 	ImVec4 visuals_glow_c4_col = ImVec4(204, 54, 46, 255);
 	ImVec4 visuals_glow_chicken_col = ImVec4(73, 244, 82, 255);
+	ImVec4 visuals_glow_weapon_col = ImVec4(212, 244, 66, 255);
 
 	json convert()
 	{
@@ -409,6 +417,8 @@ public:
 		tmp["visuals_glow_c4"] = visuals_glow_c4;
 		tmp["visuals_glow_chicken"] = visuals_glow_chicken;
 		tmp["visuals_glow_hidden_col"] = visuals_glow_hidden_col;
+		tmp["visuals_corner_box"] = visuals_corner_box;
+		tmp["visuals_glow_weapon"] = visuals_glow_weapon;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -492,6 +502,9 @@ public:
 		save_color(visuals_bullet_tracer_col, tmp, "visuals_bullet_tracer_col");
 		save_color(visuals_sniper_crosshair_col, tmp, "visuals_sniper_crosshair_col");
 		save_color(visuals_recoil_crosshair_col, tmp, "visuals_recoil_crosshair_col");
+		save_color(visuals_corner_col_hidden, tmp, "visuals_corner_col_hidden");
+		save_color(visuals_corner_col_visible, tmp, "visuals_corner_col_visible");
+		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
 
 		return tmp;
 	}
@@ -530,6 +543,8 @@ public:
 		if (check("night_sky", data)) night_sky = data["night_sky"];
 		if (check("viewmodel_changer", data)) viewmodel_changer = data["viewmodel_changer"];
 		if (check("viewmodel_offset", data)) viewmodel_offset = data["viewmodel_offset"];
+		if (check("visuals_corner_box", data)) visuals_corner_box = data["visuals_corner_box"];
+		if (check("visuals_glow_weapon", data)) visuals_glow_weapon = data["visuals_glow_weapon"];
 
 
 		// misc
@@ -613,7 +628,10 @@ public:
 		if (check_color("visuals_bullet_tracer_col", data)) read_color(visuals_bullet_tracer_col, data, "visuals_bullet_tracer_col");
 		if (check_color("visuals_sniper_crosshair_col", data)) read_color(visuals_sniper_crosshair_col, data, "visuals_sniper_crosshair_col");
 		if (check_color("visuals_recoil_crosshair_col", data)) read_color(visuals_recoil_crosshair_col, data, "visuals_recoil_crosshair_col");
-		
+		if (check_color("visuals_corner_col_hidden", data)) read_color(visuals_corner_col_hidden, data, "visuals_corner_col_hidden");
+		if (check_color("visuals_corner_col_visible", data)) read_color(visuals_corner_col_visible, data, "visuals_corner_col_visible");
+		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
+
 	}
 
 	void save_cfg(std::ostream& file)

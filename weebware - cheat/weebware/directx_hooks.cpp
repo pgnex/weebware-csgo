@@ -531,8 +531,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::Begin("Body", &g_weebware.menu_opened, ImVec2(new_width / 2, screen_height * .69), 1.f, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoInputs);
 
-		if (stage_body <= (screen_height / 2) - ((screen_height * .72) / 2))
+		if (stage_body <= (screen_height / 2) - ((screen_height * .72) / 2)) {
 			ImGui::SetWindowPos(ImVec2(((screen_width / 2) - ((screen_width / 2) / 2) - (diff / 4)), ((screen_height / 2) / 2) - (screen_height / 10)), ImGuiSetCond_Always);
+		}
 		else
 			ImGui::SetWindowPos(ImVec2(((screen_width / 2) - ((screen_width / 2) / 2) - (diff / 4)), stage_body), ImGuiSetCond_Always);
 
@@ -674,6 +675,181 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		}
 #pragma endregion
+
+
+#pragma region Visuals
+		if (tab_selection == tabs::vis) {
+			ImGui::Columns(2, "Visuals", false);
+			{
+				ImGui::BeginChild("Visuals 1", ImVec2(0, 0), true);
+				{
+					ImGui::Text("Player ESP");
+					ImGui::Separator();
+					ImGui::Text("Activation type");
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
+					const char* activation_type[] = { "Off", "Enabled", "On Key" };
+					ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
+					ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
+					if (g_weebwarecfg.visuals_teammates) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.team_visible_col, g_weebwarecfg.team_hidden_col, true, "Visible Color (Team)##Team1", "Hidden Color (Team)##Team2");
+					}
+					ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
+
+					ImGui::Checkbox("Bounding Box", &g_weebwarecfg.visuals_bounding_box, false);
+					if (g_weebwarecfg.visuals_bounding_box) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col_visible, g_weebwarecfg.visuals_bounding_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
+					}
+
+					ImGui::Checkbox("Corner Box", &g_weebwarecfg.visuals_corner_box, false);
+					if (g_weebwarecfg.visuals_corner_box) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_corner_col_visible, g_weebwarecfg.visuals_corner_col_hidden, true, "Visible Color (Enemy)##corner1", "Hidden Color (Enemy)##corner2");
+					}
+
+					ImGui::Checkbox("Skeleton", &g_weebwarecfg.visuals_skeleton, false);
+					if (g_weebwarecfg.visuals_skeleton) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##skele1", "Hidden Color (Enemy)##skele2");
+					}
+
+
+					ImGui::Checkbox("Health Bar", &g_weebwarecfg.visuals_health_bars, false);
+
+					ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
+					if (g_weebwarecfg.visuals_name_esp) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)##name1", "Hidden Color (Enemy)##name2");
+					}
+
+
+					ImGui::Checkbox("Draw On Dormant", &g_weebwarecfg.visuals_dormant_esp, false);
+					if (g_weebwarecfg.visuals_dormant_esp) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)##dormant1", "Hidden Color (Enemy)##dormant2");
+					}
+					ImGui::Checkbox("Show On Radar", &g_weebwarecfg.visuals_bspotted, false);
+
+					ImGui::Separator();
+					ImGui::Text("Glow");
+					ImGui::Separator();
+
+					ImGui::Checkbox("Enabled##Glow", &g_weebwarecfg.visuals_glow_enabled, false);
+
+					ImGui::Checkbox("Players", &g_weebwarecfg.visuals_glow_player, false);
+					if (g_weebwarecfg.visuals_glow_player) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_player_col_visible, g_weebwarecfg.visuals_glow_player_col_hidden, g_weebwarecfg.visuals_glow_hidden_col, "Glow Color (Visible)", "Glow Color (Hidden)");
+						ImGui::Checkbox("Hidden Color", &g_weebwarecfg.visuals_glow_hidden_col, false);
+					}
+
+					ImGui::Checkbox("Weapon", &g_weebwarecfg.visuals_glow_weapon, false);
+					if (g_weebwarecfg.visuals_glow_weapon) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_weapon_col, g_weebwarecfg.visuals_glow_weapon_col, false, "Weapon Color", "##glowwep");
+					}
+
+					ImGui::Checkbox("Bomb", &g_weebwarecfg.visuals_glow_c4, false);
+					if (g_weebwarecfg.visuals_glow_c4) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_c4_col, g_weebwarecfg.visuals_glow_c4_col, false, "Bomb Color", "##glowbomb");
+					}
+
+					ImGui::Checkbox("Chicken", &g_weebwarecfg.visuals_glow_chicken, false);
+					if (g_weebwarecfg.visuals_glow_chicken) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_chicken_col, g_weebwarecfg.visuals_glow_chicken_col, false, "Chicken Color", "##glow2");
+					}
+
+					ImGui::Separator();
+					ImGui::Text("Chams");
+					ImGui::Separator();
+
+					const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude" };
+					ImGui::Text("Material");
+					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
+					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
+					ImGui::Checkbox("Render Team", &g_weebwarecfg.visuals_chams_render_team, false);
+
+					ImGui::Checkbox("XQZ (Through Materials)", &g_weebwarecfg.visuals_chams_xqz, false);
+					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
+
+
+
+				}
+				ImGui::EndChild();
+
+				ImGui::NextColumn();
+
+				ImGui::BeginChild("Visuals 2", ImVec2(0, 0), true);
+				{
+					ImGui::Text("Other Visuals");
+					ImGui::Separator();
+					ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
+					if (g_weebwarecfg.visuals_inacc_circle) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
+					}
+					ImGui::Checkbox("Sniper Crosshair", &g_weebwarecfg.visuals_sniper_crosshair, false);
+					if (g_weebwarecfg.visuals_sniper_crosshair) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");
+					}
+					ImGui::Checkbox("Recoil Crosshair", &g_weebwarecfg.visuals_recoil_crosshair, false);
+					if (g_weebwarecfg.visuals_recoil_crosshair) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_recoil_crosshair_col, "Recoil Crosshair Color");
+					}
+					ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
+					imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
+					ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
+					ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
+					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
+					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
+					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
+					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
+					if (g_weebwarecfg.enable_bullet_tracers) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
+						ImGui::Text("Bullet Tracer Expire");
+						ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.0f");
+					}
+
+					ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
+					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
+					const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
+					if (g_weebwarecfg.visuals_hitmarkers) {
+						ImGui::Text("Hitmarker Sound");
+						ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
+					}
+					ImGui::Separator();
+
+					ImGui::Text("Backtracking");
+					ImGui::Separator();
+					ImGui::Text("Style");
+					const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
+					ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
+					ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
+					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
+
+
+					ImGui::Separator();
+					ImGui::Text("Models");
+					ImGui::Separator();
+
+					if (g_weebware.models_installed) {
+						ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
+
+						ImGui::Text("Player Models");
+						const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai" };
+						ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
+						// https://gamebanana.com/skins/148058
+
+						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25), ImGuiButtonFlags_Outlined)) {
+
+							g_weebwarecfg.skinchanger_apply_nxt = 1;
+
+						}
+					}
+					else {
+						ImGui::Text("Please properly install models");
+					}
+				}
+
+				ImGui::EndChild();
+
+			}
+		}
+#pragma endregion
+
+
 		if (tab_selection == tabs::skins) {
 
 			ImGui::BeginChild("skinchangetshit");
@@ -767,166 +943,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			ImGui::EndChild();
 		}
 
-
-#pragma region Visuals
-		if (tab_selection == tabs::vis) {
-			ImGui::Columns(2, "Visuals", false);
-			{
-				ImGui::BeginChild("Visuals 1", ImVec2(0, 0), true);
-				{
-					ImGui::Text("Player ESP");
-					ImGui::Separator();
-					ImGui::Text("Activation type");
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
-					const char* activation_type[] = { "Off", "Enabled", "On Key" };
-					ImGui::Combo("##activationtype", &g_weebwarecfg.enable_visuals, activation_type, ARRAYSIZE(activation_type));
-					ImGui::Checkbox("Teammates", &g_weebwarecfg.visuals_teammates, false);
-					if (g_weebwarecfg.visuals_teammates) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.team_visible_col, g_weebwarecfg.team_hidden_col, true, "Visible Color (Team)##Team1", "Hidden Color (Team)##Team2");
-					}
-					ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
-
-					ImGui::Checkbox("Bounding box", &g_weebwarecfg.visuals_bounding_box, false);
-					if (g_weebwarecfg.visuals_bounding_box) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bounding_col_visible, g_weebwarecfg.visuals_bounding_col_hidden, true, "Visible Color (Enemy)##box1", "Hidden Color (Enemy)##box2");
-					}
-
-					ImGui::Checkbox("Skeleton", &g_weebwarecfg.visuals_skeleton, false);
-					if (g_weebwarecfg.visuals_skeleton) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##skele1", "Hidden Color (Enemy)##skele2");
-					}
-
-
-					ImGui::Checkbox("Health bar", &g_weebwarecfg.visuals_health_bars, false);
-
-					ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp, false);
-					if (g_weebwarecfg.visuals_name_esp) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)##name1", "Hidden Color (Enemy)##name2");
-					}
-
-
-					ImGui::Checkbox("Draw on dormant", &g_weebwarecfg.visuals_dormant_esp, false);
-					if (g_weebwarecfg.visuals_dormant_esp) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_dormant_col, g_weebwarecfg.visuals_dormant_col_team, g_weebwarecfg.visuals_teammates, "Visible Color (Enemy)##dormant1", "Hidden Color (Enemy)##dormant2");
-					}
-					ImGui::Checkbox("Show on radar", &g_weebwarecfg.visuals_bspotted, false);
-
-					ImGui::Separator();
-					ImGui::Text("Glow");
-					ImGui::Separator();
-
-					ImGui::Checkbox("Enabled##Glow", &g_weebwarecfg.visuals_glow_enabled, false);
-
-					ImGui::Checkbox("Players", &g_weebwarecfg.visuals_glow_player, false);
-					if (g_weebwarecfg.visuals_glow_player) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_player_col_visible, g_weebwarecfg.visuals_glow_player_col_hidden, g_weebwarecfg.visuals_glow_hidden_col, "Glow Color (Visible)", "Glow Color (Hidden)");
-						ImGui::Checkbox("Hidden Color", &g_weebwarecfg.visuals_glow_hidden_col, false);
-					}
-
-					ImGui::Checkbox("Bomb", &g_weebwarecfg.visuals_glow_c4, false);
-					if (g_weebwarecfg.visuals_glow_c4) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_c4_col, g_weebwarecfg.visuals_glow_c4_col, false, "Bomb Color", "##glow2");
-					}
-
-					ImGui::Checkbox("Chicken", &g_weebwarecfg.visuals_glow_chicken, false);
-					if (g_weebwarecfg.visuals_glow_chicken) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_chicken_col, g_weebwarecfg.visuals_glow_chicken_col, false, "Chicken Color", "##glow2");
-					}
-
-					ImGui::Separator();
-					ImGui::Text("Chams");
-					ImGui::Separator();
-
-					const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude" };
-					ImGui::Text("Material");
-					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
-					ImGui::Checkbox("Render team", &g_weebwarecfg.visuals_chams_render_team, false);
-
-					ImGui::Checkbox("XQZ", &g_weebwarecfg.visuals_chams_xqz, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
-
-
-
-				}
-				ImGui::EndChild();
-
-				ImGui::NextColumn();
-
-				ImGui::BeginChild("Visuals 2", ImVec2(0, 0), true);
-				{
-					ImGui::Text("Other Visuals");
-					ImGui::Separator();
-					ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
-					if (g_weebwarecfg.visuals_inacc_circle) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
-					}
-					ImGui::Checkbox("Sniper Crosshair", &g_weebwarecfg.visuals_sniper_crosshair, false);
-					if (g_weebwarecfg.visuals_sniper_crosshair) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");
-					}
-					ImGui::Checkbox("Recoil Crosshair", &g_weebwarecfg.visuals_recoil_crosshair, false);
-					if (g_weebwarecfg.visuals_recoil_crosshair) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_recoil_crosshair_col, "Recoil Crosshair Color");
-					}
-					ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
-					ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
-					ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
-					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
-					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
-					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
-					if (g_weebwarecfg.enable_bullet_tracers) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
-						ImGui::Text("Bullet Tracer Expire");
-						ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.0f");
-					}
-
-					ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
-					const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
-					ImGui::Text("Hitmarker Sound");
-					ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
-					ImGui::Separator();
-
-					ImGui::Text("Backtracking");
-					ImGui::Separator();
-					ImGui::Text("Style");
-					const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
-					ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
-					ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
-
-
-					ImGui::Separator();
-					ImGui::Text("Models");
-					ImGui::Separator();
-
-					if (g_weebware.models_installed) {
-						ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
-
-						ImGui::Text("Player Models");
-						const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai" };
-						ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
-						// https://gamebanana.com/skins/148058
-
-						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25), ImGuiButtonFlags_Outlined)) {
-
-							g_weebwarecfg.skinchanger_apply_nxt = 1;
-
-						}
-					}
-					else {
-						ImGui::Text("Please properly install models");
-					}
-				}
-
-				ImGui::EndChild();
-
-			}
-		}
-#pragma endregion
-
 #pragma region Misc
 		if (tab_selection == tabs::misc) {
 
@@ -946,7 +962,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.viewmodel_changer) {
 						ImGui::SliderInt("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
 					}
-					ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
+				//	ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
 
 					ImGui::Separator();
 					ImGui::Text("Movement");

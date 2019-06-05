@@ -129,6 +129,11 @@ public:
 	fn_mdl o_mdl;
 #pragma endregion
 
+#pragma region viewmodel
+	typedef float(__fastcall* fn_vm)();
+	fn_vm o_vm;
+#pragma endregion
+
 public:
 	// Global function to initate the hooks
 	void hook_all_functions();

@@ -34,6 +34,11 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 
 void c_paint_traverse::draw_water_mark()
 {
+
+	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
+		return;
+	}
+
 	c_color col = c_color(g_weebwarecfg.water_mark_col);
 	std::string weebware = "weebware - " + g_weebware.g_user_name;
 	std::transform(weebware.begin(), weebware.end(), weebware.begin(), ::tolower);

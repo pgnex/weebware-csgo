@@ -14,6 +14,7 @@ public:
 	void legit_aa_resolver();
 	void third_person();
 	void bullet_tracers();
+	void glove_changer();
 };
 
 extern std::vector< ImpactData_t > vis_impact_data;
