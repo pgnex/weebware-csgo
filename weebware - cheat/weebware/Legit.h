@@ -75,7 +75,7 @@ private:
 	c_base_entity * closest_target_available();
 	bool is_visible(c_base_entity* target);
 	QAngle closest_hitbox(c_base_entity* target);
-	QAngle rcs_scaled(QAngle original_angle);
+	QAngle rcs_scaled(QAngle original_angle, float pitch, float yaw);
 	void standalone_rcs(c_usercmd* cmd);
 	long get_epoch();
 	double m_last_time = 0;

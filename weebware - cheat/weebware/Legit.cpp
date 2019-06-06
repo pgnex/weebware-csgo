@@ -71,7 +71,15 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		return;
 
 	if (m_local->m_iShotsFired() > 1) {
-		aim_angle = rcs_scaled(aim_angle);
+
+		float rcs_power = g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power;
+
+		if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
+			aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
+		}
+		else {
+			aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs);
+		}
 	}
 
 	g_maths.normalize_angle(aim_angle);
@@ -390,37 +398,24 @@ QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 	return closest_hitbox;
 }
 
-QAngle c_legitbot::rcs_scaled(QAngle original_angle)
+QAngle c_legitbot::rcs_scaled(QAngle original_angle, float pitch, float yaw)
 {
 	QAngle delta = original_angle;
 
-	delta.x -= (m_local->m_aimPunchAngle().x * (2.f / 100.f * g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs));
+	delta.x -= (m_local->m_aimPunchAngle().x * (2.f / 100.f * pitch));
 
-	delta.y -= (m_local->m_aimPunchAngle().y * (2.f / 100.f * g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs));
+	delta.y -= (m_local->m_aimPunchAngle().y * (2.f / 100.f * yaw));
 
 	return delta;
 }
-
-#if 0
-float GetRealDistanceFOV(float distance, QAngle angle)
-{
-
-	Vector aimingAt;
-	g_maths::AngleVectors(cmd->viewangles, aimingAt);
-	aimingAt *= distance;
-
-	Vector aimAt;
-	Math::AngleVectors(angle, aimAt);
-	aimAt *= distance;
-
-	return aimingAt.DistTo(aimAt);
-}
-#endif
 
 
 void c_legitbot::standalone_rcs(c_usercmd* cmd)
 {
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs)
+		return;
+
+	if (!m_local->m_iShotsFired() > 1)
 		return;
 
 	static QAngle old_punch = QAngle(0, 0, 0);
@@ -436,9 +431,6 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 	g_maths.normalize_angle(delta);
 
 	g_maths.clamp_angle(delta);
-
-	if (!m_local->m_iShotsFired() > 1)
-		return;
 
 	if (cmd->buttons & in_attack) {
 
