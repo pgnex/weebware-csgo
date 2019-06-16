@@ -19,6 +19,8 @@ public:
 	bool is_visible(c_base_entity* target);
 	void auto_strafe(c_usercmd* cmd);
 	void auto_queue();
+	void disable_post_processing();
+
 	QAngle real_angle;
 };
 

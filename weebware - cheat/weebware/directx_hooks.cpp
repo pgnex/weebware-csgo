@@ -957,6 +957,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
 				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
+					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					// ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {

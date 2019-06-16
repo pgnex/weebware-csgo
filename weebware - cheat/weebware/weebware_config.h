@@ -286,6 +286,7 @@ public:
 	bool night_sky;
 	bool remove_flash;
 	bool screenshot_proof;
+	bool disable_post_processing;
 
 	int auto_strafe = 0;
 	bool edge_jump;

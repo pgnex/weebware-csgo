@@ -28,6 +28,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 			g_create_move.skybox_changer();
 			g_create_move.auto_jump(cmd);
 			g_create_move.auto_strafe(cmd);
+			g_create_move.disable_post_processing();
 
 			g_create_move.edge_jump_pre_prediction(cmd);
 			g_engine_prediction.begin(cmd, g_create_move.local);
@@ -200,6 +201,26 @@ void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
 		cmd->forwardmove = -cmd->forwardmove;
 }
 
+bool post_process_disabled = false;
+void c_create_move::disable_post_processing() {
+
+	c_convar* mat_postprocess_enable = g_weebware.g_convars->find_cvar("mat_postprocess_enable");
+
+	if (g_weebwarecfg.disable_post_processing && !post_process_disabled) {
+		mat_postprocess_enable->SetValue(1);
+		post_process_disabled = true;
+		std::cout << "set" << std::endl;
+	}
+	else if (!g_weebwarecfg.disable_post_processing && post_process_disabled) {
+		mat_postprocess_enable->SetValue(0);
+		post_process_disabled = false;
+		std::cout << "unset" << std::endl;
+	}
+
+	//c_convar* mat_postprocess_enable = g_weebware.g_convars->find_cvar("mat_postprocess_enable");
+	//mat_postprocess_enable->SetValue(g_weebwarecfg.disable_post_processing ? 0 : 1);
+}
+
 namespace anti_trigger {
 
 	/*Credits https://stackoverflow.com/questions/2752725/finding-whether-a-point-lies-inside-a-rectangle-or-not post by Alghyaline*/
@@ -211,7 +232,7 @@ namespace anti_trigger {
 		return temp;
 	}
 	bool pointInRectangle(Vector A, Vector B, Vector C, Vector D, Vector m) {
-		Vector AB = vect2d(A, B);  float C1 = -1 * (AB.y*A.x + AB.x*A.y); float  D1 = (AB.y*m.x + AB.x*m.y) + C1;
+		Vector AB = vect2d(A, B);  float C1 = -1 * (AB.y*A.x + AB.x*A.y); float D1 = (AB.y*m.x + AB.x*m.y) + C1;
 		Vector AD = vect2d(A, D);  float C2 = -1 * (AD.y*A.x + AD.x*A.y); float D2 = (AD.y*m.x + AD.x*m.y) + C2;
 		Vector BC = vect2d(B, C);  float C3 = -1 * (BC.y*B.x + BC.x*B.y); float D3 = (BC.y*m.x + BC.x*m.y) + C3;
 		Vector CD = vect2d(C, D);  float C4 = -1 * (CD.y*C.x + CD.x*C.y); float D4 = (CD.y*m.x + CD.x*m.y) + C4;
