@@ -138,7 +138,7 @@
     <ClCompile Include="c_entities.cpp" />
     <ClCompile Include="directx_hooks.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="dme.cpp" />
+    <ClCompile Include="scene_end.cpp" />
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="esp.cpp" />
@@ -189,7 +189,7 @@
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />
-    <ClInclude Include="dme.h" />
+    <ClInclude Include="scene_end.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />
     <ClInclude Include="events.h" />

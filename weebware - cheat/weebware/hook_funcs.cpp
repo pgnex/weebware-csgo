@@ -84,20 +84,20 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 }
 #endif
 
-void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
-{
-	auto protecc = g_hooking.VEH_DME->getProtectionObject();
-
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
-	}
-	else
-		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-
-	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-	//
-	// 
-}
+//void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
+//{
+//	auto protecc = g_hooking.VEH_DME->getProtectionObject();
+//
+//	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+//		hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+//	}
+//	else
+//		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+//
+//	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+//	//
+//	// 
+//}
 
 void __fastcall hk_scene_end(void* thisptr, void* edx) {
 
