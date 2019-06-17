@@ -93,15 +93,12 @@
     </Filter>
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
     <Filter Include="Source Files\hooking\Scene End">
       <UniqueIdentifier>{7a637797-5f3b-4461-8f99-798e18e7aad6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\hooking\CreateMove\nightmode">
       <UniqueIdentifier>{75dbde77-b445-40d6-aaee-6fcd471cdfc9}</UniqueIdentifier>
     </Filter>
-=======
->>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
 =======
 >>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
 =======
@@ -201,11 +198,7 @@
     <ClCompile Include="nightmode.cpp">
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
       <Filter>Source Files\hooking\CreateMove\nightmode</Filter>
-=======
-      <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
->>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
 =======
       <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
 >>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
@@ -419,11 +412,7 @@
     <ClInclude Include="nightmode.h">
 <<<<<<< HEAD
 <<<<<<< HEAD
-<<<<<<< HEAD
       <Filter>Source Files\hooking\CreateMove\nightmode</Filter>
-=======
-      <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
->>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
 =======
       <Filter>Source Files\hooking\Draw Model Execute\nightmode</Filter>
 >>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke
