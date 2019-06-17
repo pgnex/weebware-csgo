@@ -8,6 +8,7 @@ c_dme g_dme;
 
 void hook_functions::scene_end(void* thisptr, void* edx) {
 <<<<<<< HEAD:weebware - cheat/weebware/dme.cpp
+<<<<<<< HEAD:weebware - cheat/weebware/dme.cpp
 <<<<<<< HEAD:weebware - cheat/weebware/scene_end.cpp
 
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
@@ -15,6 +16,9 @@ void hook_functions::scene_end(void* thisptr, void* edx) {
 	}
 
 	g_sceneend.scene_end();
+=======
+	g_dme.scene_end();
+>>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke:weebware - cheat/weebware/dme.cpp
 =======
 	g_dme.scene_end();
 >>>>>>> parent of 9b53124... recoded some cham stuff, and fixed chams behind smoke:weebware - cheat/weebware/dme.cpp
