@@ -4,7 +4,7 @@
 #include "esp.h"
 #include "hook_funcs.h"
 #include "Legit.h"
-#include "scene_end.h"
+#include "dme.h"
 
 c_paint_traverse g_paint_traverse;
 

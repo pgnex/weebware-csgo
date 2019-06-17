@@ -5,14 +5,13 @@
 
 #include "Header.h"
 
-class c_sceneend
+class c_dme
 {
 public:
 	void scene_end();
-	//void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
+	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
 	bool is_visible(c_base_entity* target);
 	void glow();
-	void chams();
 
 	enum custom_mats : int
 	{
@@ -31,12 +30,12 @@ public:
 	};
 
 	// Returns a material based on type
-	imaterial* borrow_mat(c_sceneend::custom_mats type);
+	imaterial* borrow_mat(c_dme::custom_mats type);
 
 private:
 
 protected:
 
 };
-extern c_sceneend g_sceneend;
+extern c_dme g_dme;
 #endif
