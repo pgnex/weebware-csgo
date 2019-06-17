@@ -264,7 +264,6 @@ public:
 	bool visuals_corner_box;
 	bool visuals_health_bars;
 	bool visuals_inacc_circle;
-	bool visuals_fov_circle;
 	bool visuals_sniper_crosshair;
 	bool visuals_recoil_crosshair;
 	bool visuals_backtrack_dots;
@@ -332,6 +331,7 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	bool killsay;
+	//bool disable_post_processing = true;
 
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
@@ -473,8 +473,6 @@ public:
 		tmp["edge_jump_key "] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
-		tmp["disable_post_processing"] = disable_post_processing;
-		tmp["visuals_fov_circle"] = visuals_fov_circle;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -597,8 +595,7 @@ public:
 		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
 		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];
 		if (check("duck_in_air", data)) duck_in_air = data["duck_in_air"];
-		if (check("disable_post_processing", data)) disable_post_processing = data["disable_post_processing"];
-		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
+
 
 		// colors
 

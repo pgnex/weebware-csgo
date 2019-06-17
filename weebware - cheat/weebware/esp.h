@@ -45,7 +45,6 @@ private:
 	void render_skeleton(c_base_entity* ent, bool is_team);
 	void render_health(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void draw_inaccuracy_circle();
-	void draw_fov_circle();
 	void render_name(s_boundaries bounds, c_base_entity* ent, bool is_team);
 	void bomb_timer(c_base_entity* ent);
 	void draw_crosshair();
