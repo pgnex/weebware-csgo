@@ -264,6 +264,7 @@ public:
 	bool visuals_corner_box;
 	bool visuals_health_bars;
 	bool visuals_inacc_circle;
+	bool visuals_fov_circle;
 	bool visuals_sniper_crosshair;
 	bool visuals_recoil_crosshair;
 	bool visuals_backtrack_dots;

@@ -28,6 +28,7 @@ void c_esp::esp_main()
 
 				// call things here for visual stuff before gay checks..
 				draw_inaccuracy_circle();
+				draw_fov_circle();
 				draw_crosshair();
 				recoil_crosshair();
 
@@ -664,6 +665,23 @@ void c_esp::draw_crosshair() {
 	g_weebware.g_surface->drawline(cx - 8, cy - 0, cx + 8, cy + 0);
 	g_weebware.g_surface->drawline(cx + 0, cy - 8, cx - 0, cy + 8);
 
+}
+
+void c_esp::draw_fov_circle() {
+
+	if (!g_weebwarecfg.visuals_fov_circle)
+		return;
+
+	int x, y;
+	float fov;
+
+	fov = g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].maximum_fov;
+	g_weebware.g_engine->get_screen_dimensions(x, y);
+	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
+
+	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(g_hooking.o_vm()) / 2) * x;
+
+	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);
 }
 
 void c_esp::draw_inaccuracy_circle()

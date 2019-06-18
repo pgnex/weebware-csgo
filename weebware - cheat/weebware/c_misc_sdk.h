@@ -372,14 +372,14 @@ public:
 	// get the name of the material.  this is a full path to 
 	// the vmt file starting from "hl2/materials" (or equivalent) without
 	// a file extension.
-	virtual const char* getname() const = 0;
-	virtual const char* gettexturegroupname() const = 0;
+	virtual const char* getname() const = 0; // 1
+	virtual const char* gettexturegroupname() const = 0; // 2
 
 	// get the preferred size/bitdepth of a preview image of a material.
 	// this is the sort of image that you would use for a thumbnail view
 	// of a material, or in worldcraft until it uses materials to render.
 	// separate this for the tools maybe
-	virtual previewimageretval_t getpreviewimageproperties(int* width, int* height, imageformat* imageformat, bool* istranslucent) const = 0;
+	virtual previewimageretval_t getpreviewimageproperties(int* width, int* height, imageformat* imageformat, bool* istranslucent) const = 0; // 3
 
 	// get a preview image at the specified width/height and bitdepth.
 	// will do resampling if necessary.(not yet!!! :) )
@@ -388,13 +388,13 @@ public:
 	//
 	virtual int getmappingwidth() = 0;
 	virtual int getmappingheight() = 0;
-	virtual int getnumanimationframes() = 0;
+	virtual int getnumanimationframes() = 0; // 8
 
 	// for material subrects (material pages).  offset(u,v) and scale(u,v) are normalized to texture.
 	virtual bool inmaterialpage(void) = 0;
 	virtual void getmaterialoffset(float* poffset) = 0;
 	virtual void getmaterialscale(float* pscale) = 0;
-	virtual imaterial* getmaterialpage(void) = 0;
+	virtual imaterial* getmaterialpage(void) = 0; //  12
 
 	// find a vmt variable.
 	// this is how game code affects how a material is rendered.
@@ -406,7 +406,7 @@ public:
 	// used instead.  garbage collection is done upon a call to 
 	// imaterialsystem::uncacheunusedmaterials.
 	virtual void incrementreferencecount(void) = 0;
-	virtual void decrementreferencecount(void) = 0;
+	virtual void decrementreferencecount(void) = 0; // 15
 
 	inline void addref()
 	{
@@ -435,7 +435,7 @@ public:
 	virtual bool isalphatested() = 0;
 
 	// are we vertex lit?
-	virtual bool isvertexlit() = 0;
+	virtual bool isvertexlit() = 0; // 23
 
 	// gets the vertex format
 	virtual vertexformat_t getvertexformat() const = 0;
@@ -456,7 +456,7 @@ public:
 	virtual void colormodulate(float r, float g, float b) = 0;
 
 	// material var flags...
-	virtual void setmaterialvarflag(materialvarflags_t flag, bool on) = 0;
+	virtual void setmaterialvarflag(materialvarflags_t flag, bool on) = 0; // 33
 	virtual bool getmaterialvarflag(materialvarflags_t flag) const = 0;
 
 	// gets material reflectivity

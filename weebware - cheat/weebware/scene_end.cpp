@@ -214,7 +214,7 @@ void c_sceneend::chams() {
 			continue;
 
 		if (g_weebwarecfg.visuals_chams_xqz) {
-			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+		//	mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 			player->draw_model(1, 255);
 			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
@@ -256,7 +256,6 @@ void c_sceneend::chams() {
 			player->draw_model(1, 255);
 			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 		}
-
 	}
 }
 
