@@ -780,6 +780,12 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.visuals_inacc_circle) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
 					}
+
+					ImGui::Checkbox("Draw FOV", &g_weebwarecfg.visuals_fov_circle, false);
+					if (g_weebwarecfg.visuals_fov_circle) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_fov_circle_col, "Circle Color");
+					}
+
 					ImGui::Checkbox("Sniper Crosshair", &g_weebwarecfg.visuals_sniper_crosshair, false);
 					if (g_weebwarecfg.visuals_sniper_crosshair) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_sniper_crosshair_col, "Sniper Crosshair Color");

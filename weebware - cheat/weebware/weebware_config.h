@@ -332,7 +332,6 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	bool killsay;
-	//bool disable_post_processing = true;
 
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
@@ -341,6 +340,7 @@ public:
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_bounding_team_col = ImVec4(255, 255, 0, 255);
 	ImVec4 visuals_innacc_circle_col = ImVec4(0, 0, 255, 50);
+	ImVec4 visuals_fov_circle_col = ImVec4(255, 0, 255, 255);
 	ImVec4 visuals_backtrack_col = ImVec4(0, 0, 255, 50);
 	ImVec4 visuals_dormant_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
@@ -421,6 +421,9 @@ public:
 		tmp["visuals_glow_hidden_col"] = visuals_glow_hidden_col;
 		tmp["visuals_corner_box"] = visuals_corner_box;
 		tmp["visuals_glow_weapon"] = visuals_glow_weapon;
+		tmp["visuals_fov_circle"] = visuals_fov_circle;
+		tmp["screenshot_proof"] = screenshot_proof;
+		tmp["disable_post_processing"] = disable_post_processing;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -507,6 +510,7 @@ public:
 		save_color(visuals_corner_col_hidden, tmp, "visuals_corner_col_hidden");
 		save_color(visuals_corner_col_visible, tmp, "visuals_corner_col_visible");
 		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
+		save_color(visuals_fov_circle_col, tmp, "visuals_fov_circle_col");
 
 		return tmp;
 	}
@@ -547,6 +551,9 @@ public:
 		if (check("viewmodel_offset", data)) viewmodel_offset = data["viewmodel_offset"];
 		if (check("visuals_corner_box", data)) visuals_corner_box = data["visuals_corner_box"];
 		if (check("visuals_glow_weapon", data)) visuals_glow_weapon = data["visuals_glow_weapon"];
+		if (check("disable_post_processing", data)) disable_post_processing = data["disable_post_processing"];
+		if (check("screenshot_proof", data)) screenshot_proof = data["screenshot_proof"];
+		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
 
 
 		// misc
@@ -633,6 +640,7 @@ public:
 		if (check_color("visuals_corner_col_hidden", data)) read_color(visuals_corner_col_hidden, data, "visuals_corner_col_hidden");
 		if (check_color("visuals_corner_col_visible", data)) read_color(visuals_corner_col_visible, data, "visuals_corner_col_visible");
 		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
+		if (check_color("visuals_fov_circle_col", data)) read_color(visuals_fov_circle_col, data, "visuals_fov_circle_col");
 
 	}
 

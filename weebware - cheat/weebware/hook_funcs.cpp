@@ -130,6 +130,9 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 {
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
 
+	if (!g_weebware.models_installed)
+		return g_hooking.o_mdl(ecx, edx, FilePath);
+
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
 	PrecacheModel("models/weapons/v_minecraft_pickaxe.mdl");
