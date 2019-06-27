@@ -412,6 +412,7 @@ void c_frame_stage_notify::run_skinchanger()
 					skin_config.m_wear = FLT_MIN;
 
 				*weapon->get_fallbackwear() = skin_config.m_wear;
+				*weapon->m_iEntityQuality() = 3;
 				*weapon->get_accountid() = local_inf.xuid_low;
 				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 				*weapon->get_original_owner_xuidhigh() = 0;

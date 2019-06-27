@@ -48,6 +48,7 @@ void knife_changer::frame_stage_notify() {
 		*weapon->m_nModelIndex() = model_index;
 		*weapon->m_nViewModelIndex() = model_index;
 		*weapon->get_fallbackwear() = 1;
+		*weapon->m_iEntityQuality() = 3;
 		*weapon->m_iItemDefinitionIndexPtr() = 516;
 	}
 }

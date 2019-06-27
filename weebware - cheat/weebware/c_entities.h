@@ -820,6 +820,11 @@ public:
 		return get_pointer<char>(offset);
 	}
 
+	int* m_iEntityQuality() {
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iEntityQuality");
+		return get_pointer<int>(offset);
+	}
+
 	int* get_item_id_high()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemIDHigh");
@@ -848,6 +853,8 @@ public:
 		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_nModelIndex");
 		return get_pointer<int>(offset);
 	}
+
+
 	int* m_iWorldModelIndex()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iWorldModelIndex");
