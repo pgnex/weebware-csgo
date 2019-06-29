@@ -50,7 +50,7 @@ public:
 	}
 
 private:
-	std::unique_ptr<netvar_table> internal_load_table(recvtable* precvtable, uint32_t offset);
+	std::unique_ptr<netvar_table> internal_load_table(recv_table* precvtable, uint32_t offset);
 	void dump(std::ostream& output, netvar_table& table, int level);
 	void dump2(std::ostream& output, netvar_table& table, int level, std::string first);
 

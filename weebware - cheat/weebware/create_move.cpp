@@ -9,6 +9,8 @@
 c_create_move g_create_move;
 c_nightmode g_nightmode;
 
+
+
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
 	if (cmd->command_number == 0)
@@ -50,7 +52,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 					g_accuracy.clear_all_records();
 
 					if (*g_weebware.g_client_state)
-						(*g_weebware.g_client_state)->force_update();
+						knife_hook.force_update();
 
 					g_accuracy.clear_all_records();
 

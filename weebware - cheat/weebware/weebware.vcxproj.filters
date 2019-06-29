@@ -186,9 +186,6 @@
     <ClCompile Include="weebware_config.cpp">
       <Filter>Source Files\Config</Filter>
     </ClCompile>
-    <ClCompile Include="skinchanger.cpp">
-      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
-    </ClCompile>
     <ClCompile Include="c_entities.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClCompile>
@@ -230,6 +227,9 @@
     </ClCompile>
     <ClCompile Include="scene_end.cpp">
       <Filter>Source Files\hooking\Scene End</Filter>
+    </ClCompile>
+    <ClCompile Include="knife_proxy_hook.cpp">
+      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -404,9 +404,6 @@
     <ClInclude Include="platform.h">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
-    <ClInclude Include="skinchanger.h">
-      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
-    </ClInclude>
     <ClInclude Include="imdlcache.h">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
@@ -451,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="scene_end.h">
       <Filter>Source Files\hooking\Scene End</Filter>
+    </ClInclude>
+    <ClInclude Include="knife_proxy_hook.h">
+      <Filter>Source Files\hooking\Frame Stage Notify\Skinchanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -841,7 +841,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25), ImGuiButtonFlags_Outlined)) {
 
 							g_weebwarecfg.skinchanger_apply_nxt = 1;
-
 						}
 					}
 					else {

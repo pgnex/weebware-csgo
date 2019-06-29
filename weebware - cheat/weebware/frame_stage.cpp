@@ -1,12 +1,11 @@
 #include "frame_stage.h"
 #include "Header.h"
 #include "shared.h"
-#include "skinchanger.h"
+#include "knife_proxy_hook.h"
 #include "thirdperson.h"
 #include "IViewRenderBeams.h"
 
 c_frame_stage_notify g_frame_stage_notify;
-knife_changer g_knife_changer;
 int convert_index_id(int index);
 
 #if 1
@@ -380,7 +379,6 @@ void c_frame_stage_notify::run_skinchanger()
 
 			c_skinchanger::knife_type knife_cfg = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]];
 
-#pragma region knifechanger
 			if (knife_cfg.weapon_index != 0) {
 
 				auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
@@ -421,8 +419,6 @@ void c_frame_stage_notify::run_skinchanger()
 			}
 		}
 		else if (weapon->is_firearm()) {
-
-#pragma endregion
 			auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
 
 			if (skin_config.m_paint_kit != 0)

@@ -8,7 +8,7 @@ public:
 	void* m_pCreateFn;
 	void* m_pCreateEventFn;
 	char* m_networkedname;
-	recvtable* m_precvtable;
+	recv_table* m_precvtable;
 	client_class* m_pNext;
 	int m_ClassID;
 };

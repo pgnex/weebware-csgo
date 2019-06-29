@@ -822,9 +822,11 @@ public:
 class c_clientstate
 {
 public:
-	void force_update()
+	void full_update()
 	{
 		// delta tick
 		*reinterpret_cast<int*>(std::uintptr_t(this) + 0x174) = -1;
 	};
+
+
 };

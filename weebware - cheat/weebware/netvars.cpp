@@ -89,7 +89,7 @@ void netvar_manager::create_database()
 			{
 				//Insert new entry on the database
 				m_database->insert(
-					pClass->m_precvtable->m_pNetTableName,
+					pClass->m_precvtable->table_name,
 					internal_load_table(pClass->m_precvtable, 0));
 				m_tableCount++;
 			}
@@ -178,34 +178,34 @@ void netvar_manager::dump2(const std::string& file)
 //------------------------------------------------------------
 // Internal methods below. This is where the real work is done
 //------------------------------------------------------------
-std::unique_ptr<netvar_table> netvar_manager::internal_load_table(recvtable* precvtable, uint32_t offset)
+std::unique_ptr<netvar_table> netvar_manager::internal_load_table(recv_table* precvtable, uint32_t offset)
 {
 	auto pTable = std::make_unique<netvar_table>();
 	pTable->m_uOffset = offset;
 
-	for (auto i = 0; i < precvtable->m_nProps; ++i)
+	for (auto i = 0; i < precvtable->props_count; ++i)
 	{
-		auto pProp = &precvtable->m_pProps[i];
+		auto pProp = &precvtable->props[i];
 
 		//Skip trash array items
-		if (!pProp || isdigit(pProp->m_pVarName[0])) continue;
+		if (!pProp || isdigit(pProp->prop_name[0])) continue;
 		//We dont care about the base class
-		if (strcmp(pProp->m_pVarName, "baseclass") == 0) continue;
+		if (strcmp(pProp->prop_name, "baseclass") == 0) continue;
 
 
 		//If this prop is a table
-		if (pProp->m_RecvType == SendPropType::DPT_DataTable && //If it is a table AND
-			pProp->m_pDataTable != NULL && //The DataTable isnt null AND
-			pProp->m_pDataTable->m_pNetTableName[0] == 'D')
+		if (pProp->prop_type == send_prop_type::_data_table && //If it is a table AND
+			pProp->data_table != NULL && //The DataTable isnt null AND
+			pProp->data_table->table_name[0] == 'D')
 		{ //The Table name starts with D (this is because there are some shitty nested 
 		  //tables that we want to skip, and those dont start with D)
 
 		  //Load the table pointed by pProp->m_pDataTable and insert it
-			pTable->insert_table(pProp->m_pVarName, internal_load_table(pProp->m_pDataTable, pProp->m_Offset));
+			pTable->insert_table(pProp->prop_name, internal_load_table(pProp->data_table, pProp->offset));
 		}
 		else
 		{
-			pTable->insert_prop(pProp->m_pVarName, pProp->m_Offset);
+			pTable->insert_prop(pProp->prop_name, pProp->offset);
 		}
 		m_netvarCount++;
 	}

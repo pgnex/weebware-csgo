@@ -905,6 +905,12 @@ public:
 		return get_pointer<int>(offset);
 	}
 
+	int m_hOwner()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_hOwner");
+		return get_value<int>(offset);
+	}
+
 	HANDLE get_weapon_handle()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_hWeapon");

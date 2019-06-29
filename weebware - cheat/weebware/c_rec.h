@@ -1,70 +1,67 @@
 #pragma once
-struct recvprop;
 
+class d_variant;
+class recv_table;
+class recv_prop;
+class c_recv_proxy_data;
 
-class d_variant
-{
+using recv_var_proxy_fn = void(*)(const c_recv_proxy_data* data, void* struct_ptr, void* out_ptr);
+using array_length_recv_proxy_fn = void(*)(void* struct_ptr, int object_id, int current_array_length);
+using data_table_recv_var_proxy_fn = void(*)(const recv_prop* prop, void** out_ptr, void* data_ptr, int object_id);
+
+enum send_prop_type {
+	_int = 0,
+	_float,
+	_vec,
+	_vec_xy,
+	_string,
+	_array,
+	_data_table,
+	_int_64,
+};
+class d_variant {
 public:
-	union
-	{
-		float m_Float;
-		long m_Int;
-		char* m_pString;
-		void* m_pData;
-		float m_Vector[3];
-		__int64  m_Int64;
+	union {
+		float m_float;
+		long m_int;
+		char* m_string;
+		void* m_data;
+		float m_vector[3];
+		__int64 m_int64;
 	};
+	send_prop_type type;
 };
-
-class c_rec_proxy_data
-{
+class c_recv_proxy_data {
 public:
-	const recvprop* m_pRecvProp;
-	d_variant m_Value;
-	int m_iElement;
-	int m_ObjectID;
+	const recv_prop* recv_prop;
+	d_variant value;
+	int element_index;
+	int object_id;
 };
-
-typedef void(*RecvVarProxyFn)(const c_rec_proxy_data* pData, void* pStruct, void* pOut);
-
-struct recvtable
-{
-	recvprop* m_pProps;
-	int m_nProps;
-	void* m_pDecoder;
-	char* m_pNetTableName;
-	bool m_bInitialized;
-	bool m_bInMainList;
+class recv_prop {
+public:
+	char* prop_name;
+	send_prop_type prop_type;
+	int prop_flags;
+	int buffer_size;
+	int is_inside_of_array;
+	const void* extra_data_ptr;
+	recv_prop* array_prop;
+	array_length_recv_proxy_fn array_length_proxy;
+	recv_var_proxy_fn proxy_fn;
+	data_table_recv_var_proxy_fn data_table_proxy_fn;
+	recv_table* data_table;
+	int offset;
+	int element_stride;
+	int elements_count;
+	const char* parent_array_prop_name;
 };
-
-struct recvprop
-{
-	char* m_pVarName;
-	int m_RecvType;
-	int m_Flags;
-	int m_StringBufferSize;
-	bool m_bInsideArray;
-	const void* m_pExtraData;
-	recvprop* m_pArrayProp;
-	void* m_ArrayLengthProxy;
-	void* m_ProxyFn;
-	void* m_DataTableProxyFn;
-	recvtable* m_pDataTable;
-	int m_Offset;
-	int m_ElementStride;
-	int m_nElements;
-	const char* m_pParentArrayPropName;
+class recv_table {
+public:
+	recv_prop* props;
+	int props_count;
+	void* decoder_ptr;
+	char* table_name;
+	bool is_initialized;
+	bool is_in_main_list;
 };
-
-typedef enum
-{
-	DPT_Int = 0,
-	DPT_Float,
-	DPT_Vector,
-	DPT_VectorXY,
-	DPT_String,
-	DPT_Array,
-	DPT_DataTable,
-	DPT_Int64,
-	DPT_NUMSendPropTypes
-} SendPropType;
