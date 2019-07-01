@@ -325,14 +325,12 @@ void c_frame_stage_notify::run_skinchanger() {
 	if (!g_weebwarecfg.skinchanger_enabled)
 		return;
 
-	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	c_base_entity* local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (!g_frame_stage_notify.local)
+	if (!local_player)
 		return;
 
-
-	// lets make sure we are alive
-	if (g_frame_stage_notify.local->m_iHealth() <= 0)
+	if (!local_player->is_valid_player())
 		return;
 
 	player_info local_inf;
@@ -341,7 +339,6 @@ void c_frame_stage_notify::run_skinchanger() {
 		return;
 
 	auto weapons = g_frame_stage_notify.local->get_weapons();
-	// Skin Changer
 
 	if (!weapons)
 		return;

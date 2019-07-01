@@ -1,6 +1,8 @@
 #include "Header.h"
 #include "shared.h"
 #include "knife_proxy_hook.h"
+#include <string>
+#include <map>
 
 c_knifehook knife_hook;
 
@@ -72,72 +74,62 @@ void c_knifehook::force_update() {
 	(*g_weebware.g_client_state)->full_update();
 }
 
-#define	LIFE_ALIVE 0
 #define RandomInt(nMin, nMax) (rand() % (nMax - nMin + 1) + nMin);
 recv_var_proxy_fn sequence_proxy_fn = nullptr;
 recv_var_proxy_fn recv_model_index;
 
 
-void hooked_recvproxy_viewmodel(c_recv_proxy_data* p_data, void* p_struct, void* p_out)noexcept {
+std::map<int, int> init_knife_indexes() {
 
-	int index_default_t = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_default_t.mdl");
-	int index_default_ct = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_default_ct.mdl");
-	int index_bayonet = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_bayonet.mdl");
-	int index_m9 = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_m9_bay.mdl");
-	int index_karambit = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_karam.mdl");
-	int index_bowie = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_survival_bowie.mdl");
-	int index_butterfly = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_butterfly.mdl");
-	int index_falchion = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_falchion_advanced.mdl");
-	int index_flip = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_flip.mdl");
-	int index_gut = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_gut.mdl");
-	int index_huntsman = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_tactical.mdl");
-	int index_shadow_daggers = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_push.mdl");
-	int index_navaja = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_gypsy_jackknife.mdl");
-	int index_stiletto = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_stiletto.mdl");
-	int index_talon = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_widowmaker.mdl");
-	int index_ursus = g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_ursus.mdl");
+	std::map<int, int> m;
 
-	auto local_player = reinterpret_cast<c_base_entity*>(g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()));
+	m.insert(std::make_pair(weapon_knife_t, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_default_t.mdl")));
+	m.insert(std::make_pair(weapon_knife, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_default_ct.mdl")));
+	m.insert(std::make_pair(weapon_knife_bayonet, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_bayonet.mdl")));
+	m.insert(std::make_pair(weapon_knife_m9_bayonet, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_m9_bay.mdl")));
+	m.insert(std::make_pair(weapon_knife_karambit, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_karam.mdl")));
+	m.insert(std::make_pair(weapon_knife_survival_bowie, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_survival_bowie.mdl")));
+	m.insert(std::make_pair(weapon_knife_butterfly, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_butterfly.mdl")));
+	m.insert(std::make_pair(weapon_knife_falchion, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_falchion_advanced.mdl")));
+	m.insert(std::make_pair(weapon_knife_flip, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_flip.mdl")));
+	m.insert(std::make_pair(weapon_knife_gut, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_gut.mdl")));
+	m.insert(std::make_pair(weapon_knife_tactical, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_tactical.mdl")));
+	m.insert(std::make_pair(weapon_knife_push, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_push.mdl")));
+	m.insert(std::make_pair(weapon_knife_gypsy_jackknife, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_gypsy_jackknife.mdl")));
+	m.insert(std::make_pair(weapon_knife_stiletto, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_stiletto.mdl")));
+	m.insert(std::make_pair(weapon_knife_widowmaker, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_widowmaker.mdl")));
+	m.insert(std::make_pair(weapon_knife_ursus, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_ursus.mdl")));
 
-	if ((g_weebwarecfg.skinchanger_enabled) && local_player) {
-
-		if (local_player->is_valid_player() && ( p_data->value.m_int == index_bayonet || p_data->value.m_int == index_m9 || p_data->value.m_int == index_karambit || p_data->value.m_int == index_bowie ||
-			p_data->value.m_int == index_butterfly || p_data->value.m_int == index_falchion || p_data->value.m_int == index_flip || p_data->value.m_int == index_gut || p_data->value.m_int == index_huntsman || p_data->value.m_int == index_shadow_daggers || p_data->value.m_int == index_navaja ||
-			p_data->value.m_int == index_stiletto || p_data->value.m_int == index_talon || p_data->value.m_int == index_ursus || p_data->value.m_int == index_default_t || p_data->value.m_int == index_default_ct))
-		{
-			if (*g_weebwarecfg.selected_knife_index == 0)
-				p_data->value.m_int = index_default_t;
-			else if (*g_weebwarecfg.selected_knife_index == 1)
-				p_data->value.m_int = index_default_ct;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_flip)
-				p_data->value.m_int = index_flip;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_karambit)
-				p_data->value.m_int = index_karambit;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_survival_bowie)
-				p_data->value.m_int = index_bowie;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_butterfly)
-				p_data->value.m_int = index_butterfly;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_falchion)
-				p_data->value.m_int = index_falchion;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_gut)
-				p_data->value.m_int = index_gut;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_tactical)
-				p_data->value.m_int = index_huntsman;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_push)
-				p_data->value.m_int = index_shadow_daggers;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_gypsy_jackknife)
-				p_data->value.m_int = index_navaja;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_stiletto)
-				p_data->value.m_int = index_stiletto;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_widowmaker)
-				p_data->value.m_int = index_talon;
-			else if (g_weebwarecfg.selected_knife_index[0] == weapon_knife_ursus)
-				p_data->value.m_int = index_ursus;
-		}
-	}
-	recv_model_index(p_data, p_struct, p_out);
+	return m;
 }
 
+
+bool is_knife_index(std::map<int, int> map, int knife_index) {
+	for (auto& i : map) {
+		if (i.second == knife_index) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void hooked_recvproxy_viewmodel(c_recv_proxy_data* p_data, void* p_struct, void* p_out)noexcept {
+
+	if (!g_weebwarecfg.skinchanger_enabled)
+		return recv_model_index(p_data, p_struct, p_out);
+
+	std::map<int, int> knife_map = init_knife_indexes();
+
+	c_base_entity* local_player = reinterpret_cast<c_base_entity*>(g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()));
+
+	if (!local_player)
+		return recv_model_index(p_data, p_struct, p_out);
+
+	if (local_player->is_valid_player() && is_knife_index(knife_map, p_data->value.m_int))
+		p_data->value.m_int = knife_map[g_weebwarecfg.selected_knife_index[0]];
+
+	recv_model_index(p_data, p_struct, p_out);
+}
 
 void set_view_model_sequence(const c_recv_proxy_data* pDataConst, void* p_struct, void* p_out)noexcept {
 	c_recv_proxy_data* p_data = const_cast<c_recv_proxy_data*>(pDataConst);
