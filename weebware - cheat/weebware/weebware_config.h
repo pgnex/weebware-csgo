@@ -475,7 +475,7 @@ public:
 		tmp["viewmodel_changer"] = viewmodel_changer;
 		tmp["viewmodel_offset"] = viewmodel_offset;
 		tmp["edge_jump"] = edge_jump;
-		tmp["edge_jump_key"] = edge_jump_key;
+		tmp["edge_jump_key "] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
 		save_color(water_mark_col, tmp, "water_mark_col");
