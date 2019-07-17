@@ -101,8 +101,8 @@ bool c_weebware::init_interfaces()
 #pragma region load_skins
 	// Initialise 
 	for (auto i = 0; i < 35; i++) {
-		g_weebwareskinscfg.skin_wheel[i] = override_skin_style();
-		g_weebwareskinscfg.skin_wheel[i].weapon_id = i;
+		g_weebwarecfg.skin_wheel[i] = override_skin_style();
+		g_weebwarecfg.skin_wheel[i].weapon_id = i;
 	}
 
 	g_skin_list = create_skin_list();
