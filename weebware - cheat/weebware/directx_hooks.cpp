@@ -718,7 +718,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_name_esp_col_visible, g_weebwarecfg.visuals_name_esp_col_hidden, true, "Visible Color (Enemy)##name1", "Hidden Color (Enemy)##name2");
 					}
 
-					ImGui::Checkbox("Weapon", &g_weebwarecfg.visuals_weapon_esp, false);
 
 					ImGui::Checkbox("Draw On Dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 					if (g_weebwarecfg.visuals_dormant_esp) {
@@ -924,9 +923,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			for (auto skin_part : skin_list)
 			{
 				std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
-				if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
+				if (ImGui::Selectable(name.c_str(), g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
 				{
-					g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
+					g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
 				}
 			}
 			ImGui::EndChild();
@@ -934,10 +933,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 			ImGui::Text("Settings");
 			ImGui::Separator();
-			ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
-			ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
+			ImGui::InputInt("Seed", &g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
+			ImGui::InputFloat("Wear", &g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
 			// ImGui::Text("Weapon name");
-			// ImGui::InputText("##Gun Name", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun]., 32);
+			// ImGui::InputText("##Gun Name", g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun]., 32);
 			if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
 
 				g_weebwarecfg.skinchanger_apply_nxt = 1;

@@ -193,6 +193,46 @@ public:
 	}
 };
 
+class c_weebwareskinscfg
+{
+public:
+	override_skin_style skin_wheel[35];
+
+	void save_cfg(std::ostream& file)
+	{
+		try {
+			json main;
+
+			for (auto i = 0; i < 35; i++) {
+				main[i] = skin_wheel[i].convert();
+			}
+
+			file << main;
+
+		}
+		catch (...) {
+
+		}
+	}
+
+	void load_cfg(std::istream& file)
+	{
+		try {
+
+			json main;
+
+			main << file;
+
+			for (auto i = 0; i < 35; i++) {
+				skin_wheel[i].convert(main[i]);
+			}
+		}
+		catch (...) {
+
+		}
+	}
+
+};
 
 class c_weebwarecfg
 {
@@ -215,7 +255,6 @@ public:
 
 	int legit_cfg_index;
 	c_legit_cfg legit_cfg[8];
-	override_skin_style skin_wheel[35];
 
 	int enable_visuals;
 	int enable_visuals_key;
@@ -266,7 +305,6 @@ public:
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
 	bool visuals_name_esp = 0;
-	bool visuals_weapon_esp = 0;
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
@@ -436,10 +474,9 @@ public:
 		tmp["viewmodel_changer"] = viewmodel_changer;
 		tmp["viewmodel_offset"] = viewmodel_offset;
 		tmp["edge_jump"] = edge_jump;
-		tmp["edge_jump_key"] = edge_jump_key;
+		tmp["edge_jump_key "] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
-		tmp["visuals_weapon_esp"] = visuals_weapon_esp;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -474,12 +511,6 @@ public:
 		save_color(visuals_corner_col_visible, tmp, "visuals_corner_col_visible");
 		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
 		save_color(visuals_fov_circle_col, tmp, "visuals_fov_circle_col");
-
-		json skin_tmp;
-		for (auto i = 0; i < 35; i++) {
-			skin_tmp[i] = skin_wheel[i].convert();
-		}
-		tmp["skins"] = skin_tmp;
 
 		return tmp;
 	}
@@ -523,7 +554,6 @@ public:
 		if (check("disable_post_processing", data)) disable_post_processing = data["disable_post_processing"];
 		if (check("screenshot_proof", data)) screenshot_proof = data["screenshot_proof"];
 		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
-		if (check("visuals_weapon_esp", data)) visuals_weapon_esp = data["visuals_weapon_esp"];
 
 
 		// misc
@@ -612,13 +642,6 @@ public:
 		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
 		if (check_color("visuals_fov_circle_col", data)) read_color(visuals_fov_circle_col, data, "visuals_fov_circle_col");
 
-
-		json skin_tmp = data["skins"];
-
-		for (auto i = 0; i < 35; i++) {
-			skin_wheel[i].convert(skin_tmp[i]);
-		}
-
 	}
 
 	void save_cfg(std::ostream& file)
@@ -649,4 +672,5 @@ public:
 };
 
 extern c_weebwarecfg g_weebwarecfg;
+extern c_weebwareskinscfg g_weebwareskinscfg;
 #endif
