@@ -189,6 +189,13 @@ public:
 		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_bSpotted");
 		return get_pointer<bool>(offset);
 	}
+
+	int* get_wearables() {
+		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_hMyWearables");
+		return get_pointer<int>(offset);
+	}
+
+
 	Vector get_vec_eyepos()
 	{
 		return (*this->m_Origin() + this->m_vecViewOffset());
@@ -237,6 +244,11 @@ public:
 	{
 		static uintptr_t offset = retrieve_offset("DT_CSPlayer", "m_flLowerBodyYawTarget");
 		return get_value<float>(offset);
+	}
+
+	int m_hObserverTarget() {
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_hObserverTarget");
+		return get_value<int>(offset);
 	}
 
 	Vector m_vecVelocity()
@@ -779,6 +791,223 @@ public:
 			|| is_shotgun() || is_heavy() || is_scout();
 	}
 
+	std::string get_weapon_name_from_id() {
+		int weapon_id = this->m_iItemDefinitionIndex();
+
+		switch (weapon_id) {
+		case weapon_type_id::weapon_none:
+			return "None";
+			break;
+		case weapon_type_id::weapon_deagle:
+			return "Desert Eagle";
+			break;
+		case weapon_type_id::weapon_elite:
+			return "Dual Berettas";
+			break;
+		case weapon_type_id::weapon_fiveseven:
+			return "Five Seven";
+			break;
+		case weapon_type_id::weapon_glock:
+			return "Glock-18";
+			break;
+		case weapon_type_id::weapon_ak47:
+			return "AK-47";
+			break;
+		case weapon_type_id::weapon_aug:
+			return "AUG";
+			break;
+		case weapon_type_id::weapon_awp:
+			return "AWP";
+			break;
+		case weapon_type_id::weapon_famas:
+			return "Famas";
+			break;
+		case weapon_type_id::weapon_g3sg1:
+			return "G3SG1";
+			break;
+		case weapon_type_id::weapon_galil:
+			return "Galil";
+			break;
+		case weapon_type_id::weapon_m249:
+			return "m249";
+			break;
+		case weapon_type_id::weapon_m4a4:
+			return "M4A4";
+			break;
+		case weapon_type_id::weapon_mac10:
+			return "mac10";
+			break;
+		case weapon_type_id::weapon_p90:
+			return "p90";
+			break;
+		case weapon_type_id::weapon_mp5sd:
+			return "MP5-SD";
+			break;
+		case weapon_type_id::weapon_ump45:
+			return "ump45";
+			break;
+		case weapon_type_id::weapon_xm1014:
+			return "xm1014";
+			break;
+		case weapon_type_id::weapon_bizon:
+			return "PP-Bizon";
+			break;
+		case weapon_type_id::weapon_mag7:
+			return "MAG7";
+			break;
+		case weapon_type_id::weapon_sawedoff:
+			return "Sawed-Off";
+			break;
+		case weapon_type_id::weapon_tec9:
+			return "Tec-9";
+			break;
+		case weapon_type_id::weapon_zeus:
+			return "Zeus";
+			break;
+		case weapon_type_id::weapon_p2000:
+			return "p2000";
+			break;
+		case weapon_type_id::weapon_mp7:
+			return "mp7";
+			break;
+		case weapon_type_id::weapon_mp9:
+			return "mp9";
+			break;
+		case weapon_type_id::weapon_nova:
+			return "Nova";
+			break;
+		case weapon_type_id::weapon_p250:
+			return "p250";
+			break;
+		case weapon_type_id::weapon_scar20:
+			return "SCAR-20";
+			break;
+		case weapon_type_id::weapon_sg553:
+			return "SG553";
+			break;
+		case weapon_type_id::weapon_ssg08:
+			return "SSG 08";
+			break;
+		case weapon_type_id::weapon_knifegg:
+			return "Knife";
+			break;
+		case weapon_type_id::weapon_knife:
+			return "Knife";
+			break;
+		case weapon_type_id::weapon_flashbang:
+			return "Flash bang";
+			break;
+		case weapon_type_id::weapon_hegrenade:
+			return "Grenade";
+			break;
+		case weapon_type_id::weapon_smokegrenade:
+			return "Smoke";
+			break;
+		case weapon_type_id::weapon_molotov:
+			return "Molotov";
+			break;
+		case weapon_type_id::weapon_decoy:
+			return "Decoy";
+			break;
+		case weapon_type_id::weapon_inc:
+			return "Incendiary";
+			break;
+		case weapon_type_id::weapon_c4:
+			return "C4";
+			break;
+		case weapon_type_id::weapon_knife_t:
+			return "Knife";
+			break;
+		case weapon_type_id::weapon_m4a1s:
+			return "M4A1-S";
+			break;
+		case weapon_type_id::weapon_usps:
+			return "USP";
+			break;
+		case weapon_type_id::weapon_cz75:
+			return "CZ75";
+			break;
+		case weapon_type_id::weapon_revolver:
+			return "Revolver";
+			break;
+		case weapon_type_id::weapon_tagrenade:
+			return "TAgrenade";
+			break;
+		case weapon_type_id::weapon_fists:
+			return "Fists";
+			break;
+		case weapon_type_id::weapon_breachcharge:
+			return "Breach Charge";
+			break;
+		case weapon_type_id::weapon_tablet:
+			return "Tablet";
+			break;
+		case weapon_type_id::weapon_melee:
+			return "Melee";
+			break;
+		case weapon_type_id::weapon_axe:
+			return "Axe";
+			break;
+		case weapon_type_id::weapon_hammer:
+			return "Hammer";
+			break;
+		case weapon_type_id::weapon_spanner:
+			return "Spanner";
+			break;
+		case weapon_type_id::weapon_firebomb:
+			return "Fire Bomb";
+			break;
+		case weapon_type_id::weapon_frag_grenade:
+			return "Grenade";
+			break;
+		case weapon_type_id::weapon_bumpmine:
+			return "Bump Mine";
+			break;
+		case weapon_type_id::weapon_knife_bayonet:
+			return "Bayonet";
+			break;
+		case weapon_type_id::weapon_knife_flip:
+			return "Flip Knife";
+			break;
+		case weapon_type_id::weapon_knife_gut:
+			return "Gut Knife";
+			break;
+		case weapon_type_id::weapon_knife_karambit:
+			return "Karambit";
+			break;
+		case weapon_type_id::weapon_knife_m9_bayonet:
+			return "M9 Bayonet";
+			break;
+		case weapon_type_id::weapon_knife_tactical:
+			return "Huntsman Knife";
+			break;
+		case weapon_type_id::weapon_knife_falchion:
+			return "Falchion Knife";
+			break;
+		case weapon_type_id::weapon_knife_survival_bowie:
+			return "Bowie Knife";
+			break;
+		case weapon_type_id::weapon_knife_butterfly:
+			return "Butterfly Knife";
+			break;
+		case weapon_type_id::weapon_knife_push:
+			return "Shadow Daggers";
+			break;
+		case weapon_type_id::weapon_knife_gypsy_jackknife:
+			return "Navaja Knife";
+			break;
+		case weapon_type_id::weapon_knife_stiletto:
+			return "Stiletto Knife";
+			break;
+		case weapon_type_id::weapon_knife_widowmaker:
+			return "Talon Knife";
+			break;
+		default:
+			return "";
+			break;
+		}
+	}
+
 	float m_flNextPrimaryAttack()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "LocalActiveWeaponData", "m_flNextPrimaryAttack");
@@ -847,6 +1076,15 @@ public:
 	{
 		getvfunc<void(__thiscall*)(void*, int)>(this, 75)(this, index);
 	}
+
+	void net_release() {
+		getvfunc<void(__thiscall*)(void*)>(this, 1)(this);
+	}
+
+	void net_set_destroyed_on_recreate_entities() {
+		getvfunc<void(__thiscall*)(void*)>(this, 13)(this);
+	}
+
 
 	int* m_nModelIndex()
 	{
