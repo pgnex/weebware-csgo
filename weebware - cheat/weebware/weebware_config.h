@@ -305,7 +305,6 @@ public:
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
 	bool visuals_name_esp = 0;
-	bool visuals_weapon_esp = 0;
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
