@@ -50,6 +50,7 @@ private:
 	void bomb_timer(c_base_entity* ent);
 	void draw_crosshair();
 	void recoil_crosshair();
+	void render_weapon(s_boundaries bounds, c_base_entity* ent, bool is_team);
 
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack();
