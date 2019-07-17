@@ -209,18 +209,13 @@ void c_create_move::disable_post_processing() {
 	c_convar* mat_postprocess_enable = g_weebware.g_convars->find_cvar("mat_postprocess_enable");
 
 	if (g_weebwarecfg.disable_post_processing && !post_process_disabled) {
-		mat_postprocess_enable->SetValue(1);
+		mat_postprocess_enable->SetValue(0);
 		post_process_disabled = true;
-		std::cout << "set" << std::endl;
 	}
 	else if (!g_weebwarecfg.disable_post_processing && post_process_disabled) {
-		mat_postprocess_enable->SetValue(0);
+		mat_postprocess_enable->SetValue(1);
 		post_process_disabled = false;
-		std::cout << "unset" << std::endl;
 	}
-
-	//c_convar* mat_postprocess_enable = g_weebware.g_convars->find_cvar("mat_postprocess_enable");
-	//mat_postprocess_enable->SetValue(g_weebwarecfg.disable_post_processing ? 0 : 1);
 }
 
 namespace anti_trigger {
