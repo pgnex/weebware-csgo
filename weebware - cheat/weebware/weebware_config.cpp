@@ -8,6 +8,7 @@
 c_config_list g_config_list;
 
 c_weebwarecfg g_weebwarecfg;
+c_weebwareskinscfg g_weebwareskinscfg;
 #define weebware_dir "C:\\weebware\\cfgs"
 
 // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
@@ -126,6 +127,14 @@ void c_config_list::save_weebware_config()
 	g_weebwarecfg.save_cfg(out);
 	// Finish up
 	out.close();
+	full_config.append("skins");
+	std::stringstream skinfile;
+	skinfile << full_config;
+	std::ofstream out2(skinfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
+	// Write to file
+	g_weebwareskinscfg.save_cfg(out2);
+	// Finish up
+	out2.close();
 
 	update_all_configs();
 }
@@ -144,6 +153,14 @@ void c_config_list::save_existing_weebware()
 	g_weebwarecfg.save_cfg(out);
 	// Finish up
 	out.close();
+	full_config.append("skins");
+	std::stringstream skinfile;
+	skinfile << full_config;
+	std::ofstream out2(skinfile.str().c_str(), std::ofstream::out | std::ofstream::trunc);
+	// Write to file
+	g_weebwareskinscfg.save_cfg(out2);
+	// Finish up
+	out2.close();
 
 	update_all_configs();
 }
@@ -170,6 +187,17 @@ void c_config_list::load_weebware_config(std::string load_name)
 	infile.open(configfile.str().c_str(), std::ios::in);
 	g_weebwarecfg.load_cfg(infile);
 	infile.close();
+
+	full_config.append("skins");
+	if (file_exists(full_config)) {
+		std::stringstream skinfile;
+		skinfile << full_config;
+		std::ifstream infile2;
+		infile2.open(skinfile.str().c_str(), std::ios::in);
+		g_weebwareskinscfg.load_cfg(infile2);
+		infile2.close();
+		update_all_configs();
+	}
 }
 
 void c_config_list::delete_weebware_config()

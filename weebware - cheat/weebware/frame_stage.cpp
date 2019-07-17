@@ -235,47 +235,90 @@ void c_frame_stage_notify::legit_aa_resolver()
 	}
 }
 
-void c_frame_stage_notify::glove_changer() {
+//#pragma once
+//
+//struct WearableItemConfig
+//{
+//	int iItemDefinitionIndex = 0;
+//	int nFallbackPaintKit = 0;
+//	int nFallbackSeed = 0;
+//	int nFallbackStatTrak = -1;
+//	int iEntityQuality = 4;
+//	float flFallbackWear = 0.1f;
+//	char* szModelFileName = nullptr;
+//	bool bUpdateStatus = false;
+//};
+//
+//std::unordered_map<int, WearableItemConfig> g_GloveChangerCfg;
+//
+//class GloveFunctions
+//{
+//public:
+//	static bool ApplyCustomSkin(c_basecombat_weapon* pEntity, int nWeaponIndex)
+//	{
+//		if (g_GloveChangerCfg.find(nWeaponIndex) == g_GloveChangerCfg.end())
+//			return false;
+//
+//		*pEntity->get_paint_kit() = g_GloveChangerCfg[nWeaponIndex].nFallbackPaintKit;
+//	//	*pEntity->GetEntityQuality() = g_GloveChangerCfg[nWeaponIndex].iEntityQuality;
+//		*pEntity->get_fallbackseed() = g_GloveChangerCfg[nWeaponIndex].nFallbackSeed;
+//	//	*pEntity->GetFallbackStatTrak() = g_GloveChangerCfg[nWeaponIndex].nFallbackStatTrak;
+//		*pEntity->get_fallbackwear() = g_GloveChangerCfg[nWeaponIndex].flFallbackWear;
+//
+//		if (g_GloveChangerCfg[nWeaponIndex].iItemDefinitionIndex)
+//			*pEntity->m_iItemDefinitionIndexPtr() = g_GloveChangerCfg[nWeaponIndex].iItemDefinitionIndex;
+//
+//		*pEntity->get_item_id_high() = -1;
+//
+//		pEntity->set_model_index(g_weebware.g_model_info->getmodelindex(g_GloveChangerCfg[nWeaponIndex].szModelFileName));
+//		pEntity->PreDataUpdate(12);
+//
+//		g_GloveChangerCfg[nWeaponIndex].bUpdateStatus = true;
+//
+//		return true;
+//	}
+//
+//	static void SetSkinConfig()
+//	{
+//		//sample code
+//		g_GloveChangerCfg[0].iItemDefinitionIndex = 5033;
+//		g_GloveChangerCfg[0].nFallbackPaintKit = 10027;
+//		g_GloveChangerCfg[0].nFallbackSeed = 0;
+//		g_GloveChangerCfg[0].flFallbackWear = 0.00000001f;
+//		g_GloveChangerCfg[0].nFallbackStatTrak = -1;
+//		g_GloveChangerCfg[0].szModelFileName = "models/weapons/v_models/arms/glove_motorcycle/v_glove_motorcycle.mdl";
+//	}
+//};
 
+void c_frame_stage_notify::glove_changer() {
 	if (!local)
 		return;
 
-	static int glove_bloodhound = g_weebware.g_model_info->getmodelindex("models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound.mdl");
+	//DWORD* hMyWearables = (DWORD*)((size_t)pLocal + 0x2EF4);
+	//if (hMyWearables != NULL)
+	//{
+	//	for (ClientClass* pClass = Interfaces::Client()->GetAllClasses(); pClass; pClass = pClass->m_pNext)
+	//	{
+	//		if (pClass->m_ClassID != CEconWearable)
+	//			continue;
 
-	int* const wearables = local->get_wearables();
+	//		int iEntry = (Interfaces::EntityList()->GetHighestEntityIndex() + 1),
+	//			iSerial = RandomInt(0x0, 0xFFF);
 
-	if (!wearables)
-		return;
+	//		pClass->m_pCreateFn(iEntry, iSerial);
+	//		hMyWearables[0] = iEntry | (iSerial << 16);
+	//		break;
+	//	}
 
-	static uintptr_t glove_handle = uintptr_t(0);
+	//	C_BaseCombatWeapon* pEnt = (C_BaseCombatWeapon*)Interfaces::EntityList()->GetClientEntity(hMyWearables[0] & 0xFFF);
 
-	c_basecombat_weapon* glove = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(reinterpret_cast<HANDLE>(wearables[0])));
+	//	if (pEnt)
+	//	{
+	//		GloveFunctions::ApplyCustomSkin(pEnt, 0);
 
-	if (!glove) {
-		const auto our_glove = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(reinterpret_cast<HANDLE>(glove_handle)));
-
-		if (our_glove) {
-			wearables[0] = glove_handle;
-			glove = our_glove;
-		}
-	}
-
-	// we are dead but need to destroy our glove
-	if (!local->is_valid_player()) {
-		if (glove) {
-			glove->net_set_destroyed_on_recreate_entities();
-			glove->net_release();
-		}
-		return;
-	}
-
-	// we are alive, but need to set our glove
-	if (!glove) {
-		const auto entry = g_weebware.g_entlist->gethighestentityindex() + 1;
-		const auto serial = std::rand() % 0x1000;
-	}
-
-
+	//		*pEnt->GetAccountID() = playerInfo.m_nXuidLow;
+	//	}
+	//}
 }
 
 void c_frame_stage_notify::run_skinchanger() {
@@ -352,7 +395,7 @@ void c_frame_stage_notify::run_skinchanger() {
 				}
 
 
-				auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
+				auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
 
 				if (skin_config.m_paint_kit != 0)
 					* weapon->get_paint_kit() = skin_config.m_paint_kit;
@@ -372,20 +415,23 @@ void c_frame_stage_notify::run_skinchanger() {
 			}
 		}
 		else if (weapon->is_firearm()) {
-			auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
+			auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
+
+			if (skin_config.m_paint_kit != 0)
+				*weapon->get_paint_kit() = skin_config.m_paint_kit;
+
+			if (skin_config.m_seed != 0)
+				*weapon->get_fallbackseed() = skin_config.m_seed;
 
 			// Config Clamping.
 			if (skin_config.m_wear < FLT_MIN)
 				skin_config.m_wear = FLT_MIN;
 
-			if (skin_config.m_paint_kit != 0)
-				* weapon->get_paint_kit() = skin_config.m_paint_kit;
-
-			if (skin_config.m_seed != 0)
-				* weapon->get_fallbackseed() = skin_config.m_seed;
-
 			*weapon->get_fallbackwear() = skin_config.m_wear;
+
+
 			*weapon->get_accountid() = local_inf.xuid_low;
+
 			*weapon->get_original_owner_xuidhigh() = 0;
 			*weapon->get_original_owner_xuidlow() = 0;
 		}
