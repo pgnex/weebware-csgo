@@ -305,6 +305,7 @@ public:
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
 	bool visuals_name_esp = 0;
+	bool visuals_weapon_esp = 0;
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
@@ -474,7 +475,7 @@ public:
 		tmp["viewmodel_changer"] = viewmodel_changer;
 		tmp["viewmodel_offset"] = viewmodel_offset;
 		tmp["edge_jump"] = edge_jump;
-		tmp["edge_jump_key "] = edge_jump_key;
+		tmp["edge_jump_key"] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
 		save_color(water_mark_col, tmp, "water_mark_col");
