@@ -325,12 +325,12 @@ void c_frame_stage_notify::run_skinchanger() {
 	if (!g_weebwarecfg.skinchanger_enabled)
 		return;
 
-	c_base_entity* local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (!local_player)
+	if (!g_frame_stage_notify.local)
 		return;
 
-	if (!local_player->is_valid_player())
+	if (g_frame_stage_notify.local->m_iHealth() <= 0)
 		return;
 
 	player_info local_inf;
