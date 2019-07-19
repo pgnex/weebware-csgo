@@ -166,6 +166,7 @@ void c_esp::esp_main()
 				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
 
 				render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
+				render_weapon(w2s_player[i].boundary, ent, is_visible(local, ent));
 
 				render_skeleton(ent, is_visible(local, ent));
 
@@ -535,6 +536,32 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length, c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
 
+	}
+}
+
+void c_esp::render_weapon(s_boundaries bounds, c_base_entity* ent, bool is_visible) {
+
+	if (!g_weebwarecfg.visuals_weapon_esp)
+		return;
+
+	if (!ent)
+		return;
+
+	c_basecombat_weapon* weapon = ent->m_pActiveWeapon();
+
+	if (!weapon)
+		return;
+
+	wchar_t buf[128];
+	std::string weapon_name = weapon->get_weapon_name_from_id();
+
+	if (MultiByteToWideChar(CP_UTF8, 0, weapon_name.c_str(), -1, buf, 128) > 0) {
+
+		int tw, th;
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
+
+		if (bounds.has_w2s)
+			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), (bounds.y + bounds.h) + 10, c_color(255, 255, 255, 255), 0, weapon_name.c_str());
 	}
 }
 

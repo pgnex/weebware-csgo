@@ -395,7 +395,7 @@ void c_frame_stage_notify::run_skinchanger() {
 				}
 
 
-				auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
+				auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
 
 				if (skin_config.m_paint_kit != 0)
 					* weapon->get_paint_kit() = skin_config.m_paint_kit;
@@ -415,7 +415,7 @@ void c_frame_stage_notify::run_skinchanger() {
 			}
 		}
 		else if (weapon->is_firearm()) {
-			auto skin_config = g_weebwareskinscfg.skin_wheel[weapon_id];
+			auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
 
 			if (skin_config.m_paint_kit != 0)
 				*weapon->get_paint_kit() = skin_config.m_paint_kit;

