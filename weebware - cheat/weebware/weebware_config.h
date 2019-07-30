@@ -237,6 +237,7 @@ public:
 	int visuals_chams;
 	bool visuals_glow_enabled;
 	bool visuals_glow_player;
+	bool visuals_glow_team;
 	bool visuals_glow_hidden_col;
 	bool visuals_glow_c4;
 	bool visuals_glow_chicken;
@@ -347,6 +348,7 @@ public:
 	ImVec4 visuals_glow_c4_col = ImVec4(204, 54, 46, 255);
 	ImVec4 visuals_glow_chicken_col = ImVec4(73, 244, 82, 255);
 	ImVec4 visuals_glow_weapon_col = ImVec4(212, 244, 66, 255);
+	ImVec4 visuals_glow_team_col = ImVec4(0, 244, 66, 255);
 
 	json convert()
 	{
@@ -388,6 +390,7 @@ public:
 		tmp["screenshot_proof"] = screenshot_proof;
 		tmp["disable_post_processing"] = disable_post_processing;
 		tmp["visuals_weapon_esp"] = visuals_weapon_esp;
+		tmp["enable_bullet_tracers"] = enable_bullet_tracers;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -525,6 +528,7 @@ public:
 		if (check("screenshot_proof", data)) screenshot_proof = data["screenshot_proof"];
 		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
 		if (check("visuals_weapon_esp", data)) visuals_weapon_esp = data["visuals_weapon_esp"];
+		if (check("enable_bullet_tracers", data)) enable_bullet_tracers = data["enable_bullet_tracers"];
 
 
 		// misc

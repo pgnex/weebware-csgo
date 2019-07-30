@@ -738,7 +738,12 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::Checkbox("Hidden Color", &g_weebwarecfg.visuals_glow_hidden_col, false);
 					}
 
-					ImGui::Checkbox("Weapon", &g_weebwarecfg.visuals_glow_weapon, false);
+					ImGui::Checkbox("Team##glow", &g_weebwarecfg.visuals_glow_team, false);
+					if (g_weebwarecfg.visuals_glow_team) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_team_col, "Team Glow Color");
+					}
+
+					ImGui::Checkbox("Weapon##glow", &g_weebwarecfg.visuals_glow_weapon, false);
 					if (g_weebwarecfg.visuals_glow_weapon) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_glow_weapon_col, g_weebwarecfg.visuals_glow_weapon_col, false, "Weapon Color", "##glowwep");
 					}

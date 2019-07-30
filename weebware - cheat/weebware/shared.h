@@ -15,6 +15,7 @@ public:
 	uint64_t pattern_scan(const char* szModule, const char* szSignature);
 	void init_fonts();
 	bool models_installed = false;
+	bool check_models_installed();
 
 
 	HMODULE h_module;

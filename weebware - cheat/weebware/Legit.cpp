@@ -456,7 +456,7 @@ void c_legitbot::c_accuracy_boost::set_abs_origins(c_base_entity* a1, const Vect
 	static SetAbsOriginFn SetAbsOrigin;
 
 	if (!SetAbsOrigin)
-		SetAbsOrigin = (SetAbsOriginFn)(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 1F ? ?"));
+		SetAbsOrigin = (SetAbsOriginFn)(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 1F ? ?"));
 
 	SetAbsOrigin(a1, a2);
 }
@@ -467,14 +467,14 @@ void c_legitbot::c_accuracy_boost::set_abs_angles(c_base_entity* a1, const Vecto
 	static SetAbsAnglesFn SetAbsAngles;
 
 	if (!SetAbsAngles)
-		SetAbsAngles = (SetAbsAnglesFn)(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8 5D"));
+		SetAbsAngles = (SetAbsAnglesFn)(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8 5D"));
 
 	SetAbsAngles(a1, a2);
 }
 
 void c_legitbot::c_accuracy_boost::invalidate_bone_cache(c_base_entity* entity)
 {
-	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client.dll", "80 3D ?? ?? ?? ?? ?? 74 16 A1 ?? ?? ?? ?? 48 C7 81");
+	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client_panorama.dll", "80 3D ?? ?? ?? ?? ?? 74 16 A1 ?? ?? ?? ?? 48 C7 81");
 	uintptr_t iModelBoneCounter = **(uintptr_t**)(dwBoneCache + 10);
 	*(uintptr_t*)((DWORD)entity + 0x2914) = 0xFF7FFFFF;
 	*(uintptr_t*)((DWORD)entity + 0x2680) = (iModelBoneCounter - 1);

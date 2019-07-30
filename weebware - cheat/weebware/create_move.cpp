@@ -10,116 +10,62 @@ c_create_move g_create_move;
 c_nightmode g_nightmode;
 
 
-
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
 	if (cmd->command_number == 0)
-	{
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-		// return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
-	}
 
-	if (cmd && cmd->command_number)
-	{
-		Vector original_angles = cmd->viewangles;
-
-		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
-		{
-			g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-			g_create_move.skybox_changer();
-			g_create_move.auto_jump(cmd);
-			g_create_move.auto_strafe(cmd);
-			g_create_move.disable_post_processing();
-
-			g_create_move.edge_jump_pre_prediction(cmd);
-			g_engine_prediction.begin(cmd, g_create_move.local);
-
-
-			g_engine_prediction.end(g_create_move.local);
-			g_create_move.edge_jump_post_prediction(cmd);
-
-			g_create_move.chat_spam();
-			g_create_move.rank_reveal();
-
-			g_nightmode.run();
-
-			if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon())
-			{
-				// shouldn't actually do anything when applying skin cause entites are all refreshed and cause nullptr issues
-				if (g_weebwarecfg.skinchanger_apply_nxt) {
-
-					g_accuracy.clear_all_records();
-
-					if (*g_weebware.g_client_state)
-						knife_hook.force_update();
-
-					g_accuracy.clear_all_records();
-
-					g_weebwarecfg.skinchanger_apply_nxt = 0;
-				}
-				else {
-
-					g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
-
-					g_legitbot.m_local = g_create_move.local;
-
-					g_legitbot.create_move(cmd);
-
-				//	g_create_move.create_move(cmd, sendpacket);
-
-					g_accuracy.accuracy_boost(cmd);
-
-					g_ai.create_move(cmd, g_create_move.local);
-
-				}
-
-#pragma region Clamping
-
-				if (cmd->buttons & in_attack)
-					sendpacket = true;
-
-				QAngle cmd_view = cmd->viewangles;
-
-				g_maths.normalize_angle(cmd_view);
-
-				g_maths.clamp_angle(cmd_view);
-
-				cmd->viewangles = cmd_view;
-
-				g_create_move.correct_movement(original_angles, cmd);
-
-				g_maths.normalize_angle(cmd->viewangles);
-
-				g_maths.clamp_angle(cmd->viewangles);
-
-				// clamping movement.
-
-				if (cmd->forwardmove > 450)
-					cmd->forwardmove = 450;
-
-				if (cmd->forwardmove < -450)
-					cmd->forwardmove = -450;
-
-				if (cmd->sidemove > 450)
-					cmd->sidemove = 450;
-
-				if (cmd->sidemove < -450)
-					cmd->sidemove = -450;
-			}
-#pragma endregion
-		}
-		else
-		{
-			g_accuracy.clear_all_records();
-			g_Walkbot.m_target_area = nullptr;
-		}
-	}
-	else
-	{
+	if (!cmd || !cmd->command_number) {
 		g_accuracy.clear_all_records();
-		g_Walkbot.m_target_area = nullptr;
-		g_Walkbot.m_maploaded = false;
+		return false;
+	}
+
+	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+		g_accuracy.clear_all_records();
+		return false;
+	}
+
+	g_create_move.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	Vector original_angles = cmd->viewangles;
+
+	if (!g_create_move.local) {
+		g_accuracy.clear_all_records();
+		return false;
+	}
+
+	g_create_move.skybox_changer();
+	g_create_move.auto_jump(cmd);
+	g_create_move.auto_strafe(cmd);
+	g_create_move.disable_post_processing();
+	g_create_move.chat_spam();
+	g_create_move.rank_reveal();
+	g_nightmode.run();
+
+
+	g_create_move.edge_jump_pre_prediction(cmd);
+	g_engine_prediction.begin(cmd, g_create_move.local);
+	g_engine_prediction.end(g_create_move.local);
+	g_create_move.edge_jump_post_prediction(cmd);
+
+
+	if (g_create_move.local->is_valid_player() && g_create_move.local->m_pActiveWeapon()) {
+
+		if (g_weebwarecfg.skinchanger_apply_nxt) {
+			g_accuracy.clear_all_records();
+			if (*g_weebware.g_client_state) {
+				knife_hook.force_update();
+			}
+			g_accuracy.clear_all_records();
+			g_weebwarecfg.skinchanger_apply_nxt = 0;
+		}
+		else {
+			g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
+			g_legitbot.m_local = g_create_move.local;
+			g_legitbot.create_move(cmd);
+			g_accuracy.accuracy_boost(cmd);
+			g_ai.create_move(cmd, g_create_move.local);
+		}
+		g_create_move.clamp_angles(cmd, original_angles, sendpacket);
 	}
 
 	g_create_move.real_angle = cmd->viewangles;
@@ -182,16 +128,14 @@ void c_create_move::edge_jump_post_prediction(c_usercmd* cmd) {
 	if (local->get_move_type() == MOVETYPE_LADDER || local->get_move_type() == MOVETYPE_NOCLIP)
 		return;
 
-	if (flags_backup & fl_onground && !(local->m_fFlags() & fl_onground) && !(cmd->buttons & in_jump)) {
+	if (flags_backup & fl_onground && !(local->m_fFlags() & fl_onground) && !(cmd->buttons & in_jump))
 		cmd->buttons |= in_jump;
-	}
 
 	if (!(local->m_fFlags() & fl_onground) && g_weebwarecfg.duck_in_air)
 		cmd->buttons |= in_duck;
 }
 
-void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd)
-{
+void c_create_move::correct_movement(Vector old_view_angles, c_usercmd* cmd) {
 	Vector o_move(cmd->forwardmove, cmd->sidemove, cmd->upmove);
 	float speed = o_move.size(), yaw;
 	QAngle wish_dir;
@@ -217,8 +161,6 @@ void c_create_move::disable_post_processing() {
 		post_process_disabled = false;
 	}
 
-	//c_convar* mat_postprocess_enable = g_weebware.g_convars->find_cvar("mat_postprocess_enable");
-	//mat_postprocess_enable->SetValue(g_weebwarecfg.disable_post_processing ? 0 : 1);
 }
 
 namespace anti_trigger {
@@ -292,39 +234,20 @@ void c_create_move::rank_reveal()
 	}
 }
 
-void c_create_move::create_move(c_usercmd* cmd, bool& sendPackets)
-{
 
-	//run_fake(cmd, sendPackets);
-
-	//if (g_weebwarecfg.misc_legit_aa_enabled && !anti_trigger::require_fake)
-	//	run_legitAA(cmd, sendPackets);
-
-}
-
-
-void c_create_move::auto_jump(c_usercmd* cmd)
-{
+void c_create_move::auto_jump(c_usercmd* cmd) {
 	if (!g_weebwarecfg.auto_jump)
-	{
 		return;
-	}
 
 	if (local->get_move_type() == MOVETYPE_LADDER)
-	{
 		return;
-	}
 
-	// If Local is in air.
+	// if in air release flag
 	if (!(this->local->m_fFlags() & fl_onground))
-	{
-		// release jump flag.
 		cmd->buttons &= ~in_jump;
-	}
 }
 
-void c_create_move::auto_strafe(c_usercmd* cmd)
-{
+void c_create_move::auto_strafe(c_usercmd* cmd) {
 
 	if (g_weebwarecfg.auto_strafe <= 0)
 		return;
@@ -338,24 +261,19 @@ void c_create_move::auto_strafe(c_usercmd* cmd)
 	switch (selection) {
 	case 0:
 		break;
-
 	case 1:
 		if (cmd->mousedx > 1 || cmd->mousedx < -1)
 			cmd->mousedx > 0 ? cmd->sidemove = 450 : cmd->sidemove = -450;
 		break;
-
 	case 2:
 		if (cmd->mousedx > 1 || cmd->mousedx < -1)
 			cmd->mousedx > 0 ? cmd->sidemove = 450 : cmd->sidemove = -450;
-		else
-		{
+		else {
 			cmd->forwardmove = 5850.f / this->local->m_vecVelocity().size();
 			cmd->sidemove = (cmd->command_number % 2) == 0 ? -450.f : 450.f;
 		}
 		break;
-
 	default:
-		// should be off
 		break;
 	}
 }
@@ -651,23 +569,11 @@ void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
 	}
 }
 
-void c_create_move::chat_spam()
-{
-	static const std::vector<std::string> cspam_weebware = {
-		"weebware.net - premium cheating software, get weebware!",
-		"weebware.net - cheating is for cool kids, get weebware!",
-		"weebware.net - same price as an esea sub, lol, get weebware!",
-		"weebware.net - would u like some sauce with ur pasta?",
-		"weebware.net - no sir, i've never heard of ayyware b4",
-		"weebware.net - you pay for that baim?",
-		"weebware.net - fanta.trashed on",
-		"weebware.net - does it come with junkcode",
-		"weebware.net - handin out L's",
-		"weebware.net - where your security matters."
-	};
+void c_create_move::chat_spam() {
 
-	if (g_weebwarecfg.misc_chat_spammer)
-	{
+	if (!g_weebwarecfg.misc_chat_spammer)
+		return;
+
 		static int elapsed_ticks = 0;
 
 		int selection = int(static_cast<int>(cspam_weebware.size()) * rand() / (RAND_MAX + 1.0));
@@ -682,5 +588,33 @@ void c_create_move::chat_spam()
 			g_weebware.g_engine->execute_client_cmd(("say " + cspam_weebware.at(selection)).c_str());
 			elapsed_ticks = 0;
 		}
-	}
+}
+
+
+void c_create_move::clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket) {
+	if (cmd->buttons & in_attack)
+		sendpacket = true;
+
+	QAngle cmd_view = cmd->viewangles;
+
+	g_maths.normalize_angle(cmd_view);
+	g_maths.clamp_angle(cmd_view);
+
+	cmd->viewangles = cmd_view;
+
+	g_create_move.correct_movement(original_angles, cmd);
+	g_maths.normalize_angle(cmd->viewangles);
+	g_maths.clamp_angle(cmd->viewangles);
+
+	if (cmd->forwardmove > 450)
+		cmd->forwardmove = 450;
+
+	if (cmd->forwardmove < -450)
+		cmd->forwardmove = -450;
+
+	if (cmd->sidemove > 450)
+		cmd->sidemove = 450;
+
+	if (cmd->sidemove < -450)
+		cmd->sidemove = -450;
 }

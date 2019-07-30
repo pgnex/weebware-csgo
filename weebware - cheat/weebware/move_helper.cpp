@@ -35,7 +35,7 @@ void c_engine_prediction::begin(c_usercmd *userCMD, c_base_entity* player)
 
 	if (!init)
 	{
-		predictionRandomSeed = *reinterpret_cast<int**>(g_weebware.pattern_scan("client.dll", "8B 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 83 C4 04") + 0x2);
+		predictionRandomSeed = *reinterpret_cast<int**>(g_weebware.pattern_scan("client_panorama.dll", "8B 0D ? ? ? ? BA ? ? ? ? E8 ? ? ? ? 83 C4 04") + 0x2);
 		//predictionPlayer = *reinterpret_cast<c_base_entity**>(g_weebware.pattern_scan("client.dll", "89 3D ? ? ? ? F3 0F 10 47") + 0x2);
 
 		init = true;
