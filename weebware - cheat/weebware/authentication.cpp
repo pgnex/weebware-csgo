@@ -1,11 +1,5 @@
 #include "authentication.h"
 
-#define CURL_STATICLIB
-#include "curl/curl.h"
-#pragma comment (lib, "curl/libcurl_a.lib")
-
-
-using namespace std::chrono;
 __int64 auth::GetEpochMS() {
 	__int64 now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 	return now;
@@ -17,31 +11,10 @@ __int64 auth::GetEpochS() {
 }
 
 
-static int writer(char *data, size_t size, size_t nmemb, std::string *writerData) {
-	if (writerData == NULL) return 0;
-	writerData->append(data, size*nmemb);
-	return size * nmemb;
-}
-
-
 std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
-	std::string content;
-	curl_global_init(CURL_GLOBAL_ALL);
-	CURL *curl = nullptr;
-	curl = curl_easy_init();
-	if (curl) {
-		std::string requestData = ("key=") + key;
-		curl_easy_setopt(curl, CURLOPT_URL, base64_decode("aHR0cDovL2F1dGgud2VlYndhcmUubmV0L2lwX2xvZy5waHA="));
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, requestData.c_str());
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, ("weebware"));
-		CURLcode code = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-	}
-	curl_global_cleanup();
-	// std::cin.get(); crashes for some reason? why was this ever there.
+	std::string content = networking::post_request(base64_decode("aHR0cDovL2F1dGgud2VlYndhcmUubmV0L2lwX2xvZy5waHA="), "key=" + key);
+
 	if (content == (base64_decode("Q09OTkVDVElPTiBFWENFUFRJT04=").c_str()) || content == (base64_decode("T0ZGTElORQ==").c_str()) || content == (base64_decode("Tk8gTE9HSU4gRk9VTkQ=").c_str())) {
 		std::string exceptionError = "=4ibvl2czV2cgUmchdnYlV2dgIXdvlHIm9GI5RXaydWZ05WagUGa0BSemlmclZHIvRHIlxmYh5WV";
 		reverseString(exceptionError);

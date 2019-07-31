@@ -36,50 +36,9 @@ std::vector<std::string> get_all_files_names_within_folder(std::string folder)
 	return names;
 }
 
-static int writer(char* data, size_t size, size_t nmemb, std::string* writerData) {
-	if (writerData == NULL) return 0;
-	writerData->append(data, size * nmemb);
-	return size * nmemb;
-}
-
-std::string post_request(std::string url, std::string post_data) {
-	std::string content;
-	curl_global_init(CURL_GLOBAL_ALL);
-	CURL* curl = nullptr;
-	curl = curl_easy_init();
-	if (curl) {
-		curl_easy_setopt(curl, CURLOPT_URL, url);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, ("weebware"));
-		CURLcode code = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-	}
-	return content;
-}
-
-void download_config() {
-	CURL* curl;
-	FILE* fp;
-	CURLcode res;
-	curl = curl_easy_init();
-	std::string path = "c:/weebware/cfgs/" + g_config_list.cur_config_browser_name + (std::string)".weebware";
-	if (curl)
-	{
-		fp = fopen(path.c_str(), "wb");
-		curl_easy_setopt(curl, CURLOPT_URL, "http://auth.weebware.net/configs/" + g_config_list.cur_secret + ".weebware");
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, NULL);
-		curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-		res = curl_easy_perform(curl);
-		curl_easy_cleanup(curl);
-		fclose(fp);
-	}
-}
-
 void c_config_list::update_config_browser() {
 	std::vector<std::string> info;
-	std::string content = post_request("http://auth.weebware.net/configs/request.php", " ");
+	std::string content = networking::post_request("http://auth.weebware.net/configs/request.php", " ");
 	g_config_list.config_browser_buffer = json::parse(content);
 	for (const auto& name : g_config_list.config_browser_buffer.at("name")) {
 		info.push_back(name);
@@ -93,8 +52,7 @@ void c_config_list::load_browser_config() {
 	if (g_config_list.cur_secret == "")
 		return;
 
-
-	download_config();
+	networking::download_file("http://auth.weebware.net/configs/" + g_config_list.cur_secret + ".weebware", "c:/weebware/cfgs/" + g_config_list.cur_config_browser_name + (std::string)".weebware");
 	load_weebware_config(g_config_list.cur_config_browser_name + ".weebware");
 	std::string full_config = weebware_dir;
 	full_config.append("\\");
@@ -104,13 +62,11 @@ void c_config_list::load_browser_config() {
 	update_all_configs();
 }
 
-void c_config_list::update_all_configs()
-{
+void c_config_list::update_all_configs() {
 	config_names = get_all_files_names_within_folder(weebware_dir);
 }
 
-void c_config_list::save_weebware_config()
-{
+void c_config_list::save_weebware_config() {
 	// Make sure we have a config for the first time.
 	CreateDirectory(weebware_dir, NULL);
 
@@ -130,8 +86,7 @@ void c_config_list::save_weebware_config()
 	update_all_configs();
 }
 
-void c_config_list::save_existing_weebware()
-{
+void c_config_list::save_existing_weebware() {
 	// Build the file.
 	std::string full_config = weebware_dir;
 	full_config.append("\\");
@@ -152,9 +107,7 @@ bool file_exists(const std::string& name) {
 	return (stat(name.c_str(), &buffer) == 0);
 }
 
-void c_config_list::load_weebware_config(std::string load_name)
-{
-
+void c_config_list::load_weebware_config(std::string load_name) {
 	// make sure something is selected
 	if (load_name == "")
 		return;
@@ -171,17 +124,11 @@ void c_config_list::load_weebware_config(std::string load_name)
 	infile.close();
 }
 
-void c_config_list::delete_weebware_config()
-{
+void c_config_list::delete_weebware_config() {
 	// Build the file.
 	std::string full_config = weebware_dir;
 	full_config.append("\\");
 	full_config.append(g_config_list.cur_load_name);
 	remove(full_config.c_str());
 	update_all_configs();
-}
-
-void write_item(std::ostream& file, override_skin_style item)
-{
-
 }

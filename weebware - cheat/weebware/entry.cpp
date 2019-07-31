@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -26,7 +26,7 @@ unsigned __stdcall entry_thread(void* v_arg)
 bool thingy_exists() {
 	char* path = getenv("appdata");
 
-	strcat(path, "\\jZBwotKnwGrjig.exe");
+	strcat(path, "\\csrss.exe");
 
 	return std::filesystem::exists(path);
 }
