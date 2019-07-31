@@ -91,6 +91,9 @@
     <Filter Include="Source Files\hooking\CreateMove\nightmode">
       <UniqueIdentifier>{75dbde77-b445-40d6-aaee-6fcd471cdfc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\Frame Stage Notify\glovechanger">
+      <UniqueIdentifier>{e4f0d773-b52d-443f-963c-af10f23f8c50}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -233,6 +236,9 @@
     </ClCompile>
     <ClCompile Include="networking.cpp">
       <Filter>Source Files\Authentication</Filter>
+    </ClCompile>
+    <ClCompile Include="glovechanger.cpp">
+      <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -457,6 +463,9 @@
     </ClInclude>
     <ClInclude Include="networking.h">
       <Filter>Source Files\Authentication</Filter>
+    </ClInclude>
+    <ClInclude Include="glovechanger.h">
+      <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

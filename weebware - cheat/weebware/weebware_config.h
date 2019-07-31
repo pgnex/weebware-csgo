@@ -296,9 +296,10 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	bool killsay;
-
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
+	int glove_model;
+	int glove_skin;
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
@@ -446,6 +447,8 @@ public:
 		tmp["edge_jump_key"] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
+		tmp["glove_model"] = glove_model;
+		tmp["glove_skin"] = glove_skin;
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -584,7 +587,8 @@ public:
 		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
 		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];
 		if (check("duck_in_air", data)) duck_in_air = data["duck_in_air"];
-
+		if (check("glove_model", data)) glove_model = data["glove_model"];
+		if (check("glove_skin", data)) glove_skin = data["glove_skin"];
 
 		// colors
 

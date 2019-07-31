@@ -19,6 +19,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
 			g_frame_stage_notify.legit_aa_resolver();
+			glove_changer.run();
 		}
 
 		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())

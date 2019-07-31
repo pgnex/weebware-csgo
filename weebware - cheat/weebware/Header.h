@@ -64,6 +64,7 @@
 #include "Ai.h"
 #include "nightmode.h"
 #include "knife_proxy_hook.h"
+#include "glovechanger.h"
 #include "weebware_config.h"
 #include "networking.h"
 

@@ -10724,7 +10724,7 @@ bool ImGui::BeginCombo(const char* label, const char* preview_value, ImGuiComboF
 	const float arrow_size = (flags & ImGuiComboFlags_NoArrowButton) ? 0.0f : GetFrameHeight();
 	const ImVec2 label_size = CalcTextSize(label, NULL, true);
 	const float w = (flags & ImGuiComboFlags_NoPreview) ? arrow_size : CalcItemWidth();
-	const ImRect frame_bb(window->DC.CursorPos + ImVec2(4.f, 0.f), window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y*2.0f) - ImVec2(4.f, 0.f));
+	const ImRect frame_bb(window->DC.CursorPos + ImVec2(4.f, 0.f), window->DC.CursorPos + ImVec2(w, label_size.y + style.FramePadding.y * 2.0f) - ImVec2(4.f, 0.f));
 	const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0.0f));
 	ItemSize(total_bb, style.FramePadding.y);
 	if (!ItemAdd(total_bb, id, &frame_bb))

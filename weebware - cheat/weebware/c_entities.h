@@ -263,6 +263,11 @@ public:
 		return get_value<int>(offset);
 	}
 
+	uintptr_t* get_wearables() {
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatCharacter", "m_hMyWearables");
+		return get_pointer<uintptr_t>(offset);
+	}
+
 	int m_fFlags()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_fFlags");
@@ -554,6 +559,7 @@ enum weapon_type_id
 	glove_specialist = 5034,
 	glove_hydra = 5035
 };
+
 
 class c_weapon_info
 {
@@ -1019,6 +1025,12 @@ public:
 		return get_pointer<int>(offset);
 	}
 
+	int* fallback_stattrak()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_nFallbackStatTrak");
+		return get_pointer<int>(offset);
+	}
+
 	float* get_fallbackwear()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_flFallbackWear");
@@ -1070,7 +1082,6 @@ public:
 		static uintptr_t offset = retrieve_offset("DT_BaseViewModel", "m_nModelIndex");
 		return get_pointer<int>(offset);
 	}
-
 
 	int* m_iWorldModelIndex()
 	{
