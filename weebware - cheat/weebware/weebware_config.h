@@ -391,6 +391,8 @@ public:
 		tmp["disable_post_processing"] = disable_post_processing;
 		tmp["visuals_weapon_esp"] = visuals_weapon_esp;
 		tmp["enable_bullet_tracers"] = enable_bullet_tracers;
+		tmp["bullet_tracer_expire"] = bullet_tracer_expire;
+		tmp["visuals_glow_team"] = visuals_glow_team;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -478,6 +480,8 @@ public:
 		save_color(visuals_corner_col_visible, tmp, "visuals_corner_col_visible");
 		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
 		save_color(visuals_fov_circle_col, tmp, "visuals_fov_circle_col");
+		save_color(visuals_glow_team_col, tmp, "visuals_glow_team_col");
+
 
 		json skin_tmp;
 		for (auto i = 0; i < 35; i++) {
@@ -529,6 +533,8 @@ public:
 		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
 		if (check("visuals_weapon_esp", data)) visuals_weapon_esp = data["visuals_weapon_esp"];
 		if (check("enable_bullet_tracers", data)) enable_bullet_tracers = data["enable_bullet_tracers"];
+		if (check("bullet_tracer_expire", data)) bullet_tracer_expire = data["bullet_tracer_expire"];
+		if (check("visuals_glow_team", data)) visuals_glow_team = data["visuals_glow_team"];
 
 
 		// misc
@@ -616,6 +622,8 @@ public:
 		if (check_color("visuals_corner_col_visible", data)) read_color(visuals_corner_col_visible, data, "visuals_corner_col_visible");
 		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
 		if (check_color("visuals_fov_circle_col", data)) read_color(visuals_fov_circle_col, data, "visuals_fov_circle_col");
+		if (check_color("visuals_glow_team_col", data)) read_color(visuals_glow_team_col, data, "visuals_glow_team_col");
+		
 
 		json skin_tmp = data["skins"];
 
