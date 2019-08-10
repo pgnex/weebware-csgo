@@ -9,6 +9,7 @@
 	db_connect();
 
 	$data = get_user_data($_SESSION['username']);
+	$date = new DateTime();
 
 	if (isset($_GET['reset']) && $data['rank'] == 2 && check_user_exists($_GET['reset'])) {
 		update_hwid($_GET['reset'], 0);
@@ -67,9 +68,7 @@
 				<button type="submit" class="quickicon" onclick="redirectTo('../discord')"><i class="fas fa-question"></i></button>
                 <img src="../images/weebware_logo.png" class="header_img_dashboard">
   			    <a class="tablinks" id="tabAccountBtn" onclick="openTab(event, 'tabAccount')"><i class="fas fa-user-tie" style="padding: 3px;"></i> Account</a>
-  			    <a class="tablinks" onclick="openTab(event, 'tabShoutbox')"><i class="fas fa-comment" style="padding: 3px;"></i> Shoutbox</a>
-				<a class="tablinks" onclick="openTab(event, 'tabChangelog')"><i class="fas fa-newspaper" style="padding: 3px;"></i> Change log</a>
-		<? if ($data['rank'] == 2) { ?> <a class="tablinks" onclick="openTab(event, 'tabAdmin')"><i class="fas fa-user-shield" style="padding: 3px;"></i> Admin</a> <? } ?>
+  			 <? if ($data['expire'] < $date->getTimestamp()) { ?>   <a class="tablinks" onclick="openTab(event, 'tabPurchase')"><i class="fas fa-shopping-cart"></i> Purchase</a> <? } ?>
         </div>
 
 		<div id="tabAccount" class="tabcontent">
@@ -78,64 +77,30 @@
  	 		<p class="information"><?=$data['username']?> [<?=$data['id']?>]</p>
  	 		<br>
  	 		<p class="preinformation">HWID:</p> 
- 	 		<p class="information"><?=$data['hwid']?> <a href="../discord" style="color: #6f7072; font-size: 12px">[request reset]</a></p>
+ 	 		<p class="information"><a href="../discord" style="color: #6f7072; font-size: 12px">[request reset]</a></p>
  	 		<br><br>
  	 		<h3>Subscription</h3>
  	 		<p class="preinformation">Active: </p> 
  	 		<p class="information"><?=(is_sub_active($data['username'], $data['expire'])) ? 'True' : 'False';?></p>
  	 		<br>
- 	 		<p class="preinformation">Expires:</p> 
- 	 		<p class="information"><?=$data['expire'] >= 2000000000 ? 'Never' : date("F d, Y h:i A", $data['expire'])?></p>
+ 	 		<? if ($data['expire'] > $date->getTimestamp()) { ?><p class="preinformation">Expires:</p> <? } ?>
+ 	 		<? if ($data['expire'] > $date->getTimestamp()) { ?> <p class="information"><?=$data['expire'] >= 2000000000 ? 'Never' : date("F d, Y h:i A", $data['expire'])?></p> <? } ?>
  	 		<br>
 			<br>
 			<br>
-			<?php if ($data['expire'] > time()) {  ?> <p class="preinformation"> <a href="https://weebware.net/download/loader.exe" download="<?=$filename?>.exe">Download</a> <? } ?> </p> 
-
-		<? if (!($data['expire'] >= 2000000000)) { ?> 
-			<button type="submit" class="extend" onclick="openTab(event, 'tabExtendSubscription')">Extend Subscription</button> 
-		<? } ?>
+			<?php if ($data['expire'] > time()) {  ?>
+			
+            <a href="https://weebware.net/download/loader.exe" download="<?=$filename?>.exe">
+                <button type="submit" class="normal" style="display: block; max-width: 285px">Download</button>
+            </a>
+			
+			
+			 <? } ?>
 
  	 	<br>
         </div>
 
-		<div id="tabShoutbox" class="tabcontent">
-			<h3>Coming soon</h3>
-        </div>
-
-
-		<div id="tabChangelog" class="tabcontent">
-		<p class="preinformation">[May 11th 2019] - </p> 
-		<p class="information">Glow Fixed</p> 
-        </div>
-
-		<div id="tabAdmin" class="tabcontent">
-  			<h3>Admin</h3>
-              <form action="" method="get"> 
-			  <input type="text" id="username" name="username" style="max-width: 50%">
-			  <label for="username">Username</label>
-			  <button type="submit" class="normal" id="tabAdminBtn" style="display: block; max-width: 285px">Submit</button>
-			  <br>
-			  <br>
-
-		<? if (isset($_GET['username']) && check_user_exists($_GET['username'])) { 		
-			$admin_data = get_user_data($_GET['username']);
-		?>
-
-			<p class="preinformation">Username:</p> 
- 	 		<p class="information"><?=$admin_data['username']?> [<?=$admin_data['id']?>]</p>
- 	 		<br>
- 	 		<p class="preinformation">HWID:</p> 
- 	 		<p class="information"><?=$admin_data['hwid']?> <a href="?reset=<?=$admin_data['username']?>" style="color: #6f7072; font-size: 12px">[reset]</a></p>
- 	 		<br>
- 	 		<p class="preinformation">Email:</p> 
- 	 		<p class="information"><?=$admin_data['email']?></p>
-
-		<? } ?>
-			  </form>
-        </div>
-		
-
-        <div id="tabExtendSubscription" class="tabcontent">
+		<div id="tabPurchase" class="tabcontent">
 			<h3>Extend Your Subscription</h3>
 			<form action="purchase.php" method="post">
 				<p class="preinformation">Subscription Length:</p><br>
@@ -151,12 +116,22 @@
 				<select name="paymentmethod" id="paymentmethod" style="border-radius: 5px;" class="normal" style="display: block;" required autofocus="">
                 	<option value="paypal">PayPal</option>
             	</select>
- 				<p class="preinformation priceInfo">Price:</p> 
+ 				</br><p class="preinformation">Referrer:</p><br>
+			    <input type="text" id="referrer" name="referrer" class="normal">
+			    <p class="preinformation priceInfo">Price:</p> 
  				<p class="information priceInfo" id="priceLabel">$0.00</p>
 				<button type="submit" class="normal" id="purchaseBtn" style="display: block;">Extend Subscription</button>
 			</form>
-  			<p>Note: Our payments are made handled via a third party API, which does not support cards.<br>
-  			If PayPal is not available in your country, please contact an administrator to pay with a card.</p>
+  			<p>Note: Our payments are made handled via a third party API, which does not directly support cards.<br>
+  			If PayPal is not available in your country, please contact an administrator to pay with a card.<br><br>
+  			For BTC send payment based at the current price to 3LPFRNCxyzRR2Qn7PaMJHQwe5y7KAaVoaR <br>
+  			And send an email to nex@weebware.net with the TXID, and intended subscription length.</p>
+        </div>
+
+		
+
+        <div id="tabExtendSubscription" class="tabcontent">
+
         </div>
         
         	<script>
@@ -168,7 +143,7 @@
                         var price = 0;
                         switch (selected) {
                             case "1month": price = "$14.00"; break;
-                            case "3months": price = "$24.00"; break;
+                            case "3months": price = "$26.00"; break;
                             case "6months": price = "$38.00"; break;
                             case "lifetime": price = "$46.00"; break;
                         }
