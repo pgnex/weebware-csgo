@@ -12,28 +12,7 @@
             return true;
         else
             return false;
-	}
-	
-    function check_email_exists($email) {
-        global $db;
-        $get_email = $db->prepare('SELECT * FROM users WHERE email=:email');
-        $get_email->bindValue(':email', $email);
-        $get_email->execute();
-        
-        if ($get_email->rowCount() > 0)
-            return true;
-        else
-            return false;
-	}
-	
-	function create_user($username, $password, $email) {
-		global $db;
-		$create_account = $db->prepare("INSERT INTO users (id, username, password, email, hwid) VALUES ('', :username, :password, :email, 0);");
-		$create_account->bindValue(':username', $username);
-		$create_account->bindValue(':email', $email);
-		$create_account->bindValue(':password', password_hash($password, PASSWORD_BCRYPT));
-		$create_account->execute();
-	}
+    }
     
     function get_user_data($username) {
         global $db;
@@ -49,23 +28,7 @@
         $update_hwid->bindValue(':hwid', $hwid);
         $update_hwid->bindValue(':username', $username);
         $update_hwid->execute();
-	}
-
-	function get_order_data($secret) {
-		global $db;
-		$get_order = $db->prepare('SELECT * FROM orders WHERE secret=:secret');
-		$get_order->bindValue(':secret', $secret);
-		$get_order->execute();
-
-		return $get_order->fetch();
-	}
-	
-	function is_sub_active($username, $expire) {
-		if ($expire > time())
-			return true;
-		else
-			return false;
-	}
+    }
     
     function login($username, $password) {
 		global $db;
@@ -168,40 +131,6 @@
 	   $add_ban->bindValue(':ip', $ip);
 	   $add_ban->bindValue(':reason', $reason);
 	   $add_ban->execute();
-	}
-
-
-	define("SELLY_EMAIL", "ifrickinghatelife@gmail.com");
-	define("SELLY_API_KEY", "4zXzzy2csz9PeMqZafQUWykCNzoxKYzzujDs-MV5_j9rbJTG4w");
-    // thank justin for help ;3
-    function selly_pay($title, $gateway, $email, $value, $currency, $return_url, $webhook_url, $ip) {
-        $params = array ('title' => $title, 'gateway' => $gateway, 'email' => $email, 'value' => $value, 'currency' => $currency, 'return_url' => $return_url, 'webhook_url' => $webhook_url, 'white_label' => true, 'ip_address' => $ip);
-        $query = http_build_query ($params);
-        $auth = base64_encode(SELLY_EMAIL.':'.SELLY_API_KEY);
-        $opts = array(
-            'http'=>array(
-                'method'=>"POST",
-                'header'=>
-                "User-agent: {$email} - {$_SERVER['SERVER_NAME']}\r\n" .
-                "Authorization: Basic {$auth}\r\n" .
-                "Content-Type: application/x-www-form-urlencoded",
-                'content' => $query
-            )
-        );
-        $context = stream_context_create($opts);
-        $result = file_get_contents('https://selly.gg/api/v2/pay', false, $context);
-        $data = json_decode($result, true);
-        return $data;
-	}
-	
-	function generate_random_string($length) {
-		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-		$charactersLength = strlen($characters);
-		$randomString = '';
-		for ($i = 0; $i < $length; $i++) {
-			$randomString .= $characters[rand(0, $charactersLength - 1)];
-		}
-		return $randomString;
 	}
 	
 	function get_client_ip() {
