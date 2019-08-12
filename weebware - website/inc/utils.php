@@ -40,6 +40,7 @@
         $get_data = $db->prepare('SELECT * FROM users WHERE username=:username');
         $get_data->bindValue(':username', $username);
         $get_data->execute();
+        
         return $get_data->fetch();
     }
     
@@ -85,6 +86,15 @@
         return $decryptedString;
     }
     
+    function get_referral_info($code) {
+        global $db;
+        $check_code = $db->prepare('SELECT * FROM referrals WHERE code=:code');
+        $check_code->bindValue(':code', $code);
+        $check_code->execute();
+        
+        return $check_code->fetch();        
+    }
+    
 	function successful_login($username) {
 	   global $db;
 	   $log_login = $db->prepare("INSERT INTO logins (id, user, ip, timestamp) VALUES ('', :username, :ip, :timestamp);");
@@ -123,6 +133,9 @@
 	}
 	
 	function ip_banned($ip) {
+	    
+	    if ($ip == NULL) return false;
+	    
 	    global $db;
 	    $check_ip_ban = $db->prepare('SELECT * FROM bans WHERE ip=:ip');
 	    $check_ip_ban->bindValue(':ip', $ip);
@@ -162,12 +175,23 @@
 	    if (hwid_banned($hwid)) return;
 	    if (ip_banned($ip)) return;
 	    
-	   $add_ban = $db->prepare("INSERT INTO bans (id, username, hwid, ip, reason) VALUES ('', :username, :hwid, :ip, :reason);");
-	   $add_ban->bindValue(':username', $username);
-	   $add_ban->bindValue(':hwid', $hwid);
-	   $add_ban->bindValue(':ip', $ip);
-	   $add_ban->bindValue(':reason', $reason);
-	   $add_ban->execute();
+	    $add_ban = $db->prepare("INSERT INTO bans (id, username, hwid, ip, reason) VALUES ('', :username, :hwid, :ip, :reason);");
+	    $add_ban->bindValue(':username', $username);
+	    $add_ban->bindValue(':hwid', $hwid);
+	    $add_ban->bindValue(':ip', $ip);
+	    $add_ban->bindValue(':reason', $reason);
+	    $add_ban->execute();
+	}
+	
+	function insert_registration($username, $timestamp, $ip) {
+	    global $db;
+	    
+        $add_reg = $db->prepare("INSERT INTO registrations (id, username, timestamp, ip) VALUES ('', :username, :timestamp, :ip);");
+	    $add_reg->bindValue(':username', $username);
+	    $add_reg->bindValue(':timestamp', $timestamp);
+	    $add_reg->bindValue(':ip', $ip);
+	    
+	    $add_reg->execute();
 	}
 
 

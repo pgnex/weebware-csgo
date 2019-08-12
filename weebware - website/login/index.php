@@ -7,17 +7,23 @@
 		// initialize db connection
 		db_connect();
 
+
 		// check if valid login, if it is, store the username in session
 		if (!login($_POST['username'], $_POST['password'])) {
 			$issue = "Invalid username or password";
-		} else {
+		}
+		else if (user_banned($_POST['username'])) {
+            $issue = "You have been banned.";
+        }
+		else {
 			session_start();
 			$_SESSION['username'] = $_POST['username'];
 			header('location: ../home');
 		}
+
 	}
 
-	$issue = "Please enter a username and password";
+
 
 ?>
 

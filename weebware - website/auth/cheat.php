@@ -2,9 +2,9 @@
 $cheat = array (
     "name" => "Counter-strike: Global Offensive",
     "download" => "https://auth.weebware.net/weebware.dll.enc",
-    "key" => "AFS0X01V0LW5voTRU6JvRfjDJU+JzL/1NTwBweiPAeQ=",
+    "key" => "y1CzbjomKomIaJdhXeO1pwkHK8K1dLtl/0xyceDVvlE=",
     "status" => "undetected",
-    "version" => "6.29",
+    "version" => "6.43",
 );
 
 ?>

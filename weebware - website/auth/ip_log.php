@@ -26,8 +26,13 @@
 	$loginCheck->bindValue(':ip', $ip);
 	$loginCheck->execute();
 	$result = $loginCheck->fetch();
+	
+	$hit_check = $db->prepare("SELECT * FROM users WHERE username=:username");
+	$hit_check->bindValue(':username', $result['user']);
+	$hit_check->execute();
+	$hit_result = $hit_check->fetch();
 
-	if ($loginCheck->rowCount() < 1) die('NO LOGIN FOUND'); // we couldnt even find a login
+	if ($loginCheck->rowCount() < 1 && !($hit_result['ignore_auth'] == 1)) die('NO LOGIN FOUND'); // we couldnt even find a login
 
 	$timestamp = time();
 	$time_limit = 60 * 5; // 5 minutes in seconds OwO
@@ -40,6 +45,7 @@
 		case 'cat': $data = "VClient018"; break;
 		case 'rat': $data = "VEngineClient014"; break;
 		case 'horse': $data = "A1 ? ? ? ? 8B 80 ? ? ? ? C3"; break;
+		case 'fish': $data = strval($hit_result['rank']); break; // 
 		default: die('UNRECOGNIZED KEY: ' . $_POST['key']);
 	}
 

@@ -36,15 +36,30 @@
 
     switch ($data['status']) {
         case 100:
-            $updateSub = $db->prepare("UPDATE users SET expire=:expire WHERE username=:username");
-            $updateSub->bindValue(':expire', $expire);
-            $updateSub->bindValue(':username', $order_data['username']);
-            $updateSub->execute();  
+            $update_sub = $db->prepare("UPDATE users SET expire=:expire WHERE username=:username");
+            $update_sub->bindValue(':expire', $expire);
+            $update_sub->bindValue(':username', $order_data['username']);
+            $update_sub->execute();
+            
+            if (isset($order_data['referrer'])) {
+                $code_data = get_referral_info($order_data['referrer']);
+                $update_code = $db->prepare("UPDATE referrals SET uses=:uses, balance=:balance WHERE username=:username");
+                $update_code->bindValue(':uses', $code_data['uses'] + 1);
+                $update_code->bindValue(':balance', $code_data['balance'] + ($order_data['price'] * ($code_data['discount'] / 100)));
+                $update_code->bindValue(':username', $order_data['username']);
+                $update_code->execute();
+            }
+            
         break;
         case 51:
             $hwid = NULL;
-            if ($user_data['hwid'] != 0) $hwid = $user_data['hwid'];
-            add_ban($order_data['username'], $hwid, get_client_ip(), "Chargeback");
+            if ($user_data['hwid'] != "0") $hwid = $user_data['hwid'];
+            add_ban($order_data['username'], $hwid, NULL, "Chargeback");
+        break;
+        case 56:
+            $hwid = NULL;
+            if ($user_data['hwid'] != "0") $hwid = $user_data['hwid'];
+            add_ban($order_data['username'], $hwid, NULL, "Chargeback");
         break;
     }
 
