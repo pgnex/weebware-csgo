@@ -86,13 +86,31 @@
         return $decryptedString;
     }
     
-    function get_referral_info($code) {
+    function get_referral_code_info($code) {
         global $db;
         $check_code = $db->prepare('SELECT * FROM referrals WHERE code=:code');
         $check_code->bindValue(':code', $code);
         $check_code->execute();
         
         return $check_code->fetch();        
+    }
+    
+    function get_referrer_info($username) {
+        global $db;
+        $get_referrer = $db->prepare('SELECT * FROM referrals WHERE username=:username');
+        $get_referrer->bindValue(':username', $username);
+        $get_referrer->execute();
+        
+        return $get_referrer->fetch();        
+    }
+    
+    function is_sponsor($username) {
+        global $db;
+        $get_sponsor = $db->prepare('SELECT * FROM referrals WHERE username=:username');
+        $get_sponsor->bindValue(':username', $username);
+        $get_sponsor->execute();
+        
+        return $get_sponsor->rowCount() > 0;
     }
     
 	function successful_login($username) {

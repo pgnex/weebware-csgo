@@ -42,11 +42,11 @@
             $update_sub->execute();
             
             if (isset($order_data['referrer'])) {
-                $code_data = get_referral_info($order_data['referrer']);
+                $code_data = get_referral_code_info($order_data['referrer']);
                 $update_code = $db->prepare("UPDATE referrals SET uses=:uses, balance=:balance WHERE username=:username");
                 $update_code->bindValue(':uses', $code_data['uses'] + 1);
                 $update_code->bindValue(':balance', $code_data['balance'] + ($order_data['price'] * ($code_data['discount'] / 100)));
-                $update_code->bindValue(':username', $order_data['username']);
+                $update_code->bindValue(':username', $code_data['username']);
                 $update_code->execute();
             }
             

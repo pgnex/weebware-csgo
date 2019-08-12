@@ -35,12 +35,12 @@
         
         $referrer = NULL;
         
-        if (isset($_POST['referrer'])) {
-            $code_data = get_referral_info($_POST['referrer']);
+        if (isset($_POST['referral_code'])) {
+            $code_data = get_referral_code_info($_POST['referral_code']);
             
             if ($code_data) {
                 $price = $price * ( 1 - ($code_data['discount'] / 100));
-                $referrer = $_POST['referrer'];
+                $referrer = $_POST['referral_code'];
             }
 
         }

@@ -64,7 +64,8 @@
 				<button type="submit" class="quickicon" onclick="redirectTo('../discord')"><i class="fas fa-question"></i></button>
                 <img src="../images/weebware_logo.png" class="header_img_dashboard">
   			    <a class="tablinks" id="tabAccountBtn" onclick="openTab(event, 'tabAccount')"><i class="fas fa-user-tie" style="padding: 3px;"></i> Account</a>
-  			 <? if ($data['expire'] < $date->getTimestamp()) { ?>   <a class="tablinks" onclick="openTab(event, 'tabPurchase')"><i class="fas fa-shopping-cart"></i> Purchase</a> <? } ?>
+  			 <? if ($data['expire'] < $date->getTimestamp()) { ?> <a class="tablinks" onclick="openTab(event, 'tabPurchase')"><i class="fas fa-shopping-cart"></i> Purchase</a> <? } ?>
+  			 <? if ($data['expire'] > $date->getTimestamp()) { ?> <a href="https://weebware.net/download/loader.exe" download="<?=$filename?>.exe"class="tablinks" ><i class="fas fa-download"></i> Download</a> <? } ?>
         </div>
 
 		<div id="tabAccount" class="tabcontent">
@@ -83,16 +84,17 @@
  	 		<? if ($data['expire'] > $date->getTimestamp()) { ?> <p class="information"><?=$data['expire'] >= 2000000000 ? 'Never' : date("F d, Y h:i A", $data['expire'])?></p> <? } ?>
  	 		<br>
 			<br>
-			<br>
-			<?php if ($data['expire'] > time()) {  ?>
-			
-            <a href="https://weebware.net/download/loader.exe" download="<?=$filename?>.exe">
-                <button type="submit" class="normal" style="display: block; max-width: 285px">Download</button>
-            </a>
-			
-			
-			 <? } ?>
-
+           <? if (get_referrer_info($data['username'])) { $referrer_info = get_referrer_info($data['username']); ?>
+           
+           <h3>Referrals</h3>
+ 	 		<p class="preinformation">Total Uses: </p> 
+ 	 		<p class="information"><?=$referrer_info['uses']?></p>
+ 	 		<br>
+ 	 		<p class="preinformation">Balance: </p> 
+ 	 		<p class="information"><?='$' . $referrer_info['balance']?></p>
+           <? } ?>
+            
+            
  	 	<br>
         </div>
 
@@ -113,7 +115,7 @@
                 	<option value="paypal">PayPal</option>
             	</select>
  				</br><p class="preinformation">Referrer / Discount (applied at checkout):</p><br>
-			    <input type="text" id="referrer" name="referrer" class="normal">
+			    <input type="text" id="referral_code" name="referral_code" class="normal">
 			    <p class="preinformation priceInfo">Price:</p> 
  				<p class="information priceInfo" id="priceLabel">$0.00</p>
 				<button type="submit" class="normal" id="purchaseBtn" style="display: block;">Extend Subscription</button>

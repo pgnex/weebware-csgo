@@ -1,6 +1,13 @@
 <?php
 	require '../inc/utils.php';
 
+    session_start();
+    
+    if (isset($_SESSION['username'])) {
+    	header('location: ..\home');
+    	die();
+    }
+
 	// make sure the username and password is set
 	if (isset($_POST['username']) && isset($_POST['password'])) {
 
