@@ -990,6 +990,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Separator();
 
 					ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
+					ImGui::SliderInt("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
 					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
 					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
 					if (g_weebwarecfg.edge_jump) {

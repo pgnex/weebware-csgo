@@ -247,6 +247,7 @@ public:
 	bool enable_bullet_tracers;
 	float bullet_tracer_expire = 1.f;
 	bool auto_jump;
+	int auto_jump_hitchance = 100;
 	bool night_sky;
 	bool remove_flash;
 	bool screenshot_proof;
@@ -398,6 +399,7 @@ public:
 		// misc
 		tmp["enable_misc"] = enable_misc;
 		tmp["auto_jump"] = auto_jump;
+		tmp["autu_jump_hitchance"] = auto_jump_hitchance;
 		tmp["misc_ai"] = misc_ai;
 		tmp["misc_ai_legitfactor"] = misc_ai_legitfactor;
 		tmp["misc_ai_random"] = misc_ai_random;
@@ -543,6 +545,7 @@ public:
 		// misc
 		if (check("enable_misc", data)) enable_misc = data["enable_misc"];
 		if (check("auto_jump", data)) auto_jump = data["auto_jump"];
+		if (check("auto_jump_hitchance", data)) auto_jump_hitchance = data["auto_jump_hitchance"];
 		if (check("misc_ai", data)) misc_ai = data["misc_ai"];
 		if (check("misc_ai_legitfactor", data)) misc_ai_legitfactor = data["misc_ai_legitfactor"];
 		if (check("misc_ai_random", data)) misc_ai_random = data["misc_ai_random"];

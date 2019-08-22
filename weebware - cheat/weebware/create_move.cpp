@@ -242,6 +242,11 @@ void c_create_move::auto_jump(c_usercmd* cmd) {
 	if (local->get_move_type() == MOVETYPE_LADDER)
 		return;
 
+	if (g_weebwarecfg.auto_jump_hitchance < 100) {
+		if ((rand() % 99) + 1 > g_weebwarecfg.auto_jump_hitchance)
+			return;
+	}
+
 	// if in air release flag
 	if (!(this->local->m_fFlags() & fl_onground))
 		cmd->buttons &= ~in_jump;
