@@ -188,9 +188,6 @@ void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, i
 {
 	auto protecc = g_hooking.VEH_SOUNDS->getProtectionObject();
 
-	if (strstr(pSample, "null"))
-		iPitch = 256;
-
 	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
 		SetLocalPlayerReady();
 
@@ -303,10 +300,10 @@ void c_hooking::hook_all_functions()
 
 	
 
-	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
-	//VEH_SOUNDS->hook();
-	//o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
+	VEH_SOUNDS->hook();
+	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 #endif
 
 #define StreamProof 0

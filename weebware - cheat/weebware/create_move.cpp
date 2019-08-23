@@ -39,7 +39,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.disable_post_processing();
 	g_create_move.chat_spam();
 	g_create_move.rank_reveal();
-	g_nightmode.run();
+ 	g_nightmode.run();
 
 
 	g_create_move.edge_jump_pre_prediction(cmd);
