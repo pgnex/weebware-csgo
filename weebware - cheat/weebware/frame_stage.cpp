@@ -38,6 +38,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 }
 #endif
 
+
 std::vector<const char*> vistasmoke_mats =
 {
 	"particle/vistasmokev1/vistasmokev1_fire",

@@ -94,6 +94,9 @@
     <Filter Include="Source Files\hooking\Frame Stage Notify\glovechanger">
       <UniqueIdentifier>{e4f0d773-b52d-443f-963c-af10f23f8c50}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\Draw Model Execute">
+      <UniqueIdentifier>{65b153f7-ef21-4480-b7dc-ce2cdfd78619}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -239,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="glovechanger.cpp">
       <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
+    </ClCompile>
+    <ClCompile Include="dme.cpp">
+      <Filter>Source Files\hooking\Draw Model Execute</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -466,6 +472,9 @@
     </ClInclude>
     <ClInclude Include="glovechanger.h">
       <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
+    </ClInclude>
+    <ClInclude Include="dme.h">
+      <Filter>Source Files\hooking\Draw Model Execute</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

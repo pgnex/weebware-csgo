@@ -1,15 +1,11 @@
 #pragma once
 
-#ifndef DME
-#define DME
-
 #include "Header.h"
 
 class c_sceneend
 {
 public:
 	void scene_end();
-	//void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
 	bool is_visible(c_base_entity* target);
 	void glow();
 	void chams();
@@ -39,4 +35,3 @@ protected:
 
 };
 extern c_sceneend g_sceneend;
-#endif

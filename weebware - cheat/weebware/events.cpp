@@ -164,8 +164,15 @@ void EventFuncs::player_death(i_game_event *event) {
 	c_base_entity* attacker_ent = (c_base_entity *)g_weebware.g_entlist->getcliententity(attacker);
 
 	if (attacker_ent == g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local())) {
-		int selection = int(static_cast<int>(killsay_messaes.size()) * rand() / (RAND_MAX + 1.0));
-		g_weebware.g_engine->execute_client_cmd(("say " + killsay_messaes.at(selection)).c_str());
+		if (strlen(g_weebwarecfg.killsay_msg_custom) > 0) {
+			std::string msg = g_weebwarecfg.killsay_msg_custom;
+			g_weebware.g_engine->execute_client_cmd(("say " + msg).c_str());
+		}
+		else {
+			int selection = int(static_cast<int>(killsay_messaes.size()) * rand() / (RAND_MAX + 1.0));
+			g_weebware.g_engine->execute_client_cmd(("say " + killsay_messaes.at(selection)).c_str());
+		}
+
 	}
 }
 

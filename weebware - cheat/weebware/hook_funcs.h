@@ -17,7 +17,7 @@ namespace hook_functions
 	void frame_stage_notify(clientframestage_t curStage);
 	long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
-	//void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
+	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
 	void scene_end(void* thisptr, void* edx);
 }
 

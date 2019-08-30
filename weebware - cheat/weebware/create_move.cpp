@@ -39,6 +39,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.disable_post_processing();
 	g_create_move.chat_spam();
 	g_create_move.rank_reveal();
+	g_create_move.slidewalk(cmd);
  	g_nightmode.run();
 
 
@@ -234,7 +235,36 @@ void c_create_move::rank_reveal()
 	}
 }
 
+void c_create_move::slidewalk(c_usercmd* cmd) {
 
+	if (!g_weebwarecfg.misc_slidewalk)
+		return;
+
+	if (cmd->forwardmove > 0)
+	{
+		cmd->buttons |= in_back;
+		cmd->buttons &= ~in_forward;
+	}
+
+	if (cmd->forwardmove < 0)
+	{
+		cmd->buttons |= in_forward;
+		cmd->buttons &= ~in_back;
+	}
+
+	if (cmd->sidemove < 0)
+	{
+		cmd->buttons |= in_moveright;
+		cmd->buttons &= ~in_moveleft;
+	}
+
+	if (cmd->sidemove > 0)
+	{
+		cmd->buttons |= in_moveleft;
+		cmd->buttons &= ~in_moveright;
+	}
+}
+ 
 void c_create_move::auto_jump(c_usercmd* cmd) {
 	if (!g_weebwarecfg.auto_jump)
 		return;

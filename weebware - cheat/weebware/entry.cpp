@@ -151,7 +151,7 @@ void c_weebware::setup_thread() {
 #endif
 
 	if (init_interfaces()) {
-		// netvar_manager::_instance()->dump("latest.txt");
+		//netvar_manager::_instance()->dump("latest.txt");
 		g_hooking.hook_all_functions();
 	}
 

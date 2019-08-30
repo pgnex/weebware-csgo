@@ -12,18 +12,14 @@ void hook_functions::scene_end(void* thisptr, void* edx) {
 		return;
 	}
 
-	g_sceneend.scene_end();
+	try {
+		g_sceneend.scene_end();
+	}
+	catch (...) {
+
+	}
 }
 
-//void hook_functions::draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
-//{
-//	if (!ctx)
-//		return;
-//	try {
-//		g_sceneend.draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
-//	}
-//	catch (...) {}
-//}
 
 void init_key_vals(KeyValues* keyValues, char* name)
 {
@@ -213,12 +209,6 @@ void c_sceneend::chams() {
 		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
 			continue;
 
-		if (g_weebwarecfg.visuals_chams_xqz) {
-		//	mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
-			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-			player->draw_model(1, 255);
-			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-		}
 
 		if (local->m_iTeamNum() == player->m_iTeamNum()) {
 			if (g_weebwarecfg.visuals_chams_render_team) {
@@ -246,12 +236,10 @@ void c_sceneend::chams() {
 				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 			}
 
-			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-
 			// Set material info.
 			g_weebware.g_render_view->SetBlend(col.a / 255.f);
 			g_weebware.g_render_view->SetColorModulation(col_blend);
-
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
 			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 			player->draw_model(1, 255);
 			g_weebware.g_model_render->forcedmaterialoverride(nullptr);

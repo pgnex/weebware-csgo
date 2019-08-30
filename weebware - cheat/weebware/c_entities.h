@@ -7,10 +7,24 @@
 #define retrieve_offset(table, ...)netvar_manager::_instance()->iget_offset(table, __VA_ARGS__)
 
 class bf_read;
-struct model_t;
 struct mstudiobbox_t;
 struct mstudiohitboxset_t;
 struct studiohdr_t;
+
+struct model_t
+{
+	void* fnHandle;               //0x0000 
+	char    szName[260];            //0x0004 
+	int     nLoadFlags;             //0x0108 
+	int     nServerCount;           //0x010C 
+	int     type;                   //0x0110 
+	int     flags;                  //0x0114 
+	Vector  vecMins;                //0x0118 
+	Vector  vecMaxs;                //0x0124 
+	float   radius;                 //0x0130 
+	uint8_t pad[0x1C];              //0x0134
+};
+
 
 class i_handle_ent
 {

@@ -17,6 +17,7 @@ public:
 	bool anti_trigger(c_usercmd* cmd, bool& send_packets);
 	bool is_visible(c_base_entity* target);
 	void auto_strafe(c_usercmd* cmd);
+	void slidewalk(c_usercmd* cmd);
 	void auto_queue();
 	void disable_post_processing();
 	void clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket);

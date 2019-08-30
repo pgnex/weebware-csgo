@@ -288,6 +288,9 @@ public:
 	float misc_ai_aimspeed = 30.f;
 	bool visuals_nightmode = 0;
 	bool wireframe_smoke = 0;
+	bool no_hands = 0;
+	bool no_flash = 0;
+	bool no_smoke = 0;
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
 	int hitmarker_sound = 0;
@@ -297,6 +300,7 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	bool killsay;
+	char killsay_msg_custom[256];
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
 	int glove_model;
@@ -439,7 +443,10 @@ public:
 		tmp["auto_strafe"] = auto_strafe;
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
+		tmp["killsay_msg_custom"] = killsay_msg_custom;
 		tmp["wireframe_smoke"] = wireframe_smoke;
+		tmp["no_hands"] = no_hands;
+		tmp["no_smoke"] = no_smoke;
 		tmp["visuals_skeleton"] = visuals_skeleton;
 		tmp["visuals_recoil_crosshair"] = visuals_recoil_crosshair;
 		tmp["visuals_sniper_crosshair"] = visuals_sniper_crosshair;
@@ -585,7 +592,13 @@ public:
 		if (check("auto_strafe", data)) auto_strafe = data["auto_strafe"];
 		if (check("thirdperson", data)) thirdperson = data["thirdperson"];
 		if (check("killsay", data)) killsay = data["killsay"];
+		if (check("killsay_msg_custom", data)) {
+			std::string msg = data["killsay_msg_custom"];
+			strncpy(killsay_msg_custom, msg.c_str(), sizeof(killsay_msg_custom));
+		}
 		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
+		if (check("no_hands", data)) no_hands = data["no_hands"];
+		if (check("no_smoke", data)) no_smoke = data["no_smoke"];
 		if (check("visuals_skeleton", data)) visuals_skeleton = data["visuals_skeleton"];
 		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
 		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];

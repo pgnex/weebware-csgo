@@ -9,6 +9,9 @@ void c_nightmode::run() {
 
 	g_weebwarecfg.visuals_nightmode ? g_nightmode.apply() : g_nightmode.remove();
 
+	if (!done)
+		return;
+
 	static auto r_drawspecificstaticprop = g_weebware.g_convars->find_cvar("r_DrawSpecificStaticProp");
 	r_drawspecificstaticprop->SetValue(g_weebwarecfg.visuals_nightmode ? 0 : 1);
 

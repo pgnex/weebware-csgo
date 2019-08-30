@@ -110,6 +110,7 @@
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <FavorSizeOrSpeed>Size</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -138,6 +139,7 @@
     <ClCompile Include="c_entities.cpp" />
     <ClCompile Include="directx_hooks.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="dme.cpp" />
     <ClCompile Include="glovechanger.cpp" />
     <ClCompile Include="networking.cpp" />
     <ClCompile Include="scene_end.cpp" />
@@ -191,6 +193,7 @@
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />
+    <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="networking.h" />
     <ClInclude Include="scene_end.h" />

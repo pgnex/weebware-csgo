@@ -807,6 +807,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
 					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
+					ImGui::Checkbox("No Hands", &g_weebwarecfg.no_hands, false);
+					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
 					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 					if (g_weebwarecfg.enable_bullet_tracers) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
@@ -977,6 +979,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
 				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
+					if (g_weebwarecfg.killsay) {
+						ImGui::InputText("empty for default", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
+					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					 ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
@@ -993,6 +998,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.auto_jump) {
 						ImGui::SliderInt("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
 					}
+
+					ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk, false);
 					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
 					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
 					if (g_weebwarecfg.edge_jump) {
