@@ -300,6 +300,12 @@ public:
 		return get_value<int>(offset);
 	}
 
+	HANDLE m_hObserverTarget()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "m_hObserverTarget");
+		return get_value<HANDLE>(offset);
+	}
+
 	HANDLE m_hOwnerEntity()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_hOwnerEntity");
@@ -1010,6 +1016,9 @@ public:
 		case weapon_type_id::weapon_knife_widowmaker:
 			return "Talon Knife";
 			break;
+		case weapon_type_id::weapon_negev:
+			return "Negev";
+			break;
 		default:
 			return "";
 			break;
@@ -1122,6 +1131,12 @@ public:
 	int Clip1()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iClip1");
+		return get_value<int>(offset);
+	}
+
+	int m_iPrimaryReserveAmmoCount()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BaseCombatWeapon", "m_iPrimaryReserveAmmoCount");
 		return get_value<int>(offset);
 	}
 };
