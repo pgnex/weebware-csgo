@@ -60,6 +60,8 @@ void c_config_list::load_browser_config() {
 	full_config.append(".weebware");
 	remove(full_config.c_str());
 	update_all_configs();
+
+	g_weebwarecfg.skinchanger_apply_nxt = 1;
 }
 
 void c_config_list::update_all_configs() {

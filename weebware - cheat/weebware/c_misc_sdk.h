@@ -369,156 +369,160 @@ enum materialvarflags_t;
 class imaterial
 {
 public:
-	// get the name of the material.  this is a full path to 
+	// Get the name of the material.  This is a full path to
 	// the vmt file starting from "hl2/materials" (or equivalent) without
 	// a file extension.
-	virtual const char* getname() const = 0; // 1
-	virtual const char* gettexturegroupname() const = 0; // 2
+	virtual const char* GetName() const = 0;
+	virtual const char* gettexturegroupname() const = 0;
 
-	// get the preferred size/bitdepth of a preview image of a material.
-	// this is the sort of image that you would use for a thumbnail view
-	// of a material, or in worldcraft until it uses materials to render.
+	// Get the preferred size/bitDepth of a preview image of a material.
+	// This is the sort of image that you would use for a thumbnail view
+	// of a material, or in WorldCraft until it uses materials to render.
 	// separate this for the tools maybe
-	virtual previewimageretval_t getpreviewimageproperties(int* width, int* height, imageformat* imageformat, bool* istranslucent) const = 0; // 3
+	virtual previewimageretval_t GetPreviewImageProperties(int* width, int* height, imageformat* imageFormat, bool* isTranslucent) const = 0;
 
-	// get a preview image at the specified width/height and bitdepth.
-	// will do resampling if necessary.(not yet!!! :) )
-	// will do color format conversion. (works now.)
-	virtual previewimageretval_t getpreviewimage(unsigned char* data, int width, int height, imageformat imageformat) const = 0;
+	// Get a preview image at the specified width/height and bitDepth.
+	// Will do resampling if necessary.(not yet!!! :) )
+	// Will do color format conversion. (works now.)
+	virtual previewimageretval_t GetPreviewImage(unsigned char* data, int width, int height, imageformat imageFormat) const = 0;
 	//
-	virtual int getmappingwidth() = 0;
-	virtual int getmappingheight() = 0;
-	virtual int getnumanimationframes() = 0; // 8
+	virtual int             GetMappingWidth() = 0;
+	virtual int             GetMappingHeight() = 0;
 
-	// for material subrects (material pages).  offset(u,v) and scale(u,v) are normalized to texture.
-	virtual bool inmaterialpage(void) = 0;
-	virtual void getmaterialoffset(float* poffset) = 0;
-	virtual void getmaterialscale(float* pscale) = 0;
-	virtual imaterial* getmaterialpage(void) = 0; //  12
+	virtual int             GetNumAnimationFrames() = 0;
+
+	// For material subrects (material pages).  Offset(u,v) and scale(u,v) are normalized to texture.
+	virtual bool            InMaterialPage(void) = 0;
+	virtual void            GetMaterialOffset(float* pOffset) = 0;
+	virtual void            GetMaterialScale(float* pScale) = 0;
+	virtual imaterial* GetMaterialPage(void) = 0;
 
 	// find a vmt variable.
-	// this is how game code affects how a material is rendered.
-	// the game code must know about the params that are used by
+	// This is how game code affects how a material is rendered.
+	// The game code must know about the params that are used by
 	// the shader for the material that it is trying to affect.
-	virtual imaterialvar* findvar(const char* varname, bool* found, bool complain = true) = 0;
+	virtual imaterialvar* FindVar(const char* varName, bool* found, bool complain = true) = 0;
 
-	// the user never allocates or deallocates materials.  reference counting is
-	// used instead.  garbage collection is done upon a call to 
-	// imaterialsystem::uncacheunusedmaterials.
-	virtual void incrementreferencecount(void) = 0;
-	virtual void decrementreferencecount(void) = 0; // 15
+	// The user never allocates or deallocates materials.  Reference counting is
+	// used instead.  Garbage collection is done upon a call to
+	// IMaterialSystem::UncacheUnusedMaterials.
+	virtual void            incrementreferencecount(void) = 0;
+	virtual void            DecrementReferenceCount(void) = 0;
 
-	inline void addref()
-	{
-		// incrementreferencecount();
-		typedef void(__thiscall* incrementreferencecountfn)(void*);
-		return getvfunc<incrementreferencecountfn>(this, 14)(this);
-	}
+	inline void AddRef() { incrementreferencecount(); }
+	inline void Release() { DecrementReferenceCount(); }
 
-	inline void release()
-	{
-		decrementreferencecount();
-	}
-
-	// each material is assigned a number that groups it with like materials
+	// Each material is assigned a number that groups it with like materials
 	// for sorting in the application.
-	virtual int getenumerationid(void) const = 0;
-	virtual void getlowrescolorsample(float s, float t, float* color) const = 0;
+	virtual int             GetEnumerationID(void) const = 0;
 
-	// this computes the state snapshots for this material
-	virtual void recomputestatesnapshots() = 0;
+	virtual void            GetLowResColorSample(float s, float t, float* color) const = 0;
 
-	// are we translucent?
-	virtual bool istranslucent() = 0;
+	// This computes the state snapshots for this material
+	virtual void            RecomputeStateSnapshots() = 0;
 
-	// are we alphatested?
-	virtual bool isalphatested() = 0;
+	// Are we translucent?
+	virtual bool            IsTranslucent() = 0;
 
-	// are we vertex lit?
-	virtual bool isvertexlit() = 0; // 23
+	// Are we alphatested?
+	virtual bool            IsAlphaTested() = 0;
 
-	// gets the vertex format
-	virtual vertexformat_t getvertexformat() const = 0;
+	// Are we vertex lit?
+	virtual bool            IsVertexLit() = 0;
+
+	// Gets the vertex format
+	virtual vertexformat_t  GetVertexFormat() const = 0;
 
 	// returns true if this material uses a material proxy
-	virtual bool hasproxy(void) const = 0;
-	virtual bool usesenvcubemap(void) = 0;
-	virtual bool needstangentspace(void) = 0;
-	virtual bool needspoweroftwoframebuffertexture(bool bcheckspecifictothisframe = true) = 0;
-	virtual bool needsfullframebuffertexture(bool bcheckspecifictothisframe = true) = 0;
+	virtual bool            HasProxy(void) const = 0;
+
+	virtual bool            UsesEnvCubemap(void) = 0;
+
+	virtual bool            NeedsTangentSpace(void) = 0;
+
+	virtual bool            NeedsPowerOfTwoFrameBufferTexture(bool bCheckSpecificToThisFrame = true) = 0;
+	virtual bool            NeedsFullFrameBufferTexture(bool bCheckSpecificToThisFrame = true) = 0;
 
 	// returns true if the shader doesn't do skinning itself and requires
 	// the data that is sent to it to be preskinned.
-	virtual bool needssoftwareskinning(void) = 0;
+	virtual bool            NeedsSoftwareSkinning(void) = 0;
 
-	// apply constant color or alpha modulation
-	virtual void alphamodulate(float alpha) = 0;
-	virtual void colormodulate(float r, float g, float b) = 0;
+	// Apply constant color or alpha modulation
+	virtual void            AlphaModulate(float alpha) = 0;
+	virtual void            colormodulate(float r, float g, float b) = 0;
 
-	// material var flags...
-	virtual void setmaterialvarflag(materialvarflags_t flag, bool on) = 0; // 33
-	virtual bool getmaterialvarflag(materialvarflags_t flag) const = 0;
+	// Material Var flags...
+	virtual void            setmaterialvarflag(materialvarflags_t flag, bool on) = 0;
+	virtual bool            GetMaterialVarFlag(materialvarflags_t flag) = 0;
 
-	// gets material reflectivity
-	virtual void getreflectivity(Vector& reflect) = 0;
+	// Gets material reflectivity
+	virtual void            GetReflectivity(Vector& reflect) = 0;
 
-	// gets material property flags
-	virtual bool getpropertyflag(materialpropertytypes_t type) = 0;
+	// Gets material property flags
+	virtual bool            GetPropertyFlag(materialpropertytypes_t type) = 0;
 
-	// is the material visible from both sides?
-	virtual bool istwosided() = 0;
+	// Is the material visible from both sides?
+	virtual bool            IsTwoSided() = 0;
 
-	// sets the shader associated with the material
-	virtual void setshader(const char* pshadername) = 0;
+	// Sets the shader associated with the material
+	virtual void            SetShader(const char* pShaderName) = 0;
 
-	// can't be const because the material might have to precache itself.
-	virtual int getnumpasses(void) = 0;
+	// Can't be const because the material might have to precache itself.
+	virtual int             GetNumPasses(void) = 0;
 
-	// can't be const because the material might have to precache itself.
-	virtual int gettexturememorybytes(void) = 0;
+	// Can't be const because the material might have to precache itself.
+	virtual int             GetTextureMemoryBytes(void) = 0;
 
-	// meant to be used with materials created using creatematerial
-	// it updates the materials to reflect the current values stored in the material vars
-	virtual void refresh() = 0;
+	// Meant to be used with materials created using CreateMaterial
+	// It updates the materials to reflect the current values stored in the material vars
+	virtual void            Refresh() = 0;
 
-	// gr - returns true is material uses lightmap alpha for blending
-	virtual bool needslightmapblendalpha(void) = 0;
+	// GR - returns true is material uses lightmap alpha for blending
+	virtual bool            NeedsLightmapBlendAlpha(void) = 0;
 
 	// returns true if the shader doesn't do lighting itself and requires
 	// the data that is sent to it to be prelighted
-	virtual bool needssoftwarelighting(void) = 0;
+	virtual bool            NeedsSoftwareLighting(void) = 0;
 
-	// gets at the shader parameters
-	virtual int shaderparamcount() const = 0;
-	virtual imaterialvar** getshaderparams(void) = 0;
+	// Gets at the shader parameters
+	virtual int             ShaderParamCount() const = 0;
+	virtual imaterialvar** GetShaderParams(void) = 0;
 
-	// returns true if this is the error material you get back from imaterialsystem::findmaterial if
+	// Returns true if this is the error material you get back from IMaterialSystem::FindMaterial if
 	// the material can't be found.
-	virtual bool iserrormaterial() const = 0;
-	virtual void unused() = 0;
+	virtual bool            iserrormaterial() const = 0;
 
-	// gets the current alpha modulation
-	virtual float getalphamodulation() = 0;
+	virtual void            Unused() = 0;
 
-	virtual void getcolormodulation(float* r, float* g, float* b) = 0;
+	// Gets the current alpha modulation
+	virtual float           GetAlphaModulation() = 0;
+	virtual void            GetColorModulation(float* r, float* g, float* b) = 0;
 
-	// is this translucent given a particular alpha modulation?
-	virtual bool istranslucentundermodulation(float falphamodulation = 1.0f) const = 0;
+	// Is this translucent given a particular alpha modulation?
+	virtual bool            IsTranslucentUnderModulation(float fAlphaModulation = 1.0f) const = 0;
 
 	// fast find that stores the index of the found var in the string table in local cache
-	virtual imaterialvar* findvarfast(char const* pvarname, unsigned int* ptoken) = 0;
+	virtual imaterialvar* FindVarFast(char const* pVarName, unsigned int* pToken) = 0;
 
-	// sets new vmt shader parameters for the material
-	virtual void setshaderandparams(KeyValues* pkeyvalues) = 0;
-	virtual const char* getshadername() const = 0;
-	virtual void deleteifunreferenced() = 0;
-	virtual bool isspritecard() = 0;
-	virtual void callbindproxy(void* proxydata) = 0;
-	virtual void refreshpreservingmaterialvars() = 0;
-	virtual bool wasreloadedfromwhitelist() = 0;
-	virtual bool settempexcluded(bool bset, int nexcludeddimensionlimit) = 0;
-	virtual int getreferencecount() const = 0;
+	// Sets new VMT shader parameters for the material
+	virtual void            SetShaderAndParams(void* pKeyValues) = 0;
+	virtual const char* GetShaderName() const = 0;
+
+	virtual void            DeleteIfUnreferenced() = 0;
+
+	virtual bool            IsSpriteCard() = 0;
+
+	virtual void            CallBindProxy(void* proxyData) = 0;
+
+	virtual void            RefreshPreservingMaterialVars() = 0;
+
+	virtual bool            WasReloadedFromWhitelist() = 0;
+
+	virtual bool            SetTempExcluded(bool bSet, int nExcludedDimensionLimit) = 0;
+
+	virtual int             GetReferenceCount() const = 0;
 };
+
 class CGameTrace;
 
 typedef CGameTrace trace_t;

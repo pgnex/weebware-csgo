@@ -7,6 +7,7 @@ public:
 	void no_hands(const modelrenderinfo_t& pInfo);
 	void no_smoke(const modelrenderinfo_t& pInfo);
 	void no_flash(const modelrenderinfo_t& pInfo);
+	void hand_chams(const modelrenderinfo_t& pInfo);
 
 	std::vector<const char*> vistasmoke_mats =
 	{

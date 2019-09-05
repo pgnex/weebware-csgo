@@ -50,9 +50,11 @@ private:
 	void bomb_timer(c_base_entity* ent);
 	void draw_crosshair();
 	void recoil_crosshair();
-	void render_weapon(s_boundaries bounds, c_base_entity* ent, bool is_visible);
+	void render_weapon(s_boundaries bounds, c_base_entity* ent);
+	void render_ammo(s_boundaries bounds, c_base_entity* ent);
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack();
+	void set_models(c_base_entity* ent);
 };
 
 extern c_esp g_esp;

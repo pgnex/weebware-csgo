@@ -507,7 +507,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		style.Colors[ImGuiCol_ChildWindowBg] = imgui_custom::ConvertFromRGBA(ImVec4(30, 10, 10, 255.f));
 		ImGui::BeginChild("COL7", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (ImGui::Button("Unload", ImVec2(column_width / 6, 20))) {
-			g_hooking.unhook_all_functions();
+			try {
+				g_hooking.unhook_all_functions();
+			}
+			catch (...) {}
 		}
 		ImGui::EndChild();
 
@@ -719,6 +722,14 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 
 					ImGui::Checkbox("Weapon", &g_weebwarecfg.visuals_weapon_esp, false);
+					if (g_weebwarecfg.visuals_weapon_esp) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_weapon_esp_col, "Weapon ESP Color");
+					}
+
+					ImGui::Checkbox("Ammo", &g_weebwarecfg.visuals_ammo_esp, false);
+					if (g_weebwarecfg.visuals_ammo_esp) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_ammo_esp_col, "Ammo ESP Color");
+					}
 
 					ImGui::Checkbox("Draw On Dormant", &g_weebwarecfg.visuals_dormant_esp, false);
 					if (g_weebwarecfg.visuals_dormant_esp) {
@@ -759,10 +770,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 
 					ImGui::Separator();
-					ImGui::Text("Chams");
+					ImGui::Text("Player Chams");
 					ImGui::Separator();
 
-					const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude" };
+					const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude", "Flat"};
 					ImGui::Text("Material");
 					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
 					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
@@ -772,10 +783,24 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
 
 
+					//ImGui::Separator();
+					//ImGui::Text("Hand Chams");
+					//ImGui::Separator();
+					//ImGui::Checkbox("Enabled##handcham", &g_weebwarecfg.hand_chams, false);
+					//if (g_weebwarecfg.hand_chams)
+					//	imgui_custom::custom_color_inline(g_weebwarecfg.hand_cham_col, "Hand Cham Color");
+
+					//ImGui::Checkbox("XQZ##handcham", &g_weebwarecfg.hand_chams_xqz, false);
+
+					//ImGui::Separator();
+					//ImGui::Text("Weapon Chams");
+					//ImGui::Separator();
+					//ImGui::Checkbox("Enabled##weaponcham", &g_weebwarecfg.weapon_chams, false);
+					//if (g_weebwarecfg.weapon_chams)
+					//	imgui_custom::custom_color_inline(g_weebwarecfg.weapon_cham_col, "Hand Cham Color");
 
 				}
 				ImGui::EndChild();
-
 				ImGui::NextColumn();
 
 				ImGui::BeginChild("Visuals 2", ImVec2(0, 0), true);
@@ -807,7 +832,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
 					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
-					ImGui::Checkbox("No Hands", &g_weebwarecfg.no_hands, false);
 					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
 					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 					if (g_weebwarecfg.enable_bullet_tracers) {
@@ -1009,7 +1033,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					const char* strafe_type[] = { "Off", "Legit", "Fast" };
 					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
 
-				//	ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
 				//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
 				}
 				ImGui::EndChild();

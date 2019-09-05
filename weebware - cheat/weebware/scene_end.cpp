@@ -66,7 +66,7 @@ void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *p
 }
 
 // Ayyware
-imaterial* generate_material(bool ignore, bool lit, bool wire_frame)
+imaterial* c_sceneend::generate_material(bool ignore, bool lit, bool wire_frame)
 {
 	static int created = 0;
 	static const char tmp[] =
@@ -131,10 +131,10 @@ bool c_sceneend::is_visible(c_base_entity* target)
 imaterial* c_sceneend::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail" };
+	const char* material_list[] = { "", "regular", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail", "flat" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
-	return g_weebware.g_mat_sys->find_material(material_list[type], nullptr);
+	return g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
 }
 
 // change all return false to original calls.
@@ -160,11 +160,11 @@ void c_sceneend::chams() {
 	// Setting up mats
 	if (!init) {
 		// Grab pre-generated materials
-		for (auto i = 2; i < custom_mats::max; i++) {
+		for (auto i = 1; i < custom_mats::max; i++) {
 			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
 		}
 		// Make our own materials
-		mat_list[custom_mats::plain] = generate_material(0, 1, 0);
+	//	mat_list[custom_mats::plain] = generate_material(0, 1, 0);
 		init = true;
 	}
 
@@ -209,10 +209,16 @@ void c_sceneend::chams() {
 		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
 			continue;
 
+		if (!mat_list[g_weebwarecfg.visuals_chams])
+			continue;
+
+		if (mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
+			continue;
 
 		if (local->m_iTeamNum() == player->m_iTeamNum()) {
 			if (g_weebwarecfg.visuals_chams_render_team) {
 				if (g_weebwarecfg.visuals_chams_xqz) {
+					mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
 					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 					player->draw_model(1, 255);
@@ -230,15 +236,18 @@ void c_sceneend::chams() {
 		}
 		else {
 			if (g_weebwarecfg.visuals_chams_xqz) {
+				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
 				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 				player->draw_model(1, 255);
+
 				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 			}
 
 			// Set material info.
 			g_weebware.g_render_view->SetBlend(col.a / 255.f);
 			g_weebware.g_render_view->SetColorModulation(col_blend);
+			mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
 			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
 			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 			player->draw_model(1, 255);
@@ -272,7 +281,7 @@ void c_sceneend::glow() {
 
 		if (strstr(entity->get_client_class()->m_networkedname, "CWeapon"))
 			class_id = -1;
-		else if (class_id == weapon_ak47 || class_id == weapon_revolver || class_id == weapon_deagle)
+		else if (class_id == 1 || class_id == weapon_revolver || class_id == 46)
 			class_id = -1;
 
 		switch (class_id) {

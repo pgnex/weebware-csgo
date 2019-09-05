@@ -14,62 +14,45 @@ void c_esp::esp_main()
 
 	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+	if (!g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+		return;
 
+	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
+		return;
 
-		if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
-			return;
+	if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+
+	if (!local)
+		return;
+
+	// call things here if no ent loop needed 
+
+	draw_inaccuracy_circle();
+	draw_fov_circle();
+	draw_crosshair();
+	recoil_crosshair();
+
+	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+	{
+		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
+
+		if (!ent || ent == nullptr)
+			continue;
+
+		// check if bomb timer is enabled, if it is check for entity
+		if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
+			bomb_timer(ent);
+
+		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
+			continue;
 		}
 
-		if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
-
-		if (local) {
-			if (local->is_valid_player()) {
-
-				// call things here for visual stuff before gay checks..
-				draw_inaccuracy_circle();
-				draw_fov_circle();
-				draw_crosshair();
-				recoil_crosshair();
-
-				for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
-				{
-					c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
-
-					if (!ent || ent == nullptr)
-						continue;
-
-					// check if bomb timer is enabled, if it is check for entity
-					if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4")) {
-						bomb_timer(ent);
-					}
-
-					if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
-						continue;
-					}
-
-					if (g_weebwarecfg.anime_model == 1) {
-
-						if (ent->m_iTeamNum() == local->m_iTeamNum()) {
-							*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
-						}
-						else {
-							*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
-						}
-					}
-					else if (g_weebwarecfg.anime_model == 2) {
-						*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
-					}
-
-				}
-			}
-
-		}
+		if (g_weebwarecfg.anime_model > 0)
+			set_models(ent);
 	}
 
 
-	if (g_weebware.menu_opened)
-	{
+	if (g_weebware.menu_opened) {
 		int s, h;
 		g_weebware.g_engine->get_screen_dimensions(s, h);
 		g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
@@ -77,125 +60,94 @@ void c_esp::esp_main()
 	}
 
 	if (g_weebwarecfg.enable_visuals == 0)
-	{
 		return;
-	}
 
 	if (g_weebwarecfg.enable_visuals == 2)
-	{
 		if (!GetAsyncKeyState(g_weebwarecfg.enable_visuals_key))
-		{
 			return;
-		}
-	}
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
-	{
-		if (local)
-		{
-			if (local->is_valid_player())
+
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+
+		draw_inaccuracy_circle();
+		display_backtrack();
+
+		if (g_weebwarecfg.visuals_backtrack_dots) {
+
+			for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
 			{
-				// Used to print current gun id.
-				// g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, 30, c_color(255, 255, 255, 255), 0, "%i", local->m_pActiveWeapon()->m_iItemDefinitionIndex());
+				Vector w2s;
 
-				draw_inaccuracy_circle();
-				display_backtrack();
-
-				if (g_weebwarecfg.visuals_backtrack_dots) {
-
-					for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
-					{
-						Vector w2s;
-
-						if (g_maths.world_to_screen(g_accuracy.accuracy_records[i].m_head, w2s))
-						{
-							g_accuracy.accuracy_records[i].m_w2s_head = w2s;
-							g_accuracy.accuracy_records[i].m_has_w2s = true;
-						}
-					}
-
+				if (g_maths.world_to_screen(g_accuracy.accuracy_records[i].m_head, w2s))
+				{
+					g_accuracy.accuracy_records[i].m_w2s_head = w2s;
+					g_accuracy.accuracy_records[i].m_has_w2s = true;
 				}
-
-			}
-
-			for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
-			{
-				c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
-
-				if (!ent || ent == nullptr)
-					continue;
-
-
-#pragma region players
-				if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
-					continue;
-				}
-
-				if (!g_weebwarecfg.visuals_dormant_esp) {
-					if (ent->is_dormant()) {
-						continue;
-					}
-				}
-
-				if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) {
-					continue;
-				}
-
-				if (ent == local) {
-
-					continue;
-				}
-
-				if (g_weebwarecfg.visuals_bspotted) {
-					*ent->b_spotted() = true;
-				}
-
-				if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
-					continue;
-				}
-
-				w2s_player[i].boundary = calc_boundaries(ent);
-
-				if (ent->is_dormant())
-					w2s_player[i].boundary.dormant = true;
-
-				render_box(w2s_player[i].boundary, ent, is_visible(local, ent));
-
-				render_box_corners(w2s_player[i].boundary, ent, is_visible(local, ent));
-
-				render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
-
-				render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
-				render_weapon(w2s_player[i].boundary, ent, is_visible(local, ent));
-
-				render_skeleton(ent, is_visible(local, ent));
-
-#pragma endregion
-
 			}
 
 		}
+
+	}
+
+	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+	{
+		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
+
+		if (!ent || ent == nullptr)
+			continue;
+
+		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
+			continue;
+		}
+
+		if (!g_weebwarecfg.visuals_dormant_esp) {
+			if (ent->is_dormant()) {
+				continue;
+			}
+		}
+
+		if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) {
+			continue;
+		}
+
+		if (ent == local) {
+			continue;
+		}
+
+		if (g_weebwarecfg.visuals_bspotted) {
+			*ent->b_spotted() = true;
+		}
+
+		if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
+			continue;
+		}
+
+		w2s_player[i].boundary = calc_boundaries(ent);
+
+		if (ent->is_dormant())
+			w2s_player[i].boundary.dormant = true;
+
+
+		if (local->m_iHealth() <= 0) {
+			auto obv = g_weebware.g_entlist->getcliententityfromhandle(local->m_hObserverTarget());
+			if (!obv)
+				return;
+
+			if (obv->EntIndex() == i)
+				continue;
+		}
+
+		render_box(w2s_player[i].boundary, ent, is_visible(local, ent));
+		render_box_corners(w2s_player[i].boundary, ent, is_visible(local, ent));
+		render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
+		render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
+		render_weapon(w2s_player[i].boundary, ent);
+		render_ammo(w2s_player[i].boundary, ent);
+		render_skeleton(ent, is_visible(local, ent));
+
 	}
 }
 
-#if 0
-void c_esp::esp_reset()
-{
-	if (!has_esp_init)
-	{
-		return;
-	}
-
-	g_draw.OnLostDevice();
-
-	if (g_draw.Font())
-	{
-		g_draw.FontReset();
-	}
-
-	g_draw.Reset();
-}
-#endif
 
 void c_esp::calc_w2svalues()
 {
@@ -237,6 +189,21 @@ void c_esp::calc_w2svalues()
 		}
 
 
+	}
+}
+
+void c_esp::set_models(c_base_entity* ent) {
+
+	switch (g_weebwarecfg.anime_model) {
+	case 1:
+		if (ent->m_iTeamNum() == local->m_iTeamNum())
+			*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
+		else
+			*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
+		break;
+	case 2:
+		*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
+		break;
 	}
 }
 
@@ -398,7 +365,6 @@ void c_esp::bomb_timer(c_base_entity* ent) {
 
 			predicted_damage *= 0.5f;
 
-
 			if ((predicted_damage / 2) > local->m_ArmorValue())
 			{
 				predicted_damage += (local->m_ArmorValue() * 2);
@@ -539,7 +505,42 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 	}
 }
 
-void c_esp::render_weapon(s_boundaries bounds, c_base_entity* ent, bool is_visible) {
+
+void c_esp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
+
+	if (!g_weebwarecfg.visuals_ammo_esp)
+		return;
+
+	if (!ent)
+		return;
+
+	c_basecombat_weapon* weapon = ent->m_pActiveWeapon();
+
+	if (!weapon)
+		return;
+
+	int max_ammo = weapon->m_iPrimaryReserveAmmoCount();
+	int current_ammo = weapon->Clip1();
+
+	wchar_t buf[128];
+	std::string out = std::to_string(current_ammo) + "/" + std::to_string(max_ammo);
+
+	int offset = 10;
+
+	if (g_weebwarecfg.visuals_weapon_esp)
+		offset = 22;
+
+	if (MultiByteToWideChar(CP_UTF8, 0, out.c_str(), -1, buf, 128) > 0) {
+
+		int tw, th;
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
+
+		if (bounds.has_w2s)
+			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), (bounds.y + bounds.h) + offset, c_color(g_weebwarecfg.visuals_ammo_esp_col), 0, out.c_str());
+	}
+}
+
+void c_esp::render_weapon(s_boundaries bounds, c_base_entity* ent) {
 
 	if (!g_weebwarecfg.visuals_weapon_esp)
 		return;
@@ -561,7 +562,7 @@ void c_esp::render_weapon(s_boundaries bounds, c_base_entity* ent, bool is_visib
 		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
 
 		if (bounds.has_w2s)
-			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), (bounds.y + bounds.h) + 10, c_color(255, 255, 255, 255), 0, weapon_name.c_str());
+			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), (bounds.y + bounds.h) + 10, c_color(g_weebwarecfg.visuals_weapon_esp_col), 0, weapon_name.c_str());
 	}
 }
 
@@ -598,7 +599,6 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), bounds.y - 5, draw_col, 0, player_name.c_str());
 	}
 
-
 }
 
 void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
@@ -631,7 +631,7 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 		col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
 	}
 
-	for (int i = 0; i < hdr->numbones; i++) {
+	for (int i = 0; i < hdr->numbones; ++i) {
 		bone = hdr->GetBone(i);
 
 		if (!bone)
@@ -699,6 +699,12 @@ void c_esp::draw_fov_circle() {
 	if (!g_weebwarecfg.visuals_fov_circle)
 		return;
 
+	if (!local)
+		return;
+
+	if (local->m_iHealth() <= 0)
+		return;
+
 	int x, y;
 	float fov;
 
@@ -716,12 +722,19 @@ void c_esp::draw_inaccuracy_circle()
 	if (!g_weebwarecfg.visuals_inacc_circle)
 		return;
 
+	auto weapon = local->m_pActiveWeapon();
+
+	if (!weapon)
+		return;
+
+	if (!weapon->is_firearm())
+		return;
 
 	int x, y;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
 
-	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, local->m_pActiveWeapon()->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
+	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, weapon->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
 }
 
 void c_esp::display_backtrack()

@@ -27,6 +27,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
 			g_frame_stage_notify.bullet_tracers();
+			g_frame_stage_notify.no_smoke();
 		//	g_frame_stage_notify.third_person();
 		//	g_frame_stage_notify.remove_flash();
 		}
@@ -71,6 +72,25 @@ void c_frame_stage_notify::wireframe_smoke() {
 	}
 }
 
+
+static bool smoke_disabled = false;
+void c_frame_stage_notify::no_smoke() {
+
+	if (g_weebwarecfg.no_smoke && smoke_disabled) {
+		for (auto mat_s : vistasmoke_mats) {
+			imaterial* mat = g_weebware.g_mat_sys->find_material(mat_s, TEXTURE_GROUP_OTHER);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_no_draw, true);
+		}
+		smoke_disabled = false;
+	}
+	else if (!g_weebwarecfg.no_smoke && !smoke_disabled) {
+		for (auto mat_s : vistasmoke_mats) {
+			imaterial* mat = g_weebware.g_mat_sys->find_material(mat_s, TEXTURE_GROUP_OTHER);
+			mat->setmaterialvarflag(materialvarflags_t::material_var_no_draw, false);
+		}
+		smoke_disabled = true;
+	}
+}
 
 static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
 bool clantag_done = false;

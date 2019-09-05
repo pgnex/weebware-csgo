@@ -10,6 +10,7 @@ public:
 	void pvs_fix();
 	void run_clantag();
 	void wireframe_smoke();
+	void no_smoke();
 	void run_skinchanger();
 	void legit_aa_resolver();
 	void third_person();

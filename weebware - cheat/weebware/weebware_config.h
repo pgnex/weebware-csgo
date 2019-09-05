@@ -270,6 +270,7 @@ public:
 	int next_knife_index = 0;
 	bool visuals_name_esp = 0;
 	bool visuals_weapon_esp = 0;
+	bool visuals_ammo_esp = 0;
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
@@ -293,6 +294,9 @@ public:
 	bool no_smoke = 0;
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
+	bool hand_chams = 0;
+	bool wireframe_hands = 0;
+	bool hand_chams_xqz = 0;
 	int hitmarker_sound = 0;
 	bool rank_reveal = false;
 	bool misc_autoAccept = false;
@@ -356,6 +360,14 @@ public:
 	ImVec4 visuals_glow_weapon_col = ImVec4(212, 244, 66, 255);
 	ImVec4 visuals_glow_team_col = ImVec4(0, 244, 66, 255);
 
+	// weapon info esp color
+	ImVec4 visuals_weapon_esp_col = ImVec4(255, 255, 255, 255);
+	ImVec4 visuals_ammo_esp_col = ImVec4(255, 255, 255, 255);
+
+	// hand cham colors
+	ImVec4 hand_cham_col = ImVec4(255, 0, 255, 255);
+	ImVec4 hand_cham_col_xqz = ImVec4(60, 255, 255, 255);
+
 	json convert()
 	{
 		// const char* weapon_groups[] = { "Pistols", "Rifles", "SMG","Shotguns", "Heavy", "Auto-Snipers", "AWP", "SSG08" };
@@ -399,6 +411,9 @@ public:
 		tmp["enable_bullet_tracers"] = enable_bullet_tracers;
 		tmp["bullet_tracer_expire"] = bullet_tracer_expire;
 		tmp["visuals_glow_team"] = visuals_glow_team;
+		tmp["hand_chams"] = hand_chams;
+		tmp["hand_chams_xqz"] = hand_chams_xqz;
+		tmp["visuals_ammo_esp"] = visuals_ammo_esp;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -493,6 +508,10 @@ public:
 		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
 		save_color(visuals_fov_circle_col, tmp, "visuals_fov_circle_col");
 		save_color(visuals_glow_team_col, tmp, "visuals_glow_team_col");
+		save_color(visuals_ammo_esp_col, tmp, "visuals_ammo_esp_col");
+		save_color(visuals_weapon_esp_col, tmp, "visuals_weapon_esp_col");
+		save_color(hand_cham_col, tmp, "hand_cham_col");
+		save_color(hand_cham_col_xqz, tmp, "hand_cham_col_xqz");
 
 
 		json skin_tmp;
@@ -547,6 +566,9 @@ public:
 		if (check("enable_bullet_tracers", data)) enable_bullet_tracers = data["enable_bullet_tracers"];
 		if (check("bullet_tracer_expire", data)) bullet_tracer_expire = data["bullet_tracer_expire"];
 		if (check("visuals_glow_team", data)) visuals_glow_team = data["visuals_glow_team"];
+		if (check("hand_chams", data)) hand_chams = data["hand_chams"];
+		if (check("hand_chams_xqz", data)) hand_chams_xqz = data["hand_chams_xqz"];
+		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
 
 
 		// misc
@@ -643,7 +665,12 @@ public:
 		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
 		if (check_color("visuals_fov_circle_col", data)) read_color(visuals_fov_circle_col, data, "visuals_fov_circle_col");
 		if (check_color("visuals_glow_team_col", data)) read_color(visuals_glow_team_col, data, "visuals_glow_team_col");
+		if (check_color("visuals_ammo_esp_color", data)) read_color(visuals_ammo_esp_col, data, "visuals_ammo_esp_color");
+		if (check_color("visuals_weapon_esp_col", data)) read_color(visuals_weapon_esp_col, data, "visuals_weapon_esp_col");
+		if (check_color("hand_cham_col", data)) read_color(hand_cham_col, data, "hand_cham_col");
+		if (check_color("hand_cham_col_xqz", data)) read_color(hand_cham_col_xqz, data, "hand_cham_col_xqz");
 		
+	
 
 		json skin_tmp = data["skins"];
 

@@ -62,6 +62,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		else {
 			g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 			g_legitbot.m_local = g_create_move.local;
+			g_create_move.legit_aa(cmd, sendpacket);
 			g_legitbot.create_move(cmd);
 			g_accuracy.accuracy_boost(cmd);
 			g_ai.create_move(cmd, g_create_move.local);
@@ -238,6 +239,9 @@ void c_create_move::rank_reveal()
 void c_create_move::slidewalk(c_usercmd* cmd) {
 
 	if (!g_weebwarecfg.misc_slidewalk)
+		return;
+
+	if (local->get_move_type() == MOVETYPE_LADDER)
 		return;
 
 	if (cmd->forwardmove > 0)
@@ -578,31 +582,24 @@ void edge_aa(Vector &edgeang, bool& willedge, c_base_entity* local)
 }
 
 
-void c_create_move::run_legitAA(c_usercmd* cmd, bool send_packets)
+void c_create_move::legit_aa(c_usercmd* cmd, bool send_packets)
 {
+	if (!g_weebwarecfg.misc_legit_aa_enabled)
+		return;
+
 	if (local->m_pActiveWeapon()->is_grenade())
 		return;
 
 	if (local->get_move_type() == MOVETYPE_LADDER)
 		return;
 
-	if (!(cmd->buttons & in_attack) && send_packets) {
+	if (cmd->buttons & in_attack)
+		return;
 
-		c_base_entity* target = get_best_target(this->local);
-
-		QAngle angle2Target = cmd->viewangles;
-
-		auto animstate = *(uintptr_t**)((uintptr_t)this->local + g_weebware.g_animoffset);
-
-		float offset = 58.f;
-
-		float feet_yaw = *(float*)((uintptr_t)animstate + 0x84);
-
-		std::cout << feet_yaw << std::endl;
-
-		cmd->viewangles.y = feet_yaw + offset;
-	}
+	if (send_packets)
+		cmd->viewangles.y = ((58 * cmd->command_number % 3 == 0 ? -1 : 1));
 }
+
 
 void c_create_move::chat_spam() {
 

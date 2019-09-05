@@ -7,7 +7,7 @@
 #include "gui_basegraphical.h"
 #include "gui_baserelational.h"
 #include "gui_baserenderable.h"
-
+#include <string>
 #include "gui_base.h"
 
 

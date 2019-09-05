@@ -12,6 +12,7 @@ public:
 
 	enum custom_mats : int
 	{
+		default,
 		plain = 1,
 		platinum,
 		glass,
@@ -23,11 +24,13 @@ public:
 		crystal_blue,
 		velvet,
 		darude,
+		flat,
 		max
 	};
 
 	// Returns a material based on type
 	imaterial* borrow_mat(c_sceneend::custom_mats type);
+	imaterial* generate_material(bool ignore, bool lit, bool wire_frame);
 
 private:
 

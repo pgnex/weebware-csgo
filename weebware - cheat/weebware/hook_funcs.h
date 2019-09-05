@@ -42,6 +42,10 @@ public:
 	PLH::x86Detour* DETOUR_DME;
 	PLH::x86Detour* DETOUR_CURSORLOCK;
 #else
+
+	//PLH::x86Detour* DETOUR_SCENEEND;
+	//uint64_t sceneend_tramp = NULL;
+
 	PLH::BreakPointHook* VEH_PAINT;
 	PLH::BreakPointHook* VEH_CM;
 	PLH::BreakPointHook* VEH_RESET;
