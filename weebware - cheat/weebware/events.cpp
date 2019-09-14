@@ -119,6 +119,9 @@ void FeatureFuncs::on_paint()
 	if (flHurtTime < g_weebware.g_global_vars->curtime)
 		return;
 
+	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
+		return;
+
 	float delta = flHurtTime - g_weebware.g_global_vars->curtime;
 
 	c_color col = g_weebwarecfg.visuals_hitmarker_col;
