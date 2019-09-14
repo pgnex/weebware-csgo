@@ -196,7 +196,7 @@ void c_glovechanger::run() noexcept {
 
 
 	if (glove) {
-		float g_wear = 0.15f;
+		float g_wear = 0.00f;
 		
 
 		apply_glove_model(glove);
