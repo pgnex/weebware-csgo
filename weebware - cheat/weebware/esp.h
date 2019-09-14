@@ -55,6 +55,7 @@ private:
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack();
 	void set_models(c_base_entity* ent);
+	void defusing_indicator(s_boundaries bounds, c_base_entity* ent);
 };
 
 extern c_esp g_esp;

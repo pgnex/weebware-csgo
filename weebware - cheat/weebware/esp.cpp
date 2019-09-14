@@ -144,6 +144,7 @@ void c_esp::esp_main()
 		render_weapon(w2s_player[i].boundary, ent);
 		render_ammo(w2s_player[i].boundary, ent);
 		render_skeleton(ent, is_visible(local, ent));
+		defusing_indicator(w2s_player[i].boundary, ent);
 
 	}
 }
@@ -506,6 +507,33 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 }
 
 
+void c_esp::defusing_indicator(s_boundaries bounds, c_base_entity* ent) {
+
+	if (!g_weebwarecfg.defusing_indicator)
+		return;
+
+	if (!ent)
+		return;
+
+	if (!ent->is_valid_player())
+		return;
+
+	if (ent->m_bIsDefusing()) {
+		wchar_t buf[128];
+		std::string output_text = "Defusing";
+
+		if (MultiByteToWideChar(CP_UTF8, 0, output_text.c_str(), -1, buf, 128) > 0)
+		{
+			int tw, th;
+			g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
+
+			if (bounds.has_w2s)
+				g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), bounds.y - 20, g_weebwarecfg.defusing_indicator_col, 0, output_text.c_str());
+		}
+	}
+}
+
+
 void c_esp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 
 	if (!g_weebwarecfg.visuals_ammo_esp)
@@ -719,6 +747,7 @@ void c_esp::draw_fov_circle() {
 
 	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);
 }
+
 
 void c_esp::draw_inaccuracy_circle()
 {
