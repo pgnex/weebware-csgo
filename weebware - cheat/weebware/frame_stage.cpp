@@ -28,6 +28,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 			g_frame_stage_notify.wireframe_smoke();
 			g_frame_stage_notify.bullet_tracers();
 			g_frame_stage_notify.no_smoke();
+			g_frame_stage_notify.preserve_killfeed();
 		//	g_frame_stage_notify.third_person();
 		//	g_frame_stage_notify.remove_flash();
 		}
@@ -94,6 +95,7 @@ void c_frame_stage_notify::no_smoke() {
 
 static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
 bool clantag_done = false;
+std::string current_clantag;
 void c_frame_stage_notify::run_clantag()
 {
 
@@ -107,6 +109,16 @@ void c_frame_stage_notify::run_clantag()
 		return;
 	}
 
+	if (strlen(g_weebwarecfg.custom_clantag_static) > 0) {
+
+		if (current_clantag == g_weebwarecfg.custom_clantag_static)
+			return;
+
+		current_clantag = g_weebwarecfg.custom_clantag_static;
+		set_clantag(current_clantag.c_str(), current_clantag.c_str());
+		clantag_done = true;
+		return;
+	}
 
 	const char* stages[] = { u8"\u2800\u2800\u2800\u2800w", u8"\u2800\u2800\u2800w\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800e", u8"w\u2800\u2800\u2800e\u2800", u8"w\u2800\u2800e\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800e", u8"we\u2800\u2800\u2800e\u2800", u8"we\u2800\u2800e\u2800\u2800", u8"we\u2800e\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800b", u8"wee\u2800\u2800b\u2800", u8"wee\u2800b\u2800\u2800", u8"weeb\u2800\u2800\u2800", u8"weeb\u2800\u2800w", u8"weeb\u2800w\u2800", u8"weebw\u2800a\u2800", u8"weebwa\u2800\u2800", u8"weebwar\u2800", u8"weebware", u8"weebware", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"weebware", u8"weebware" };
 
@@ -141,10 +153,33 @@ void c_frame_stage_notify::pvs_fix()
 	}
 }
 
-void c_frame_stage_notify::third_person() {
+template<class T>
+static T* find_hud_elem(const char* name) {
+	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client_panorama.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
+
+	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client_panorama.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
+	return (T*)find_hud_element(fn, name);
+}
+
+static void(__thiscall* _clear_notices)(DWORD) = (void(__thiscall*)(DWORD))g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
+void c_frame_stage_notify::preserve_killfeed() {
+
+	if (!g_weebwarecfg.preserve_killfeed)
+		return;
 
 	if (!local)
 		return;
+
+	static DWORD* _death_notice = find_hud_elem<DWORD>("CCSGO_HudDeathNotice");
+
+	if (g_weebware.round_end) {
+		_death_notice = find_hud_elem<DWORD>("CCSGO_HudDeathNotice");
+		_clear_notices(((DWORD)_death_notice - 20));
+	}
+
+	if (_death_notice && g_weebwarecfg.preserve_killfeed)
+		* (float*)((DWORD)_death_notice + 0x50) = 120;
+
 }
 
 std::vector<ImpactData_t> vis_impact_data;

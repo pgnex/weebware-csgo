@@ -13,7 +13,7 @@ public:
 	void no_smoke();
 	void run_skinchanger();
 	void legit_aa_resolver();
-	void third_person();
+	void preserve_killfeed();
 	void bullet_tracers();
 	void glove_changer();
 };
