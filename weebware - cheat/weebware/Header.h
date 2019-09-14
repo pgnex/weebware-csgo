@@ -34,6 +34,7 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 #include "Trampoline.h"
+#include "utils.h"
 #include "imgui\imgui.h"
 #include "imgui\dx9\imgui_dx9.h"
 #include "vmt.h"
