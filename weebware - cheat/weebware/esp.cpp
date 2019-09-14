@@ -525,6 +525,9 @@ void c_esp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 	wchar_t buf[128];
 	std::string out = std::to_string(current_ammo) + "/" + std::to_string(max_ammo);
 
+	if (!weapon->is_firearm())
+		out = "N/A";
+
 	int offset = 10;
 
 	if (g_weebwarecfg.visuals_weapon_esp)
