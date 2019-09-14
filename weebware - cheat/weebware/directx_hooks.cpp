@@ -659,6 +659,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::SliderFloat("FOV##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
 				ImGui::Text("Sensitivity");
 				ImGui::SliderFloat("Smooth##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
+				ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet, false);
 
 
 			}
@@ -729,6 +730,11 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Ammo", &g_weebwarecfg.visuals_ammo_esp, false);
 					if (g_weebwarecfg.visuals_ammo_esp) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_ammo_esp_col, "Ammo ESP Color");
+					}
+
+					ImGui::Checkbox("Defusing Indicator", &g_weebwarecfg.defusing_indicator, false);
+					if (g_weebwarecfg.defusing_indicator) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.defusing_indicator_col, "dfcol##1");
 					}
 
 					ImGui::Checkbox("Draw On Dormant", &g_weebwarecfg.visuals_dormant_esp, false);
@@ -825,6 +831,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.visuals_recoil_crosshair) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_recoil_crosshair_col, "Recoil Crosshair Color");
 					}
+
 					ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
 					imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 					ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
@@ -833,6 +840,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
 					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
+
 					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 					if (g_weebwarecfg.enable_bullet_tracers) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
@@ -999,7 +1007,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Text("Misc");
 					ImGui::Separator();
 					ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
+					if (g_weebwarecfg.misc_clantag_changer) {
+						ImGui::InputText("empty for default", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
+					}
 					ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
+					ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed, false);
+					ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
 					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
 				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
@@ -1007,11 +1021,17 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::InputText("empty for default", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
 					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
-					 ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
+					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {
 						ImGui::SliderInt("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
 					}
+					ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name, false);
+					ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
+					ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
+
 				//	ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
 
 					ImGui::Separator();
@@ -1022,7 +1042,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.auto_jump) {
 						ImGui::SliderInt("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
 					}
-
+			//		ImGui::Checkbox("Auto Jump Bug", &g_weebwarecfg.auto_jumpbug, false);
+			//		imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_jumpbug_key, key_counter);
 					ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk, false);
 					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
 					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
@@ -1033,8 +1054,16 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					const char* strafe_type[] = { "Off", "Legit", "Fast" };
 					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
 
-					ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-				//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
+					//ImGui::Separator();
+					//ImGui::Text("Legit HVH");
+					//ImGui::Separator();
+					//ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					//ImGui::Checkbox("On Sendpacket", &g_weebwarecfg.on_sendpacket, false);
+					//ImGui::Text("Tickcount mod");
+					//ImGui::SliderInt("Tickcount mod", &g_weebwarecfg.tick_count_mod, 1, 20);
+					//ImGui::Text("Command num mod");
+					//ImGui::SliderInt("Command num mod", &g_weebwarecfg.command_num_mod, 1, 20);
+					//ImGui::SliderFloat("Yaw offset", &g_weebwarecfg.yaw_offset, -180, 180);
 				}
 				ImGui::EndChild();
 
@@ -1053,6 +1082,18 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
 					ImGui::Text("Aim Speed");
 					ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
+
+					ImGui::Separator();
+					ImGui::Text("Fake Lag");
+					ImGui::Separator();
+					ImGui::Text("Activation type");
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
+
+					const char* fakelag_type[] = { "Off", "On Key", "Always On" };
+					ImGui::Combo("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
+					if (g_weebwarecfg.fake_lag > 0) {
+						ImGui::SliderInt("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 12);
+					}
 
 					//ImGui::Separator();
 

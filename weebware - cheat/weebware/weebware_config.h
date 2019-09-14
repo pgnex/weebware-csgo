@@ -86,6 +86,7 @@ public:
 	float triggerbot_reaction;
 	bool target_teammates;
 	bool magnet_triggerbot_enabled;
+	bool quick_stop_magnet;
 	float magnet_trigger_smooth;
 	float magnet_trigger_fov;
 
@@ -124,6 +125,7 @@ public:
 		tmp["magnet_triggerbot_enabled"] = magnet_triggerbot_enabled;
 		tmp["magnet_trigger_smooth"] = magnet_trigger_smooth;
 		tmp["magnet_trigger_fov"] = magnet_trigger_fov;
+		tmp["quick_stop_magnet"] = quick_stop_magnet;
 		return tmp;
 	}
 
@@ -161,6 +163,7 @@ public:
 		if (check("magnet_triggerbot_enabled", data)) magnet_triggerbot_enabled = data["magnet_triggerbot_enabled"];
 		if (check("magnet_trigger_smooth", data)) magnet_trigger_smooth = data["magnet_trigger_smooth"];
 		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
+		if (check("quick_stop", data)) quick_stop = data["quick_stop"];
 	}
 
 };
@@ -249,9 +252,13 @@ public:
 	bool auto_jump;
 	int auto_jump_hitchance = 100;
 	bool night_sky;
-	bool remove_flash;
 	bool screenshot_proof;
 	bool disable_post_processing;
+	bool auto_pistol;
+	int auto_pistol_key = VK_LBUTTON;
+
+	bool auto_jumpbug;
+	int auto_jumpbug_key = VK_XBUTTON1;
 
 	int auto_strafe = 0;
 	bool edge_jump;
@@ -271,6 +278,7 @@ public:
 	bool visuals_name_esp = 0;
 	bool visuals_weapon_esp = 0;
 	bool visuals_ammo_esp = 0;
+	bool defusing_indicator = 0;
 	bool skinchanger_apply_nxt = 0;
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
@@ -291,7 +299,9 @@ public:
 	bool wireframe_smoke = 0;
 	bool no_hands = 0;
 	bool no_flash = 0;
+	bool preserve_killfeed = 0;
 	bool no_smoke = 0;
+	bool color_smoke = 0;
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
 	bool hand_chams = 0;
@@ -299,16 +309,33 @@ public:
 	bool hand_chams_xqz = 0;
 	int hitmarker_sound = 0;
 	bool rank_reveal = false;
+	bool rainbow_name = false;
 	bool misc_autoAccept = false;
 	bool minecraft_pickaxe = false;
 	int anime_model = false;
 	bool thirdperson;
 	bool killsay;
 	char killsay_msg_custom[256];
+	char custom_clantag_static[256];
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
+	int fake_lag = 0;
+	int fake_lag_factor = 0;
+	int fake_lag_key = 0;
 	int glove_model;
 	int glove_skin;
+	bool block_bot;
+	int block_bot_key;
+
+	bool auto_defuse;
+	int auto_defuse_key;
+
+	// debug stuff
+	bool on_sendpacket = 0;
+	int tick_count_mod = 2;
+	int command_num_mod = 2;
+	float yaw_offset = 58;
+	//
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
 	ImVec4 visuals_bounding_col = ImVec4(255, 0, 0, 255);
@@ -367,6 +394,8 @@ public:
 	// hand cham colors
 	ImVec4 hand_cham_col = ImVec4(255, 0, 255, 255);
 	ImVec4 hand_cham_col_xqz = ImVec4(60, 255, 255, 255);
+
+	ImVec4 defusing_indicator_col = ImVec4(245, 66, 155, 255);
 
 	json convert()
 	{
@@ -459,6 +488,7 @@ public:
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
 		tmp["killsay_msg_custom"] = killsay_msg_custom;
+		tmp["custom_clantag_static"] = custom_clantag_static;
 		tmp["wireframe_smoke"] = wireframe_smoke;
 		tmp["no_hands"] = no_hands;
 		tmp["no_smoke"] = no_smoke;
@@ -473,6 +503,19 @@ public:
 		tmp["night_sky"] = night_sky;
 		tmp["glove_model"] = glove_model;
 		tmp["glove_skin"] = glove_skin;
+		tmp["auto_pistol"] = auto_pistol;
+		tmp["auto_pistol_key"] = auto_pistol_key;
+		tmp["preserve_killfeed"] = preserve_killfeed;
+		tmp["rainbow_name"] = rainbow_name;
+		tmp["fake_lag_factor"] = fake_lag_factor;
+		tmp["fake_lag"] = fake_lag;
+		tmp["block_bot"] = block_bot;
+		tmp["block_bot_key"] = block_bot_key;
+		tmp["auto_defuse"] = auto_defuse;
+		tmp["auto_defuse_key"] = auto_defuse_key;
+		tmp["defusing_indicator"] = defusing_indicator;
+		  
+
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
 		save_color(visuals_bounding_team_col, tmp, "visuals_bounding_team_col");
@@ -512,6 +555,7 @@ public:
 		save_color(visuals_weapon_esp_col, tmp, "visuals_weapon_esp_col");
 		save_color(hand_cham_col, tmp, "hand_cham_col");
 		save_color(hand_cham_col_xqz, tmp, "hand_cham_col_xqz");
+		save_color(defusing_indicator_col, tmp, "defusing_indicator_col");
 
 
 		json skin_tmp;
@@ -614,19 +658,36 @@ public:
 		if (check("auto_strafe", data)) auto_strafe = data["auto_strafe"];
 		if (check("thirdperson", data)) thirdperson = data["thirdperson"];
 		if (check("killsay", data)) killsay = data["killsay"];
-		if (check("killsay_msg_custom", data)) {
-			std::string msg = data["killsay_msg_custom"];
-			strncpy(killsay_msg_custom, msg.c_str(), sizeof(killsay_msg_custom));
-		}
 		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
 		if (check("no_hands", data)) no_hands = data["no_hands"];
 		if (check("no_smoke", data)) no_smoke = data["no_smoke"];
+		if (check("auto_pistol", data)) auto_pistol = data["auto_pistol"];
+		if (check("auto_pistol_key", data)) auto_pistol_key = data["auto_pistol_key"];
+		if (check("preserve_killfeed", data)) preserve_killfeed = data["preserve_killfeed"];
 		if (check("visuals_skeleton", data)) visuals_skeleton = data["visuals_skeleton"];
 		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
 		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];
 		if (check("duck_in_air", data)) duck_in_air = data["duck_in_air"];
 		if (check("glove_model", data)) glove_model = data["glove_model"];
 		if (check("glove_skin", data)) glove_skin = data["glove_skin"];
+		if (check("rainbow_name", data)) rainbow_name = data["rainbow_name"];
+		if (check("fake_lag_factor", data)) fake_lag_factor = data["fake_lag_factor"];
+		if (check("fake_lag", data)) fake_lag = data["fake_lag"];
+		if (check("block_bot", data)) block_bot = data["block_bot"];
+		if (check("block_bot_key", data)) block_bot_key = data["block_bot_key"];
+		if (check("auto_defuse", data)) auto_defuse = data["auto_defuse"];
+		if (check("auto_defuse_key", data)) auto_defuse_key = data["auto_defuse_key"];
+		if (check("defusing_indicator", data)) defusing_indicator = data["defusing_indicator"];
+
+
+		if (check("killsay_msg_custom", data)) {
+			std::string msg = data["killsay_msg_custom"];
+			strncpy(killsay_msg_custom, msg.c_str(), sizeof(killsay_msg_custom));
+		}
+		if (check("custom_clantag_static", data)) {
+			std::string msg = data["custom_clantag_static"];
+			strncpy(custom_clantag_static, msg.c_str(), sizeof(custom_clantag_static));
+		}
 
 		// colors
 
@@ -669,7 +730,7 @@ public:
 		if (check_color("visuals_weapon_esp_col", data)) read_color(visuals_weapon_esp_col, data, "visuals_weapon_esp_col");
 		if (check_color("hand_cham_col", data)) read_color(hand_cham_col, data, "hand_cham_col");
 		if (check_color("hand_cham_col_xqz", data)) read_color(hand_cham_col_xqz, data, "hand_cham_col_xqz");
-		
+		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");		
 	
 
 		json skin_tmp = data["skins"];
