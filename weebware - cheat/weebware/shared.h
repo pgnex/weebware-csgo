@@ -16,6 +16,8 @@ public:
 	void init_fonts();
 	bool models_installed = false;
 	bool check_models_installed();
+	bool round_end = false;
+	bool send_packet = true;
 
 
 	HMODULE h_module;

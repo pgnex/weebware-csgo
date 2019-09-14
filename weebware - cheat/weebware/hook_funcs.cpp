@@ -40,16 +40,12 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 	auto protecc = g_hooking.VEH_CM->getProtectionObject();
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-
-		bool send_packet = 1;
-
-		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, send_packet);
-
+		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
 		if (cmd && cmd->command_number)
 		{
 			uintptr_t* fp;
 			__asm mov fp, ebp;
-			*(bool*)(*fp - 0x1C) = send_packet;
+			*(bool*)(*fp - 0x1C) = g_weebware.send_packet;
 		}
 		return retv;
 	}
@@ -106,9 +102,6 @@ void __fastcall hk_scene_end(void* thisptr, void* edx) {
 
 	g_hooking.o_sceneend(thisptr, edx);
 	//PLH::FnCast(g_hooking.sceneend_tramp, g_hooking.o_sceneend)(thisptr, edx);
-
-	if (!edx)
-		return;
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::scene_end(thisptr, edx);
