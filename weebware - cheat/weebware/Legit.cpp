@@ -54,7 +54,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	if (!is_visible(target))
 		return;
 
-	if (target->trace_from_smoke(*m_local->m_Origin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
+	if (target->trace_from_smoke(*m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
 		return;
 
 

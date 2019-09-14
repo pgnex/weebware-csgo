@@ -285,7 +285,7 @@ create_interface retrieve_interface(LPCSTR module_name) {
 bool c_base_entity::trace_from_smoke(Vector src) {
 	typedef bool(*td_LineGoesThroughSmoke)(float, float, float, float, float, float, short);
 
-	Vector dst = *this->m_Origin();
+	Vector dst = *this->m_vecOrigin();
 	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0"));
 
 	if (!line_through_smoke)

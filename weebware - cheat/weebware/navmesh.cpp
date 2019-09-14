@@ -143,7 +143,7 @@ void CWalkbot::create_move(c_usercmd* pCmd, c_base_entity* alocal)
 	// do rest of stuff here.
 
 	// Lets get our current area
-	m_pCurrentArea = GetNavArea(*m_pLocal->m_Origin());
+	m_pCurrentArea = GetNavArea(*m_pLocal->m_vecOrigin());
 
 	if (!m_pCurrentArea)
 		return;
@@ -200,7 +200,7 @@ void CWalkbot::create_move(c_usercmd* pCmd, c_base_entity* alocal)
 				printf("We have defuse entity! \n");
 #endif
 
-				CNavArea* bomb_area = GetNavArea(*m_TargetEntity->m_Origin());
+				CNavArea* bomb_area = GetNavArea(*m_TargetEntity->m_vecOrigin());
 
 				if (!bomb_area)
 					return;
@@ -872,7 +872,7 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 		m_target_area = nullptr;
 		return;
 	}
-	Vector Origin = *m_pLocal->m_Origin();
+	Vector Origin = *m_pLocal->m_vecOrigin();
 
 	if ((Origin - m_path[m_iCurrentPathPoint]).size() < 25.f)
 	{
@@ -941,7 +941,7 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 	if (cmd->viewangles.x < -90.f || cmd->viewangles.x > 90.f)
 		cmd->forwardmove = -cmd->forwardmove;
 
-	auto m_pCurrentArea = GetNavArea(*m_pLocal->m_Origin());
+	auto m_pCurrentArea = GetNavArea(*m_pLocal->m_vecOrigin());
 
 	g_Walkbot.m_iswalking = true;
 }
