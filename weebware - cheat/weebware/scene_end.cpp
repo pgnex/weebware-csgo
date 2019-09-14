@@ -151,6 +151,25 @@ void c_sceneend::scene_end() {
 
 }
 
+imaterial* create_default() {
+	std::ofstream("csgo\\materials\\material_textured.vmt") << R"#("VertexLitGeneric"
+{
+  "$basetexture" "vgui/white_additive"
+  "$ignorez"      "0"
+  "$envmap"       ""
+  "$nofog"        "1"
+  "$model"        "1"
+  "$nocull"       "0"
+  "$selfillum"    "1"
+  "$halflambert"  "1"
+  "$znearer"      "0"
+  "$flat"         "1"
+}
+)#";
+
+	return g_weebware.g_mat_sys->find_material("material_textured", TEXTURE_GROUP_MODEL);
+}
+
 void c_sceneend::chams() {
 
 	static bool init = false;
@@ -164,7 +183,7 @@ void c_sceneend::chams() {
 			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
 		}
 		// Make our own materials
-	//	mat_list[custom_mats::plain] = generate_material(0, 1, 0);
+		mat_list[custom_mats::plain] = create_default();
 		init = true;
 	}
 
@@ -183,13 +202,13 @@ void c_sceneend::chams() {
 			continue;
 
 		// if player is behind smoke and we dont have xqz on, go next
-		if (player->trace_from_smoke(*local->m_Origin()) && !g_weebwarecfg.visuals_chams_xqz) 
+		if (player->trace_from_smoke(*local->m_vecOrigin()) && !g_weebwarecfg.visuals_chams_xqz) 
 			continue;
 
 		// setup our colors here..
 		c_color col;
 
-		if (player->trace_from_smoke(*local->m_Origin()) && g_weebwarecfg.visuals_chams_xqz) {
+		if (player->trace_from_smoke(*local->m_vecOrigin()) && g_weebwarecfg.visuals_chams_xqz) {
 			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
 		}
 		else {
@@ -209,11 +228,11 @@ void c_sceneend::chams() {
 		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
 			continue;
 
-		if (!mat_list[g_weebwarecfg.visuals_chams])
-			continue;
+		//if (!mat_list[g_weebwarecfg.visuals_chams])
+		//	continue;
 
-		if (mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
-			continue;
+		//if (mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
+		//	continue;
 
 		if (local->m_iTeamNum() == player->m_iTeamNum()) {
 			if (g_weebwarecfg.visuals_chams_render_team) {
