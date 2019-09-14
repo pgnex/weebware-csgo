@@ -176,12 +176,22 @@ void EventFuncs::player_death(i_game_event *event) {
 	}
 }
 
+void EventFuncs::round_end(i_game_event* event) {
+	g_weebware.round_end = true;
+}
+
+void EventFuncs::round_start(i_game_event* event) {
+	g_weebware.round_end = false;
+}
+
 // initialize our events
 void GameEvents::init() {
 
 	add_event("player_hurt", EventFuncs::player_hurt);
 	add_event("bullet_impact", EventFuncs::bullet_impact);
 	add_event("player_death", EventFuncs::player_death);
+	add_event("round_end", EventFuncs::round_end);
+	add_event("round_start", EventFuncs::round_start);
 
 	register_events();
 }

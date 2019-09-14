@@ -9,6 +9,8 @@ namespace EventFuncs {
 	void player_hurt(i_game_event *event);
 	void player_death(i_game_event *event);
 	void bullet_impact(i_game_event *event);
+	void round_end(i_game_event* event);
+	void round_start(i_game_event* event);
 }
 
 class FeatureFuncs {
