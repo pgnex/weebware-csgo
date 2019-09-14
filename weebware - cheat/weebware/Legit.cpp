@@ -830,18 +830,18 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 	if (!g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled)
 		return;
 
-
 	c_base_entity* target = closest_target_triggerbot();
 
 	if (!target->is_valid_player())
 		return;
 
-
 	if (!is_visible(target))
 		return;
 
-
 	if (target) {
+
+		if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet)
+			auto_stop(cmd);
 
 		auto aim_angle = magnet_hitbox(target);
 
