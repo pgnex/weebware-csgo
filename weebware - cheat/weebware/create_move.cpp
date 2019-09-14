@@ -8,12 +8,14 @@
 
 c_create_move g_create_move;
 c_nightmode g_nightmode;
+c_utils g_utils;
 
 
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
 	if (cmd->command_number == 0)
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
+
 
 	if (!cmd || !cmd->command_number) {
 		g_accuracy.clear_all_records();
@@ -40,6 +42,11 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.chat_spam();
 	g_create_move.rank_reveal();
 	g_create_move.slidewalk(cmd);
+	g_create_move.auto_pistol(cmd);
+	g_create_move.auto_jumpbug(cmd);
+	g_create_move.rainbow_name();
+	g_create_move.block_bot(cmd);
+	g_create_move.auto_defuse(cmd);
  	g_nightmode.run();
 
 
@@ -62,7 +69,8 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		else {
 			g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 			g_legitbot.m_local = g_create_move.local;
-			g_create_move.legit_aa(cmd, sendpacket);
+		//	g_create_move.legit_aa(cmd, sendpacket);
+			g_create_move.fake_lag(cmd, sendpacket);
 			g_legitbot.create_move(cmd);
 			g_accuracy.accuracy_boost(cmd);
 			g_ai.create_move(cmd, g_create_move.local);
@@ -268,6 +276,63 @@ void c_create_move::slidewalk(c_usercmd* cmd) {
 		cmd->buttons &= ~in_moveright;
 	}
 }
+
+std::string color_codes[] = { "\x01", "\x02", "\x03", "\x04", "\x05", "\x06", "\x07", "\x08", "\x09", "\x0A", "\x0B", "\x0C", "\x0D", "\x0E", "\x0F", "\x10" };
+
+std::string rainbowize(const std::string& s) {
+	if (!s.size()) {
+		return "";
+	}
+	std::stringstream ss;
+	ss << s[0];
+	for (int i = 1; i < s.size(); i++) {
+		ss << color_codes[rand() % 15] << s[i];
+	}
+	return ss.str();
+}
+
+bool noname_done = false;
+bool rainbow_done = false;
+std::string o_name;
+
+void c_create_move::rainbow_name() {
+
+	if (!g_weebwarecfg.rainbow_name && !rainbow_done && !noname_done)
+		return;
+
+	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+		bool noname_done = false;
+		bool rainbow_done = false;
+		return;
+	}
+
+	s_player_info playerinfo;
+
+	g_weebware.g_engine->get_player_info(local->EntIndex(), &playerinfo);
+
+	if (o_name.empty())
+		o_name = playerinfo.name;
+
+	if (!noname_done) {
+		g_utils.set_name("\n\xAD\xAD\xAD");
+		noname_done = true;
+		return;
+	}
+
+	if (!rainbow_done) {
+		std::string rainbow_name = rainbowize(o_name);
+
+		g_utils.set_name(rainbow_name.c_str());
+		rainbow_done = true;
+	}
+
+	if (rainbow_done && noname_done && !g_weebwarecfg.rainbow_name) {
+		g_utils.set_name(o_name.c_str());
+
+		rainbow_done = false;
+		noname_done = false;
+	}
+}
  
 void c_create_move::auto_jump(c_usercmd* cmd) {
 	if (!g_weebwarecfg.auto_jump)
@@ -387,7 +452,7 @@ bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 	if (!GetAsyncKeyState(g_weebwarecfg.anti_triggerbot_key))
 		return false;
 
-	auto org = *local->m_Origin();
+	auto org = *local->m_vecOrigin();
 
 	org += (local->m_vecVelocity() / 6);
 
@@ -581,9 +646,187 @@ void edge_aa(Vector &edgeang, bool& willedge, c_base_entity* local)
 
 }
 
+bool c_create_move::can_shoot(c_usercmd* cmd) {
+
+	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
+
+	if (!weapon)
+		return false;
+
+	if (!weapon->is_pistol())
+		return false;
+
+	float server_time = local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
+
+	if (weapon->m_flNextPrimaryAttack() - server_time > 0)
+		return false;
+
+	if (weapon->Clip1() == 0) {
+		return false;
+	}
+
+	if (cmd->buttons == in_reload)
+		return false;
+
+
+	return true;
+}
+
+void c_create_move::auto_pistol(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.auto_pistol)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.auto_pistol_key))
+		return;
+
+	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
+
+	if (!weapon)
+		return;
+
+	if (!weapon->is_pistol())
+		return;
+
+	if (can_shoot(cmd)) {
+		cmd->buttons |= in_attack;
+	}
+	else if (!can_shoot(cmd)) {
+		cmd->buttons = 0;
+	}
+}
+
+
+void c_create_move::fake_lag(c_usercmd* cmd, bool send_packets) {
+
+	if (!g_weebwarecfg.fake_lag > 0) {
+		if (g_weebwarecfg.fake_lag_factor > 0)
+			g_weebwarecfg.fake_lag_factor = 0;
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	if (g_weebwarecfg.fake_lag == 1 && !GetAsyncKeyState(g_weebwarecfg.fake_lag_key)) {
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	if (g_weebware.g_engine->is_voice_recording()) {
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	static int chokes = 0;
+
+	if (g_weebwarecfg.fake_lag_factor > 0)
+		g_weebware.send_packet = (chokes == 0) ? true : false;
+
+	chokes++;
+
+	if (chokes > g_weebwarecfg.fake_lag_factor)
+		chokes = 0;
+}
+
+void c_create_move::auto_defuse(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.auto_defuse)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.auto_defuse_key))
+		return;
+
+	std::cout << g_weebwarecfg.auto_defuse_key << std::endl;
+
+	if (!local)
+		return;
+
+	if (local->m_iTeamNum() != 3)
+		return;
+
+	c_bomb* bomb = nullptr;
+
+	for (int i = 1; i < g_weebware.g_entlist->gethighestentityindex(); i++) {
+		c_base_entity* entity = g_weebware.g_entlist->getcliententity(i);
+
+		if (!entity)
+			continue;
+
+		if (entity->get_client_class()->m_ClassID == cplantedc4) {
+			bomb = (c_bomb*)entity;
+			break;
+		}
+	}
+
+	if (!bomb || bomb->is_bomb_defused())
+		return;
+
+	float bomb_timer = bomb->get_blow_time() - g_weebware.g_global_vars->curtime;
+
+	if (local->m_bHasDefuser() && bomb_timer > 5.5f)
+		return;
+
+	if (!local->m_bHasDefuser() && bomb_timer > 10.5f)
+		return;
+
+	float distance = local->m_vecOrigin()->dist_to(bomb->get_vec_origin());
+	if (distance <= 75.0f)
+		cmd->buttons |= in_use;
+}
+
+void c_create_move::block_bot(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.block_bot)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.block_bot_key))
+		return;
+
+	float bestdist = 250.f;
+	int index = -1;
+
+	for (int i = 1; i < g_weebware.g_engine->get_max_clients(); i++) {
+		c_base_entity* entity = (c_base_entity*)g_weebware.g_entlist->getcliententity(i);
+
+		if (!entity)
+			continue;
+
+		if (!entity->is_valid_player())
+			continue;
+
+		if (entity == local)
+			continue;
+
+		float dist = local->m_vecOrigin()->dist_to(*entity->m_vecOrigin());
+
+		if (dist < bestdist) {
+			bestdist = dist;
+			index = i;
+		}
+	}
+
+	if (index == -1)
+		return;
+
+	c_base_entity* target = (c_base_entity*)g_weebware.g_entlist->getcliententity(index);
+
+	if (!target)
+		return;
+
+	QAngle angles;
+	g_maths.calc_angle(*local->m_vecOrigin(), *target->m_vecOrigin(), angles);
+		
+	angles.y -= local->m_angEyeAngles().y;
+	g_maths.normalize_angle(angles);
+
+	if (angles.y < 0.0f)
+		cmd->sidemove = 450.f;
+	else if (angles.y > 0.0f)
+		cmd->sidemove = -450.f;
+}
 
 void c_create_move::legit_aa(c_usercmd* cmd, bool send_packets)
 {
+
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
 		return;
 
@@ -596,8 +839,11 @@ void c_create_move::legit_aa(c_usercmd* cmd, bool send_packets)
 	if (cmd->buttons & in_attack)
 		return;
 
-	if (send_packets)
-		cmd->viewangles.y = ((58 * cmd->command_number % 3 == 0 ? -1 : 1));
+	g_weebware.send_packet = cmd->tick_count % g_weebwarecfg.tick_count_mod == 0;
+
+	if (g_weebwarecfg.on_sendpacket ? g_weebware.send_packet : !g_weebware.send_packet) {
+		cmd->viewangles.y = g_weebwarecfg.yaw_offset * (cmd->command_number % g_weebwarecfg.command_num_mod == 0 ? -1 : 1);
+	}
 }
 
 
@@ -622,6 +868,48 @@ void c_create_move::chat_spam() {
 		}
 }
 
+bool c_create_move::is_ground() {
+
+	Vector origin = *local->m_vecOrigin();
+	origin += local->m_vecVelocity() * g_weebware.g_global_vars->interval_per_tick;
+
+	Ray_t ray;
+	ray.Init(origin, origin - Vector(0, 0, 9));
+
+	ITraceFilter traceFilter;
+
+	traceFilter.pSkip = (void*)local;
+
+	trace_t tr;
+
+	g_weebware.g_engine_trace->TraceRay(ray, MASK_PLAYERSOLID, &traceFilter, &tr);
+
+	if (!tr.DidHit())
+		return false;
+
+
+	return true;
+}
+
+void c_create_move::auto_jumpbug(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.auto_jumpbug)
+		return;
+
+	if (!GetAsyncKeyState(g_weebwarecfg.auto_jumpbug_key))
+		return;
+
+	if (!(local->m_fFlags() & fl_onground)) {
+		cmd->buttons |= in_duck;
+		std::cout << "duck" << std::endl;
+		if (is_ground()) {
+			cmd->buttons &= ~in_duck;
+			std::cout << "unduck" << std::endl;
+			cmd->buttons |= in_jump;
+			std::cout << "jump" << std::endl;
+		}
+	}
+}
 
 void c_create_move::clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket) {
 	if (cmd->buttons & in_attack)

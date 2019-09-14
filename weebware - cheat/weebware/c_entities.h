@@ -205,7 +205,7 @@ public:
 	}
 	Vector get_vec_eyepos()
 	{
-		return (*this->m_Origin() + this->m_vecViewOffset());
+		return (*this->m_vecOrigin() + this->m_vecViewOffset());
 	}
 
 	int get_move_type() {
@@ -222,7 +222,7 @@ public:
 		return !(!this || this == nullptr  || this == NULL || this->m_iHealth() <= 0 || this->is_dormant() || this->get_client_class()->m_ClassID != 40);
 	}
 
-	Vector* m_Origin()
+	Vector* m_vecOrigin()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseEntity", "m_vecOrigin");
 		return get_pointer<Vector>(offset);
@@ -276,6 +276,19 @@ public:
 		static auto offset = retrieve_offset("DT_CSPlayer", "m_ArmorValue");
 		return get_value<int>(offset);
 	}
+
+	int m_bHasDefuser()
+	{
+		static auto offset = retrieve_offset("DT_CSPlayer", "m_bHasDefuser");
+		return get_value<int>(offset);
+	}
+
+	bool m_bIsDefusing() {
+		static auto offset = retrieve_offset("DT_CSPlayer", "m_bIsDefusing");
+		return get_value<bool>(offset);
+	}
+
+	
 
 	uintptr_t* get_wearables() {
 		static uintptr_t offset = retrieve_offset("DT_BaseCombatCharacter", "m_hMyWearables");
@@ -469,9 +482,20 @@ public:
 		return get_value<float>(offset);
 	}
 
+	Vector get_vec_origin()
+	{
+		static auto offset = retrieve_offset("DT_BaseEntity", "m_vecOrigin");
+		return get_value<Vector>(offset);
+	}
+
 	bool is_ticking()
 	{
 		static auto offset = retrieve_offset("DT_PlantedC4", "m_bBombTicking");
+		return get_value<bool>(offset);
+	}
+
+	bool is_bomb_defused() {
+		static auto offset = retrieve_offset("DT_PlantedC4", "m_bBombDefused");
 		return get_value<bool>(offset);
 	}
 

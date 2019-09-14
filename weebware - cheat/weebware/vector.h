@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-
+#define CHECK_VALID( _v ) 0
 template <typename T>
 struct _VECTOR2D
 {
@@ -20,6 +20,29 @@ struct _VECTOR : public _VECTOR2D<T>
 	_VECTOR(T x_, T y_, T z_) : _VECTOR2D<T>(x_, y_), z(z_) {}
 
 #pragma region Vector Operators
+
+	inline float length(void) const
+	{
+		CHECK_VALID(*this);
+
+		float root = 0.0f;
+
+		float sqsr = x * x + y * y + z * z;
+
+		root = sqrt(sqsr);
+
+		return root;
+	}
+
+	float dist_to(const _VECTOR<T>& rhs) const {
+		Vector delta;
+
+		delta.x = x - rhs.x;
+		delta.y = y - rhs.y;
+		delta.z = z - rhs.z;
+
+		return delta.length();
+	}
 
 	inline _VECTOR<T> operator+(const _VECTOR<T>& rhs) const
 	{

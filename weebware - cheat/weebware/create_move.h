@@ -7,6 +7,7 @@ public:
 	c_base_entity* local;
 	void correct_movement(Vector old_view_angles, c_usercmd* cmd);
 	void legit_aa(c_usercmd* cmd, bool send_packets);
+	void fake_lag(c_usercmd* cmd, bool send_packets);
 	void chat_spam();
 	void rank_reveal();
 	void skybox_changer();
@@ -21,6 +22,13 @@ public:
 	void auto_queue();
 	void disable_post_processing();
 	void clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket);
+	void auto_pistol(c_usercmd* cmd);
+	bool can_shoot(c_usercmd* cmd);
+	bool is_ground();
+	void auto_jumpbug(c_usercmd* cmd);
+	void rainbow_name();
+	void block_bot(c_usercmd* cmd);
+	void auto_defuse(c_usercmd* cmd);
 
 	std::vector<std::string> cspam_weebware = {
 	"weebware.net - premium cheating software, get weebware!",
