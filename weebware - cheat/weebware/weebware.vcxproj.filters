@@ -246,6 +246,9 @@
     <ClCompile Include="dme.cpp">
       <Filter>Source Files\hooking\Draw Model Execute</Filter>
     </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files\Source Development Kit</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -475,6 +478,9 @@
     </ClInclude>
     <ClInclude Include="dme.h">
       <Filter>Source Files\hooking\Draw Model Execute</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -171,6 +171,7 @@
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x64Detour.cpp" />
     <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp" />
     <ClCompile Include="knife_proxy_hook.cpp" />
+    <ClCompile Include="utils.cpp" />
     <ClCompile Include="weebware_config.cpp" />
     <ClCompile Include="Legit.cpp" />
     <ClCompile Include="maths.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
     <ClInclude Include="knife_proxy_hook.h" />
     <ClInclude Include="skindefs.h" />
+    <ClInclude Include="utils.h" />
     <ClInclude Include="UtlMemory.h" />
     <ClInclude Include="UtlVector.hpp" />
     <ClInclude Include="weebware_config.h" />
