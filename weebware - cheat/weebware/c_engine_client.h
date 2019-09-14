@@ -140,10 +140,16 @@ public:
 		getvfunc<void(__thiscall*)(PVOID, const char*, char)>(this, 114)(this, szCmdString, flag);
 	}
 
+	bool is_voice_recording()
+	{
+		return getvfunc<bool(__thiscall*)(PVOID)>(this, 224)(this);
+	}
+
 	int get_local()
 	{
 		return getvfunc<int(__thiscall*)(PVOID)>(this, 12)(this);
 	}
+
 	int get_version()
 	{
 		return getvfunc<int(__thiscall*)(PVOID)>(this, 236)(this);
