@@ -40,7 +40,7 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 
 	std::string button_text = "[";
 	// Display original text.
-	if (key != has_input)
+	if (key && key != has_input)
 	{
 		button_text.append(KeyboardKeys[key]);
 	}
