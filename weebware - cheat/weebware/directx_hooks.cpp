@@ -1044,6 +1044,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 			//		ImGui::Checkbox("Auto Jump Bug", &g_weebwarecfg.auto_jumpbug, false);
 			//		imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_jumpbug_key, key_counter);
+					ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown, false);
 					ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk, false);
 					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
 					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);

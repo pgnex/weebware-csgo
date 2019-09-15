@@ -163,7 +163,7 @@ public:
 		if (check("magnet_triggerbot_enabled", data)) magnet_triggerbot_enabled = data["magnet_triggerbot_enabled"];
 		if (check("magnet_trigger_smooth", data)) magnet_trigger_smooth = data["magnet_trigger_smooth"];
 		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
-		if (check("quick_stop", data)) quick_stop = data["quick_stop"];
+		if (check("quick_stop_magnet", data)) quick_stop_magnet = data["quick_stop_magnet"];
 	}
 
 };
@@ -326,9 +326,9 @@ public:
 	int glove_skin;
 	bool block_bot;
 	int block_bot_key;
-
 	bool auto_defuse;
 	int auto_defuse_key;
+	bool no_duck_cooldown;
 
 	// debug stuff
 	bool on_sendpacket = 0;
@@ -514,6 +514,7 @@ public:
 		tmp["auto_defuse"] = auto_defuse;
 		tmp["auto_defuse_key"] = auto_defuse_key;
 		tmp["defusing_indicator"] = defusing_indicator;
+		tmp["no_duck_cooldown"] = no_duck_cooldown;
 		  
 
 		save_color(water_mark_col, tmp, "water_mark_col");
@@ -678,6 +679,7 @@ public:
 		if (check("auto_defuse", data)) auto_defuse = data["auto_defuse"];
 		if (check("auto_defuse_key", data)) auto_defuse_key = data["auto_defuse_key"];
 		if (check("defusing_indicator", data)) defusing_indicator = data["defusing_indicator"];
+		if (check("no_duck_cooldown", data)) no_duck_cooldown = data["no_duck_cooldown"];
 
 
 		if (check("killsay_msg_custom", data)) {

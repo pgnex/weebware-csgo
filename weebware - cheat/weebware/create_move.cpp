@@ -47,6 +47,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.rainbow_name();
 	g_create_move.block_bot(cmd);
 	g_create_move.auto_defuse(cmd);
+	g_create_move.no_crouch_cooldown(cmd);
  	g_nightmode.run();
 
 
@@ -668,8 +669,15 @@ bool c_create_move::can_shoot(c_usercmd* cmd) {
 	if (cmd->buttons == in_reload)
 		return false;
 
-
 	return true;
+}
+
+void c_create_move::no_crouch_cooldown(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.no_duck_cooldown)
+		return;
+
+	cmd->buttons |= in_bullrush;
 }
 
 void c_create_move::auto_pistol(c_usercmd* cmd) {
@@ -712,6 +720,11 @@ void c_create_move::fake_lag(c_usercmd* cmd, bool send_packets) {
 	}
 
 	if (g_weebware.g_engine->is_voice_recording()) {
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	if (local->m_iHealth() <= 0) {
 		g_weebware.send_packet = true;
 		return;
 	}
@@ -901,12 +914,9 @@ void c_create_move::auto_jumpbug(c_usercmd* cmd) {
 
 	if (!(local->m_fFlags() & fl_onground)) {
 		cmd->buttons |= in_duck;
-		std::cout << "duck" << std::endl;
 		if (is_ground()) {
 			cmd->buttons &= ~in_duck;
-			std::cout << "unduck" << std::endl;
 			cmd->buttons |= in_jump;
-			std::cout << "jump" << std::endl;
 		}
 	}
 }
