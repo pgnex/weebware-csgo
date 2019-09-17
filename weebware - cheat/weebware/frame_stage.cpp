@@ -401,6 +401,10 @@ void c_frame_stage_notify::run_skinchanger() {
 			if (skin_config.m_seed != 0)
 				*weapon->get_fallbackseed() = skin_config.m_seed;
 
+			//if (skin_config.stattrak) {
+			//	*weapon->fallback_stattrak() = skin_config.stattrak_kill_count;
+			//}
+
 			// Config Clamping.
 			if (skin_config.m_wear < FLT_MIN)
 				skin_config.m_wear = FLT_MIN;

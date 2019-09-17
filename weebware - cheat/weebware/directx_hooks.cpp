@@ -460,18 +460,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		ImGui::NextColumn();
 
 		ImGui::BeginChild("COL4", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
-		if (tab_selection == tabs::skins)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
-
-		if (ImGui::Button("Skins", ImVec2(column_width / 6, 20))) {
-			tab_selection = tabs::skins;
-		}
-		style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
-		ImGui::EndChild();
-
-		ImGui::NextColumn();
-
-		ImGui::BeginChild("COL5", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::misc)
 			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 
@@ -483,6 +471,19 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		ImGui::EndChild();
 
 		ImGui::NextColumn();
+
+		ImGui::BeginChild("COL5", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
+		if (tab_selection == tabs::skins)
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+
+		if (ImGui::Button("Skins", ImVec2(column_width / 6, 20))) {
+			tab_selection = tabs::skins;
+		}
+		style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
+		ImGui::EndChild();
+
+		ImGui::NextColumn();
+
 
 		ImGui::BeginChild("COL6", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::sets)
@@ -984,8 +985,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			ImGui::Separator();
 			ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
 			ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
-			// ImGui::Text("Weapon name");
-			// ImGui::InputText("##Gun Name", g_weebwareskinscfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun]., 32);
+
 			if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
 
 				g_weebwarecfg.skinchanger_apply_nxt = 1;
@@ -1008,7 +1008,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Separator();
 					ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
 					if (g_weebwarecfg.misc_clantag_changer) {
-						ImGui::InputText("empty for default", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
+						ImGui::InputText("empty for default##clantag", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
 					}
 					ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
 					ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed, false);
@@ -1018,7 +1018,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
 					if (g_weebwarecfg.killsay) {
-						ImGui::InputText("empty for default", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
+						ImGui::InputText("empty for default##killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
 					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);

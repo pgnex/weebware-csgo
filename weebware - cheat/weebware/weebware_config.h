@@ -10,6 +10,7 @@ using nlohmann::json;
 
 static bool check(std::string key, json data) {
 	if (data.count(key) > 0) {
+		std::cout << key << std::endl;
 		return true;
 	}
 	return false;
@@ -176,6 +177,8 @@ public:
 	int m_paint_kit = 0;
 	float m_wear = FLT_MIN;
 	int m_seed = 69;
+	bool stattrak = false;
+	int stattrak_kill_count = 0;
 
 	json convert()
 	{
@@ -184,6 +187,8 @@ public:
 		tmp["m_paint_kit"] = m_paint_kit;
 		tmp["m_wear"] = m_wear;
 		tmp["m_seed"] = m_seed;
+		tmp["stattrak"] = stattrak;
+		tmp["stattrak_kill_count"] = stattrak_kill_count;
 		return tmp;
 	}
 
@@ -193,6 +198,8 @@ public:
 		if (check("m_paint_kit", data)) m_paint_kit = data["m_paint_kit"];
 		if (check("m_wear", data)) m_wear = data["m_wear"];
 		if (check("m_seed", data)) m_seed = data["m_seed"];
+		//if (check("stattrak", data)) stattrak = data["stattrak"];
+		//if (check("stattrak_kill_count", data)) stattrak = data["stattrak_kill_count"];
 	}
 };
 
@@ -759,12 +766,8 @@ public:
 			json main;
 			main << file;
 			convert(main);
-
 		}
-		catch (...) {
-
-		}
-
+		catch (...) {}
 	}
 
 

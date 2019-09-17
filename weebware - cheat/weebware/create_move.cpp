@@ -13,7 +13,7 @@ c_utils g_utils;
 
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
-	if (cmd->command_number == 0)
+	if (cmd->command_number == 0 && sendpacket)
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
 
 
@@ -48,6 +48,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.block_bot(cmd);
 	g_create_move.auto_defuse(cmd);
 	g_create_move.no_crouch_cooldown(cmd);
+	g_create_move.fake_lag(cmd, sendpacket);
  	g_nightmode.run();
 
 
@@ -70,8 +71,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 		else {
 			g_create_move.local->m_pActiveWeapon()->Update_Accuracy_Penalty();
 			g_legitbot.m_local = g_create_move.local;
-		//	g_create_move.legit_aa(cmd, sendpacket);
-			g_create_move.fake_lag(cmd, sendpacket);
+		//	g_create_move.legit_aa(cmd, sendpacket);			
 			g_legitbot.create_move(cmd);
 			g_accuracy.accuracy_boost(cmd);
 			g_ai.create_move(cmd, g_create_move.local);
@@ -707,9 +707,20 @@ void c_create_move::auto_pistol(c_usercmd* cmd) {
 
 void c_create_move::fake_lag(c_usercmd* cmd, bool send_packets) {
 
+
 	if (!g_weebwarecfg.fake_lag > 0) {
 		if (g_weebwarecfg.fake_lag_factor > 0)
 			g_weebwarecfg.fake_lag_factor = 0;
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	if (!local->is_valid_player()) {
+		g_weebware.send_packet = true;
+		return;
+	}
+
+	if (local->m_iHealth() <= 0) {
 		g_weebware.send_packet = true;
 		return;
 	}
@@ -720,11 +731,6 @@ void c_create_move::fake_lag(c_usercmd* cmd, bool send_packets) {
 	}
 
 	if (g_weebware.g_engine->is_voice_recording()) {
-		g_weebware.send_packet = true;
-		return;
-	}
-
-	if (local->m_iHealth() <= 0) {
 		g_weebware.send_packet = true;
 		return;
 	}
