@@ -20,7 +20,7 @@ void c_esp::esp_main()
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
 		return;
 
-	if (g_weebwarecfg.visuals_hitmarkers) g_event_features.on_paint();
+	g_event_features.on_paint();
 
 	if (!local)
 		return;
@@ -554,7 +554,7 @@ void c_esp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 	std::string out = std::to_string(current_ammo) + "/" + std::to_string(max_ammo);
 
 	if (!weapon->is_firearm())
-		out = "N/A";
+		out = "";
 
 	int offset = 10;
 

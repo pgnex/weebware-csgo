@@ -21,6 +21,7 @@ public:
 	void slidewalk(c_usercmd* cmd);
 	void auto_queue();
 	void disable_post_processing();
+	void draw_grenade_trajectory();
 	void clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket);
 	void auto_pistol(c_usercmd* cmd);
 	bool can_shoot(c_usercmd* cmd);

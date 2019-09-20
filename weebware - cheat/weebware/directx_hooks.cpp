@@ -841,6 +841,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
 					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
+					ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj, false);
 
 					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
 					if (g_weebwarecfg.enable_bullet_tracers) {

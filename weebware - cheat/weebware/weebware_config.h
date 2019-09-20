@@ -261,12 +261,12 @@ public:
 	bool night_sky;
 	bool screenshot_proof;
 	bool disable_post_processing;
-	bool auto_pistol;
-	int auto_pistol_key = VK_LBUTTON;
+	bool draw_grenade_traj;
 
 	bool auto_jumpbug;
 	int auto_jumpbug_key = VK_XBUTTON1;
-
+	bool auto_pistol;
+	int auto_pistol_key = VK_LBUTTON;
 	int auto_strafe = 0;
 	bool edge_jump;
 	int edge_jump_key = 0;
@@ -522,6 +522,7 @@ public:
 		tmp["auto_defuse_key"] = auto_defuse_key;
 		tmp["defusing_indicator"] = defusing_indicator;
 		tmp["no_duck_cooldown"] = no_duck_cooldown;
+		tmp["draw_grenade_traj"] = draw_grenade_traj;
 		  
 
 		save_color(water_mark_col, tmp, "water_mark_col");
@@ -621,6 +622,7 @@ public:
 		if (check("hand_chams", data)) hand_chams = data["hand_chams"];
 		if (check("hand_chams_xqz", data)) hand_chams_xqz = data["hand_chams_xqz"];
 		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
+		if (check("draw_grenade_traj", data)) draw_grenade_traj = data["draw_grenade_traj"];
 
 
 		// misc

@@ -39,6 +39,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.auto_jump(cmd);
 	g_create_move.auto_strafe(cmd);
 	g_create_move.disable_post_processing();
+	g_create_move.draw_grenade_trajectory();
 	g_create_move.chat_spam();
 	g_create_move.rank_reveal();
 	g_create_move.slidewalk(cmd);
@@ -173,6 +174,24 @@ void c_create_move::disable_post_processing() {
 	}
 
 }
+
+
+bool grenade_traj_disabled = false;
+void c_create_move::draw_grenade_trajectory() {
+
+	c_convar* draw_grenade_trajectory = g_weebware.g_convars->find_cvar("cl_grenadepreview");
+
+	if (g_weebwarecfg.draw_grenade_traj && !grenade_traj_disabled) {
+		draw_grenade_trajectory->SetValue(1);
+		grenade_traj_disabled = true;
+	}
+	else if (!g_weebwarecfg.draw_grenade_traj && grenade_traj_disabled) {
+		draw_grenade_trajectory->SetValue(0);
+		grenade_traj_disabled = false;
+	}
+
+}
+
 
 namespace anti_trigger {
 
