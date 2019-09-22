@@ -1,9 +1,7 @@
-﻿using Microsoft.Win32;
+﻿using Ionic.Zip;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
 
 namespace dependency_downloader {
 
@@ -32,13 +30,14 @@ namespace dependency_downloader {
             }
 
             foreach (string archive in archives) {
-                string file = Path.GetFileName(archive);
-                Console.WriteLine("Downloading " + file + "...");
                 Dependency dependency = new Dependency(archive, extractPath) {
                     Password = "weebware",
+                    DownloadCompleted = DownloadCompleted,
                     DownloadProgressChanged = DownloadProgressChanged,
-                    DownloadCompleted = DownloadCompleted
+                    ExtractionCompleted = ExtractionCompleted,
+                    ExtractionProgressChanged = ExtractionProgressChanged
                 };
+                Console.WriteLine("Downloading " + Path.GetFileName(dependency.URL) + "...");
                 dependency.Download();
             }
 
@@ -51,7 +50,15 @@ namespace dependency_downloader {
         }
 
         private static void DownloadCompleted(Dependency sender) {
+            Console.WriteLine("downloaded: " + Path.GetFileName(sender.URL));
+        }
 
+        private static void ExtractionProgressChanged(Dependency sender, ExtractProgressEventArgs args) {
+
+        }
+
+        private static void ExtractionCompleted(Dependency sender) {
+            Console.WriteLine("extracted: " + Path.GetFileName(sender.URL));
         }
 
     }

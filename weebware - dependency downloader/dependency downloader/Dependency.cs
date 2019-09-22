@@ -16,17 +16,25 @@ namespace dependency_downloader {
                 else
                     throw new FormatException("Invalid URI format.");
             }
+            get { return _url; }
         }
 
         public string Password { get; set; }
         public string ExtractToPath { get; internal set; }
         public string ArchivePath { get; internal set; }
-
-        public delegate void DownloadProgressChangedHandler(Dependency sender, DownloadProgressChangedEventArgs args);
-        public DownloadProgressChangedHandler DownloadProgressChanged = null;
+        public bool DeleteAfterExtract { get; set; } = true;
 
         public delegate void DownloadCompletedHandler(Dependency sender);
         public DownloadCompletedHandler DownloadCompleted = null;
+            
+        public delegate void DownloadProgressHandler(Dependency sender, DownloadProgressChangedEventArgs args);
+        public DownloadProgressHandler DownloadProgressChanged = null;
+
+        public delegate void ExtractionCompletedHandler(Dependency sender);
+        public ExtractionCompletedHandler ExtractionCompleted = null;
+
+        public delegate void ExtractionProgressHandler(Dependency sender, ExtractProgressEventArgs args);
+        public ExtractionProgressHandler ExtractionProgressChanged = null;
 
         public Dependency(string url, string extractToPath) {
             URL = url;
@@ -37,27 +45,35 @@ namespace dependency_downloader {
             ArchivePath = Path.GetTempFileName();
             using (WebClient web = new WebClient()) {
 
+                web.DownloadFileCompleted += (s, e) => DownloadCompleted?.Invoke(this);
+                web.DownloadProgressChanged += (s, e) => DownloadProgressChanged?.Invoke(this, e);
+
                 if (extractOnCompletion)
                     web.DownloadFileCompleted += ExtractFiles;
 
-                web.DownloadFileCompleted += (s, e) => DownloadCompleted?.Invoke(this);
-                web.DownloadProgressChanged += (s, e) => DownloadProgressChanged?.Invoke(this, e);
                 web.DownloadFileAsync(new Uri(_url), ArchivePath);
 
             }
         }
 
-        private void ExtractFiles(object sender, AsyncCompletedEventArgs e) {
+        private void ExtractFiles(object sender, AsyncCompletedEventArgs args) {
+
             using (ZipFile archive = new ZipFile(ArchivePath)) {
                 if (Password != null) {
                     archive.Password = Password;
                     archive.Encryption = EncryptionAlgorithm.PkzipWeak;
                 }
+                archive.ExtractProgress += (s, e) => ExtractionProgressChanged?.Invoke(this, e);
                 archive.ExtractAll(ExtractToPath, ExtractExistingFileAction.OverwriteSilently);
             }
-            File.Delete(ArchivePath);
-        }
 
+            if (DeleteAfterExtract)
+                try { File.Delete(ArchivePath); }
+                catch (Exception) { }
+
+            ExtractionCompleted?.Invoke(this);
+
+        }
     }
 
 }
