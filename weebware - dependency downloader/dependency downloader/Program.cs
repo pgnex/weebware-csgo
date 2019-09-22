@@ -46,7 +46,7 @@ namespace dependency_downloader {
         }
 
         private static void DownloadProgressChanged(Dependency sender, DownloadProgressChangedEventArgs args) {
-            
+            Console.WriteLine("downloaded: " + args.ProgressPercentage);
         }
 
         private static void DownloadCompleted(Dependency sender) {
@@ -54,7 +54,9 @@ namespace dependency_downloader {
         }
 
         private static void ExtractionProgressChanged(Dependency sender, ExtractProgressEventArgs args) {
-
+            if ((args.EventType == ZipProgressEventType.Extracting_BeforeExtractEntry && args.EntriesExtracted == 0) || 
+                args.EventType == ZipProgressEventType.Extracting_AfterExtractEntry)
+            Console.WriteLine("extracted: " + args.EntriesExtracted + "/" + args.EntriesTotal);
         }
 
         private static void ExtractionCompleted(Dependency sender) {
