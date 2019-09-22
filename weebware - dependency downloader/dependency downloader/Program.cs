@@ -1,25 +1,21 @@
 ﻿using Ionic.Zip;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace dependency_downloader {
 
     class Program {
 
-        /*
-        TODO
-        - Add other models
-        - Create custom events in Dependency class (completed/progress changed)
-        - Report download/extraction progress to console
-        - Wait for previous download to complete (use events to trigger next download)
-        */
-
-        static string[] archives = new string[] {
-            "https://f002.backblazeb2.com/file/justinooo-upload/ShareX/reinakousaka.zip"
-        };
-
         static void Main(string[] args) {
+
+            List<string> archives = null;
+            using (WebClient web = new WebClient()) {
+                string archivesRaw = web.DownloadString("https://pastebin.com/raw/E4iLmrFG");
+                archives = JsonConvert.DeserializeObject<List<string>>(archivesRaw);
+            }
 
             string installPath = SteamUtils.GameInstallPath(730);
             string extractPath = Path.Combine(installPath ?? string.Empty, "csgo");
@@ -31,7 +27,7 @@ namespace dependency_downloader {
 
             foreach (string archive in archives) {
                 Dependency dependency = new Dependency(archive, extractPath) {
-                    Password = "weebware",
+                    Password = "justinooo",
                     DownloadCompleted = DownloadCompleted,
                     DownloadProgressChanged = DownloadProgressChanged,
                     ExtractionCompleted = ExtractionCompleted,
