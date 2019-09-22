@@ -301,3 +301,4 @@ __pycache__/
 
 # Some vscode files
 .vscode/
+*.enc
