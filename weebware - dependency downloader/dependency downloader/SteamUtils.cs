@@ -12,12 +12,16 @@ namespace dependency_downloader {
     public static class SteamUtils {
 
         public static string SteamInstallPath() {
-            return Convert.ToString(
-                Registry.GetValue(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam",
-                    "InstallPath",
-                    null)
-                );
+
+            object installPath = Registry.GetValue(
+                @"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam",
+                "InstallPath",
+                null
+            );
+
+            return (installPath != null) ?
+                Convert.ToString(installPath) : null;
+
         }
 
         public static List<string> GetLibraryFolders() {
