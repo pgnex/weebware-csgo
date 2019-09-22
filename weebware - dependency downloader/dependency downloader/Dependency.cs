@@ -14,8 +14,11 @@ namespace dependency_downloader {
         private string path;
         private string archivePath;
 
-        public DownloadProgressChangedEventHandler DownloadProgressChanged = null;
-        public AsyncCompletedEventHandler DownloadCompleted = null;
+        public delegate void DownloadProgressChangedHandler(Dependency sender, DownloadProgressChangedEventArgs args);
+        public DownloadProgressChangedHandler DownloadProgressChanged = null;
+
+        public delegate void DownloadCompletedHandler(Dependency sender);
+        public DownloadCompletedHandler DownloadCompleted = null;
 
         public Dependency(string url, string path) {
             this.url = url;
@@ -26,14 +29,11 @@ namespace dependency_downloader {
             archivePath = Path.GetTempFileName();
             using (WebClient web = new WebClient()) {
 
-                if (DownloadProgressChanged != null)
-                    web.DownloadProgressChanged += DownloadProgressChanged;
-
-                if (DownloadCompleted != null)
-                    web.DownloadFileCompleted += DownloadCompleted;
-
                 if (extractOnCompletion)
                     web.DownloadFileCompleted += ExtractFiles;
+
+                web.DownloadFileCompleted += (s, e) => DownloadCompleted?.Invoke(this);
+                web.DownloadProgressChanged += (s, e) => DownloadProgressChanged?.Invoke(this, e);
 
                 web.DownloadFileAsync(new Uri(url), archivePath);
 
@@ -51,6 +51,7 @@ namespace dependency_downloader {
                 archive.ExtractAll(path, ExtractExistingFileAction.OverwriteSilently);
 
             }
+            File.Delete(archivePath);
         }
 
     }
