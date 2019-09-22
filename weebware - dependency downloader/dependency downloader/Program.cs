@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace dependency_downloader {
@@ -23,8 +24,8 @@ namespace dependency_downloader {
         static void Main(string[] args) {
 
             string installPath = SteamUtils.GameInstallPath(730);
-            string extractPath = Path.Combine(installPath, "csgo");
-            if (!Directory.Exists(extractPath)) {
+            string extractPath = Path.Combine(installPath ?? string.Empty, "csgo");
+            if (installPath == null || !Directory.Exists(extractPath)) {
                 Console.WriteLine("Failed to locate \"csgo\" installation directory.");
                 Console.ReadKey();
                 return;
@@ -34,12 +35,22 @@ namespace dependency_downloader {
                 string file = Path.GetFileName(archive);
                 Console.WriteLine("Downloading " + file + "...");
                 Dependency dependency = new Dependency(archive, extractPath) {
-                    Password = "weebware"
+                    Password = "weebware",
+                    DownloadProgressChanged = DownloadProgressChanged,
+                    DownloadCompleted = DownloadCompleted
                 };
                 dependency.Download();
             }
 
             Console.ReadKey();
+
+        }
+
+        private static void DownloadProgressChanged(Dependency sender, DownloadProgressChangedEventArgs args) {
+            
+        }
+
+        private static void DownloadCompleted(Dependency sender) {
 
         }
 
