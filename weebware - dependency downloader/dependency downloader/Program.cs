@@ -8,6 +8,14 @@ namespace dependency_downloader {
 
     class Program {
 
+        /*
+        TODO
+        - Add other models
+        - Create custom events in Dependency class (completed/progress changed)
+        - Report download/extraction progress to console
+        - Wait for previous download to complete (use events to trigger next download)
+        */
+
         static string[] archives = new string[] {
             "https://f002.backblazeb2.com/file/justinooo-upload/ShareX/reinakousaka.zip"
         };
