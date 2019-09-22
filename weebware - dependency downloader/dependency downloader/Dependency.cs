@@ -8,11 +8,19 @@ namespace dependency_downloader {
 
     class Dependency {
 
-        public string Password = null;
+        private string _url;
+        public string URL {
+            set {
+                if (Uri.IsWellFormedUriString(value, UriKind.Absolute))
+                    _url = value;
+                else
+                    throw new FormatException("Invalid URI format.");
+            }
+        }
 
-        private string url;
-        private string path;
-        private string archivePath;
+        public string Password { get; set; }
+        public string ExtractToPath { get; internal set; }
+        public string ArchivePath { get; internal set; }
 
         public delegate void DownloadProgressChangedHandler(Dependency sender, DownloadProgressChangedEventArgs args);
         public DownloadProgressChangedHandler DownloadProgressChanged = null;
@@ -20,13 +28,13 @@ namespace dependency_downloader {
         public delegate void DownloadCompletedHandler(Dependency sender);
         public DownloadCompletedHandler DownloadCompleted = null;
 
-        public Dependency(string url, string path) {
-            this.url = url;
-            this.path = path;
+        public Dependency(string url, string extractToPath) {
+            URL = url;
+            ExtractToPath = extractToPath;
         }
 
         public void Download(bool extractOnCompletion = true) {
-            archivePath = Path.GetTempFileName();
+            ArchivePath = Path.GetTempFileName();
             using (WebClient web = new WebClient()) {
 
                 if (extractOnCompletion)
@@ -34,24 +42,20 @@ namespace dependency_downloader {
 
                 web.DownloadFileCompleted += (s, e) => DownloadCompleted?.Invoke(this);
                 web.DownloadProgressChanged += (s, e) => DownloadProgressChanged?.Invoke(this, e);
-
-                web.DownloadFileAsync(new Uri(url), archivePath);
+                web.DownloadFileAsync(new Uri(_url), ArchivePath);
 
             }
         }
 
         private void ExtractFiles(object sender, AsyncCompletedEventArgs e) {
-            using (ZipFile archive = new ZipFile(archivePath)) {
-
+            using (ZipFile archive = new ZipFile(ArchivePath)) {
                 if (Password != null) {
                     archive.Password = Password;
                     archive.Encryption = EncryptionAlgorithm.PkzipWeak;
                 }
-
-                archive.ExtractAll(path, ExtractExistingFileAction.OverwriteSilently);
-
+                archive.ExtractAll(ExtractToPath, ExtractExistingFileAction.OverwriteSilently);
             }
-            File.Delete(archivePath);
+            File.Delete(ArchivePath);
         }
 
     }
