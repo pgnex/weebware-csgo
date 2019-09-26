@@ -711,7 +711,7 @@ public:
 
 	float Get_Innacuracy()
 	{
-		return getvfunc<float(__thiscall*)(void*)>(this, 477)(this);
+		return getvfunc<float(__thiscall*)(void*)>(this, 478)(this);
 	}
 
 	float GetSpread()
@@ -1057,7 +1057,7 @@ public:
 
 	c_weapon_info* get_weapon_info()
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 455)(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>(this, 456)(this);
 	}
 
 	int* get_paint_kit()
