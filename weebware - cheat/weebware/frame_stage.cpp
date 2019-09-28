@@ -234,15 +234,15 @@ void c_frame_stage_notify::bullet_tracers() {
 				impact_data->m_shoot_pos,
 				impact.m_pos,
 				g_weebware.g_model_info->getmodelindex("sprites/physbeam.vmt"),
-				-1,                                        // haloIndex
-				0.f,                                       // haloScale
-				(float)g_weebwarecfg.bullet_tracer_expire, // life
-				2.f,                                       // width
-				2.f,                                       // endWidth
-				0.f,                                       // fadeLength
-				0.f,                                       // amplitude
-				255.f,                                     // brightness
-				0.5f,                                      // speed
+				-1,													// haloIndex
+				0.f,                            // haloScale
+				(float)g_weebwarecfg.bullet_tracer_expire,			// life
+				g_weebwarecfg.bullet_tracer_width,                                // width
+				g_weebwarecfg.bullet_tracer_width,                             // endWidth
+				0.f,                           // fadeLength
+				g_weebwarecfg.bullet_tracer_amplitude,                            // amplitude
+				(float)col.a,										// brightness
+				g_weebwarecfg.bullet_tracer_speed,                                // speed
 				0,
 				0.f,
 				(float)col.r,

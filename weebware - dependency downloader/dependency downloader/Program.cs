@@ -19,7 +19,7 @@ namespace dependency_downloader {
 
             // parse list of archive urls on runtime
             using (WebClient web = new WebClient()) {
-                string archivesRaw = web.DownloadString("https://pastebin.com/raw/E4iLmrFG");
+                string archivesRaw = web.DownloadString("https://auth.weebware.net/dependencies/models.txt");
                 archives = JsonConvert.DeserializeObject<List<string>>(archivesRaw);
             }
 
@@ -37,7 +37,7 @@ namespace dependency_downloader {
 
                 // create instance of dependency class w/ events + zip password
                 Dependency dependency = new Dependency(archive, extractPath) {
-                    Password = "justinooo",
+                    Password = null,
                     DownloadCompleted = DownloadCompleted,
                     DownloadProgressChanged = DownloadProgressChanged,
                     ExtractionCompleted = ExtractionCompleted,

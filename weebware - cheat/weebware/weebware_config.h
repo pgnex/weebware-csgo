@@ -341,6 +341,14 @@ public:
 	int tick_count_mod = 2;
 	int command_num_mod = 2;
 	float yaw_offset = 58;
+
+
+	float bullet_tracer_width = 1.5f;
+	float bullet_tracer_amplitude = 0.f;
+	float bullet_tracer_speed = 0.5f;
+
+
+
 	//
 
 	ImVec4 water_mark_col = ImVec4(113, 221, 229, 255);
@@ -447,6 +455,9 @@ public:
 		tmp["visuals_weapon_esp"] = visuals_weapon_esp;
 		tmp["enable_bullet_tracers"] = enable_bullet_tracers;
 		tmp["bullet_tracer_expire"] = bullet_tracer_expire;
+		tmp["bullet_tracer_width"] = bullet_tracer_width;
+		tmp["bullet_tracer_amplitude"] = bullet_tracer_amplitude;
+		tmp["bullet_tracer_speed"] = bullet_tracer_speed;
 		tmp["visuals_glow_team"] = visuals_glow_team;
 		tmp["hand_chams"] = hand_chams;
 		tmp["hand_chams_xqz"] = hand_chams_xqz;
@@ -619,6 +630,9 @@ public:
 		if (check("visuals_weapon_esp", data)) visuals_weapon_esp = data["visuals_weapon_esp"];
 		if (check("enable_bullet_tracers", data)) enable_bullet_tracers = data["enable_bullet_tracers"];
 		if (check("bullet_tracer_expire", data)) bullet_tracer_expire = data["bullet_tracer_expire"];
+		if (check("bullet_tracer_speed", data)) bullet_tracer_speed = data["bullet_tracer_speed"];
+		if (check("bullet_tracer_amplitude", data)) bullet_tracer_amplitude = data["bullet_tracer_amplitude"];
+		if (check("bullet_tracer_width", data)) bullet_tracer_width = data["bullet_tracer_width"];
 		if (check("visuals_glow_team", data)) visuals_glow_team = data["visuals_glow_team"];
 		if (check("hand_chams", data)) hand_chams = data["hand_chams"];
 		if (check("hand_chams_xqz", data)) hand_chams_xqz = data["hand_chams_xqz"];

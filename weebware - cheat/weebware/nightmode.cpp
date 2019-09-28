@@ -3,11 +3,12 @@
 
 
 static c_convar* old_sky_name;
-bool done = false;
 
 void c_nightmode::run() {
 
 	g_weebwarecfg.visuals_nightmode ? g_nightmode.apply() : g_nightmode.remove();
+
+	if (g_weebware.round_end)
 
 	if (!done)
 		return;

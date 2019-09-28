@@ -31,6 +31,7 @@ void c_esp::esp_main()
 	draw_fov_circle();
 	draw_crosshair();
 	recoil_crosshair();
+//	set_weapon_models();
 
 	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
 	{
@@ -43,12 +44,13 @@ void c_esp::esp_main()
 		if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
 			bomb_timer(ent);
 
+
 		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
 			continue;
 		}
 
 		if (g_weebwarecfg.anime_model > 0)
-			set_models(ent);
+			set_player_models(ent);
 	}
 
 
@@ -193,7 +195,7 @@ void c_esp::calc_w2svalues()
 	}
 }
 
-void c_esp::set_models(c_base_entity* ent) {
+void c_esp::set_player_models(c_base_entity* ent) {
 
 	switch (g_weebwarecfg.anime_model) {
 	case 1:
@@ -205,8 +207,28 @@ void c_esp::set_models(c_base_entity* ent) {
 	case 2:
 		*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
 		break;
+	case 3:
+		*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/bbs_93x_net_2016/kimono_luka/update_2016_08_05/kimono_luka.mdl");
+		break;
+	case 4:
+		*ent->m_nModelIndex() = g_weebware.g_model_info->getmodelindex("models/player/custom_player/monsterko/inori_yuzuriha/inori.mdl");
+		break;
 	}
 }
+
+void c_esp::set_weapon_models() {
+
+	const HANDLE view_model_handle = local->get_viewmodel_handle();
+	if (!view_model_handle)
+		return;
+
+	c_basecombat_weapon* view_model = static_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(view_model_handle));
+	int index = g_weebware.g_model_info->getmodelindex("models/weapons/v_minecraft_pickaxe.mdl");
+	
+	view_model->set_model_index(index);
+}
+
+
 
 void c_esp::recoil_crosshair() {
 
@@ -640,7 +662,6 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 	const model_t* model;
 	studiohdr_t* hdr;
 	mstudiobone_t* bone;
-	int			  parent_bone;
 	Vector        bone_world_pos, parent_bone_world_pos, bone_screen_pos, parent_bone_screen_pos;
 
 	model = ent->getmodel();
@@ -663,23 +684,33 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 	for (int i = 0; i < hdr->numbones; ++i) {
 		bone = hdr->GetBone(i);
 
-		if (!bone)
-			continue;
+		if (bone && (bone->flags & 0x00000100) && bone->parent != -1) {
 
-		if (!bone->flags & 0x00000100)
-			continue;
+			bone_world_pos = ent->get_bone(i);
+			parent_bone_world_pos = ent->get_bone(bone->parent);
 
-		if (bone->parent == -1)
-			continue;
+			int iChestBone = 6;
+			Vector vBreastBone;
+			Vector vUpperDirection = ent->get_bone(iChestBone + 1) - ent->get_bone(iChestBone);
+			vBreastBone = ent->get_bone(iChestBone) + vUpperDirection / 2;
+			Vector vDeltaChild = bone_world_pos - vBreastBone;
+			Vector vDeltaParent = parent_bone_world_pos - vBreastBone;
 
-		bone_world_pos = ent->get_bone(i);
-		parent_bone_world_pos = ent->get_bone(bone->parent);
+			if ((vDeltaParent.size() < 9 && vDeltaChild.size() < 9))
+				parent_bone_world_pos = vBreastBone;
 
-		g_maths.world_to_screen(bone_world_pos, bone_screen_pos);
-		g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos);
+			if (i == iChestBone - 1)
+				bone_world_pos = vBreastBone;
 
-		g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-		g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
+			if (abs(vDeltaChild.z) < 5 && (vDeltaParent.size() < 5 && vDeltaChild.size() < 5) || i == iChestBone)
+				continue;
+
+			g_maths.world_to_screen(bone_world_pos, bone_screen_pos);
+			g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos);
+
+			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+			g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
+		}
 	}
 }
 

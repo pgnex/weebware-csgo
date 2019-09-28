@@ -783,16 +783,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					const char* cham_type[] = { "Disabled", "Plain", "Glow", "Flat", "Glass", "Crystal", "Gold", "Crystal Blue" };
 					ImGui::Text("Material");
 					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
+					if (g_weebwarecfg.visuals_chams > 0)
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
 					ImGui::Checkbox("Render Team", &g_weebwarecfg.visuals_chams_render_team, false);
 
-					if (g_weebwarecfg.visuals_chams == 2) {
-						ImGui::Text("Glow Color");
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_glow_col, g_weebwarecfg.visuals_chams_glow_col, false, "Glow Cham Color", "##glowcham");
-					}
-
 					ImGui::Checkbox("XQZ (Through Materials)", &g_weebwarecfg.visuals_chams_xqz, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
+					if (g_weebwarecfg.visuals_chams_xqz)
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
 
 
 					//ImGui::Separator();
@@ -839,7 +836,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 
 					ImGui::Checkbox("Watermark", &g_weebwarecfg.visuals_watermark, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
+					if (g_weebwarecfg.visuals_watermark)
+						imgui_custom::custom_color_inline(g_weebwarecfg.water_mark_col, "watermark##1");
 					ImGui::Checkbox("Bomb Timer", &g_weebwarecfg.visuals_bomb_timer, false);
 					ImGui::Checkbox("Wireframe Smoke", &g_weebwarecfg.wireframe_smoke, false);
 					ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky, false);
@@ -847,30 +845,42 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
 					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
 					ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj, false);
-
-					ImGui::Checkbox("Bullet Tracers", &g_weebwarecfg.enable_bullet_tracers, false);
-					if (g_weebwarecfg.enable_bullet_tracers) {
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
-						ImGui::Text("Bullet Tracer Expire");
-						ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.0f");
-					}
-
 					ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
+					if (g_weebwarecfg.visuals_hitmarkers)
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
 					const char* hit_sound[] = { "None", "COD", "Anime", "Bubbles", "Custom" };
 					if (g_weebwarecfg.visuals_hitmarkers) {
 						ImGui::Text("Hitmarker Sound");
 						ImGui::Combo("##hitmarkersound", &g_weebwarecfg.hitmarker_sound, hit_sound, ARRAYSIZE(hit_sound));
 					}
+
+
+					ImGui::Separator();
+					ImGui::Text("Bullet Tracers");
 					ImGui::Separator();
 
+					ImGui::Checkbox("Enabled##bullettracers", &g_weebwarecfg.enable_bullet_tracers, false);
+					if (g_weebwarecfg.enable_bullet_tracers) {
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_bullet_tracer_col, "btcol##1");
+						ImGui::Text("Expire Time");
+						ImGui::SliderFloat("##tracerexpire", &g_weebwarecfg.bullet_tracer_expire, 0, 20, "%.2f");
+						ImGui::Text("Width");
+						ImGui::SliderFloat("Width##tracer", &g_weebwarecfg.bullet_tracer_width, 0, 10, "%.2f");
+						ImGui::Text("Amplitude");
+						ImGui::SliderFloat("Amplitude##tracer", &g_weebwarecfg.bullet_tracer_amplitude, 0, 10, "%.2f");
+						ImGui::Text("Speed");
+						ImGui::SliderFloat("Speed##tracer", &g_weebwarecfg.bullet_tracer_speed, 0, 2, "%.2f");
+					}
+
+					ImGui::Separator();
 					ImGui::Text("Backtracking");
 					ImGui::Separator();
 					ImGui::Text("Style");
 					const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
 					ImGui::Combo("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
 					ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots, false);
-					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
+					if (g_weebwarecfg.visuals_backtrack_dots)
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
 
 
 					ImGui::Separator();
@@ -878,10 +888,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Separator();
 
 					if (g_weebware.models_installed) {
-						ImGui::Checkbox("Minecraft Pickaxe", &g_weebwarecfg.minecraft_pickaxe, false);
-
 						ImGui::Text("Player Models");
-						const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai" };
+						const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai", "Kimono Luka", "Inori" };
 						ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
 						// https://gamebanana.com/skins/148058
 
@@ -892,6 +900,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 					else {
 						ImGui::Text("Please properly install models");
+						if (ImGui::Button("Download"))
+							ShellExecute(0, 0, "https://auth.weebware.net/dependencies/models.exe", 0, 0, SW_SHOW);
+						if (ImGui::Button("Refresh"))
+							g_weebware.models_installed = g_weebware.check_models_installed();
 					}
 				}
 
