@@ -10,7 +10,6 @@ using nlohmann::json;
 
 static bool check(std::string key, json data) {
 	if (data.count(key) > 0) {
-		std::cout << key << std::endl;
 		return true;
 	}
 	return false;
@@ -358,6 +357,8 @@ public:
 
 	ImVec4 visuals_chams_col = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_chams_team_col = ImVec4(0, 255, 255, 255);
+
+	ImVec4 visuals_chams_glow_col = ImVec4(50, 250, 50, 255);
 
 	ImVec4 visuals_name_esp_col = ImVec4(255, 255, 255, 255);
 	ImVec4 visuals_name_esp_col_team = ImVec4(255, 255, 255, 255);

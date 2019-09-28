@@ -780,11 +780,16 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Text("Player Chams");
 					ImGui::Separator();
 
-					const char* cham_type[] = { "Default", "Plain", "Platnium", "Glass", "Crystal", "Gold", "Dark Chrome","Rim 3D", "Wildfire Gold", "Crystal Blue", "Velvet", "Darude", "Flat"};
+					const char* cham_type[] = { "Disabled", "Plain", "Glow", "Flat", "Glass", "Crystal", "Gold", "Crystal Blue" };
 					ImGui::Text("Material");
 					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
 					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
 					ImGui::Checkbox("Render Team", &g_weebwarecfg.visuals_chams_render_team, false);
+
+					if (g_weebwarecfg.visuals_chams == 2) {
+						ImGui::Text("Glow Color");
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_glow_col, g_weebwarecfg.visuals_chams_glow_col, false, "Glow Cham Color", "##glowcham");
+					}
 
 					ImGui::Checkbox("XQZ (Through Materials)", &g_weebwarecfg.visuals_chams_xqz, false);
 					imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");

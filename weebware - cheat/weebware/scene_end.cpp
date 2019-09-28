@@ -131,7 +131,7 @@ bool c_sceneend::is_visible(c_base_entity* target)
 imaterial* c_sceneend::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "regular", "models/player/ct_fbi/ct_fbi_glass", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/gibs/glass/glass", "dev/glow_rim3d" , "models/inventory_items/wildfire_gold/wildfire_gold_detail" ,"models/inventory_items/trophy_majors/crystal_blue" , "models/inventory_items/trophy_majors/velvet", "models/inventory_items/music_kit/darude_01/mp3_detail", "flat" };
+	const char* material_list[] = { "", "", "", "flat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
 	return g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
@@ -170,7 +170,26 @@ imaterial* create_default() {
 	return g_weebware.g_mat_sys->find_material("material_textured", TEXTURE_GROUP_MODEL);
 }
 
+
+imaterial* create_glow() {
+	std::ofstream("csgo/materials/glowOverlay.vmt") << R"#("VertexLitGeneric" {
+ 
+	"$additive" "0"
+	"$envmap" "models/effects/cube_white"
+	"$envmaptint" "[1 1 1]"
+	"$envmapfresnel" "1"
+	"$envmapfresnelminmaxexp" "[0 1 2]"
+	"$alpha" "0.8"
+})#";
+
+	return g_weebware.g_mat_sys->find_material("glowOverlay", TEXTURE_GROUP_MODEL);
+}
+
+
 void c_sceneend::chams() {
+
+	if (g_weebwarecfg.visuals_chams > custom_mats::max)
+		g_weebwarecfg.visuals_chams = 1;
 
 	static bool init = false;
 
@@ -184,6 +203,7 @@ void c_sceneend::chams() {
 		}
 		// Make our own materials
 		mat_list[custom_mats::plain] = create_default();
+		mat_list[custom_mats::glow_cham] = create_glow();
 		init = true;
 	}
 
@@ -263,14 +283,36 @@ void c_sceneend::chams() {
 				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 			}
 
-			// Set material info.
-			g_weebware.g_render_view->SetBlend(col.a / 255.f);
-			g_weebware.g_render_view->SetColorModulation(col_blend);
-			mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-			player->draw_model(1, 255);
-			g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+			if (g_weebwarecfg.visuals_chams == custom_mats::glow_cham) {
+
+				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+				g_weebware.g_render_view->SetColorModulation(col_blend);
+
+				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
+				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
+				player->draw_model(1, 255);
+				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+
+
+				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
+				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+				player->draw_model(1, 255);
+				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+			}
+			else {
+				// Set material info.
+				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+				g_weebware.g_render_view->SetColorModulation(col_blend);
+
+
+				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
+				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+				player->draw_model(1, 255);
+				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+			}
 		}
 	}
 }

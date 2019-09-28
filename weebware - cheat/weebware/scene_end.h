@@ -12,19 +12,14 @@ public:
 
 	enum custom_mats : int
 	{
-		default,
-		plain = 1,
-		platinum,
+		disabled,
+		plain,
+		glow_cham = 2,
+		flat,
 		glass,
 		crystal,
 		gold,
-		dark_chrome,
-		glow_rim3d,
-		wildfire_gold,
 		crystal_blue,
-		velvet,
-		darude,
-		flat,
 		max
 	};
 
