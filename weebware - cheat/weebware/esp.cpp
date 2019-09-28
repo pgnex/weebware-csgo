@@ -637,10 +637,9 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 	if (!g_weebwarecfg.visuals_skeleton)
 		return;
 
-	const model_t *model;
-	studiohdr_t	  *hdr;
-	matrix3x4_t	  bone_matrix[128];
-	mstudiobone_t *bone;
+	const model_t* model;
+	studiohdr_t* hdr;
+	mstudiobone_t* bone;
 	int			  parent_bone;
 	Vector        bone_world_pos, parent_bone_world_pos, bone_screen_pos, parent_bone_screen_pos;
 
@@ -652,7 +651,6 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 	if (!hdr)
 		return;
 
-	ent->setupbones(bone_matrix, 128, 0x00000100, 0.f);
 
 	c_color col;
 	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
@@ -671,18 +669,17 @@ void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 		if (!bone->flags & 0x00000100)
 			continue;
 
-		parent_bone = bone->parent;
-		if (parent_bone == -1)
+		if (bone->parent == -1)
 			continue;
 
-		bone_world_pos = bone_matrix[i].at(3);
-		parent_bone_world_pos = bone_matrix[parent_bone].at(3);
+		bone_world_pos = ent->get_bone(i);
+		parent_bone_world_pos = ent->get_bone(bone->parent);
 
+		g_maths.world_to_screen(bone_world_pos, bone_screen_pos);
+		g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos);
 
-		if (g_maths.world_to_screen(bone_world_pos, bone_screen_pos) && g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos)) {
-			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-			g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
-		}
+		g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+		g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
 	}
 }
 
