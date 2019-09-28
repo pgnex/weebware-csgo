@@ -665,31 +665,31 @@ void edge_aa(Vector &edgeang, bool& willedge, c_base_entity* local)
 	}
 
 }
-
-bool c_create_move::can_shoot(c_usercmd* cmd) {
-
-	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
-
-	if (!weapon)
-		return false;
-
-	if (!weapon->is_pistol())
-		return false;
-
-	float server_time = local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
-
-	if (weapon->m_flNextPrimaryAttack() - server_time > 0)
-		return false;
-
-	if (weapon->Clip1() == 0) {
-		return false;
-	}
-
-	if (cmd->buttons == in_reload)
-		return false;
-
-	return true;
-}
+//
+//bool c_create_move::can_shoot(c_usercmd* cmd) {
+//
+//	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
+//
+//	if (!weapon)
+//		return false;
+//
+//	if (!weapon->is_pistol())
+//		return false;
+//
+//	float server_time = local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
+//
+//	if (weapon->m_flNextPrimaryAttack() - server_time > 0)
+//		return false;
+//
+//	if (weapon->Clip1() == 0) {
+//		return false;
+//	}
+//
+//	if (cmd->buttons == in_reload)
+//		return false;
+//
+//	return true;
+//}
 
 void c_create_move::no_crouch_cooldown(c_usercmd* cmd) {
 
@@ -715,11 +715,12 @@ void c_create_move::auto_pistol(c_usercmd* cmd) {
 	if (!weapon->is_pistol())
 		return;
 
-	if (can_shoot(cmd)) {
+	float flCurTime = local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
+	float flNextAttack = weapon->m_flNextPrimaryAttack();
+	if (flNextAttack > flCurTime) {
+		cmd->buttons &= ~in_attack;
 		cmd->buttons |= in_attack;
-	}
-	else if (!can_shoot(cmd)) {
-		cmd->buttons = 0;
+		cmd->buttons &= ~in_attack;
 	}
 }
 
@@ -772,8 +773,6 @@ void c_create_move::auto_defuse(c_usercmd* cmd) {
 
 	if (!GetAsyncKeyState(g_weebwarecfg.auto_defuse_key))
 		return;
-
-	std::cout << g_weebwarecfg.auto_defuse_key << std::endl;
 
 	if (!local)
 		return;
