@@ -11,6 +11,7 @@ public:
 	void chat_spam();
 	void rank_reveal();
 	void skybox_changer();
+	bool is_sky_set = false;
 	void edge_jump_pre_prediction(c_usercmd* cmd);
 	void edge_jump_post_prediction(c_usercmd* cmd);
 	void auto_jump(c_usercmd* cmd);
@@ -22,6 +23,7 @@ public:
 	void auto_queue();
 	void disable_post_processing();
 	void draw_grenade_trajectory();
+	bool grenade_traj_disabled = false;
 	void clamp_angles(c_usercmd* cmd, Vector original_angles, bool& sendpacket);
 	void auto_pistol(c_usercmd* cmd);
 	bool is_ground();

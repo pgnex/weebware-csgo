@@ -92,7 +92,7 @@ void load_named_sky(const char* sky_name) {
 	load_named_sky_fn(sky_name);
 }
 
-bool is_sky_set = false;
+
 void c_create_move::skybox_changer() {
 
 	c_convar* old_sky_name = g_weebware.g_convars->find_cvar("sv_skyname");
@@ -176,7 +176,7 @@ void c_create_move::disable_post_processing() {
 }
 
 
-bool grenade_traj_disabled = false;
+
 void c_create_move::draw_grenade_trajectory() {
 
 	c_convar* draw_grenade_trajectory = g_weebware.g_convars->find_cvar("cl_grenadepreview");
@@ -402,37 +402,7 @@ void c_create_move::auto_strafe(c_usercmd* cmd) {
 	}
 }
 
-//void c_create_move::auto_queue() {
-//	using handle_match_start_fn = bool(__thiscall*)(void*, const char*, char*, char*, char*);
-//	using create_session_fn = void*(__stdcall*)(void);
-//
-//	static auto singleton = *(uint8_t**)(g_weebware.pattern_scan("client_panorama.dll", "8B C8 89 0D ? ? ? ? 8D 41 08") + 4);
-//	static auto handle_match_start = (handle_match_start_fn)g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 51 53 56 57 8B F9 8B 0D ? ? ? ? 8B 01 FF 50 34");
-//	static auto create_session = (create_session_fn)g_weebware.pattern_scan("client_panorama.dll", "E8 ? ? ? ? 83 EC 14 E8");
-//
-//	static auto search_started = []() {
-//		if (!singleton)
-//			return false;
-//		if (auto ls = *(uint8_t**)singleton; ls) {
-//			return *(uint32_t*)(ls + 0x10) != 0;
-//		}
-//		return false;
-//	};
-//
-//	if (auto match_session = g_match_framework->get_match_session()) {
-//		if (!search_started()) {
-//			auto session_settings = match_session->get_session_settings();
-//			session_settings->set_string("game/type", "classic");
-//			session_settings->set_string("game/mode", "casual");
-//			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
-//			match_session->update_session_settings(session_settings);
-//			handle_match_start(*(uint8_t**)singleton, "", "", "", "");
-//		}
-//	}
-//	else {
-//		create_session();
-//	}
-//}
+
 
 bool c_create_move::is_visible(c_base_entity* target)
 {
@@ -665,31 +635,7 @@ void edge_aa(Vector &edgeang, bool& willedge, c_base_entity* local)
 	}
 
 }
-//
-//bool c_create_move::can_shoot(c_usercmd* cmd) {
-//
-//	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
-//
-//	if (!weapon)
-//		return false;
-//
-//	if (!weapon->is_pistol())
-//		return false;
-//
-//	float server_time = local->get_tick_base() * g_weebware.g_global_vars->interval_per_tick;
-//
-//	if (weapon->m_flNextPrimaryAttack() - server_time > 0)
-//		return false;
-//
-//	if (weapon->Clip1() == 0) {
-//		return false;
-//	}
-//
-//	if (cmd->buttons == in_reload)
-//		return false;
-//
-//	return true;
-//}
+
 
 void c_create_move::no_crouch_cooldown(c_usercmd* cmd) {
 

@@ -1,5 +1,6 @@
 #include "events.h"
 #include "frame_stage.h"
+#include "create_move.h"
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
@@ -185,6 +186,9 @@ void EventFuncs::round_end(i_game_event* event) {
 
 void EventFuncs::round_start(i_game_event* event) {
 	g_weebware.round_end = false;
+	g_nightmode.done = false;
+	g_create_move.grenade_traj_disabled = false;
+	g_create_move.is_sky_set = false;
 }
 
 // initialize our events
