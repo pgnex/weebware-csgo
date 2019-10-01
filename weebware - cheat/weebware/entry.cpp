@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -132,6 +132,7 @@ bool c_weebware::init_interfaces()
 	g_gun_list = create_gun_list();
 	g_knife_list = create_knife_list();
 
+
 	g_events.init();
 
 	srand(time(0));
@@ -141,7 +142,7 @@ bool c_weebware::init_interfaces()
 
 void c_weebware::init_fonts() {
 	tahoma_font = g_weebware.g_surface->create_font();
-	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 13, 300, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
+	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
 }
 
 void c_weebware::setup_thread() {
@@ -236,6 +237,7 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list() {
 	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", weapon_knife_butterfly));
 	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", weapon_knife_push));
 	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", weapon_knife_survival_bowie));
+
 	return tmp;
 }
 
