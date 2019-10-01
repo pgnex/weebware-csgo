@@ -292,15 +292,10 @@ void c_frame_stage_notify::legit_aa_resolver()
 	}
 }
 
-void c_frame_stage_notify::glove_changer() {
-	if (!local)
-		return;
-
-
-}
 
 void c_frame_stage_notify::run_skinchanger() {
-	if (!g_weebwarecfg.skinchanger_enabled)
+
+	if (!g_weebwarecfg.skinchanger_enabled && !g_weebwarecfg.knifechanger_enabled)
 		return;
 
 	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
@@ -321,6 +316,7 @@ void c_frame_stage_notify::run_skinchanger() {
 	if (!weapons)
 		return;
 
+	c_skinchanger::knife_type knife_cfg;
 	for (size_t i = 0; weapons[i] != 0xFFFFFFFF; i++) {
 		if (weapons[i] == 0xFFFFFFFF)
 			break;
@@ -335,10 +331,19 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon_id > 34 || weapon_id < 0)
 			continue;
 
+		if (weapon == local->m_pActiveWeapon())
+			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
+
+
 		*weapon->get_item_id_high() = -1;
 
-		if (weapon_id == 0 && weapon->is_knife()) {
+		if (weapon_id == 0 && weapon->is_knife() && !g_weebwarecfg.knifechanger_enabled)
+			continue;
 
+		if (weapon->is_firearm() && !g_weebwarecfg.skinchanger_enabled)
+			continue;
+
+		if (weapon->is_knife()) {
 			auto vm_handle = local->get_viewmodel_handle();
 
 			if (!vm_handle)
@@ -351,75 +356,53 @@ void c_frame_stage_notify::run_skinchanger() {
 
 			auto viewmodel_weapon = reinterpret_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel->get_weapon_handle()));
 
-			c_skinchanger::knife_type knife_cfg = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]];
+			knife_cfg = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]];
 
-			if (knife_cfg.weapon_index != 0) {
+			if (!knife_cfg.weapon_index != 0)
+				return;
 
-				auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
+			auto model_index = g_weebware.g_model_info->getmodelindex(knife_cfg.mdl.c_str());
 
-				if (!model_index)
-					continue;
+			if (!model_index)
+				continue;
 
-				*weapon->m_nModelIndex() = model_index;
+			*weapon->m_nModelIndex() = model_index;
 
-				if (viewmodel_weapon && viewmodel_weapon == weapon) {
+			if (viewmodel_weapon && viewmodel_weapon == weapon) {
 
-					*viewmodel->m_nModelIndex() = model_index;
+				*viewmodel->m_nModelIndex() = model_index;
 
-					auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
+				auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
 
-					if (worldmodel_weapon)
-						* worldmodel_weapon->m_nModelIndex() = model_index + 1;
-				}
-
-
-				auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
-
-				if (skin_config.m_paint_kit != 0)
-					* weapon->get_paint_kit() = skin_config.m_paint_kit;
-
-				*weapon->get_fallbackseed() = skin_config.m_seed;
-
-				if (skin_config.m_wear < FLT_MIN)
-					skin_config.m_wear = FLT_MIN;
-
-				*weapon->get_fallbackwear() = skin_config.m_wear;
-				*weapon->m_iEntityQuality() = 3;
-				*weapon->get_accountid() = local_inf.xuid_low;
-				*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
-				*weapon->get_original_owner_xuidhigh() = 0;
-				*weapon->get_original_owner_xuidlow() = 0;
-
+				if (worldmodel_weapon)
+					* worldmodel_weapon->m_nModelIndex() = model_index + 1;
 			}
 		}
-		else if (weapon->is_firearm()) {
-			auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
 
-			if (skin_config.m_paint_kit != 0)
-				*weapon->get_paint_kit() = skin_config.m_paint_kit;
+		auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];
 
-			if (skin_config.m_seed != 0)
-				*weapon->get_fallbackseed() = skin_config.m_seed;
+		if (skin_config.m_paint_kit != 0)
+			* weapon->get_paint_kit() = skin_config.m_paint_kit;
 
-			//if (skin_config.stattrak) {
-			//	*weapon->fallback_stattrak() = skin_config.stattrak_kill_count;
-			//}
+		if (skin_config.m_seed != 0)
+			* weapon->get_fallbackseed() = skin_config.m_seed;
 
-			// Config Clamping.
-			if (skin_config.m_wear < FLT_MIN)
-				skin_config.m_wear = FLT_MIN;
-
-			*weapon->get_fallbackwear() = skin_config.m_wear;
-
-
-			*weapon->get_accountid() = local_inf.xuid_low;
-
-			*weapon->get_original_owner_xuidhigh() = 0;
-			*weapon->get_original_owner_xuidlow() = 0;
+		if (skin_config.stattrak_enabled) {
+			*weapon->fallback_stattrak() = skin_config.stattrak_kill_count;
 		}
 
-	}
+		*weapon->get_fallbackwear() = (100 - skin_config.m_wear) / 100;
+		*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
+		*weapon->get_accountid() = local_inf.xuid_low;
+		if (weapon->is_knife())
+			* weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 
+		if (strlen(skin_config.weapon_name) > 0)
+			*weapon->get_custom_name() = skin_config.weapon_name;
+
+		*weapon->get_original_owner_xuidhigh() = 0;
+		*weapon->get_original_owner_xuidlow() = 0;
+	}
 }
 
 int convert_index_id(int index)

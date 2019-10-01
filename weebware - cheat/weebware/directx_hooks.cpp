@@ -1,6 +1,7 @@
 ﻿#include "Header.h"
 #include "shared.h"
 #include "esp.h"
+#include "frame_stage.h"
 #include "imgui_custom.h"
 #include "imgui\imgui_internal.h"
 #include "hook_funcs.h"
@@ -784,7 +785,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Text("Material");
 					ImGui::Combo("##chammaterials", &g_weebwarecfg.visuals_chams, cham_type, ARRAYSIZE(cham_type));
 					if (g_weebwarecfg.visuals_chams > 0)
-						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", "Team Color##chams2");
+						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams == 2 ? g_weebwarecfg.visuals_chams_glow_col : g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", g_weebwarecfg.visuals_chams == 2 ? "Glow Cham Color##chams2" : "Team Color##chams2");
 					ImGui::Checkbox("Render Team", &g_weebwarecfg.visuals_chams_render_team, false);
 
 					ImGui::Checkbox("XQZ (Through Materials)", &g_weebwarecfg.visuals_chams_xqz, false);
@@ -882,29 +883,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.visuals_backtrack_dots)
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
 
-
-					ImGui::Separator();
-					ImGui::Text("Models");
-					ImGui::Separator();
-
-					if (g_weebware.models_installed) {
-						ImGui::Text("Player Models");
-						const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai", "Kimono Luka", "Inori" };
-						ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
-						// https://gamebanana.com/skins/148058
-
-						if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25), ImGuiButtonFlags_Outlined)) {
-
-							g_weebwarecfg.skinchanger_apply_nxt = 1;
-						}
-					}
-					else {
-						ImGui::Text("Please properly install models");
-						if (ImGui::Button("Download"))
-							ShellExecute(0, 0, "https://auth.weebware.net/dependencies/models.exe", 0, 0, SW_SHOW);
-						if (ImGui::Button("Refresh"))
-							g_weebware.models_installed = g_weebware.check_models_installed();
-					}
 				}
 
 				ImGui::EndChild();
@@ -916,103 +894,212 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		if (tab_selection == tabs::skins) {
 
-			ImGui::BeginChild("skinchangetshit");
-
-			ImGui::Checkbox("Enabled##skin", &g_weebwarecfg.skinchanger_enabled, false);
-
 			ImGui::Columns(2, "SkinChanger", false);
 
-			ImGui::BeginChild("GunList", ImVec2(0, 0), true);
-			ImGui::Text("Guns");
-			ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
-			ImGui::InputText("##Search Gun", g_config_list.skinchanger_gunsearch, ARRAYSIZE(g_config_list.skinchanger_gunsearch));
-			ImGui::PopItemWidth();
 
-			auto gun_list = filtered_guns();
-
-			ImGui::Separator();
-			ImGui::BeginChild("Existing Guns", ImVec2(0, (new_height / 2) - 25), false);
-			// Enumerate skins at start of game and filter them out b4 drawing
-			for (auto gun_part : gun_list)
+			ImGui::BeginChild("Knife", ImVec2(0, ImGui::GetContentRegionAvail().y / 5), true);
 			{
-				if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
-				{
-					g_weebwarecfg.skinchanger_selected_gun = convert_index_id(gun_part.id);
-					g_weebwarecfg.selected_gun_index = gun_part.id;
-				}
+				ImGui::Text("Knife Options");
+				ImGui::Separator();
+				ImGui::Checkbox("Enabled##knifechanger", &g_weebwarecfg.knifechanger_enabled, false);
+				const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie" };
+				ImGui::Combo("##knifecombo", &g_weebwarecfg.selected_knife_index[1], knives, ARRAYSIZE(knives));
+				g_weebwarecfg.selected_knife_index[0] = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]].weapon_index;
 			}
 			ImGui::EndChild();
-			ImGui::Separator();
 
-			ImGui::BeginChild("Existing Knives", ImVec2(0, (new_height / 2) - 90), false);
-			// Enumerate skins at start of game and filter them out b4 drawing
-			try {
-				int loopi = 0;
+			ImGui::BeginChild("Gloves", ImVec2(0, ImGui::GetContentRegionAvail().y / 5 * 3), true);
+			{
+				ImGui::Text("Glove Options");
+				ImGui::Separator();
+				ImGui::Checkbox("Enabled##glovechanger", &g_weebwarecfg.glovechanger_enabled, false);
+				const char* glove_models[] = { "Default", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound" };
+				ImGui::Combo("##glovenames", &g_weebwarecfg.glove_model, glove_models, ARRAYSIZE(glove_models));
+				ImGui::Text("Wear");
+				ImGui::SliderFloat("Wear##gloves", &g_weebwarecfg.glove_wearz, 0, 100, "%.0f%%");
+				ImGui::Separator();
 
-				for (auto knife_part : g_weebware.g_knife_list)
-				{
-					if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife_index[0] == knife_part.weapon_index))
+				if (g_weebwarecfg.glove_model > 0) {
+					std::vector<const char*> v = glove_changer.set_glove_skin_array();
+					//ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
+					int loopi = 0;
+					for (auto skin_part : v)
 					{
-						g_weebwarecfg.selected_knife_index[0] = knife_part.weapon_index;
-						g_weebwarecfg.selected_knife_index[1] = loopi;
+						std::string name = std::string(skin_part) + "##" + std::string(skin_part);
+						if (ImGui::Selectable(name.c_str(), name == g_weebwarecfg.glove_skin_cur))
+						{
+							g_weebwarecfg.glove_skin = loopi;
+							g_weebwarecfg.glove_skin_cur = name;
+							g_weebwarecfg.skinchanger_apply_nxt = 1;
+						}
+						loopi++;
 					}
-					++loopi;
 				}
 			}
-			catch (...) {}
-
 			ImGui::EndChild();
 
-			ImGui::EndChild();
+			ImGui::BeginChild("Models", ImVec2(0, ImGui::GetContentRegionAvail().y), true);
+			{
+				ImGui::Text("Models");
+				ImGui::Separator();
 
+				if (g_weebware.models_installed) {
+					ImGui::Text("Player Models");
+					const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai", "Kimono Luka", "Inori" };
+					ImGui::Combo("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
+					// https://gamebanana.com/skins/148058
+
+					if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25), ImGuiButtonFlags_Outlined)) {
+
+						g_weebwarecfg.skinchanger_apply_nxt = 1;
+					}
+				}
+				else {
+					ImGui::Text("Please properly install models");
+					if (ImGui::Button("Download"))
+						ShellExecute(0, 0, "https://auth.weebware.net/dependencies/models.exe", 0, 0, SW_SHOW);
+					if (ImGui::Button("Refresh"))
+						g_weebware.models_installed = g_weebware.check_models_installed();
+				}
+			}
+			ImGui::EndChild();
 
 			ImGui::NextColumn();
 
-			ImGui::BeginChild("SkinList", ImVec2(0, 0), true);
-			ImGui::Text("Skins");
+			ImGui::BeginChild("Skins and shit", ImVec2(0, ImGui::GetContentRegionAvail().y), true);
+			ImGui::Text("Weapon Options");
+			ImGui::Separator();
+
+			ImGui::Checkbox("Enabled", &g_weebwarecfg.skinchanger_enabled, false);
+			ImGui::Checkbox("StatTrak", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_enabled, false);
+			if (g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_enabled)
+				ImGui::InputInt("Kills", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_kill_count);
+
+			ImGui::Text("Nametag");
+			ImGui::InputText("##weaponname", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name));
+			ImGui::Text("Wear");
+			ImGui::SliderFloat("Wear##skins", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear, 0, 100, "%.0f%%");
+			ImGui::Separator();
 			ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
+			ImGui::Text("Skins");
 			ImGui::InputText("##Search Skin", g_config_list.skinchanger_skinsearch, ARRAYSIZE(g_config_list.skinchanger_skinsearch));
 			ImGui::PopItemWidth();
 
 			auto skin_list = filtered_skins();
 
 			ImGui::Separator();
-			ImGui::BeginChild("Existing Skins", ImVec2(0, new_height - 300), false);
+			ImGui::BeginChild("Existing Skins", ImVec2(0, ImGui::GetContentRegionAvail().y - 40), false);
 			// Enumerate skins at start of game and filter them out b4 drawing
-			for (auto skin_part : skin_list)
+			for (c_skinchanger::skin_type skin_part : skin_list)
 			{
 				std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
 				if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
 				{
 					g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
+					g_weebwarecfg.skinchanger_apply_nxt = 1;
 				}
 			}
 			ImGui::EndChild();
 			ImGui::Separator();
-
-			ImGui::Text("Gloves");
-			ImGui::Separator();
-			const char* glove_models[] = { "Off", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound" };
-			ImGui::Combo("##glovenames", &g_weebwarecfg.glove_model, glove_models, ARRAYSIZE(glove_models));
-
-			std::vector<const char*> v = glove_changer.set_glove_skin_array();
-	    	ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
-
-			ImGui::Separator();
-			ImGui::Text("Settings");
-			ImGui::Separator();
-			ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
-			ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
-
-			if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
-
+			if (ImGui::Button("Force Update", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined))
 				g_weebwarecfg.skinchanger_apply_nxt = 1;
-
-			}
-
 			ImGui::EndChild();
 
-			ImGui::EndChild();
+			
+			//ImGui::Checkbox("Enabled##skin", &g_weebwarecfg.skinchanger_enabled, false);
+
+
+			//ImGui::BeginChild("GunList", ImVec2(0, 0), true);
+			//ImGui::Text("Guns");
+			//ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
+			//ImGui::InputText("##Search Gun", g_config_list.skinchanger_gunsearch, ARRAYSIZE(g_config_list.skinchanger_gunsearch));
+			//ImGui::PopItemWidth();
+
+			//auto gun_list = filtered_guns();
+
+			//ImGui::Separator();
+			//ImGui::BeginChild("Existing Guns", ImVec2(0, (new_height / 2) - 25), false);
+			//// Enumerate skins at start of game and filter them out b4 drawing
+			//for (auto gun_part : gun_list)
+			//{
+			//	if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
+			//	{
+			//		g_weebwarecfg.skinchanger_selected_gun = convert_index_id(gun_part.id);
+			//		g_weebwarecfg.selected_gun_index = gun_part.id;
+			//	}
+			//}
+			//ImGui::EndChild();
+			//ImGui::Separator();
+
+			//ImGui::BeginChild("Existing Knives", ImVec2(0, (new_height / 2) - 90), false);
+			//// Enumerate skins at start of game and filter them out b4 drawing
+			//try {
+			//	int loopi = 0;
+
+			//	for (auto knife_part : g_weebware.g_knife_list)
+			//	{
+			//		if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife_index[0] == knife_part.weapon_index))
+			//		{
+			//			g_weebwarecfg.selected_knife_index[0] = knife_part.weapon_index;
+			//			g_weebwarecfg.selected_knife_index[1] = loopi;
+			//		}
+			//		++loopi;
+			//	}
+			//}
+			//catch (...) {}
+
+			//ImGui::EndChild();
+
+			//ImGui::EndChild();
+
+
+			//ImGui::NextColumn();
+
+			//ImGui::BeginChild("SkinList", ImVec2(0, 0), true);
+			//ImGui::Text("Skins");
+			//ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
+			//ImGui::InputText("##Search Skin", g_config_list.skinchanger_skinsearch, ARRAYSIZE(g_config_list.skinchanger_skinsearch));
+			//ImGui::PopItemWidth();
+
+			//auto skin_list = filtered_skins();
+
+			//ImGui::Separator();
+			//ImGui::BeginChild("Existing Skins", ImVec2(0, new_height - 300), false);
+			//// Enumerate skins at start of game and filter them out b4 drawing
+			//for (auto skin_part : skin_list)
+			//{
+			//	std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
+			//	if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
+			//	{
+			//		g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
+			//	}
+			//}
+			//ImGui::EndChild();
+			//ImGui::Separator();
+
+			//ImGui::Text("Gloves");
+			//ImGui::Separator();
+			//const char* glove_models[] = { "Off", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound" };
+			//ImGui::Combo("##glovenames", &g_weebwarecfg.glove_model, glove_models, ARRAYSIZE(glove_models));
+
+			//std::vector<const char*> v = glove_changer.set_glove_skin_array();
+	  //  	ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
+
+			//ImGui::Separator();
+			//ImGui::Text("Settings");
+			//ImGui::Separator();
+			//ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
+			//ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
+
+			//if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
+
+			//	g_weebwarecfg.skinchanger_apply_nxt = 1;
+
+			//}
+
+			//ImGui::EndChild();
+
+			//ImGui::EndChild();
 		}
 
 #pragma region Misc

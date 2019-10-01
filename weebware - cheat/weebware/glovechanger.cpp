@@ -77,7 +77,7 @@ bool c_glovechanger::apply_glove_skin(c_basecombat_weapon* glove, int item_defin
 	*glove->get_paint_kit() = paint_kit;
 	glove->set_model_index(model_index);
 	*glove->m_iEntityQuality() = entity_quality;
-	*glove->get_fallbackwear() = fallback_wear;
+	*glove->get_fallbackwear() = (100 - fallback_wear) / 100;
 
 	return true;
 }
@@ -144,7 +144,24 @@ int get_skin() {
 	return 0;
 }
 
+bool disabled = false;
 void c_glovechanger::run() noexcept {
+
+
+	if (!g_weebwarecfg.glove_model > 0 && !disabled) {
+		g_weebwarecfg.skinchanger_apply_nxt = 1;
+		disabled = true;
+		return;
+	}
+
+	if (!g_weebwarecfg.glovechanger_enabled && !disabled) {
+		g_weebwarecfg.skinchanger_apply_nxt = 1;
+		disabled = true;
+		return;
+	}
+
+	if (!g_weebwarecfg.glovechanger_enabled)
+		return;
 
 	if (!g_weebwarecfg.glove_model > 0)
 		return;
@@ -196,19 +213,22 @@ void c_glovechanger::run() noexcept {
 
 
 	if (glove) {
-		float g_wear = 0.00f;
-		
-
 		apply_glove_model(glove);
 
 		set_glove_skin_array();
 
-		apply_glove_skin(glove, get_glove_model(), get_skin(), g_weebware.g_model_info->getmodelindex(glove_map[get_glove_model()]), 3, g_wear);
+		apply_glove_skin(glove, get_glove_model(), get_skin(), g_weebware.g_model_info->getmodelindex(glove_map[get_glove_model()]), 3, g_weebwarecfg.glove_wearz);
 
 		*glove->get_item_id_high() = -1;
 		*glove->get_fallbackseed() = 0;
 		*glove->fallback_stattrak() = -1;
 
 		glove->PreDataUpdate(0);
+
+		if (disabled) {
+			g_weebwarecfg.skinchanger_apply_nxt = 1;
+			disabled = false;
+		}
+
 	}
 }

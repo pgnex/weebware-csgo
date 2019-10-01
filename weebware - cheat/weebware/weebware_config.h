@@ -174,31 +174,40 @@ class override_skin_style
 public:
 	int weapon_id = 0;
 	int m_paint_kit = 0;
-	float m_wear = FLT_MIN;
+	float m_wear = 100;
 	int m_seed = 69;
-	bool stattrak = false;
+	bool stattrak_enabled = false;
 	int stattrak_kill_count = 0;
+	char weapon_name[256];
 
-	json convert()
+	json to_json()
 	{
 		json tmp;
 		tmp["weapon_id"] = weapon_id;
 		tmp["m_paint_kit"] = m_paint_kit;
 		tmp["m_wear"] = m_wear;
 		tmp["m_seed"] = m_seed;
-		tmp["stattrak"] = stattrak;
+		tmp["stattrak_enabled"] = stattrak_enabled;
 		tmp["stattrak_kill_count"] = stattrak_kill_count;
+		tmp["weapon_name"] = weapon_name;
 		return tmp;
 	}
 
-	void convert(json data)
+	void from_json(json data)
 	{
 		if (check("weapon_id", data)) weapon_id = data["weapon_id"];
 		if (check("m_paint_kit", data)) m_paint_kit = data["m_paint_kit"];
-		if (check("m_wear", data)) m_wear = data["m_wear"];
+		if (check("m_wear", data)) {
+			if (data["m_wear"] == FLT_MIN)
+				m_wear = 100;
+		}
 		if (check("m_seed", data)) m_seed = data["m_seed"];
-		//if (check("stattrak", data)) stattrak = data["stattrak"];
-		//if (check("stattrak_kill_count", data)) stattrak = data["stattrak_kill_count"];
+		if (check("stattrak_enabled", data)) stattrak_enabled = data["stattrak_enabled"];
+		if (check("stattrak_kill_count", data)) stattrak_kill_count = data["stattrak_kill_count"];
+		if (check("weapon_name", data)) {
+			std::string msg = data["weapon_name"];
+			strncpy(weapon_name, msg.c_str(), sizeof(weapon_name));
+		}
 	}
 };
 
@@ -278,6 +287,7 @@ public:
 	bool misc_ai_defend;
 	bool visuals_chams_render_team = false;
 	bool skinchanger_enabled = false;
+	bool knifechanger_enabled = false;
 	int skinchanger_selected_gun = 0;
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
@@ -329,7 +339,10 @@ public:
 	int fake_lag_factor = 0;
 	int fake_lag_key = 0;
 	int glove_model;
+	bool glovechanger_enabled;
+	float glove_wearz = 100.f;
 	int glove_skin;
+	std::string glove_skin_cur;
 	bool block_bot;
 	int block_bot_key;
 	bool auto_defuse;
@@ -474,18 +487,11 @@ public:
 		tmp["misc_ai_defuse"] = misc_ai_defuse;
 		tmp["misc_ai_defend"] = misc_ai_defend;
 		tmp["visuals_chams_render_team"] = visuals_chams_render_team;
-		tmp["skinchanger_enabled"] = skinchanger_enabled;
-		tmp["skinchanger_selected_gun"] = skinchanger_selected_gun;
-		tmp["previous_knife_index"] = previous_knife_index;
-		tmp["next_knife_index"] = next_knife_index;
 		tmp["visuals_name_esp"] = visuals_name_esp;
 		tmp["skinchanger_apply_nxt"] = skinchanger_apply_nxt;
 		tmp["misc_legit_aa_enabled"] = misc_legit_aa_enabled;
 		tmp["misc_legit_aa_jitter"] = misc_legit_aa_jitter;
 		tmp["misc_legit_aa_edge"] = misc_legit_aa_edge;
-		tmp["selected_knife_index0"] = selected_knife_index[0];
-		tmp["selected_knife_index1"] = selected_knife_index[1];
-		tmp["selected_gun_index"] = selected_gun_index;
 		tmp["visuals_backtrack_style"] = visuals_backtrack_style;
 		tmp["anti_triggerbot"] = anti_triggerbot;
 		tmp["misc_clantag_changer"] = misc_clantag_changer;
@@ -502,7 +508,6 @@ public:
 		tmp["rank_reveal"] = rank_reveal;
 		tmp["misc_autoAccept"] = misc_autoAccept;
 		tmp["minecraft_pickaxe"] = minecraft_pickaxe;
-		tmp["reina_model"] = anime_model;
 		tmp["auto_strafe"] = auto_strafe;
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
@@ -520,8 +525,6 @@ public:
 		tmp["edge_jump_key"] = edge_jump_key;
 		tmp["duck_in_air"] = duck_in_air;
 		tmp["night_sky"] = night_sky;
-		tmp["glove_model"] = glove_model;
-		tmp["glove_skin"] = glove_skin;
 		tmp["auto_pistol"] = auto_pistol;
 		tmp["auto_pistol_key"] = auto_pistol_key;
 		tmp["preserve_killfeed"] = preserve_killfeed;
@@ -535,6 +538,23 @@ public:
 		tmp["defusing_indicator"] = defusing_indicator;
 		tmp["no_duck_cooldown"] = no_duck_cooldown;
 		tmp["draw_grenade_traj"] = draw_grenade_traj;
+
+		// skinchanger, glovechanger, models
+		tmp["skinchanger_enabled"] = skinchanger_enabled;
+		tmp["knifechanger_enabled"] = knifechanger_enabled;
+		tmp["glovechanger_enabled"] = glovechanger_enabled;
+		tmp["glove_wearz"] = glove_wearz;
+		tmp["glove_skin_cur"] = glove_skin_cur;
+		tmp["glove_model"] = glove_model;
+		tmp["glove_skin"] = glove_skin;
+		tmp["reina_model"] = anime_model;
+		tmp["skinchanger_enabled"] = skinchanger_enabled;
+		tmp["skinchanger_selected_gun"] = skinchanger_selected_gun;
+		tmp["previous_knife_index"] = previous_knife_index;
+		tmp["next_knife_index"] = next_knife_index;
+		tmp["selected_knife_index0"] = selected_knife_index[0];
+		tmp["selected_knife_index1"] = selected_knife_index[1];
+		tmp["selected_gun_index"] = selected_gun_index;
 		  
 
 		save_color(water_mark_col, tmp, "water_mark_col");
@@ -577,11 +597,12 @@ public:
 		save_color(hand_cham_col, tmp, "hand_cham_col");
 		save_color(hand_cham_col_xqz, tmp, "hand_cham_col_xqz");
 		save_color(defusing_indicator_col, tmp, "defusing_indicator_col");
+		save_color(visuals_chams_glow_col, tmp, "visuals_chams_glow_col");
 
 
 		json skin_tmp;
 		for (auto i = 0; i < 35; i++) {
-			skin_tmp[i] = skin_wheel[i].convert();
+			skin_tmp[i] = skin_wheel[i].to_json();
 		}
 		tmp["skins"] = skin_tmp;
 
@@ -660,7 +681,11 @@ public:
 		if (check("misc_legit_aa_enabled", data)) misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
 		if (check("misc_legit_aa_jitter", data)) misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
 		if (check("misc_legit_aa_edge", data)) misc_legit_aa_edge = data["misc_legit_aa_edge"];
-		if (check("selected_knife_index0", data)) selected_knife_index[0] = data["selected_knife_index0"];
+		if (check("selected_knife_index0", data)) {
+			selected_knife_index[0] = data["selected_knife_index0"];
+			if (selected_knife_index > 0)
+				knifechanger_enabled = true;
+		}
 		if (check("selected_knife_index1", data)) selected_knife_index[1] = data["selected_knife_index1"];
 		if (check("selected_gun_index", data)) selected_gun_index = data["selected_gun_index"];
 		if (check("visuals_backtrack_style", data)) visuals_backtrack_style = data["visuals_backtrack_style"];
@@ -693,7 +718,11 @@ public:
 		if (check("edge_jump", data)) edge_jump = data["edge_jump"];
 		if (check("edge_jump_key", data)) edge_jump_key = data["edge_jump_key"];
 		if (check("duck_in_air", data)) duck_in_air = data["duck_in_air"];
-		if (check("glove_model", data)) glove_model = data["glove_model"];
+		if (check("glove_model", data)) {
+			glove_model = data["glove_model"];
+			if (glove_model > 0)
+				glovechanger_enabled = true;
+		}
 		if (check("glove_skin", data)) glove_skin = data["glove_skin"];
 		if (check("rainbow_name", data)) rainbow_name = data["rainbow_name"];
 		if (check("fake_lag_factor", data)) fake_lag_factor = data["fake_lag_factor"];
@@ -704,6 +733,14 @@ public:
 		if (check("auto_defuse_key", data)) auto_defuse_key = data["auto_defuse_key"];
 		if (check("defusing_indicator", data)) defusing_indicator = data["defusing_indicator"];
 		if (check("no_duck_cooldown", data)) no_duck_cooldown = data["no_duck_cooldown"];
+
+
+		if (check("skinchanger_enabled", data)) skinchanger_enabled = data["skinchanger_enabled"];
+		if (check("knifechanger_enabled", data)) knifechanger_enabled = data["knifechanger_enabled"];
+		if (check("glovechanger_enabled", data)) glovechanger_enabled = data["glovechanger_enabled"];
+		if (check("glove_wearz", data)) glove_wearz = data["glove_wearz"];
+		if (check("glove_skin_cur", data)) glove_skin_cur = data["glove_skin_cur"];
+
 
 
 		if (check("killsay_msg_custom", data)) {
@@ -757,12 +794,12 @@ public:
 		if (check_color("hand_cham_col", data)) read_color(hand_cham_col, data, "hand_cham_col");
 		if (check_color("hand_cham_col_xqz", data)) read_color(hand_cham_col_xqz, data, "hand_cham_col_xqz");
 		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");		
-	
+		if (check_color("visuals_chams_glow_col", data)) read_color(visuals_chams_glow_col, data, "visuals_chams_glow_col");
 
 		json skin_tmp = data["skins"];
 
 		for (auto i = 0; i < 35; i++) {
-			skin_wheel[i].convert(skin_tmp[i]);
+			skin_wheel[i].from_json(skin_tmp[i]);
 		}
 
 	}
