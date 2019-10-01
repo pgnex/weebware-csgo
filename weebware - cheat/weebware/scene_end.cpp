@@ -154,16 +154,16 @@ void c_sceneend::scene_end() {
 imaterial* create_default() {
 	std::ofstream("csgo\\materials\\material_textured.vmt") << R"#("VertexLitGeneric"
 {
-  "$basetexture" "vgui/white_additive"
-  "$ignorez"      "0"
-  "$envmap"       ""
-  "$nofog"        "1"
-  "$model"        "1"
-  "$nocull"       "0"
-  "$selfillum"    "1"
-  "$halflambert"  "1"
-  "$znearer"      "0"
-  "$flat"         "1"
+	"$basetexture" "vgui/white_additive"
+	"$ignorez"      "0"
+	"$envmap"       ""
+	"$nofog"        "1"
+	"$model"        "1"
+	"$nocull"       "0"
+	"$selfillum"    "1"
+	"$halflambert"  "1"
+	"$znearer"      "0"
+	"$flat"         "1"
 }
 )#";
 
@@ -171,18 +171,32 @@ imaterial* create_default() {
 }
 
 
-imaterial* create_glow() {
-	std::ofstream("csgo/materials/glowOverlay.vmt") << R"#("VertexLitGeneric" {
- 
-	"$additive" "0"
-	"$envmap" "models/effects/cube_white"
-	"$envmaptint" "[1 1 1]"
-	"$envmapfresnel" "1"
-	"$envmapfresnelminmaxexp" "[0 1 2]"
-	"$alpha" "0.8"
-})#";
+imaterial* c_sceneend::create_glow() {
 
-	return g_weebware.g_mat_sys->find_material("glowOverlay", TEXTURE_GROUP_MODEL);
+	float col_r, col_g, col_b;
+	c_color clr = g_weebwarecfg.visuals_chams_glow_col;
+
+	col_r = clr.r / 255.f;
+	col_g = clr.g / 255.f;
+	col_b = clr.b / 255.f;
+
+	std::stringstream s;
+	s.precision(3);
+	s << "\"$envmaptint\"" << " \"[" << col_r << " " << col_g << " " << col_b << "]\"\n\t";
+	
+	std::ofstream glow_cham_texture("csgo/materials/mat_glow_cham.vmt");
+	glow_cham_texture.precision(3);
+	glow_cham_texture << "\"VertexLitGeneric\" {\n\n\t";
+	glow_cham_texture << "\"$additive\" \"0\"\n\t";
+	glow_cham_texture << "\"$envmap\" \"models/effects/cube_white\"\n\t";
+	glow_cham_texture << s.str();
+	glow_cham_texture << "\"$envmapfresnel\" \"1\"\n\t";
+	glow_cham_texture << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
+	glow_cham_texture << "\"$alpha\" \"0.8\"\n";
+	glow_cham_texture << "}";
+	glow_cham_texture.close();
+
+	return g_weebware.g_mat_sys->find_material("mat_glow_cham", TEXTURE_GROUP_MODEL);
 }
 
 
@@ -288,12 +302,17 @@ void c_sceneend::chams() {
 				g_weebware.g_render_view->SetBlend(col.a / 255.f);
 				g_weebware.g_render_view->SetColorModulation(col_blend);
 
+				c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
+
 				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
 				g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
 				player->draw_model(1, 255);
-				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 
+				bool found = false;
+				imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar("$envmaptint", &found);
+				if (found)
+					(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f);
 
 				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
 				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);

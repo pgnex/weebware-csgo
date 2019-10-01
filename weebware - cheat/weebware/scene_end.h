@@ -26,6 +26,7 @@ public:
 	// Returns a material based on type
 	imaterial* borrow_mat(c_sceneend::custom_mats type);
 	imaterial* generate_material(bool ignore, bool lit, bool wire_frame);
+	imaterial* create_glow();
 
 private:
 
