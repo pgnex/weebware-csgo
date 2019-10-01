@@ -1062,10 +1062,10 @@ public:
 		return get_pointer<int>(offset);
 	}
 
-	char* get_custom_name()
+	std::string* get_custom_name()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_szCustomName");
-		return get_pointer<char>(offset);
+		return get_pointer<std::string>(offset);
 	}
 
 	int* m_iEntityQuality() {
