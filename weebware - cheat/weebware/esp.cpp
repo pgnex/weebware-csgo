@@ -14,7 +14,10 @@ void c_esp::esp_main()
 
 	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
-	if (!g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+	if (!g_weebware.g_engine->is_connected())
+		return;
+
+	if (!g_weebware.g_engine->is_in_game())
 		return;
 
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
@@ -483,7 +486,7 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 	}
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-	g_weebware.g_surface->drawoutlinedrect(bounds.x + 2, bounds.y, (bounds.w + bounds.x) - 2, bounds.h + bounds.y);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x + 2, bounds.y - 2, (bounds.w + bounds.x) - 3, (bounds.h + bounds.y) - 1);
 
 }
 
@@ -501,10 +504,10 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	// render the full black line.
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 255);
-	g_weebware.g_surface->drawline(bounds.x - 5, bounds.y, bounds.x - 5, bounds.y + bounds.h);
+	g_weebware.g_surface->drawline(bounds.x - 1, bounds.y, bounds.x - 1, bounds.y + bounds.h);
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 50);
-	g_weebware.g_surface->drawline(bounds.x - 6, bounds.y - 1, bounds.x - 6, bounds.y + bounds.h + 1);
-	g_weebware.g_surface->drawline(bounds.x - 4, bounds.y - 1, bounds.x - 4, bounds.y + bounds.h + 1);
+	g_weebware.g_surface->drawline(bounds.x - 2, bounds.y - 1, bounds.x - 2, bounds.y + bounds.h + 1);
+	g_weebware.g_surface->drawline(bounds.x , bounds.y - 1, bounds.x, bounds.y + bounds.h + 1);
 
 	// render the line.
 	// Calculate color
@@ -519,7 +522,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-	g_weebware.g_surface->drawline(bounds.x - 5, bounds.y + length, bounds.x - 5, bounds.y + bounds.h);
+	g_weebware.g_surface->drawline(bounds.x - 1, bounds.y + length, bounds.x - 1, bounds.y + bounds.h);
 
 	if (ent->m_iHealth() < 100 && ent->m_iHealth() > 0) {
 
@@ -794,7 +797,8 @@ void c_esp::draw_inaccuracy_circle()
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
 
-	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, weapon->Get_Innacuracy() * 200, col.r, col.g, col.b, col.a);
+	g_weebware.g_surface->drawfilledcircle(x / 2.f, y / 2.f, col, weapon->Get_Innacuracy() * 200, 20);
+	g_weebware.g_surface->drawcoloredcircle(x / 2.f, y / 2.f, (weapon->Get_Innacuracy() * 200) + 1, 0, 0, 0, 200);
 }
 
 void c_esp::display_backtrack()
