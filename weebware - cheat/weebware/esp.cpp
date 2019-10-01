@@ -424,9 +424,9 @@ void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_
 	}
 
 
-	int x = bounds.x;
-	int y = bounds.y;
-	int w = bounds.w;
+	int x = bounds.x + 2;
+	int y = bounds.y - 2;
+	int w = bounds.w - 6;
 	int h = bounds.h;
 
 	float line_w = (w / 5);
@@ -471,7 +471,7 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 	// Box
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 60);
 
-	g_weebware.g_surface->drawoutlinedrect(bounds.x - 1, bounds.y - 1, bounds.w + 2 + bounds.x - 1, bounds.h + 2 + bounds.y - 1);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x + 3, bounds.y - 1, bounds.w + 2 + bounds.x - 3, bounds.h + 2 + bounds.y - 1);
 
 	if (g_weebwarecfg.visuals_dormant_esp) {
 
@@ -483,7 +483,7 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 	}
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-	g_weebware.g_surface->drawoutlinedrect(bounds.x, bounds.y, bounds.w + bounds.x, bounds.h + bounds.y);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x + 2, bounds.y, (bounds.w + bounds.x) - 2, bounds.h + bounds.y);
 
 }
 
