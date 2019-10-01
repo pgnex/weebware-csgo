@@ -348,6 +348,7 @@ public:
 	bool auto_defuse;
 	int auto_defuse_key;
 	bool no_duck_cooldown;
+	std::string weapon_option_name = "Weapon Options - Hold Out A Weapon";
 
 	// debug stuff
 	bool on_sendpacket = 0;

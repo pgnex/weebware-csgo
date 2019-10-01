@@ -525,6 +525,9 @@ void c_create_move::run_fake(c_usercmd* cmd, bool &send_packet)
 
 bool can_shoot(c_base_entity* local)
 {
+	if (!local)
+		return false;
+
 	if (local->m_pActiveWeapon()->m_flNextPrimaryAttack() > (float)g_weebware.g_global_vars->curtime)
 		return false;
 	return true;
@@ -811,6 +814,9 @@ void c_create_move::legit_aa(c_usercmd* cmd, bool send_packets)
 {
 
 	if (!g_weebwarecfg.misc_legit_aa_enabled)
+		return;
+
+	if (!local)
 		return;
 
 	if (local->m_pActiveWeapon()->is_grenade())

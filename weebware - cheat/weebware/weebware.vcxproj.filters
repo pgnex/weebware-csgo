@@ -73,9 +73,6 @@
     <Filter Include="Source Files\Events">
       <UniqueIdentifier>{0a04ef18-815d-428d-9a18-a2913ec42be2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Events\Hitmarkers">
-      <UniqueIdentifier>{87e0e260-855f-438c-b905-41d7568dacb1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\hooking\Frame Stage Notify\Skinchanger">
       <UniqueIdentifier>{8ec71b90-1b1b-40a3-96b0-3ac320b0e7e5}</UniqueIdentifier>
     </Filter>

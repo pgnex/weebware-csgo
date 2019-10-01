@@ -128,28 +128,6 @@ bool c_sceneend::is_visible(c_base_entity* target)
 	return false;
 }
 
-imaterial* c_sceneend::borrow_mat(custom_mats type)
-{
-	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "", "", "flat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
-
-	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
-	return g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
-}
-
-// change all return false to original calls.
-
-void c_sceneend::scene_end() {
-
-	if (g_weebwarecfg.visuals_glow_enabled) {
-		g_sceneend.glow();
-	}
-
-	if (g_weebwarecfg.visuals_chams > 0) {
-		g_sceneend.chams();
-	}
-
-}
 
 imaterial* create_default() {
 	std::ofstream("csgo\\materials\\material_textured.vmt") << R"#("VertexLitGeneric"
@@ -173,17 +151,9 @@ imaterial* create_default() {
 
 imaterial* c_sceneend::create_glow() {
 
-	float col_r, col_g, col_b;
-	c_color clr = g_weebwarecfg.visuals_chams_glow_col;
-
-	col_r = clr.r / 255.f;
-	col_g = clr.g / 255.f;
-	col_b = clr.b / 255.f;
-
 	std::stringstream s;
-	s.precision(3);
-	s << "\"$envmaptint\"" << " \"[" << col_r << " " << col_g << " " << col_b << "]\"\n\t";
-	
+	s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
+
 	std::ofstream glow_cham_texture("csgo/materials/mat_glow_cham.vmt");
 	glow_cham_texture.precision(3);
 	glow_cham_texture << "\"VertexLitGeneric\" {\n\n\t";
@@ -197,6 +167,37 @@ imaterial* c_sceneend::create_glow() {
 	glow_cham_texture.close();
 
 	return g_weebware.g_mat_sys->find_material("mat_glow_cham", TEXTURE_GROUP_MODEL);
+}
+
+imaterial* c_sceneend::borrow_mat(custom_mats type)
+{
+	// Thanks Shigure for these mats u sent me like last year 
+	const char* material_list[] = { "", "", "", "flat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
+
+	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
+
+	imaterial* mat = g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
+	if (!mat)
+		return create_default();
+
+	if (mat->iserrormaterial())
+		return create_default();
+
+	g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
+}
+
+// change all return false to original calls.
+
+void c_sceneend::scene_end() {
+
+	if (g_weebwarecfg.visuals_glow_enabled) {
+		g_sceneend.glow();
+	}
+
+	if (g_weebwarecfg.visuals_chams > 0) {
+		g_sceneend.chams();
+	}
+
 }
 
 

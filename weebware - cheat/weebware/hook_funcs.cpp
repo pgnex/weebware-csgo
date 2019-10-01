@@ -136,7 +136,6 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	PrecacheModel("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
 	PrecacheModel("models/player/custom_player/bbs_93x_net_2016/kimono_luka/update_2016_08_05/kimono_luka.mdl");
 	PrecacheModel("models/player/custom_player/monsterko/inori_yuzuriha/inori.mdl");
-	PrecacheModel("models/weapons/v_minecraft_pickaxe.mdl");
 	return g_hooking.o_mdl(ecx, edx, FilePath);
 }
 

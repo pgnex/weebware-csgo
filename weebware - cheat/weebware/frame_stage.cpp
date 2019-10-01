@@ -18,7 +18,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_net_update_postdataupdate_start) {
 			g_frame_stage_notify.run_skinchanger();
-			g_frame_stage_notify.legit_aa_resolver();
+			// g_frame_stage_notify.legit_aa_resolver();
 			glove_changer.run();
 		}
 
@@ -31,6 +31,9 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 			g_frame_stage_notify.preserve_killfeed();
 		//	g_frame_stage_notify.third_person();
 		//	g_frame_stage_notify.remove_flash();
+		}
+		else if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
+			g_weebwarecfg.weapon_option_name = "Weapon Options - Hold Out A Weapon";
 		}
 	}
 	catch (...) {}
@@ -298,6 +301,9 @@ void c_frame_stage_notify::run_skinchanger() {
 	if (!g_weebwarecfg.skinchanger_enabled && !g_weebwarecfg.knifechanger_enabled)
 		return;
 
+	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
+		return;
+
 	g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	if (!g_frame_stage_notify.local)
@@ -331,9 +337,13 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon_id > 34 || weapon_id < 0)
 			continue;
 
-		if (weapon == local->m_pActiveWeapon())
-			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
+		if (!local)
+			continue;
 
+		if (weapon == local->m_pActiveWeapon()) {
+			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
+			g_weebwarecfg.weapon_option_name = "Weapon Options - " + local->m_pActiveWeapon()->get_weapon_name_from_id();
+		}
 
 		*weapon->get_item_id_high() = -1;
 
@@ -391,7 +401,7 @@ void c_frame_stage_notify::run_skinchanger() {
 			*weapon->fallback_stattrak() = skin_config.stattrak_kill_count;
 		}
 
-		*weapon->get_fallbackwear() = (100 - skin_config.m_wear) / 100;
+		*weapon->get_fallbackwear() = skin_config.m_wear == 100 ? FLT_MIN : (100 - skin_config.m_wear) / 100;
 		*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
 		*weapon->get_accountid() = local_inf.xuid_low;
 		if (weapon->is_knife())

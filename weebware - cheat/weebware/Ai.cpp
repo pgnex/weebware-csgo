@@ -13,6 +13,9 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 {
 	m_localview = cmd->viewangles;
 
+	if (!local)
+		return;
+
 	m_local = local;
 
 	m_target_ent = nullptr;

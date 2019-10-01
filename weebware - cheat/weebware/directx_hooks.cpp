@@ -967,7 +967,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			ImGui::NextColumn();
 
 			ImGui::BeginChild("Skins and shit", ImVec2(0, ImGui::GetContentRegionAvail().y), true);
-			ImGui::Text("Weapon Options");
+			ImGui::Text(g_weebwarecfg.weapon_option_name.c_str());
 			ImGui::Separator();
 
 			ImGui::Checkbox("Enabled", &g_weebwarecfg.skinchanger_enabled, false);
