@@ -321,7 +321,25 @@ public:
 	virtual void padfunction211() = 0;
 	virtual void padfunction212() = 0; // vmt count = 212
 
-									   // variables
+	void drawtexturedpoly(int n, vertex_t* vertice, c_color col) {
+		static int texture_id = createnewtextureid(true);
+		static unsigned char buf[4] = { 255, 255, 255, 255 };
+		drawsettexturergba(texture_id, buf, 1, 1);
+		drawsetcolor(col.r, col.g, col.b, col.a);
+		drawsettexture(texture_id);
+		drawtexturedpolygon(n, vertice);
+	}
+
+
+	void drawfilledcircle(float x, float y, c_color color, float radius, float points) {
+		std::vector<vertex_t> vertices;
+		float step = (float)PI * 2.0f / points;
+
+		for (float a = 0; a < (PI * 2.0f); a += step)
+			vertices.push_back(vertex_t({ radius * cosf(a) + x, radius * sinf(a) + y }));
+
+		drawtexturedpoly((int)points, vertices.data(), color);
+	}
 };
 
 class c_panel
