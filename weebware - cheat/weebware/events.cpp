@@ -185,6 +185,10 @@ void EventFuncs::round_end(i_game_event* event) {
 }
 
 void EventFuncs::round_start(i_game_event* event) {
+
+	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
+		return;
+
 	g_weebware.round_end = false;
 	if (g_weebwarecfg.visuals_nightmode) g_nightmode.done = false;
 	if (g_weebwarecfg.draw_grenade_traj) g_create_move.grenade_traj_disabled = false;

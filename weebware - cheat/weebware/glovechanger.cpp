@@ -144,7 +144,7 @@ int get_skin() {
 	return 0;
 }
 
-bool disabled = false;
+bool disabled = true;
 void c_glovechanger::run() noexcept {
 
 
