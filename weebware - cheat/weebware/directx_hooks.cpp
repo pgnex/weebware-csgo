@@ -979,6 +979,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			ImGui::InputText("##weaponname", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name));
 			ImGui::Text("Wear");
 			ImGui::SliderFloat("Wear##skins", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear, 0, 100, "%.0f%%");
+			ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
 			ImGui::Separator();
 			ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
 			ImGui::Text("Skins");

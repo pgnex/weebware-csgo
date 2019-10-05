@@ -4,6 +4,7 @@
 #include "knife_proxy_hook.h"
 #include "thirdperson.h"
 #include "IViewRenderBeams.h"
+#include <regex>
 
 c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
@@ -411,7 +412,7 @@ void c_frame_stage_notify::run_skinchanger() {
 			* weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 
 		if (strlen(skin_config.weapon_name) > 0)
-			*weapon->get_custom_name() = skin_config.weapon_name;
+			*weapon->get_custom_name() = std::regex_replace(skin_config.weapon_name, std::regex(" "), "\u0020");
 
 		*weapon->get_original_owner_xuidhigh() = 0;
 		*weapon->get_original_owner_xuidlow() = 0;
