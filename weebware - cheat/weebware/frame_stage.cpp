@@ -353,6 +353,9 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon->is_firearm() && !g_weebwarecfg.skinchanger_enabled)
 			continue;
 
+		if (weapon->is_grenade())
+			continue;
+
 		if (weapon->is_knife()) {
 			auto vm_handle = local->get_viewmodel_handle();
 
