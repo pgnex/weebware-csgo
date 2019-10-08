@@ -15,6 +15,13 @@ std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
 	std::string content = networking::post_request(base64_decode("aHR0cDovL2F1dGgud2VlYndhcmUubmV0L2lwX2xvZy5waHA="), "key=" + key);
 
+	if (!content.length() > 0) {
+		std::string exceptionError = "==gUPJlUFBySS90VUVkT";
+		reverseString(exceptionError);
+		MessageBox(NULL, (base64_decode(exceptionError).c_str()), ("Error"), MB_ICONWARNING);
+		exit(EXIT_SUCCESS);
+	}
+
 	if (content == (base64_decode("Q09OTkVDVElPTiBFWENFUFRJT04=").c_str()) || content == (base64_decode("T0ZGTElORQ==").c_str()) || content == (base64_decode("Tk8gTE9HSU4gRk9VTkQ=").c_str())) {
 		std::string exceptionError = "=4ibvl2czV2cgUmchdnYlV2dgIXdvlHIm9GI5RXaydWZ05WagUGa0BSemlmclZHIvRHIlxmYh5WV";
 		reverseString(exceptionError);
@@ -38,18 +45,18 @@ std::string auth::GetServerVariable(std::string key) {
 		char c = charValue;
 		content += c;
 	}
-	OutputDebugString(content.c_str());
+	// OutputDebugString(content.c_str());
 	std::vector<std::string> pieces;
 	std::stringstream decodedContentStream(content);
 	content = "";
 	while (std::getline(decodedContentStream, piece, '|'))
 		pieces.push_back(piece);
 	int serverTimestamp = atoi(pieces.at(1).c_str());
-	if (serverTimestamp < timestamp - 30) {
-		// it took us more than 30 seconds to receive and parse that data? :thinking:
+	if (serverTimestamp < timestamp - 60) {
+		// it took us more than 60 seconds to receive and parse that data? :thinking:
 		pieces.clear();
 		decodedContentStream.str(std::string());
-		std::string Error1 = "=4ibvl2czV2cgUmchdnYlV2dgIXdvlHIm9GI5RXaydWZ05WagUGa0BSemlmclZHIvRHIlxmYh5WV";
+		std::string Error1 = "==gUPJlUFBySS90VUVkT";
 		reverseString(Error1);
 		MessageBox(NULL, (base64_decode(Error1).c_str()), ("Error"), MB_ICONWARNING);
 		exit(EXIT_SUCCESS);

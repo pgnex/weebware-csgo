@@ -532,6 +532,7 @@ public:
 		tmp["rainbow_name"] = rainbow_name;
 		tmp["fake_lag_factor"] = fake_lag_factor;
 		tmp["fake_lag"] = fake_lag;
+		tmp["fake_lag_key"] = fake_lag_key;
 		tmp["block_bot"] = block_bot;
 		tmp["block_bot_key"] = block_bot_key;
 		tmp["auto_defuse"] = auto_defuse;
@@ -728,6 +729,7 @@ public:
 		if (check("rainbow_name", data)) rainbow_name = data["rainbow_name"];
 		if (check("fake_lag_factor", data)) fake_lag_factor = data["fake_lag_factor"];
 		if (check("fake_lag", data)) fake_lag = data["fake_lag"];
+		if (check("fake_lag_key", data)) fake_lag_key = data["fake_lag_key"];
 		if (check("block_bot", data)) block_bot = data["block_bot"];
 		if (check("block_bot_key", data)) block_bot_key = data["block_bot_key"];
 		if (check("auto_defuse", data)) auto_defuse = data["auto_defuse"];
