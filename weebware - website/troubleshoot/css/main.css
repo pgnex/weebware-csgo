@@ -1,0 +1,31 @@
+body, html {
+    margin: 0;
+    background-color: #1a1a1c;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.wrapper {
+    max-width: 80vw;
+    width: 986px;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: #D950C4;
+}
+
+article {
+    margin: 40px auto;
+}
+
+.info {
+    color: #aaaaaa;
+}
