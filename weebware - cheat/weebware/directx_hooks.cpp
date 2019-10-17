@@ -228,6 +228,8 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->GrabMinSize = 5.0f;
 	style->ItemInnerSpacing = ImVec2(2, 5);
 
+	// NORMAL THEME (0.541, 0.169, 0.886)
+
 	style->Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
 	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
 	style->Colors[ImGuiCol_WindowBg] = imgui_custom::ConvertFromRGBA(ImVec4(20.f, 20.f, 20.f, 255.f));
@@ -248,16 +250,16 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 
 	// Change active stuff later.
-	style->Colors[ImGuiCol_CheckMark] = ImVec4(0.541, 0.169, 0.886, 1.0f);
-	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.541, 0.169, 0.886, 0.7f);
-	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.541, 0.169, 0.886, 0.7f);
+	style->Colors[ImGuiCol_CheckMark] = ImVec4(0.922, 0.482, 0.102, 1.0f);
+	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.922, 0.482, 0.102, 0.7f);
+	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.922, 0.482, 0.102, 0.7f);
 	style->Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_PopupBg] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
-	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.541, 0.169, 0.886, 1.0f);
-	style->Colors[ImGuiCol_Header] = ImVec4(0.541, 0.169, 0.886, 0.4f);
-	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.541, 0.169, 0.886, 0.7f);
-	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.541, 0.169, 0.886, 1.0f);
+	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.922, 0.482, 0.102, 1.0f);
+	style->Colors[ImGuiCol_Header] = ImVec4(0.922, 0.482, 0.102, 0.4f);
+	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.922, 0.482, 0.102, 0.7f);
+	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.922, 0.482, 0.102, 1.0f);
 
 	style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 0.30f);
 	style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -437,7 +439,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f)); 
 
 		if (tab_selection == tabs::legit) {
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
 		}
 		if (ImGui::Button("Legit", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::legit;
@@ -450,7 +452,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		ImGui::BeginChild("COL3", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 
 		if (tab_selection == tabs::vis)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
 
 		if (ImGui::Button("Visual", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::vis;
@@ -462,7 +464,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL4", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::misc)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
 
 		if (ImGui::Button("Misc", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::misc;
@@ -475,7 +477,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL5", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::skins)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
 
 		if (ImGui::Button("Skins", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::skins;
@@ -488,7 +490,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL6", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::sets)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
 		if (ImGui::Button("Configs", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::sets;
 		}
