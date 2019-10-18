@@ -229,6 +229,7 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->ItemInnerSpacing = ImVec2(2, 5);
 
 	// NORMAL THEME (0.541, 0.169, 0.886)
+	// HALLOWEEN THEME (0.922, 0.482, 0.102)
 
 	style->Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
 	style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -904,7 +905,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::Text("Knife Options");
 				ImGui::Separator();
 				ImGui::Checkbox("Enabled##knifechanger", &g_weebwarecfg.knifechanger_enabled, false);
-				const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie" };
+				const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic" };
 				ImGui::Combo("##knifecombo", &g_weebwarecfg.selected_knife_index[1], knives, ARRAYSIZE(knives));
 				g_weebwarecfg.selected_knife_index[0] = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]].weapon_index;
 			}

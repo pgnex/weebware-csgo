@@ -99,6 +99,7 @@ std::map<int, int> init_knife_indexes() {
 	m.insert(std::make_pair(weapon_knife_stiletto, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_stiletto.mdl")));
 	m.insert(std::make_pair(weapon_knife_widowmaker, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_widowmaker.mdl")));
 	m.insert(std::make_pair(weapon_knife_ursus, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_ursus.mdl")));
+	m.insert(std::make_pair(weapon_knife_css, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_css.mdl")));
 
 	return m;
 }

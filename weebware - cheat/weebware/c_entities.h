@@ -580,6 +580,7 @@ enum weapon_type_id
 	weapon_snowball,
 	weapon_bumpmine,
 	weapon_knife_bayonet = 500,
+	weapon_knife_css = 503,
 	weapon_knife_flip = 505,
 	weapon_knife_gut,
 	weapon_knife_karambit,
@@ -654,16 +655,22 @@ class c_basecombat_weapon : public c_base_entity
 {
 public:
 
+	bool is_knife()
+	{
+		auto index = this->m_iItemDefinitionIndex();
+
+		std::vector<int> knife_ids = { 42, 59, 41, 500, 505, 506, 507, 508, 509, 515, 512, 523, 520, 519, 522, 503, 514, 516 };
+
+		return (std::find(knife_ids.begin(), knife_ids.end(), index) != knife_ids.end());
+	}
+
+
 	short filtered_index()
 	{
 		static uintptr_t offset = retrieve_offset("DT_BaseAttributableItem", "m_AttributeManager", "m_Item", "m_iItemDefinitionIndex");
 		auto index = get_value<short>(offset);
 
-		if (index == 42 || index == 59 || index == 41
-			|| index == 500 || index == 505 || index == 506
-			|| index == 507 || index == 508 || index == 509
-			|| index == 515 || index == 512 || index == 523
-			|| index == 520 || index == 519 || index == 522)
+		if (is_knife())
 			return 69;
 
 		return index;
@@ -701,18 +708,6 @@ public:
 		return this->m_iItemDefinitionIndex() == weapon_type_id::weapon_zeus;
 	}
 
-	bool is_knife()
-	{
-		auto index = this->m_iItemDefinitionIndex();
-
-		return (index == 42 || index == 59 || index == 41
-			|| index == 500 || index == 505 || index == 506
-			|| index == 507 || index == 508 || index == 509
-			|| index == 515 || index == 512 || index == 523
-			|| index == 520 || index == 519 || index == 522);
-
-		return (!is_firearm() && !is_zeus() && !is_grenade() && !is_bomb());
-	}
 
 	bool is_pistol()
 	{
@@ -1014,6 +1009,9 @@ public:
 			break;
 		case weapon_type_id::weapon_negev:
 			return "Negev";
+			break;
+		case weapon_type_id::weapon_knife_css:
+			return "Classic";
 			break;
 		default:
 			return "";
