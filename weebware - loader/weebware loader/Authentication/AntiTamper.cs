@@ -16,7 +16,6 @@ using SafeRequest.NET;
 [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
 class AntiTamper
 {
-
     private static Thread instance;
 
     public static void Start()
@@ -79,6 +78,8 @@ class AntiTamper
         AntiList.Add(Program("MegaDumper", "MegaDumper"));
         AntiList.Add(Program("X64NetDumper", ""));
         AntiList.Add(Program("x64dbg", ""));
+        AntiList.Add(Program("Burp", ""));
+        AntiList.Add(Program("Wireshark", ""));
         AntiList.Add(Program("NETUnpack", ".NET Generic Unpacker"));
 
         ProcessNames = new List<string>();

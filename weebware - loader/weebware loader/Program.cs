@@ -1,4 +1,5 @@
 ﻿using loader;
+using loader.Functions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace weebware_loader
             AntiTamper.Start();
             AntiTamper.ip_check();
             Utils.CreateFiles();
+            Utils.raw_color_data = Utils.get_color_data();
             Application.Run(new Login());
         }
     }

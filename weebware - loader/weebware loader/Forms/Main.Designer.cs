@@ -44,6 +44,8 @@
             this.btnInject = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.loadTimer = new System.Windows.Forms.Timer(this.components);
+            this.pnlBar = new System.Windows.Forms.Panel();
+            this.labelStatusChange = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -66,6 +68,7 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(53)))), ((int)(((byte)(49)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.labelStatusChange);
             this.panel1.Controls.Add(this.lblVersion);
             this.panel1.Controls.Add(this.lblStatus);
             this.panel1.Controls.Add(this.lblExpireDate);
@@ -95,9 +98,9 @@
             this.lblStatus.ForeColor = System.Drawing.Color.White;
             this.lblStatus.Location = new System.Drawing.Point(2, 53);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(106, 13);
+            this.lblStatus.Size = new System.Drawing.Size(48, 13);
             this.lblStatus.TabIndex = 22;
-            this.lblStatus.Text = "Account Status: -";
+            this.lblStatus.Text = "Status:";
             // 
             // lblExpireDate
             // 
@@ -209,11 +212,32 @@
             this.loadTimer.Interval = 5;
             this.loadTimer.Tick += new System.EventHandler(this.loadTimer_Tick);
             // 
+            // pnlBar
+            // 
+            this.pnlBar.BackColor = System.Drawing.Color.DarkSlateBlue;
+            this.pnlBar.Location = new System.Drawing.Point(2, 22);
+            this.pnlBar.Name = "pnlBar";
+            this.pnlBar.Size = new System.Drawing.Size(379, 1);
+            this.pnlBar.TabIndex = 20;
+            // 
+            // labelStatusChange
+            // 
+            this.labelStatusChange.AutoSize = true;
+            this.labelStatusChange.BackColor = System.Drawing.Color.Transparent;
+            this.labelStatusChange.Font = new System.Drawing.Font("Verdana", 8F);
+            this.labelStatusChange.ForeColor = System.Drawing.Color.White;
+            this.labelStatusChange.Location = new System.Drawing.Point(48, 53);
+            this.labelStatusChange.Name = "labelStatusChange";
+            this.labelStatusChange.Size = new System.Drawing.Size(12, 13);
+            this.labelStatusChange.TabIndex = 24;
+            this.labelStatusChange.Text = "-";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 244);
+            this.Controls.Add(this.pnlBar);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.btnInject);
             this.Controls.Add(this.label1);
@@ -252,5 +276,7 @@
         private System.Windows.Forms.Label lblExpireDate;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label lblVersion;
+        private System.Windows.Forms.Panel pnlBar;
+        private System.Windows.Forms.Label labelStatusChange;
     }
 }

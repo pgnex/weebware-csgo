@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using loader.Functions;
 using System.Reflection;
 using SafeRequest.NET;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace loader.Authentication
 {
@@ -25,8 +27,7 @@ namespace loader.Authentication
             NameValueCollection values = new NameValueCollection();
             values["username"] = username;
             values["password"] = password;
-            values["justin"] = Settings.EncryptedRandomString;
-            values["version_key"] = Settings.lucyiscute;
+            values["version_key"] = Settings.version;
             values["hwid"] = HWID.getHWID();
             return safeRequest.Request(URL + "login.php", values);
         }
@@ -54,5 +55,6 @@ namespace loader.Authentication
             values["reason"] = ExitReason;
             byte[] responseArray = web.UploadValues(URL + "alert.php", values);
         }
+
     }
 }

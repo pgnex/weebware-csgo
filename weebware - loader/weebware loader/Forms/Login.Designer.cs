@@ -37,10 +37,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.btnLogin = new System.Windows.Forms.Button();
             this.pnlPasswordTxt = new System.Windows.Forms.Panel();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlUsernameTxt = new System.Windows.Forms.Panel();
             this.tmrBorder = new System.Windows.Forms.Timer(this.components);
             this.lblClose = new System.Windows.Forms.Label();
             this.cbRememberMe = new System.Windows.Forms.CheckBox();
+            this.pnlBar = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -123,14 +124,14 @@
             this.pnlPasswordTxt.TabIndex = 8;
             this.pnlPasswordTxt.Visible = false;
             // 
-            // panel1
+            // pnlUsernameTxt
             // 
-            this.panel1.BackColor = System.Drawing.Color.BlueViolet;
-            this.panel1.Location = new System.Drawing.Point(50, 61);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(207, 22);
-            this.panel1.TabIndex = 9;
-            this.panel1.Visible = false;
+            this.pnlUsernameTxt.BackColor = System.Drawing.Color.BlueViolet;
+            this.pnlUsernameTxt.Location = new System.Drawing.Point(50, 61);
+            this.pnlUsernameTxt.Name = "pnlUsernameTxt";
+            this.pnlUsernameTxt.Size = new System.Drawing.Size(207, 22);
+            this.pnlUsernameTxt.TabIndex = 9;
+            this.pnlUsernameTxt.Visible = false;
             // 
             // tmrBorder
             // 
@@ -162,15 +163,24 @@
             this.cbRememberMe.Text = "Remember Me";
             this.cbRememberMe.UseVisualStyleBackColor = false;
             // 
+            // pnlBar
+            // 
+            this.pnlBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(163)))), ((int)(((byte)(122)))), ((int)(((byte)(189)))));
+            this.pnlBar.Location = new System.Drawing.Point(3, 22);
+            this.pnlBar.Name = "pnlBar";
+            this.pnlBar.Size = new System.Drawing.Size(306, 2);
+            this.pnlBar.TabIndex = 21;
+            // 
             // Login
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(310, 181);
+            this.Controls.Add(this.pnlBar);
             this.Controls.Add(this.cbRememberMe);
             this.Controls.Add(this.lblClose);
             this.Controls.Add(this.txtUsername);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlUsernameTxt);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.pnlPasswordTxt);
             this.Controls.Add(this.btnLogin);
@@ -196,10 +206,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Panel pnlPasswordTxt;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlUsernameTxt;
         private System.Windows.Forms.Timer tmrBorder;
         private System.Windows.Forms.Label lblClose;
         private System.Windows.Forms.CheckBox cbRememberMe;
+        private System.Windows.Forms.Panel pnlBar;
     }
 }
 

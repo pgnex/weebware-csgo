@@ -1,7 +1,9 @@
 ﻿using loader.Authentication;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -131,6 +133,39 @@ namespace loader
             const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public class c_color {
+            public int r;
+            public int g;
+            public int b;
+        }
+
+        public static string raw_color_data = string.Empty;
+        public static string get_color_data() {
+            WebClient web = new WebClient();
+            web.Proxy = null;
+
+            return web.DownloadString("https://pastebin.com/raw/RkcuBKCV");
+        }
+
+        public static Color get_color(string component) {
+
+            if (string.IsNullOrEmpty(raw_color_data))
+                return Color.FromArgb(163, 122, 189);
+
+            List<c_color> colors = JsonConvert.DeserializeObject<List<c_color>>(raw_color_data);
+
+            switch (component) {
+                case "topbar":
+                    return Color.FromArgb(colors[0].r, colors[0].g, colors[0].b);
+                case "txtboxbg":
+                    return Color.FromArgb(colors[1].r, colors[1].g, colors[1].b);
+                case "selectable":
+                    return Color.FromArgb(colors[2].r, colors[2].g, colors[2].b);
+                default:
+                    return Color.FromArgb(163, 122, 189);
+            }
         }
 
         public static void UnknownError()

@@ -13,8 +13,7 @@ namespace loader.Functions
         public static string HWIDkey = "QqxG1lLzeIliTzrB7hxPXpQ3HbhwHcMH";
         public static string RandomStringKey = "pw92UdN8BacNdbvvolcwEFj4PYV3uqMa";
         public static string PublicIP = string.Empty;
-        public static string EncryptedRandomString = string.Empty;
         public static string username = string.Empty;
-        public static string lucyiscute = "BGBrrQ3te7c7SCHvHnYcDwFbKpRB9aa7";
+        public static string version = "b8TrGxsAAqk2vMyWwI1iohCHdhNACir2";
     }
 }

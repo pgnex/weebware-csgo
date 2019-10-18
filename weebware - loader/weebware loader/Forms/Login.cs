@@ -23,6 +23,10 @@ namespace weebware_loader {
             }
             tmrBorder.Start();
             this.Movable(pictureBox1);
+            pnlBar.BackColor = Utils.get_color("topbar");
+            pnlPasswordTxt.BackColor = Utils.get_color("txtboxbg");
+            pnlUsernameTxt.BackColor = Utils.get_color("txtboxbg");
+
             lblClose.LabelButton(Color.Red);
         }
 
@@ -32,16 +36,14 @@ namespace weebware_loader {
             if (txtPassword.Focused == true) pnlPasswordTxt.Show();
             else pnlPasswordTxt.Hide();
 
-            if (txtUsername.Focused == true) panel1.Show();
-            else panel1.Hide();
+            if (txtUsername.Focused == true) pnlUsernameTxt.Show();
+            else pnlUsernameTxt.Hide();
         }
 
         private void label4_Click(object sender, EventArgs e) { Environment.Exit(1337); }
 
         private void btnLogin_Click(object sender, EventArgs e) {
             AntiTamper.IntegrityCheck();
-            string randomString = Utils.RandomString(16);
-            Settings.EncryptedRandomString = Utils.EncryptString(Settings.RandomStringKey, "zrw12MoTl6idAYzETkrMxt6tqStMpDUU", randomString);
             Response response = Networking.SafeLogin(txtUsername.Text, txtPassword.Text);
             if (response != null) {
                 if (!response.status) {
@@ -76,12 +78,6 @@ namespace weebware_loader {
                     }
                 } else if ((response.status) && response.GetData<string>("username") == txtUsername.Text && response.GetData<long>("time_left") > 0) {
 
-                    AntiTamper.IntegrityCheck();
-                    string reversedJustin = (Utils.Reverse(Encoding.UTF8.GetString(Convert.FromBase64String(Utils.Reverse(response.GetData<string>("justin"))))));
-                    if (reversedJustin != randomString) {
-                        MessageBox.Show("Login token mismatched from server");
-                        Application.Exit();
-                    }
 
                     if (cbRememberMe.Checked) {
                         Properties.Settings.Default.username = txtUsername.Text;

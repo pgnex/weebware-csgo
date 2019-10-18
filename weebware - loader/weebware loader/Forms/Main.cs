@@ -18,7 +18,8 @@ namespace weebware_loader.Forms
         public Main(Response response) {
             InitializeComponent();
             this.Movable(pictureBox1);
-            pnlCheat0.BackColor = Color.FromArgb(52, 53, 49);
+            pnlBar.BackColor = Utils.get_color("topbar");
+         
 
             AntiTamper.IntegrityCheck();
             DateTime current = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Eastern Standard Time");
@@ -36,7 +37,7 @@ namespace weebware_loader.Forms
             decryptionKey = response.GetData<string>("key");
             lblVersion.Text = "Version: " + response.GetData<string>("version");
             lblCheat0.Text = response.GetData<string>("name");
-            pnlCheat0.BackColor = Color.DarkSlateBlue;
+            pnlCheat0.BackColor = Utils.get_color("selectable");
             AntiTamper.IntegrityCheck();
             lblLoggedIn.Text = "Logged in as: " + response.GetData<string>("username");
             lblExpireDate.Text = "Expires: " + expireDate;
@@ -44,16 +45,16 @@ namespace weebware_loader.Forms
 
             switch (response.GetData<string>("detected")) {
                 case "undetected":
-                    lblStatus.Text = "Status: Undetected";
-                    lblStatus.ForeColor = Color.Lime;
+                    labelStatusChange.Text = "Undetected";
+                    labelStatusChange.ForeColor = Color.Lime;
                     break;
                 case "unknown":
-                    lblStatus.Text = "Status: Unknown";
-                    lblStatus.ForeColor = Color.Yellow;
+                    labelStatusChange.Text = "Unknown";
+                    labelStatusChange.ForeColor = Color.Yellow;
                     break;
                 case "detected":
-                    lblStatus.Text = "Status: Detected";
-                    lblStatus.ForeColor = Color.Red;
+                    labelStatusChange.Text = "Detected";
+                    labelStatusChange.ForeColor = Color.Red;
                     break;
             }
         }
