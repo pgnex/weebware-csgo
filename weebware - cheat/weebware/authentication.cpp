@@ -13,7 +13,7 @@ __int64 auth::GetEpochS() {
 
 std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
-	std::string content = networking::post_request(base64_decode("aHR0cDovL2F1dGgud2VlYndhcmUubmV0L2lwX2xvZy5waHA="), "key=" + key);
+	std::string content = networking::post_request(base64_decode("aHR0cHM6Ly9hdXRoLndlZWJ3YXJlLm5ldC9pcF9sb2cucGhw"), "key=" + key);
 
 	if (!content.length() > 0) {
 		std::string exceptionError = "==gUPJlUFBySS90VUVkT";
