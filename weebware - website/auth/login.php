@@ -8,25 +8,40 @@
     $sr = new SafeRequest(ENCRYPTION_KEY);
     
 	if ($_SERVER['HTTP_USER_AGENT'] != 'weebware') {
-		$response = array('status' => 'failed', 'detail' => 'connection error');
+		$response = [
+		    'status' => 'failed',
+            'detail' => 'connection error'
+        ];
+
 		$sr->output(false, 'test', $response);
 	}
     
     // make sure we have server online
 	if ($config['status'] != 'online') {
-		$response = array('status' => 'failed', 'detail' => 'server offline', 'reason' => $config['reason']);
+		$response = [
+            'status' => 'failed',
+            'detail' => 'server offline',
+            'reason' => $config['reason']
+        ];
 		$sr->output(false, 'test', $response);
 	}
 	
 	// made this so i dont have to change directories and set shit to offline for every loader update
 	if ($config['version_key'] != $_POST['version_key']) {
-	    $response = array('status' => 'failed', 'detail' => 'update');
+	    $response = [
+	        'status' => 'failed',
+            'detail' => 'update'
+        ];
+
 	    $sr->output(false, 'test', $response);
 	}
     
     // establish connection to db
     if (!db_connect()) {
-        $response = array('status' => 'failed', 'detail' => 'connection error');
+        $response = [
+            'status' => 'failed',
+            'detail' => 'connection error'
+        ];
 	    $sr->output(false, 'test', $response);
     }
     
@@ -67,13 +82,17 @@
     }
     
     if (!login($_POST['username'], $_POST['password'])) {
-		$response = array('status' => 'failed', 'detail' => 'wrong password');
+		$response = array('status' => 'failed', 'detail' => 'Incorrect password');
 		$sr->output(false, 'test', $response);
     }
     
     $expire_time = intval($data['expire']) - time();
     if ($expire_time < 1) {
-        $response = array('status' => 'failed', 'detail' => 'sub invalid');
+        $response =[
+            'status' => 'failed',
+            'detail' => 'sub invalid'
+        ];
+
 		$sr->output(false, 'test', $response);
     }
 
@@ -83,21 +102,20 @@
 	
 	successful_login($_POST['username']);
 	
-    $decryptedKey = decrypt_string($_POST['justin']);
 	// Use the informtion from cheat files to send data to the client
 	include 'cheat.php';
-	$response = array(
-	'username' => $_POST['username'],
-	'time_left' => $expire_time,
-    'rank' => $data['rank'],
-    'notify' => 'Please join the new discord via https://weebware.net/discord',
-    'name' => $cheat['name'],
-    'download' => $cheat['download'],
-    'key' => $cheat['key'],
-    'detected' => $cheat['status'],
-    'email' => empty($data['email']),
-    'version' => $cheat['version']);
-	$response['justin'] = strrev(base64_encode(strrev($decryptedKey)));
+	$response = [
+        'username' => $_POST['username'],
+        'time_left' => $expire_time,
+        'rank' => $data['rank'],
+        'notify' => 'Please join the new discord via https://weebware.net/discord',
+        'name' => $cheat['name'],
+        'download' => $cheat['download'],
+        'key' => $cheat['key'],
+        'detected' => $cheat['status'],
+        'email' => empty($data['email']),
+        'version' => $cheat['version'],
+    ];
 	$sr->output(true, 'test', $response);
 
 ?>

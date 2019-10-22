@@ -8,10 +8,10 @@
     $data = $db->prepare('SELECT * FROM configs');
     $data->execute();
     
-    $secret = array();
-    $name = array();
-    $username = array();
-    $desc = array();
+    $secret = [];
+    $name = [];
+    $username = [];
+    $desc = [];
     
     while ($result = $data->fetch()) {
         $secret[] = $result['secret'];
@@ -19,7 +19,13 @@
         $username[] = $result['username'];
         $description[] = $result['description'];
     }
-    $response = array('secret' => $secret, 'name' => $name, 'username' => $username, 'description' => $description);
+
+    $response = [
+        'secret' => $secret,
+        'name' => $name,
+        'username' => $username,
+        'description' => $description
+    ];
+
     echo json_encode($response);
-    
 ?>

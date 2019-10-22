@@ -2,8 +2,8 @@
     --main-navbar: #111111;
     --main-background: #1a1a1c;
     --main-container: #18181a;
-    --main-pink: #D950C4;
-    --bright-pink: #D950C4;
+    --main-pink: #EB6123;
+    --bright-pink: #EB6123;
     --contrast-blue: #3f50b5;
 }
 
@@ -32,7 +32,7 @@ body {
 
 .container {
     width: 300px;
-    height: 475px;
+    height: 575px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -104,10 +104,11 @@ input:focus {
 
 a {
     text-decoration: none;
-    color: #D950C4;
+    color: #EB6123;
     font-size: 16px;
 }
 
 img {
+    width: 150px;
     margin-bottom: 30px;
 }

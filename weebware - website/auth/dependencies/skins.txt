@@ -714,3 +714,20 @@
 856: Marble Fade
 857: Damascus Steel
 858: Damascus Steel
+902: Aztec
+903: Elite 1.6
+904: Decommissioned
+905: Flash Out
+906: Buddy
+907: Inferno
+908: Classic Crate
+909: Popdog
+910: Hydra
+911: Nostalgia
+913: Death by Puppy
+914: Assault
+915: Agent
+916: Plastique
+917: Wildfire
+918: Sacrifice
+919: Commemoration

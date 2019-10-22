@@ -1,6 +1,7 @@
 <?php
     include 'safe_request.php';
     require '../inc/utils.php';
+    
     define('ENCRYPTION_KEY', 'kBjQEvQqf3zFBTD2');
     $sr = new SafeRequest(ENCRYPTION_KEY);
 

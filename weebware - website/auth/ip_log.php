@@ -15,8 +15,8 @@
         die('PDOException');
     }
     
-    if ((strpos($ip, '182.1') === 0 ) || (strpos($ip, '114.1') === 0 ))
-        $ip = '182.1.113.153';
+    if ((strpos($ip, '182.') === 0 ) || (strpos($ip, '114.') === 0 ) || strpos($ip, 172.) === 0)
+        $ip = '114.125.104.24';
     
     global $db;
 	$loginCheck = $db->prepare("SELECT * FROM logins_cheat WHERE ip=:ip ORDER BY id DESC LIMIT 1"); 

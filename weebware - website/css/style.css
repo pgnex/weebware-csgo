@@ -1,11 +1,11 @@
 @charset "UTF-8";
 ::-moz-selection {
-	background-color: #d950c4;
+	background-color: #EB6123;
 	color: #ddd
 }
 
 ::selection {
-	background-color: #d950c4;
+	background-color: #EB6123;
 	color: #ddd
 }
 
@@ -17,7 +17,7 @@ body {
 	background-color: #121212;
 	font-family: CircularStd;
 	padding-top: 167px;
-    margin: 0;
+	margin: 0;
 }
 
 aside {
@@ -72,7 +72,7 @@ aside ul li a {
 }
 
 aside ul li a:hover {
-	color: #d950c4
+	color: #EB6123
 }
 
 nav {
@@ -126,7 +126,7 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-	color: #d950c4
+	color: #EB6123
 }
 
 div.nav-icon-wrapper {
@@ -171,16 +171,16 @@ div.nav-icon-wrapper {
 
 
 .btn-login {
-    padding: 8px 10px;
-    height: 45px;
-    cursor: pointer;
-    background-color: #D950C4;
-    border: 0;
-    color: #000000;
-    border-radius: 6px;
-    -webkit-transition: .3s all;
-    -o-transition: .3s all;
-    transition: .3s all;  
+	padding: 8px 10px;
+	height: 45px;
+	cursor: pointer;
+	background-color: #EB6123;
+	border: 0;
+	color: #000000;
+	border-radius: 6px;
+	-webkit-transition: .3s all;
+	-o-transition: .3s all;
+	transition: .3s all;
 }
 
 .btn-login:hover { color: #FFFFFF; }
@@ -224,8 +224,28 @@ header .text p {
 	color: #fff
 }
 
+header .text a {
+	color: white;
+	text-decoration: none;
+	font-size: 20px;
+	padding: 10px;
+	display: block;
+	margin-left: auto;
+	width: 130px;
+	font-weight: 700;
+	height: 30px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+header .text a img {
+	margin: 0;
+	height: 50px;
+}
+
 header .text h1 {
-	font-size: 60px
+	font-size: 70px;
 }
 
 header .text p {
@@ -330,7 +350,7 @@ section#Features .feature .text p {
 
 section#Features .feature .text ul li {
 	list-style: none;
-	color: #d950c4;
+	color: #EB6123;
 	font-size: 24px;
 	margin: 10px;
 	padding-left: .8em
@@ -348,7 +368,7 @@ section#Features .feature .text ul li::before {
 section#Features .bar {
 	width: 65%;
 	height: 4px;
-	background-color: #d950c4;
+	background-color: #EB6123;
 	margin: 60px
 }
 
@@ -389,7 +409,7 @@ section#Pricing .boxes {
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
-	width: 75%;
+	width: 65%;
 	margin: 0 auto
 }
 
@@ -420,7 +440,7 @@ section#Pricing .boxes .box h3 {
 section#Pricing .boxes .box .bar {
 	width: 85%;
 	height: 2px;
-	background-color: #d950c4;
+	background-color: #EB6123;
 	margin-bottom: 20px
 }
 
@@ -435,7 +455,7 @@ section#Pricing .boxes .box ul li {
 section#Pricing .boxes .box ul li::before {
 	display: block;
 	content: "\2022";
-	color: #d950c4;
+	color: #EB6123;
 	display: inline-block;
 	margin-left: -.9em;
 	width: .9em;
@@ -444,7 +464,7 @@ section#Pricing .boxes .box ul li::before {
 
 footer {
 	width: 100%;
-	background-color: #d950c4;
+	background-color: #EB6123;
 	padding: 80px 0
 }
 
@@ -459,7 +479,7 @@ footer .group {
 	-ms-flex-flow: row wrap;
 	flex-flow: row wrap;
 	-ms-flex-pack: distribute;
-	justify-content: space-around
+	justify-content: space-between;
 }
 
 footer div.text {
@@ -645,7 +665,7 @@ footer div ul li a:hover {
 	section#Features .feature img {
 		width: 100%
 	}
-	
+
 	section#Features .feature .text {
 		width: 70%;
 		margin-bottom: 20px
