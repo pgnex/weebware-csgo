@@ -52,6 +52,7 @@
 #include "i_game_event_manager.h"
 #include "c_entities.h"
 #include "c_misc_sdk.h"
+#include "c_input.h"
 #include "skindefs.h"
 #include "c_rec.h"
 #include "c_client.h"

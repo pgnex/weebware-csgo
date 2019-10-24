@@ -18,6 +18,7 @@ public:
 	bool check_models_installed();
 	bool round_end = false;
 	bool send_packet = true;
+	QAngle real_angle;
 
 
 	HMODULE h_module;
@@ -29,6 +30,7 @@ public:
 	unsigned long* g_client_mode;
 	IDirect3DDevice9* g_direct_x;
 	c_input_system* g_input_system;
+	c_input* g_input;
 	iv_model_info* g_model_info;
 	i_engine_trace* g_engine_trace;
 	c_debug_overlay* g_debug_overlay;

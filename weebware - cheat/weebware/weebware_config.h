@@ -541,6 +541,7 @@ public:
 		tmp["defusing_indicator"] = defusing_indicator;
 		tmp["no_duck_cooldown"] = no_duck_cooldown;
 		tmp["draw_grenade_traj"] = draw_grenade_traj;
+		tmp["anti_afk"] = anti_afk;
 
 		// skinchanger, glovechanger, models
 		tmp["skinchanger_enabled"] = skinchanger_enabled;
@@ -737,6 +738,7 @@ public:
 		if (check("auto_defuse_key", data)) auto_defuse_key = data["auto_defuse_key"];
 		if (check("defusing_indicator", data)) defusing_indicator = data["defusing_indicator"];
 		if (check("no_duck_cooldown", data)) no_duck_cooldown = data["no_duck_cooldown"];
+		if (check("anti_afk", data)) anti_afk = data["anti_afk"];
 
 
 		if (check("skinchanger_enabled", data)) skinchanger_enabled = data["skinchanger_enabled"];

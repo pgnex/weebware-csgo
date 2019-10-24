@@ -1028,13 +1028,13 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol, false);
 					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
 					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
-				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
 					if (g_weebwarecfg.killsay) {
 						ImGui::InputText("empty for default##killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
 					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
+					ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
 					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {

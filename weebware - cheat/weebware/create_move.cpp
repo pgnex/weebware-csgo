@@ -82,6 +82,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	}
 
 	g_create_move.real_angle = cmd->viewangles;
+	g_weebware.real_angle = cmd->viewangles;
 
 	return false;
 }
@@ -191,12 +192,12 @@ void c_create_move::anti_afk(c_usercmd* cmd) {
 	static int update_time = 0;
 
 	if (get_epoch() > update_time && updated) {
-		cmd->forwardmove = 5;
+		cmd->forwardmove = 30;
 		updated = false;
 		return;
 	}
 	if (!updated) {
-		update_time = get_epoch() + 5;
+		update_time = get_epoch() + 30;
 		updated = true;
 	}
 

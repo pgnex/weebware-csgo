@@ -59,6 +59,13 @@ public:
 	char    pad_0x4C[0x18];     // 0x4C Current sizeof( usercmd ) =  100  = 0x64
 };
 
+class c_verifiedusercmd
+{
+public:
+	c_usercmd m_cmd;
+	unsigned long m_crc;
+};
+
 struct player_info
 {
 private:

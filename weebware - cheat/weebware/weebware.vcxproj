@@ -191,6 +191,7 @@
     <ClInclude Include="c_engine_client.h" />
     <ClInclude Include="c_entities.h" />
     <ClInclude Include="c_glow_object_manager.h" />
+    <ClInclude Include="c_input.h" />
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />

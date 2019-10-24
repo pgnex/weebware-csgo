@@ -15,6 +15,7 @@ public:
 	void legit_aa_resolver();
 	void preserve_killfeed();
 	void bullet_tracers();
+	void third_person();
 };
 
 extern std::vector< ImpactData_t > vis_impact_data;

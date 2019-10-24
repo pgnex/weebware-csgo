@@ -25,12 +25,12 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		{
+			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
 			g_frame_stage_notify.bullet_tracers();
 			g_frame_stage_notify.no_smoke();
 			g_frame_stage_notify.preserve_killfeed();
-		//	g_frame_stage_notify.third_person();
 		//	g_frame_stage_notify.remove_flash();
 		}
 		else if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
@@ -239,14 +239,14 @@ void c_frame_stage_notify::bullet_tracers() {
 				impact.m_pos,
 				g_weebware.g_model_info->getmodelindex("sprites/physbeam.vmt"),
 				-1,													// haloIndex
-				0.f,                            // haloScale
+				0.f,												// haloScale
 				(float)g_weebwarecfg.bullet_tracer_expire,			// life
-				g_weebwarecfg.bullet_tracer_width,                                // width
-				g_weebwarecfg.bullet_tracer_width,                             // endWidth
-				0.f,                           // fadeLength
-				g_weebwarecfg.bullet_tracer_amplitude,                            // amplitude
+				g_weebwarecfg.bullet_tracer_width,                  // width
+				g_weebwarecfg.bullet_tracer_width,                  // endWidth
+				0.f,												// fadeLength
+				g_weebwarecfg.bullet_tracer_amplitude,              // amplitude
 				(float)col.a,										// brightness
-				g_weebwarecfg.bullet_tracer_speed,                                // speed
+				g_weebwarecfg.bullet_tracer_speed,                  // speed
 				0,
 				0.f,
 				(float)col.r,
@@ -256,6 +256,24 @@ void c_frame_stage_notify::bullet_tracers() {
 
 			impact_data->m_skip = true;
 		}
+	}
+}
+
+void c_frame_stage_notify::third_person() {
+
+	static bool done = false;
+
+	if (!g_weebwarecfg.thirdperson && !done)
+		return;
+
+	if (!g_weebwarecfg.thirdperson && done) {
+		g_weebware.g_input->m_fCameraInThirdPerson = false;
+		done = false;
+	}
+	
+	if (g_weebwarecfg.thirdperson && !done) {
+		g_weebware.g_input->m_fCameraInThirdPerson = true;
+		done = true;
 	}
 }
 
