@@ -50,6 +50,7 @@ bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool
 	g_create_move.auto_defuse(cmd);
 	g_create_move.no_crouch_cooldown(cmd);
 	g_create_move.fake_lag(cmd, sendpacket);
+	g_create_move.anti_afk(cmd);
  	g_nightmode.run();
 
 
@@ -176,6 +177,30 @@ void c_create_move::disable_post_processing() {
 }
 
 
+long get_epoch() {
+	auto duration = std::chrono::system_clock::now().time_since_epoch();
+	return std::chrono::duration_cast<std::chrono::seconds>(duration).count();
+}
+
+void c_create_move::anti_afk(c_usercmd* cmd) {
+
+	if (!g_weebwarecfg.anti_afk)
+		return;
+
+	static bool updated = false;
+	static int update_time = 0;
+
+	if (get_epoch() > update_time && updated) {
+		cmd->forwardmove = 5;
+		updated = false;
+		return;
+	}
+	if (!updated) {
+		update_time = get_epoch() + 5;
+		updated = true;
+	}
+
+}
 
 void c_create_move::draw_grenade_trajectory() {
 

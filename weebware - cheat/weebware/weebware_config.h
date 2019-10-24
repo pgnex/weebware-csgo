@@ -271,6 +271,7 @@ public:
 	bool disable_post_processing;
 	bool draw_grenade_traj;
 
+	bool anti_afk;
 	bool auto_jumpbug;
 	int auto_jumpbug_key = VK_XBUTTON1;
 	bool auto_pistol;

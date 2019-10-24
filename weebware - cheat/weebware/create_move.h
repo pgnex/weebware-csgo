@@ -32,6 +32,7 @@ public:
 	void block_bot(c_usercmd* cmd);
 	void auto_defuse(c_usercmd* cmd);
 	void no_crouch_cooldown(c_usercmd* cmd);
+	void anti_afk(c_usercmd* cmd);
 
 	std::vector<std::string> cspam_weebware = {
 	"weebware.net - premium cheating software, get weebware!",

@@ -1008,102 +1008,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			if (ImGui::Button("Force Update", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined))
 				g_weebwarecfg.skinchanger_apply_nxt = 1;
 			ImGui::EndChild();
-
-			
-			//ImGui::Checkbox("Enabled##skin", &g_weebwarecfg.skinchanger_enabled, false);
-
-
-			//ImGui::BeginChild("GunList", ImVec2(0, 0), true);
-			//ImGui::Text("Guns");
-			//ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
-			//ImGui::InputText("##Search Gun", g_config_list.skinchanger_gunsearch, ARRAYSIZE(g_config_list.skinchanger_gunsearch));
-			//ImGui::PopItemWidth();
-
-			//auto gun_list = filtered_guns();
-
-			//ImGui::Separator();
-			//ImGui::BeginChild("Existing Guns", ImVec2(0, (new_height / 2) - 25), false);
-			//// Enumerate skins at start of game and filter them out b4 drawing
-			//for (auto gun_part : gun_list)
-			//{
-			//	if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
-			//	{
-			//		g_weebwarecfg.skinchanger_selected_gun = convert_index_id(gun_part.id);
-			//		g_weebwarecfg.selected_gun_index = gun_part.id;
-			//	}
-			//}
-			//ImGui::EndChild();
-			//ImGui::Separator();
-
-			//ImGui::BeginChild("Existing Knives", ImVec2(0, (new_height / 2) - 90), false);
-			//// Enumerate skins at start of game and filter them out b4 drawing
-			//try {
-			//	int loopi = 0;
-
-			//	for (auto knife_part : g_weebware.g_knife_list)
-			//	{
-			//		if (ImGui::Selectable(knife_part.weapon_name.c_str(), g_weebwarecfg.selected_knife_index[0] == knife_part.weapon_index))
-			//		{
-			//			g_weebwarecfg.selected_knife_index[0] = knife_part.weapon_index;
-			//			g_weebwarecfg.selected_knife_index[1] = loopi;
-			//		}
-			//		++loopi;
-			//	}
-			//}
-			//catch (...) {}
-
-			//ImGui::EndChild();
-
-			//ImGui::EndChild();
-
-
-			//ImGui::NextColumn();
-
-			//ImGui::BeginChild("SkinList", ImVec2(0, 0), true);
-			//ImGui::Text("Skins");
-			//ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
-			//ImGui::InputText("##Search Skin", g_config_list.skinchanger_skinsearch, ARRAYSIZE(g_config_list.skinchanger_skinsearch));
-			//ImGui::PopItemWidth();
-
-			//auto skin_list = filtered_skins();
-
-			//ImGui::Separator();
-			//ImGui::BeginChild("Existing Skins", ImVec2(0, new_height - 300), false);
-			//// Enumerate skins at start of game and filter them out b4 drawing
-			//for (auto skin_part : skin_list)
-			//{
-			//	std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
-			//	if (ImGui::Selectable(name.c_str(), g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit == skin_part.id))
-			//	{
-			//		g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_paint_kit = skin_part.id;
-			//	}
-			//}
-			//ImGui::EndChild();
-			//ImGui::Separator();
-
-			//ImGui::Text("Gloves");
-			//ImGui::Separator();
-			//const char* glove_models[] = { "Off", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound" };
-			//ImGui::Combo("##glovenames", &g_weebwarecfg.glove_model, glove_models, ARRAYSIZE(glove_models));
-
-			//std::vector<const char*> v = glove_changer.set_glove_skin_array();
-	  //  	ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
-
-			//ImGui::Separator();
-			//ImGui::Text("Settings");
-			//ImGui::Separator();
-			//ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
-			//ImGui::InputFloat("Wear", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear);
-
-			//if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth(), 25), ImGuiButtonFlags_Outlined)) {
-
-			//	g_weebwarecfg.skinchanger_apply_nxt = 1;
-
-			//}
-
-			//ImGui::EndChild();
-
-			//ImGui::EndChild();
 		}
 
 #pragma region Misc
@@ -1130,6 +1034,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						ImGui::InputText("empty for default##killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
 					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
+					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
 					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {
