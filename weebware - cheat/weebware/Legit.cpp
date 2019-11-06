@@ -771,15 +771,18 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 c_base_entity* c_legitbot::closest_target_triggerbot()
 {
 
-	float best_fov = g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov;
+	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov;
+
+	std::cout << best_fov << std::endl;
+
 	float closest_fov = 180.f;
 
-	c_base_entity * best_entity = nullptr;
-	c_base_entity * closest_ent = nullptr;
+	c_base_entity* best_entity = nullptr;
+	c_base_entity* closest_ent = nullptr;
 
 	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
-		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
+		c_base_entity* cur_entity = g_weebware.g_entlist->getcliententity(i);
 
 		if (!cur_entity->is_valid_player())
 			continue;
@@ -815,7 +818,7 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 		}
 
 		// prevent symmetry collision
-		if (this_fov < g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov && this_fov < best_fov && closest_ent == cur_entity)
+		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov && this_fov < best_fov && closest_ent == cur_entity)
 		{
 			best_entity = cur_entity;
 			best_fov = this_fov;
@@ -827,7 +830,7 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 }
 
 void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
-	if (!g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled)
+	if (!g_weebwarecfg.legit_cfg[get_config_index()].magnet_triggerbot_enabled)
 		return;
 
 	c_base_entity* target = closest_target_triggerbot();
@@ -852,7 +855,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 		g_weebware.g_engine->get_view_angles(view_angles);
 
-		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth);
+		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth);
 
 		cmd->viewangles = delta;
 
