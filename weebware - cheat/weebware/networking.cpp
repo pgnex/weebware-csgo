@@ -25,7 +25,7 @@ std::string networking::post_request(std::string url, std::string post_data) {
 		curl_easy_cleanup(curl);
 		return content;
 	}
-	return "";
+	return "REQUESTFAILED";
 }
 
 void networking::download_file(std::string url, std::string path) {

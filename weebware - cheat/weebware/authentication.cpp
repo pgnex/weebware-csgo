@@ -15,7 +15,7 @@ std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
 	std::string content = networking::post_request(base64_decode("aHR0cHM6Ly9hdXRoLndlZWJ3YXJlLm5ldC9pcF9sb2cucGhw"), "key=" + key);
 
-	if (!content.length() > 0) {
+	if (content == "REQUESTFAILED") {
 		std::string exceptionError = "==gUPJlUFBySS90VUVkT";
 		reverseString(exceptionError);
 		MessageBox(NULL, (base64_decode(exceptionError).c_str()), ("Error"), MB_ICONWARNING);
@@ -56,7 +56,7 @@ std::string auth::GetServerVariable(std::string key) {
 		// it took us more than 60 seconds to receive and parse that data? :thinking:
 		pieces.clear();
 		decodedContentStream.str(std::string());
-		std::string Error1 = "==gUPJlUFBySS90VUVkT";
+		std::string Error1 = "==ARFNkTZNVREBSRNlEV";
 		reverseString(Error1);
 		MessageBox(NULL, (base64_decode(Error1).c_str()), ("Error"), MB_ICONWARNING);
 		exit(EXIT_SUCCESS);

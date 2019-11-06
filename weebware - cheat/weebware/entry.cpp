@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -77,6 +77,7 @@ bool c_weebware::init_interfaces()
 	g_effects = reinterpret_cast<i_effects*>(client_fact("IEffects001", NULL));
 	g_game_events = reinterpret_cast<i_game_event_manager*>(engine_fact("GAMEEVENTSMANAGER002", NULL));
 	g_enginesound = reinterpret_cast<uintptr_t*>(engine_fact("IEngineSoundClient003", NULL));
+	g_input = *(c_input**)(pattern_scan("client_panorama.dll", "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10") + 0x1);
 
 	// lets make sure models are installed to display on menu
 	models_installed = check_models_installed();
