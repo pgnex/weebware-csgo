@@ -57,6 +57,7 @@ private:
 	void set_weapon_models();
 	void set_player_models(c_base_entity* ent);
 	void defusing_indicator(s_boundaries bounds, c_base_entity* ent);
+	void spectator_list(c_base_entity* ent);
 };
 
 extern c_esp g_esp;

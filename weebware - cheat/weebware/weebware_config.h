@@ -270,6 +270,7 @@ public:
 	bool screenshot_proof;
 	bool disable_post_processing;
 	bool draw_grenade_traj;
+	bool spec_list;
 
 	bool anti_afk;
 	bool auto_jumpbug;
@@ -331,6 +332,7 @@ public:
 	bool minecraft_pickaxe = false;
 	int anime_model = false;
 	bool thirdperson;
+	int thirdperson_key;
 	bool killsay;
 	char killsay_msg_custom[256];
 	char custom_clantag_static[256];
@@ -477,6 +479,7 @@ public:
 		tmp["hand_chams"] = hand_chams;
 		tmp["hand_chams_xqz"] = hand_chams_xqz;
 		tmp["visuals_ammo_esp"] = visuals_ammo_esp;
+		tmp["spec_list"] = spec_list;
 
 		// misc
 		tmp["enable_misc"] = enable_misc;
@@ -663,6 +666,7 @@ public:
 		if (check("hand_chams_xqz", data)) hand_chams_xqz = data["hand_chams_xqz"];
 		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
 		if (check("draw_grenade_traj", data)) draw_grenade_traj = data["draw_grenade_traj"];
+		if (check("spec_list", data)) spec_list = data["spec_list"];
 
 
 		// misc

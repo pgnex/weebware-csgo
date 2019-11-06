@@ -820,7 +820,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				{
 					ImGui::Text("Other Visuals");
 					ImGui::Separator();
-					ImGui::Checkbox("Inaccuracy circle", &g_weebwarecfg.visuals_inacc_circle, false);
+					ImGui::Checkbox("Inaccuracy Circle", &g_weebwarecfg.visuals_inacc_circle, false);
 					if (g_weebwarecfg.visuals_inacc_circle) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_innacc_circle_col, "Inacc Color");
 					}
@@ -848,6 +848,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode, false);
 					ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof, false);
 					ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke, false);
+					ImGui::Checkbox("Spectator List", &g_weebwarecfg.spec_list, false);
 					ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj, false);
 					ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers, false);
 					if (g_weebwarecfg.visuals_hitmarkers)
@@ -1035,6 +1036,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
 					ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson_key, key_counter);
 					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {

@@ -7,6 +7,7 @@
 c_esp g_esp;
 FeatureFuncs g_event_features;
 bool has_esp_init = false;
+int specs = 0;
 
 void c_esp::esp_main()
 {
@@ -94,6 +95,8 @@ void c_esp::esp_main()
 
 	}
 
+	specs = 0;
+
 	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
 	{
 		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
@@ -101,32 +104,28 @@ void c_esp::esp_main()
 		if (!ent || ent == nullptr)
 			continue;
 
-		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
-			continue;
-		}
+		spectator_list(ent);
 
+		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) 
+			continue;
+		
 		if (!g_weebwarecfg.visuals_dormant_esp) {
-			if (ent->is_dormant()) {
+			if (ent->is_dormant())
 				continue;
-			}
 		}
 
-		if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) {
+		if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) 
 			continue;
-		}
+		
+		if (ent == local) 
+			continue;		
 
-		if (ent == local) {
-			continue;
-		}
-
-		if (g_weebwarecfg.visuals_bspotted) {
+		if (g_weebwarecfg.visuals_bspotted)
 			*ent->b_spotted() = true;
-		}
-
-		if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent)) {
+		
+		if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent))
 			continue;
-		}
-
+		
 		w2s_player[i].boundary = calc_boundaries(ent);
 
 		if (ent->is_dormant())
@@ -152,6 +151,66 @@ void c_esp::esp_main()
 		defusing_indicator(w2s_player[i].boundary, ent);
 
 	}
+}
+
+void c_esp::spectator_list(c_base_entity* ent) {
+	
+	if (!g_weebwarecfg.spec_list)
+		return;
+
+	if (!local)
+		return;
+
+	if (!local->is_valid_player())
+		return;
+
+	if (ent->m_iHealth() > 0)
+		return;
+
+	if (ent->is_dormant())
+		return;
+
+	if (ent == local)
+		return;
+
+	if (ent->get_client_class()->m_ClassID != 40)
+		return;
+
+	s_player_info local_info;
+	g_weebware.g_engine->get_player_info(local->EntIndex(), &local_info);
+
+	s_player_info ent_info;
+	g_weebware.g_engine->get_player_info(ent->EntIndex(), &ent_info);
+
+	if (ent_info.ishltv)
+		return;
+
+	auto obv = g_weebware.g_entlist->getcliententityfromhandle(ent->m_hObserverTarget());
+
+	if (!obv)
+		return;
+
+	s_player_info target_info;
+	g_weebware.g_engine->get_player_info(obv->EntIndex(), &target_info);
+
+	if (strcmp(local_info.name, target_info.name) == 0) {
+		specs++;
+
+		int sw, sh, tw, th;
+		g_weebware.g_engine->get_screen_dimensions(sw, sh);
+
+		c_color col = c_color(255, 255, 255, 255);
+		std::string spec_name = ent_info.name;
+
+		wchar_t wbuf[1024];
+		MultiByteToWideChar(CP_UTF8, 0, spec_name.c_str(), 256, wbuf, 256);
+
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, wbuf, tw, th);
+
+		std::transform(spec_name.begin(), spec_name.end(), spec_name.begin(), ::tolower);
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, (sw - tw) - 5, (specs * 11) + 5, c_color(col.r, col.g, col.b, col.a), 0, spec_name.c_str());
+	}
+
 }
 
 
@@ -772,7 +831,7 @@ void c_esp::draw_fov_circle() {
 
 	fov = g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].maximum_fov;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
-	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
+	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
 
 	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(g_hooking.o_vm()) / 2) * x;
 
