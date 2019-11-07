@@ -251,16 +251,16 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 
 	// Change active stuff later.
-	style->Colors[ImGuiCol_CheckMark] = ImVec4(0.922, 0.482, 0.102, 1.0f);
-	style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.922, 0.482, 0.102, 0.7f);
-	style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.922, 0.482, 0.102, 0.7f);
+	style->Colors[ImGuiCol_CheckMark] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+	style->Colors[ImGuiCol_SliderGrab] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
+	style->Colors[ImGuiCol_SliderGrabActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
 	style->Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_PopupBg] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
-	style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.922, 0.482, 0.102, 1.0f);
-	style->Colors[ImGuiCol_Header] = ImVec4(0.922, 0.482, 0.102, 0.4f);
-	style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.922, 0.482, 0.102, 0.7f);
-	style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.922, 0.482, 0.102, 1.0f);
+	style->Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+	style->Colors[ImGuiCol_Header] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 100.f));
+	style->Colors[ImGuiCol_HeaderHovered] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
+	style->Colors[ImGuiCol_HeaderActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 
 	style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 0.30f);
 	style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -440,7 +440,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f)); 
 
 		if (tab_selection == tabs::legit) {
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 		}
 		if (ImGui::Button("Legit", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::legit;
@@ -453,7 +453,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		ImGui::BeginChild("COL3", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 
 		if (tab_selection == tabs::vis)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 
 		if (ImGui::Button("Visual", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::vis;
@@ -465,7 +465,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL4", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::misc)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 
 		if (ImGui::Button("Misc", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::misc;
@@ -478,7 +478,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL5", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::skins)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 
 		if (ImGui::Button("Skins", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::skins;
@@ -491,7 +491,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL6", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::sets)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 		if (ImGui::Button("Configs", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::sets;
 		}
@@ -1199,52 +1199,52 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 				ImGui::NextColumn();
 
-				ImGui::BeginChild("Browser", ImVec2(0, 0), true);
-				{
-					ImGui::Text("Config Browser");
-					ImGui::Separator();
+				//ImGui::BeginChild("Browser", ImVec2(0, 0), true);
+				//{
+				//	ImGui::Text("Config Browser");
+				//	ImGui::Separator();
 
-					ImGui::BeginChild("Configs", ImVec2(0, new_height - 123), false);
-					for (auto cfg : g_config_list.config_browser_info)
-					{
-						if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_name == cfg.c_str()))
-						{
-							g_config_list.cur_config_browser_name = cfg.c_str();
-							auto last = std::find(std::begin(g_config_list.config_browser_info), std::end(g_config_list.config_browser_info), g_config_list.cur_config_browser_name);
-							int index = std::distance(std::begin(g_config_list.config_browser_info), last);
-							g_config_list.cur_creator = "Created by: " + (std::string)g_config_list.config_browser_buffer.at("username")[index];
-							g_config_list.cur_desc = "Description: " + (std::string)g_config_list.config_browser_buffer.at("description")[index];
-							g_config_list.cur_secret = (std::string)g_config_list.config_browser_buffer.at("secret")[index];
-							g_config_list.cur_config_browser_name = (std::string)g_config_list.config_browser_buffer.at("name")[index];
-						}
-					}
-					ImGui::EndChild();
-					ImGui::Separator();
-					ImGui::Text(g_config_list.cur_creator.c_str());
-					ImGui::Text(g_config_list.cur_desc.c_str());
-					ImGui::Separator();
-					ImGui::BeginChild("Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-					ImGui::Columns(3, "LoadSettings", false);
-					ImGui::SetColumnOffset(1, 85);
-					ImGui::SetColumnOffset(2, 180);
-					if (ImGui::Button("Refresh", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-						// load config info from server
-						g_config_list.update_config_browser();
-					}
-
-					ImGui::NextColumn();
-					if (ImGui::Button("Load", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-						// load config from server
-						g_config_list.load_browser_config();
-					}
-				//	ImGui::NextColumn();
-				//	if (ImGui::Button("Save", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-				//		// save config from server
-				////		g_config_list.save_browser_config();
+				//	ImGui::BeginChild("Configs", ImVec2(0, new_height - 123), false);
+				//	for (auto cfg : g_config_list.config_browser_info)
+				//	{
+				//		if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_name == cfg.c_str()))
+				//		{
+				//			g_config_list.cur_config_browser_name = cfg.c_str();
+				//			auto last = std::find(std::begin(g_config_list.config_browser_info), std::end(g_config_list.config_browser_info), g_config_list.cur_config_browser_name);
+				//			int index = std::distance(std::begin(g_config_list.config_browser_info), last);
+				//			g_config_list.cur_creator = "Created by: " + (std::string)g_config_list.config_browser_buffer.at("username")[index];
+				//			g_config_list.cur_desc = "Description: " + (std::string)g_config_list.config_browser_buffer.at("description")[index];
+				//			g_config_list.cur_secret = (std::string)g_config_list.config_browser_buffer.at("secret")[index];
+				//			g_config_list.cur_config_browser_name = (std::string)g_config_list.config_browser_buffer.at("name")[index];
+				//		}
 				//	}
-					ImGui::EndChild();
-				}
-				ImGui::EndChild();
+				//	ImGui::EndChild();
+				//	ImGui::Separator();
+				//	ImGui::Text(g_config_list.cur_creator.c_str());
+				//	ImGui::Text(g_config_list.cur_desc.c_str());
+				//	ImGui::Separator();
+				//	ImGui::BeginChild("Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+				//	ImGui::Columns(3, "LoadSettings", false);
+				//	ImGui::SetColumnOffset(1, 85);
+				//	ImGui::SetColumnOffset(2, 180);
+				//	if (ImGui::Button("Refresh", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+				//		// load config info from server
+				//		g_config_list.update_config_browser();
+				//	}
+
+				//	ImGui::NextColumn();
+				//	if (ImGui::Button("Load", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+				//		// load config from server
+				//		g_config_list.load_browser_config();
+				//	}
+				////	ImGui::NextColumn();
+				////	if (ImGui::Button("Save", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
+				////		// save config from server
+				//////		g_config_list.save_browser_config();
+				////	}
+				//	ImGui::EndChild();
+				//}
+				//ImGui::EndChild();
 			}
 		}
 

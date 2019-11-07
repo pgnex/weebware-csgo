@@ -238,7 +238,7 @@ void imgui_custom::create_button_tab(int& tab, int set, const char* title, int w
 		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
 		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
 		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(235, 123, 26, 255.f));
+		style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 	}
 	else
 	{
