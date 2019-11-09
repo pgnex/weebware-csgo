@@ -114,6 +114,8 @@ bool c_weebware::init_interfaces()
 void c_weebware::init_fonts() {
 	tahoma_font = g_weebware.g_surface->create_font();
 	g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
+	tahoma_font_large = g_weebware.g_surface->create_font();
+	g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
 }
 
 void c_weebware::setup_thread() {

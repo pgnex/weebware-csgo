@@ -56,6 +56,7 @@ public:
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;
+	unsigned long tahoma_font_large;
 
 	bool menu_opened = false;
 	bool pressed_keys[256];

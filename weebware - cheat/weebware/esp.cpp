@@ -173,7 +173,7 @@ void c_esp::spectator_list(c_base_entity* ent) {
 	if (ent == local)
 		return;
 
-	if (ent->get_client_class()->m_ClassID != 40)
+	if (ent->get_client_class()->m_ClassID != class_ids::ccsplayer)
 		return;
 
 	s_player_info local_info;
@@ -205,10 +205,10 @@ void c_esp::spectator_list(c_base_entity* ent) {
 		wchar_t wbuf[1024];
 		MultiByteToWideChar(CP_UTF8, 0, spec_name.c_str(), 256, wbuf, 256);
 
-		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, wbuf, tw, th);
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font_large, wbuf, tw, th);
 
 		std::transform(spec_name.begin(), spec_name.end(), spec_name.begin(), ::tolower);
-		g_paint_traverse.draw_string(g_weebware.tahoma_font, (sw - tw) - 5, (specs * 11) + 5, c_color(col.r, col.g, col.b, col.a), 0, spec_name.c_str());
+		g_paint_traverse.draw_string(g_weebware.tahoma_font_large, (sw - tw) - 5, (specs * 11) + 5, c_color(col.r, col.g, col.b, col.a), 0, spec_name.c_str());
 	}
 
 }
@@ -459,14 +459,27 @@ void c_esp::bomb_timer(c_base_entity* ent) {
 
 		predicted_damage = ceilf(predicted_damage);
 
-		char timer_s[55];
 
-		sprintf(timer_s, "Time till explosion: %.2f\nDamage: %.0f", remaining, floor(predicted_damage));
+		Vector bomb_pos = ent->getrenderorigin();
+		Vector screen_pos;
 
-		g_paint_traverse.draw_string(g_weebware.tahoma_font, 5, offset_y, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, timer_s);
+		if (!g_maths.world_to_screen(bomb_pos, screen_pos))
+			return;
 
-		// Okay now lets check if we have defuse on the bomb..
-		// m_flDefuseCountDown // interesting netvar let see what it returns...
+		wchar_t buf[128];
+		char time_text[55];
+		char damage_text[55];
+
+		sprintf(damage_text, "Damage: %.0f", floor(predicted_damage));
+		sprintf(time_text, "Time: %.2fs", remaining);
+
+		if (MultiByteToWideChar(CP_UTF8, 0, time_text, -1, buf, 128) <= 0)
+			return;
+
+		int tw, th;
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font_large, buf, tw, th);
+		g_paint_traverse.draw_string(g_weebware.tahoma_font_large, screen_pos.x - (tw / 2), screen_pos.y - 40, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, time_text);
+		g_paint_traverse.draw_string(g_weebware.tahoma_font_large, screen_pos.x - (tw / 2), screen_pos.y - 25, predicted_damage < local->m_iHealth() ? c_color(0, 255, 0, 255) : c_color(255, 0, 0, 255), 0, damage_text);
 
 	}
 }
