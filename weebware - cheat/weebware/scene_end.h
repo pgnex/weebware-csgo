@@ -5,7 +5,6 @@
 class c_sceneend
 {
 public:
-	void scene_end();
 	bool is_visible(c_base_entity* target);
 	void glow();
 	void chams();

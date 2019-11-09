@@ -13,7 +13,13 @@ void hook_functions::scene_end(void* thisptr, void* edx) {
 	}
 
 	try {
-		g_sceneend.scene_end();
+		if (g_weebwarecfg.visuals_glow_enabled) {
+			g_sceneend.glow();
+		}
+
+		if (g_weebwarecfg.visuals_chams > 0) {
+			g_sceneend.chams();
+		}
 	}
 	catch (...) {
 
@@ -183,21 +189,7 @@ imaterial* c_sceneend::borrow_mat(custom_mats type)
 	if (mat->iserrormaterial())
 		return create_default();
 
-	g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
-}
-
-// change all return false to original calls.
-
-void c_sceneend::scene_end() {
-
-	if (g_weebwarecfg.visuals_glow_enabled) {
-		g_sceneend.glow();
-	}
-
-	if (g_weebwarecfg.visuals_chams > 0) {
-		g_sceneend.chams();
-	}
-
+	return g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
 }
 
 
