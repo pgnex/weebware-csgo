@@ -494,7 +494,7 @@ bool c_create_move::anti_trigger(c_usercmd* cmd, bool& send_packets)
 		if (!cur_entity)
 			continue;
 
-		if (!cur_entity->m_iHealth() > 0)
+		if (cur_entity->m_iHealth() <= 0)
 			continue;
 
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
@@ -572,7 +572,7 @@ c_base_entity* get_best_target(c_base_entity * local)
 		if (!cur_entity)
 			continue;
 
-		if (!cur_entity->m_iHealth() > 0)
+		if (cur_entity->m_iHealth() <= 0)
 			continue;
 
 		if (cur_entity->m_iTeamNum() == local->m_iTeamNum())
@@ -703,7 +703,7 @@ void c_create_move::auto_pistol(c_usercmd* cmd) {
 void c_create_move::fake_lag(c_usercmd* cmd, bool send_packets) {
 
 
-	if (!g_weebwarecfg.fake_lag > 0) {
+	if (g_weebwarecfg.fake_lag <= 0) {
 		if (g_weebwarecfg.fake_lag_factor > 0)
 			g_weebwarecfg.fake_lag_factor = 0;
 		g_weebware.send_packet = true;

@@ -148,7 +148,7 @@ bool disabled = true;
 void c_glovechanger::run() noexcept {
 
 
-	if (!g_weebwarecfg.glove_model > 0 && !disabled) {
+	if (g_weebwarecfg.glove_model <= 0 && !disabled) {
 		g_weebwarecfg.skinchanger_apply_nxt = 1;
 		disabled = true;
 		return;
@@ -163,7 +163,7 @@ void c_glovechanger::run() noexcept {
 	if (!g_weebwarecfg.glovechanger_enabled)
 		return;
 
-	if (!g_weebwarecfg.glove_model > 0)
+	if (g_weebwarecfg.glove_model <= 0)
 		return;
 
 	if (!g_weebware.g_engine->is_connected() && !g_weebware.g_engine->is_in_game())
