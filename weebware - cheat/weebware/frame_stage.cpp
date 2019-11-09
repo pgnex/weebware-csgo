@@ -375,7 +375,14 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon->is_grenade())
 			continue;
 
+		if (weapon->is_bomb())
+			continue;
+
+		if (weapon->is_zeus())
+			continue;
+
 		if (weapon->is_knife()) {
+
 			auto vm_handle = local->get_viewmodel_handle();
 
 			if (!vm_handle)
