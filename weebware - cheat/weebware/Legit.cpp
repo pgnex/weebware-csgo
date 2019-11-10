@@ -5,6 +5,8 @@ c_legitbot g_legitbot;
 
 c_legitbot::c_accuracy_boost g_accuracy;
 
+c_base_entity* cur_target = NULL;
+int last_delay = 0;
 void c_legitbot::create_move(c_usercmd* cmd)
 {
 	g_weapon = m_local->m_pActiveWeapon();
@@ -29,12 +31,14 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	case 1:
 		if (!(cmd->buttons & in_attack)) {
 			m_last_time = get_epoch();
+			last_delay = 0.f;
 			return;
 		}
 		break;
 	case 2:
 		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_activation_key)) {
 			m_last_time = get_epoch();
+			last_delay = 0.f;
 			return;
 		}
 		break;
@@ -43,8 +47,15 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	if (m_local->is_flashed() && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_while_blind))
 		return;
 
-
 	c_base_entity* target = closest_target_available();
+
+	if (cur_target != target)
+		if (cur_target != NULL)
+			if (get_epoch() <= (last_delay + g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay))
+				return;
+
+	last_delay = get_epoch();
+	cur_target = target;
 
 	if (!target->is_valid_player()) {
 		m_last_time = get_epoch();
@@ -143,14 +154,14 @@ int c_legitbot::get_config_index()
 	return 0;
 }
 
+
 c_base_entity* c_legitbot::closest_target_available()
 {
-
 	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
 	float closest_fov = 180.f;
 
-	c_base_entity * best_entity = nullptr;
-	c_base_entity * closest_ent = nullptr;
+	c_base_entity* best_entity = nullptr;
+	c_base_entity* closest_ent = nullptr;
 
 	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
@@ -415,7 +426,7 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs)
 		return;
 
-	if (!m_local->m_iShotsFired() > 1)
+	if (m_local->m_iShotsFired() <= 1)
 		return;
 
 	static QAngle old_punch = QAngle(0, 0, 0);

@@ -60,6 +60,7 @@ public:
 	int legitbot_activation_key;
 	float maximum_fov;
 	float sensitivity;
+	int aimbot_target_switch_delay = 250;
 	float reaction_time;
 	float pitch_rcs;
 	float yaw_rcs;
@@ -98,6 +99,7 @@ public:
 		tmp["legitbot_activation_key"] = legitbot_activation_key;
 		tmp["sensitivity"] = sensitivity;
 		tmp["reaction_time"] = reaction_time;
+		tmp["aimbot_target_switch_delay"] = aimbot_target_switch_delay;
 		tmp["pitch_rcs"] = pitch_rcs;
 		tmp["yaw_rcs"] = yaw_rcs;
 		tmp["quick_stop"] = quick_stop;
@@ -136,6 +138,7 @@ public:
 		if (check("legitbot_activation_key", data)) legitbot_activation_key = data["legitbot_activation_key"];
 		if (check("sensitivity", data)) sensitivity = data["sensitivity"];
 		if (check("reaction_time", data)) reaction_time = data["reaction_time"];
+		if (check("aimbot_target_switch_delay", data)) aimbot_target_switch_delay = data["aimbot_target_switch_delay"];
 		if (check("pitch_rcs", data)) pitch_rcs = data["pitch_rcs"];
 		if (check("yaw_rcs", data)) yaw_rcs = data["yaw_rcs"];
 		if (check("quick_stop", data)) quick_stop = data["quick_stop"];

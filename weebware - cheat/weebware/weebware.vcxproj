@@ -142,6 +142,7 @@
     <ClCompile Include="dme.cpp" />
     <ClCompile Include="glovechanger.cpp" />
     <ClCompile Include="networking.cpp" />
+    <ClCompile Include="Ragebot.cpp" />
     <ClCompile Include="scene_end.cpp" />
     <ClCompile Include="drawing.cpp" />
     <ClCompile Include="entry.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="networking.h" />
+    <ClInclude Include="Ragebot.h" />
     <ClInclude Include="scene_end.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />

@@ -94,6 +94,9 @@
     <Filter Include="Source Files\hooking\Draw Model Execute">
       <UniqueIdentifier>{65b153f7-ef21-4480-b7dc-ce2cdfd78619}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\CreateMove\Ragebot">
+      <UniqueIdentifier>{aeb9a660-8368-4408-b7a2-72e9dc50fe96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -245,6 +248,9 @@
     </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
+    </ClCompile>
+    <ClCompile Include="Ragebot.cpp">
+      <Filter>Source Files\hooking\CreateMove\Ragebot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,6 +487,9 @@
     </ClInclude>
     <ClInclude Include="c_input.h">
       <Filter>Source Files\Source Development Kit</Filter>
+    </ClInclude>
+    <ClInclude Include="Ragebot.h">
+      <Filter>Source Files\hooking\CreateMove\Ragebot</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

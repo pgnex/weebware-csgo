@@ -615,6 +615,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::Text("First Shot Delay");
 				ImGui::SliderFloat("First Shot Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
 
+				ImGui::Text("Target Switch Delay");
+				ImGui::SliderInt("Target Switch Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_target_switch_delay, 0, 2000, "%.0f");
+
 				ImGui::Text("Recoil compensation (P/Y)");
 				ImGui::SliderFloat("Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
 				ImGui::SliderFloat("Recoil compensation Y", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].yaw_rcs, 0, 100, "%.0f%%");
@@ -1035,8 +1038,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					}
 					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
 					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
-					ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson_key, key_counter);
+				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
+				//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson_key, key_counter);
 					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
 					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
 					if (g_weebwarecfg.viewmodel_changer) {
