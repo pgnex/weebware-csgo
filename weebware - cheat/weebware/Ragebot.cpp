@@ -336,7 +336,7 @@ namespace ragebot
 	float auto_wall::get_dmg( c_base_entity* local, Vector& point ) {
 		float damage = 0.f;
 		Vector dst = point;
-		fire_bullet_data data; 
+		fire_bullet_data data;
 		data.src = local->get_vec_eyepos( );
 		data.filter.pSkip = local;
 		QAngle angles {};
@@ -381,6 +381,14 @@ namespace ragebot
 		return vCenter;
 	}
 
+	std::vector<int> hitbox_simple =
+	{
+		csgohitboxid::head,
+		csgohitboxid::neck,
+		csgohitboxid::pelvis,
+		csgohitboxid::stomach,
+		csgohitboxid::chest
+	};
 
 	c_base_entity* get_ideal_target( c_base_entity* local )
 	{
@@ -397,6 +405,9 @@ namespace ragebot
 
 			if ( !friendly_fire &&
 				(cur_entity->m_iTeamNum( ) == local->m_iTeamNum( )) )
+				continue;
+			
+			if ( g_autowall.get_dmg( local, cur_entity->get_bone( 8 ) ) < 1.f )
 				continue;
 
 			// fov check if needed
@@ -442,15 +453,6 @@ namespace ragebot
 		if ( !target ||
 			 !local )
 			return {};
-
-		std::vector<int> hitbox_simple =
-		{
-			csgohitboxid::head,
-			csgohitboxid::neck,
-			csgohitboxid::pelvis,
-			csgohitboxid::stomach,
-			csgohitboxid::chest
-		};
 
 		auto best_dmg = 0.f;
 		Vector best_pos = {};
