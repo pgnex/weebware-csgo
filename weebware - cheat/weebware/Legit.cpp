@@ -209,8 +209,6 @@ c_base_entity* c_legitbot::closest_target_available()
 	return best_entity;
 }
 
-
-
 Vector c_legitbot::center_hitbox(c_base_entity* ent, int id)
 {
 	if (!ent)
@@ -782,7 +780,6 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 
 c_base_entity* c_legitbot::closest_target_triggerbot()
 {
-
 	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov;
 
 	std::cout << best_fov << std::endl;
@@ -904,7 +901,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	g_maths.qangle_vector(view_angles, forward);
 
 	// The ray
-	forward = m_local->get_vec_eyepos() + (forward * m_local->m_pActiveWeapon()->get_weapon_info()->range);
+	forward = m_local->get_vec_eyepos() + (forward * m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
 	c_weapon_info* info = m_local->m_pActiveWeapon()->get_weapon_info();
 
@@ -984,7 +981,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 			return;
 		}
 
-		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->range) && next_attack_queued()) {
+		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
 			cmd->buttons |= in_attack;
 		}
 		else {
