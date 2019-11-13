@@ -12,7 +12,7 @@ namespace imgui_custom
 	void custom_color_options(ImVec4& col, const char* name);
 
 	void create_tab(int& tab, int set, int pos, const char* title);
-	void create_button_tab(int& tab, int set, const char* title, int width);
+	void create_button_tab(int& tab, int set, const char* title);
 
 	enum tab_pos
 	{

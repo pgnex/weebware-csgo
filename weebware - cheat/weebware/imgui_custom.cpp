@@ -229,7 +229,7 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 	}
 }
 
-void imgui_custom::create_button_tab(int& tab, int set, const char* title, int width) {
+void imgui_custom::create_button_tab(int& tab, int set, const char* title) {
 
 	auto& style = ImGui::GetStyle();
 
@@ -249,21 +249,7 @@ void imgui_custom::create_button_tab(int& tab, int set, const char* title, int w
 	}
 
 
-	float ratio = 9.2f;
-
-	switch (width) {
-	case 1400:
-		ratio = 9.5f;
-		break;
-	case 1920:
-		ratio = 9.0f;
-		break;
-	default:
-		ratio = 9.2f;
-		break;
-	}
-
-	if (ImGui::Button(title, ImVec2((width / 2) / ratio, 20)))
+	if (ImGui::Button(title, ImVec2(72, 20)))
 	{
 		tab = set;
 	}
@@ -292,7 +278,7 @@ void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 	}
 #endif
 
-	if (ImGui::Button(title, ImVec2(80, 80)))
+	if (ImGui::Button(title, ImVec2(80, 60)))
 	{
 		tab = set;
 	}

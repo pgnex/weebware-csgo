@@ -81,16 +81,14 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	if (aim_angle.x == 0 && aim_angle.y == 0)
 		return;
 
-	if (m_local->m_iShotsFired() > 1) {
 
-		float rcs_power = g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power;
+	float rcs_power = g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power;
 
-		if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
-			aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
-		}
-		else {
-			aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs);
-		}
+	if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
+		aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
+	}
+	else {
+		aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs);
 	}
 
 	g_maths.normalize_angle(aim_angle);
@@ -413,6 +411,9 @@ QAngle c_legitbot::rcs_scaled(QAngle original_angle, float pitch, float yaw)
 {
 	QAngle delta = original_angle;
 
+	if (!m_local->m_iShotsFired() > 1)
+		return original_angle;
+
 	delta.x -= (m_local->m_aimPunchAngle().x * (2.f / 100.f * pitch));
 
 	delta.y -= (m_local->m_aimPunchAngle().y * (2.f / 100.f * yaw));
@@ -426,7 +427,7 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs)
 		return;
 
-	if (m_local->m_iShotsFired() <= 1)
+	if (!m_local->m_iShotsFired() > 1)
 		return;
 
 	static QAngle old_punch = QAngle(0, 0, 0);
