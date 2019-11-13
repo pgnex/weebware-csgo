@@ -407,6 +407,7 @@ namespace ragebot
 				(cur_entity->m_iTeamNum( ) == local->m_iTeamNum( )) )
 				continue;
 			
+			// ignore unhittable players
 			if ( g_autowall.get_dmg( local, cur_entity->get_bone( 8 ) ) < 1.f )
 				continue;
 
