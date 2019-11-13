@@ -46,6 +46,35 @@ void c_config_list::update_config_browser() {
 	config_browser_info = info;
 }
 
+void c_config_list::get_your_configs() {
+	std::vector<std::string> info;
+	std::string content = networking::get_request("https://weebware.net/inc/web/?your=nex");
+	g_config_list.your_configs_buffer = json::parse(content);
+	for (const auto& name : g_config_list.your_configs_buffer) {
+		info.push_back(name.at("title"));
+	}
+	config_browser_yours = info;
+}
+
+void c_config_list::get_favorited_configs() {
+	std::vector<std::string> info;
+	std::string content = networking::get_request("https://weebware.net/inc/web/?favourite=nex");
+	g_config_list.favorite_configs_buffer = json::parse(content);
+	for (const auto& name : g_config_list.favorite_configs_buffer) {
+		info.push_back(name.at("title"));
+	}
+	config_browser_fav = info;
+}
+
+void c_config_list::load_config_from_memory(int index) {
+
+	std::string content = networking::get_request("https://weebware.net/inc/web/?config=" + std::to_string(index));
+	json data = json::parse(content);
+	g_weebwarecfg.load_cfg_mem(data);
+	g_weebwarecfg.skinchanger_apply_nxt = 1;
+}
+
+
 void c_config_list::load_browser_config() {
 
 	// nothing selected

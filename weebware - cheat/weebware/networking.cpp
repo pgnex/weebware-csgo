@@ -28,6 +28,30 @@ std::string networking::post_request(std::string url, std::string post_data) {
 	return "REQUESTFAILED";
 }
 
+std::string networking::get_request(std::string url) {
+	std::string content;
+	CURL* curl = nullptr;
+	curl = curl_easy_init();
+	if (curl) {
+		curl_easy_setopt(curl, CURLOPT_URL, url);
+		curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1L);
+		curl_easy_setopt(curl, CURLOPT_MAXREDIRS, 50L);
+		curl_easy_setopt(curl, CURLOPT_TCP_KEEPALIVE, 1L);
+
+		std::string response_string;
+		std::string header_string;
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
+		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response_string);
+		curl_easy_setopt(curl, CURLOPT_HEADERDATA, &header_string);
+		curl_easy_perform(curl);
+		curl_easy_cleanup(curl);
+		curl = NULL;
+
+		return response_string;
+	}
+	return "REQUESTFAILED";
+}
+
 void networking::download_file(std::string url, std::string path) {
 	CURL* curl;
 	FILE* fp;

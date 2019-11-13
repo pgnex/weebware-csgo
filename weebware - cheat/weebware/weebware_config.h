@@ -27,14 +27,23 @@ class c_config_list
 public:
 	// config browser
 	std::vector<std::string> config_browser_info;
-	json config_browser_buffer;
+	std::vector<std::string> config_browser_yours;
+	std::vector<std::string> config_browser_fav;
+	json config_browser_buffer, your_configs_buffer, favorite_configs_buffer;
 	void update_config_browser();
 	void load_browser_config();
 	void save_browser_config();
+	void get_your_configs();
+	void load_config_from_memory(int index);
+	void get_favorited_configs();
+	int cur_id_yours;
+	int cur_id_fav;
 	std::string cur_secret = "";
 	std::string cur_desc = "Description: ";
 	std::string cur_creator = "Created by: ";
 	std::string cur_config_browser_name = "";
+	std::string cur_config_browser_yours_name = "";
+	std::string cur_config_browser_fav_name = "";
 
 	// configs
 	std::vector<std::string> config_names;
@@ -837,6 +846,13 @@ public:
 		catch (...) {}
 	}
 
+	void load_cfg_mem(json main)
+	{
+		try {
+			convert(main);
+		}
+		catch (...) {}
+	}
 
 };
 
