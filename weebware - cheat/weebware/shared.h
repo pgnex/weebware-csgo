@@ -12,7 +12,7 @@ class c_weebware
 public:
 	std::string g_user_name = "";
 	void setup_thread();
-	uint64_t pattern_scan(const char* szModule, const char* szSignature);
+	uintptr_t pattern_scan(const char* szModule, const char* szSignature);
 	void init_fonts();
 	bool models_installed = false;
 	bool check_models_installed();
@@ -31,6 +31,7 @@ public:
 	IDirect3DDevice9* g_direct_x;
 	c_input_system* g_input_system;
 	c_input* g_input;
+	c_phys_surface_props* g_surface_props;
 	iv_model_info* g_model_info;
 	i_engine_trace* g_engine_trace;
 	c_debug_overlay* g_debug_overlay;

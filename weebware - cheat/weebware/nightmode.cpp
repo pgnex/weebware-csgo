@@ -51,7 +51,6 @@ void c_nightmode::apply() {
 
 }
 
-
 void c_nightmode::remove() {
 
 	if (!done)

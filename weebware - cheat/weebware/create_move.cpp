@@ -10,7 +10,6 @@ c_create_move g_create_move;
 c_nightmode g_nightmode;
 c_utils g_utils;
 
-
 bool hook_functions::clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
 	if (cmd->command_number == 0 && sendpacket)

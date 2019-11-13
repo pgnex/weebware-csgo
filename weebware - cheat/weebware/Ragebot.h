@@ -1,56 +1,108 @@
 #pragma once
 #include "Header.h"
 
-// note: shifting bits into 1 always results in powers of 2, which is which is required for proper bitmasking
+namespace ragebot
+{
+	enum class target_method
+	{
+		none = 0,
+		closest = 1,
+		lowest = 2
+	};
 
-// get_target_vector flags (hitscan stuff)
-#define FL_IGNORE_HEAD			(1 << 0)
-#define FL_IGNORE_LIMBS			(1 << 1)
-#define FL_PRIORITIZE_BODY		(1 << 2)
-#define FL_DISABLE_MULTIPOINT	(1 << 3)
+	typedef bool( __fastcall* trace_to_exit_fn )(Vector&, trace_t&, float, float, float, float, float, float, trace_t*);
 
-// get_multipoints flags (multipoint stuff)
-#define FL_MULTIPOINT_DISABLED	(1 << 0)
-#define FL_MULTIPOINT_HEAD_ONLY (1 << 1)
-#define FL_MULTIPOINT_BODY_ONLY (1 << 2)
-#define FL_MULTIPOINT_HEAD_BODY (1 << 3)
+	struct fire_bullet_data
+	{
+		Vector          src;
+		trace_t         enter_trace;
+		Vector          direction;
+		ITraceFilter    filter;
+		float           trace_length;
+		float           trace_length_remaining;
+		float           current_damage;
+		int             penetrate_count;
+	};
 
-struct backtrack_data_t;
-struct target_vector_t {
-	bool initialized = false;
-	c_base_entity* owner;
-	int hitbox;
-	int bone;
-	float damage;
-	Vector position;
-};
+	struct surfacephysicsparams_t
+	{
+		float    friction;
+		float    elasticity;
+		float    density;
+		float    thickness;
+		float    dampening;
+	};
 
-class c_ragebot {
-public:
+	struct surfaceaudioparams_t
+	{
+		float    reflectivity;             // like elasticity, but how much sound should be reflected by this surface
+		float    hardnessFactor;           // like elasticity, but only affects impact sound choices
+		float    roughnessFactor;          // like friction, but only affects scrape sound choices   
+		float    roughThreshold;           // surface roughness > this causes "rough" scrapes, < this causes "smooth" scrapes
+		float    hardThreshold;            // surface hardness > this causes "hard" impacts, < this causes "soft" impacts
+		float    hardVelocityThreshold;    // collision velocity > this causes "hard" impacts, < this causes "soft" impacts   
+		float    highPitchOcclusion;       //a value betweeen 0 and 100 where 0 is not occluded at all and 100 is silent (except for any additional reflected sound)
+		float    midPitchOcclusion;
+		float    lowPitchOcclusion;
+	};
 
-	bool Run(c_usercmd* cmd);
-	target_vector_t get_target_vector(c_base_entity* entity, int flags, int multipoint_flags = 0);
-	target_vector_t rage_backtrack(c_base_entity* player, backtrack_data_t& used_record);
-	int get_target_flags(c_base_entity* player);
-	void quick_stop(c_usercmd* cmd);
-	std::vector<Vector> hitpoints[64];
-	long get_epoch();
+	struct surfacesoundnames_t
+	{
+		unsigned short    walkStepLeft;
+		unsigned short    walkStepRight;
+		unsigned short	  runStepLeft;
+		unsigned short	  runStepRight;
+		unsigned short    impactSoft;
+		unsigned short    impactHard;
+		unsigned short    scrapeSmooth;
+		unsigned short    scrapeRough;
+		unsigned short    bulletImpact;
+		unsigned short    rolling;
+		unsigned short    breakSound;
+		unsigned short    strainSound;
+	};
 
-	long long best_target_found = -1;
-	int best_target_index = -1;
-	Vector best_target_vector;
+	struct surfacegameprops_t
+	{
+	public:
+		float maxSpeedFactor;
+		float jumpFactor;
+		float flPenetrationModifier;
+		float flDamageModifier;
+		unsigned short material;
+		byte climbable;
+		char pad00[0x4];
 
+	};
 
-private:
+	struct surfacedata_t
+	{
+		surfacephysicsparams_t    physics;
+		surfaceaudioparams_t    audio;
+		surfacesoundnames_t        sounds;
+		surfacegameprops_t        game;
+	};
 
-	std::vector<target_vector_t> c_ragebot::get_multipoints(c_base_entity* entity, mstudiobbox_t* bbox, target_vector_t original_target, int flags = 0);
-	bool velocity_check(c_basecombat_weapon* weapon);
-	bool hit_chance(float flChance, c_basecombat_weapon* weapon);
-	bool aim_step(QAngle& angle);
-	bool player_valid(c_base_entity* player);
-	float forward;
-	float sidemove;
+	class auto_wall
+	{
+	public:
+		//	Call to trace to exit function using asm
+		bool asm_trace_to_exit( Vector& end, trace_t& tr, float x, float y, float z, float x2, float y2, float z2, trace_t* trace );
 
-};
+		// Rebuilds handlebulletpentration function from source sdk
+		bool handle_bullet_pen( c_weapon_info* wpn_data, fire_bullet_data& data );
 
-extern c_ragebot* ragebot;
+		void trace_line( Vector& vecAbsStart, Vector& vecAbsEnd, unsigned int mask, c_base_entity* ignore, trace_t* ptr );
+
+		void clip_trace_to_players( Vector& vecAbsStart, Vector& vecAbsEnd, unsigned int mask, ITraceFilter* filter, trace_t* tr );
+
+		bool sim_bullet_fire( fire_bullet_data& data, c_base_entity* local );
+	};
+	class target_info
+	{
+	public:
+		std::vector<Vector> hitboxes;
+	};
+
+	void main( );
+}
