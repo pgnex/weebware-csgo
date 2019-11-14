@@ -350,6 +350,7 @@ void c_hooking::unhook_all_functions()
 	VEH_CM->unHook();
 	VEH_RESET->unHook();
 	VEH_FSN->unHook();
+	VEH_ENDSCENE->unHook();
 	VEH_SCENEEND->unHook();
 	VEH_SOUNDS->unHook();
 	VEH_MDL->unHook();
