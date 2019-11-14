@@ -12,7 +12,8 @@ int convert_index_id(int index);
 #if 1
 void hook_functions::frame_stage_notify(clientframestage_t curStage)
 {
-
+	QAngle aim_punch;
+	QAngle o_aim_punch;
 	try {
 		g_frame_stage_notify.local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
@@ -25,6 +26,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		{
+			g_frame_stage_notify.no_vis_recoil();
 			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
@@ -40,6 +42,8 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 	catch (...) {}
 
 	g_hooking.o_fsn(curStage);
+
+	g_frame_stage_notify.no_vis_recoil(true);
 	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
 }
 #endif
@@ -258,6 +262,43 @@ void c_frame_stage_notify::bullet_tracers() {
 		}
 	}
 }
+
+void c_frame_stage_notify::no_vis_recoil(bool restore) {
+
+	if (!g_weebwarecfg.no_recoil && g_weebwarecfg.ragebot_silent_aim)
+		return;
+
+	static QAngle* aim_punch = nullptr;
+	static QAngle* view_punch = nullptr;
+	static QAngle aim_punch_old, view_punch_old;
+
+	if (restore) {
+		if (aim_punch && view_punch) {
+			*aim_punch = aim_punch_old;
+			*view_punch = view_punch_old;
+			aim_punch = nullptr;
+			view_punch = nullptr;
+		}
+		return;
+	}
+
+	if (!local || !local->m_iHealth() > 0)
+		return;
+
+	// get pointers to punch angles
+	aim_punch = local->pm_aimPunchAngle();
+	view_punch = local->m_viewPunchAngle();
+
+	// store original values
+	aim_punch_old = *aim_punch;
+	view_punch_old = *view_punch;
+
+	// set them to 0 (removes any visual effect)
+	*aim_punch = QAngle(0, 0, 0);
+	*view_punch = QAngle(0, 0, 0);
+
+}
+
 
 void c_frame_stage_notify::third_person() {
 
