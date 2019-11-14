@@ -4,7 +4,7 @@ namespace ragebot
 {
 	bool enabled = true;
 	bool friendly_fire = false;
-	int target_method = static_cast<int>(target_method::crosshair);
+	int target_method = static_cast<int>(target_method::lowest_hp);
 	auto_wall g_autowall;
 //	float min_dmg = 1.f;
 
@@ -453,7 +453,7 @@ namespace ragebot
 	{
 		int32_t smallest_dst = 99999;
 		int32_t smallest_fov = 180;
-		int32_t smallest_health = 100;
+		int32_t smallest_health = 101;
 
 		c_base_entity* ideal_target = nullptr;
 
