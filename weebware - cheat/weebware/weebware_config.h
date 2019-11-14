@@ -73,7 +73,7 @@ public:
 	int legitbot_activation_key;
 	float maximum_fov;
 	float sensitivity;
-	int aimbot_target_switch_delay = 250;
+	int aimbot_target_switch_delay = 125;
 	float reaction_time;
 	float pitch_rcs;
 	float yaw_rcs;
@@ -372,11 +372,9 @@ public:
 	// ragebot
 	bool ragebot_enabled;
 	bool safemode = true;
-	bool autowall_enabled;
-	float autowall_min_dmg = 1.f;
+	float autowall_min_dmg = 0.f;
 	bool ragebot_target_team;
 	bool autoshoot_enabled;
-	bool hitchance_enabled;
 	float ragebot_hitchance;
 	bool no_recoil;
 	bool ragebot_silent_aim;

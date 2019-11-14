@@ -464,6 +464,9 @@ namespace ragebot
 			if ( !cur_entity->is_valid_player( ) )
 				continue;
 
+			if (cur_entity->m_bGunGameImmunity())
+				continue;
+
 			if ( !g_weebwarecfg.ragebot_target_team &&
 				(cur_entity->m_iTeamNum( ) == local->m_iTeamNum( )) )
 				continue;
@@ -510,6 +513,9 @@ namespace ragebot
 				break;
 				case static_cast<int>(target_method::lowest_hp) :
 				{
+
+					// we need to make these functions so its easier to default :l
+
 					int target_health = cur_entity->m_iHealth();
 
 					if (target_health < smallest_health) {
@@ -590,7 +596,8 @@ namespace ragebot
 				g_weebware.g_engine->set_view_angles( cmd->viewangles );
 
 			if (g_weebwarecfg.ragebot_autostop)
-				auto_stop(cmd);
+				if (!next_attack_queued(local))
+					auto_stop(cmd);
 			
 			if (!g_weebwarecfg.autoshoot_enabled)
 				return;

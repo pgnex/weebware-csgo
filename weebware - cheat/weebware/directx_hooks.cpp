@@ -555,7 +555,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							ImGui::SliderFloat("Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
 							ImGui::SliderFloat("Recoil compensation Y", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].yaw_rcs, 0, 100, "%.0f%%");
 
-							ImGui::Checkbox("Quick stop", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
+							ImGui::Checkbox("Quickstop##legit", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
 
 							ImGui::Checkbox("Aim through smoke", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_through_smoke, false);
 
@@ -643,6 +643,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Checkbox("Silent Aim##ragebot", &g_weebwarecfg.ragebot_silent_aim, false);
 								ImGui::Checkbox("No Recoil", &g_weebwarecfg.no_recoil, false);
 								ImGui::Checkbox("Target Teammates##rage", &g_weebwarecfg.ragebot_target_team, false);
+								ImGui::Checkbox("Quickstop##rage", &g_weebwarecfg.ragebot_autostop, false);
 								ImGui::Checkbox("Autoshoot", &g_weebwarecfg.autoshoot_enabled, false);
 								ImGui::Text("Autowall Minimum Damage");
 								ImGui::SliderFloat("Autowall##mindamage", &g_weebwarecfg.autowall_min_dmg, 0, 100, "%.f%");
