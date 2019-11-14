@@ -25,6 +25,7 @@ namespace ragebot
 		int             penetrate_count;
 	};
 
+
 	class auto_wall
 	{
 	public:

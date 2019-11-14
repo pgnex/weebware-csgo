@@ -4,9 +4,9 @@ namespace ragebot
 {
 	bool enabled = true;
 	bool friendly_fire = false;
-	int target_method = static_cast<int>(target_method::distance);
+	int target_method = static_cast<int>(target_method::crosshair);
 	auto_wall g_autowall;
-	float min_dmg = 1.f;
+//	float min_dmg = 1.f;
 
 	bool auto_wall::asm_trace_to_exit( Vector& end, trace_t& tr, Vector start, Vector vEnd, trace_t* trace )
 	{
@@ -41,16 +41,16 @@ namespace ragebot
 		data.trace_length += data.enter_trace.fraction * data.trace_length_remaining;
 		data.current_damage *= pow( (wpn_data->flRangeModifier), (data.trace_length * 0.002) );
 		if ( (data.trace_length > 3000.f) || (enter_surf_penetration_mod < 0.1f) ) {
-			printf( "trace out of range\n" );
+		//	printf( "trace out of range\n" );
 			data.penetrate_count = 0;
 		}
 		if ( data.penetrate_count <= 0 ) {
-			printf( "pen count ended\n" );
+		//	printf( "pen count ended\n" );
 			return false;
 		}
 		Vector dummy;
 		trace_t trace_exit;
-		printf( "about to trace\n" );
+		//printf( "about to trace\n" );
 		if ( !this->asm_trace_to_exit(
 			dummy,
 			data.enter_trace,
@@ -82,7 +82,7 @@ namespace ragebot
 		float v34 = fmaxf( 0.f, 1.0f / combined_penetration_modifier );
 		float v35 = (data.current_damage * final_damage_modifier) + v34 * 3.0f * fmaxf( 0.0f, (3.0f / wpn_data->flPenetration) * 1.25f );
 
-		printf( "cur damage: %.2f\n", data.current_damage );
+		//printf( "cur damage: %.2f\n", data.current_damage );
 		float thickness = (trace_exit.endpos - data.enter_trace.endpos).length( );
 		thickness *= thickness;
 		thickness *= v34;
@@ -91,7 +91,7 @@ namespace ragebot
 		float lost_damage = fmaxf( 0.0f, v35 + thickness );
 
 		if ( lost_damage > data.current_damage ) {
-			printf( "damage lost is too great \n" );
+		//	printf( "damage lost is too great \n" );
 			return false;
 		}
 		if ( lost_damage >= 0.0f )
@@ -172,6 +172,87 @@ namespace ragebot
 		return range;
 	}
 
+	void auto_stop(c_usercmd* cmd)
+	{
+		cmd->forwardmove = 0;
+		cmd->sidemove = 0;
+	}
+
+	float random_float(float flMinVal, float flMaxVal)
+	{
+		typedef float(__cdecl* RandomFloatFn)(float, float);
+		static RandomFloatFn randomFloat = (RandomFloatFn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
+		return randomFloat(flMinVal, flMaxVal);
+	}
+
+	void random_seed(UINT Seed)
+	{
+		typedef void(*RandomSeed_t)(UINT);
+		static RandomSeed_t m_RandomSeed = (RandomSeed_t)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
+		m_RandomSeed(Seed);
+	}
+
+	Vector get_spread(c_basecombat_weapon* weapon, int seed)
+	{
+		random_seed((seed & 0xFF) + 1);
+
+		constexpr float pi = PI;
+		constexpr float pi2 = pi * 2;
+
+		float a = random_float(0, pi2);
+		float flRandomInaccuracy = random_float(0, weapon->Get_Innacuracy());
+		float c = random_float(0, pi2);
+
+		float flRandomSpread = random_float(0, weapon->GetSpread());
+
+		float x = (cos(a) * flRandomSpread) + (cos(c) * flRandomInaccuracy);
+		float y = (sin(a) * flRandomSpread) + (sin(c) * flRandomInaccuracy);
+		return Vector(x, y, 0);
+	}
+
+	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst, c_base_entity* local)
+	{
+		if (chance <= 0.f) return true;
+		int hitCount = 0;
+		Vector vecDirShooting, vecRight, vecUp;
+		g_maths.qangle_vector(viewAngles, vecDirShooting, vecRight, vecUp);
+		c_trace_customfilter traceFilter;
+
+		for (int seed = 0; seed < 255; seed++)
+		{
+			Vector spread = get_spread(local->m_pActiveWeapon(), seed);
+
+			Vector vecDir(vecDirShooting.x + spread.x * vecRight.x + spread.y * vecUp.x,
+				vecDirShooting.y + spread.x * vecRight.y + spread.y * vecUp.y,
+				vecDirShooting.z + spread.x * vecRight.z + spread.y * vecUp.z);
+
+			Vector vecEnd = local->get_vec_eyepos() + (vecDir * dst);
+			trace_t trace;
+			Ray_t ray;
+			traceFilter.pTarget = (void*)target;
+			ray.Init(local->get_vec_eyepos(), vecEnd);
+			g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &traceFilter, &trace);
+
+			if (trace.fraction == 1.0f)
+				continue;
+
+			if (trace.m_pEnt == target)
+				hitCount++;
+		}
+
+		if (hitCount >= (255 * (chance / 100.0f)))
+			return true;
+
+		return false;
+	}
+
+	bool next_attack_queued(c_base_entity* local)
+	{
+		if (local->m_pActiveWeapon()->m_flNextPrimaryAttack() > (float)g_weebware.g_global_vars->curtime)
+			return false;
+		return true;
+	}
+
 
 	void auto_wall::clip_trace_to_player( Vector& vecAbsStart, Vector& vecAbsEnd, unsigned int mask, ITraceFilter* filter, trace_t* tr )
 	{
@@ -215,28 +296,6 @@ namespace ragebot
 		}
 	}
 
-
-	//void auto_wall::clip_trace_to_players( Vector& vecAbsStart, Vector& vecAbsEnd, unsigned int mask, ITraceFilter* filter, trace_t* tr ) {
-
-	//	static auto clip_trace_fn = g_weebware.pattern_scan(
-	//		"client_panorama.dll",
-	//		"53 8B DC 83 EC 08 83 E4 F0 83 C4 04 55 8B 6B 04 89 6C 24 04 8B EC 81 EC ? ? ? ? 8B 43" );
-
-	//	if ( !clip_trace_fn )
-	//		return;
-
-	//	_asm {
-	//		MOV		EAX, filter
-	//		LEA		ECX, tr
-	//		PUSH	ECX
-	//		PUSH	EAX
-	//		PUSH	mask
-	//		LEA		EDX, vecAbsEnd
-	//		LEA		ECX, vecAbsStart
-	//		CALL	clip_trace_fn
-	//		ADD		ESP, 0xC
-	//	}
-	//}
 
 	float auto_wall::hitgroup_dmg_ratio( int hit_group )
 	{
@@ -315,13 +374,13 @@ namespace ragebot
 			// this->clip_trace_to_players( data.src, end + data.direction * 40.f, MASK_SHOT | CONTENTS_GRATE, &data.filter, &data.enter_trace );
 
 			this->trace_line( data.src, end + data.direction * 40.f, MASK_SHOT, local, &data.enter_trace );
-			printf( "traced line \n" );
+		//	printf( "traced line \n" );
 			if ( data.enter_trace.fraction == 1.0f ) {
-				printf( "fraction 1 \n" );
+			//	printf( "fraction 1 \n" );
 				break;
 			}
 			if ( (data.enter_trace.hitgroup > 0) && (data.enter_trace.hitgroup <= 7) ) {
-				printf( "hitgroup inbound\n" );
+			//	printf( "hitgroup inbound\n" );
 				data.trace_length += data.enter_trace.fraction * data.trace_length_remaining;
 				data.current_damage *= pow( weaponData->flRangeModifier, data.trace_length * 0.002 );
 				scale_dmg( data.enter_trace.hitgroup, data.enter_trace.m_pEnt, weaponData->flArmorRatio, data.current_damage );
@@ -393,6 +452,8 @@ namespace ragebot
 	c_base_entity* get_ideal_target( c_base_entity* local )
 	{
 		int32_t smallest_dst = 99999;
+		int32_t smallest_fov = 180;
+		int32_t smallest_health = 100;
 
 		c_base_entity* ideal_target = nullptr;
 
@@ -403,13 +464,14 @@ namespace ragebot
 			if ( !cur_entity->is_valid_player( ) )
 				continue;
 
-			if ( !friendly_fire &&
+			if ( !g_weebwarecfg.ragebot_target_team &&
 				(cur_entity->m_iTeamNum( ) == local->m_iTeamNum( )) )
 				continue;
 			
 			// ignore unhittable players
-			if ( g_autowall.get_dmg( local, cur_entity->get_bone( 8 ) ) < 1.f )
+			if ( g_autowall.get_dmg( local, cur_entity->get_bone( 8 ) ) < 1.f ) // 8 is head.
 				continue;
+
 
 			// fov check if needed
 			// really isn't needed?
@@ -430,12 +492,30 @@ namespace ragebot
 				break;
 				case static_cast<int>(target_method::crosshair) :
 				{
+					Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
+					QAngle angle_to_head;
 
+					g_maths.vector_qangles(center_head - local->get_vec_eyepos(), angle_to_head);
+					g_maths.normalize_angle(angle_to_head);
+
+					QAngle view_angles = {};
+					g_weebware.g_engine->get_view_angles(view_angles);
+					float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
+
+					if (normal_fov < smallest_fov) {
+						ideal_target = cur_entity;
+						smallest_fov = normal_fov;
+					}
 				}
 				break;
 				case static_cast<int>(target_method::lowest_hp) :
 				{
+					int target_health = cur_entity->m_iHealth();
 
+					if (target_health < smallest_health) {
+						ideal_target = cur_entity;
+						smallest_health = target_health;
+					}
 				}
 				break;
 				default: // method not selected
@@ -451,8 +531,7 @@ namespace ragebot
 
 	Vector hitscan_target( c_base_entity* target, c_base_entity* local, bool* can_fire )
 	{
-		if ( !target ||
-			 !local )
+		if ( !target || !local )
 			return {};
 
 		auto best_dmg = 0.f;
@@ -461,10 +540,15 @@ namespace ragebot
 
 		for ( auto hitbox : hitbox_simple ) {
 			auto hitbox_pos = center_hitbox( target, hitbox );
-			auto dmg = g_autowall.get_dmg( local, hitbox_pos );
-			//	printf( "damage %.2f\n", dmg );
-			if ( dmg > best_dmg
-				 && dmg > min_dmg ) {
+			float dmg = 9999, min_dmg = 0;
+
+			if (g_weebwarecfg.autowall_min_dmg > 0) {
+				dmg = g_autowall.get_dmg(local, hitbox_pos);
+				min_dmg = g_weebwarecfg.autowall_min_dmg;
+			}
+
+
+			if ( dmg > best_dmg && dmg > min_dmg) {
 				*can_fire = true;
 				best_pos = hitbox_pos;
 				best_dmg = dmg;
@@ -479,7 +563,7 @@ namespace ragebot
 
 	void main( c_base_entity* local, c_usercmd* cmd )
 	{
-		if ( !enabled || !local ) {
+		if ( !g_weebwarecfg.ragebot_enabled || !local ) {
 			return;
 		}
 
@@ -494,12 +578,33 @@ namespace ragebot
 				return;
 			}
 
-			printf( "passed test 4 \n" );
-
 			QAngle target_ang = {};
 			g_maths.vector_qangles( best_pos - local->get_vec_eyepos( ), target_ang );
+
+			if (g_weebwarecfg.no_recoil)
+				target_ang -= local->m_aimPunchAngle() * 2.f;
+
 			cmd->viewangles = target_ang;
-			g_weebware.g_engine->set_view_angles( cmd->viewangles );
+
+			if (!g_weebwarecfg.ragebot_silent_aim)
+				g_weebware.g_engine->set_view_angles( cmd->viewangles );
+
+			if (g_weebwarecfg.ragebot_autostop)
+				auto_stop(cmd);
+			
+			if (!g_weebwarecfg.autoshoot_enabled)
+				return;
+
+			QAngle view_angles = {};
+			g_weebware.g_engine->get_view_angles(view_angles);
+
+			if (raytrace_hc(cmd->viewangles, g_weebwarecfg.ragebot_hitchance, target, local->m_pActiveWeapon()->get_weapon_info()->flRange, local) && next_attack_queued(local)) {
+				cmd->buttons |= in_attack;
+			}
+			else {
+				cmd->buttons &= ~in_attack;
+			}
+
 		}
 	}
 
