@@ -128,14 +128,14 @@ void c_frame_stage_notify::run_clantag()
 		return;
 	}
 
-	const char* stages[] = { u8"\u2800\u2800\u2800\u2800w", u8"\u2800\u2800\u2800w\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800e", u8"w\u2800\u2800\u2800e\u2800", u8"w\u2800\u2800e\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800e", u8"we\u2800\u2800\u2800e\u2800", u8"we\u2800\u2800e\u2800\u2800", u8"we\u2800e\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800b", u8"wee\u2800\u2800b\u2800", u8"wee\u2800b\u2800\u2800", u8"weeb\u2800\u2800\u2800", u8"weeb\u2800\u2800w", u8"weeb\u2800w\u2800", u8"weebw\u2800a\u2800", u8"weebwa\u2800\u2800", u8"weebwar\u2800", u8"weebware", u8"weebware", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"weebware", u8"weebware" };
+	const char8_t* stages[] = { u8"\u2800\u2800\u2800\u2800w", u8"\u2800\u2800\u2800w\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800\u2800w\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"\u2800w\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800", u8"w\u2800\u2800\u2800\u2800e", u8"w\u2800\u2800\u2800e\u2800", u8"w\u2800\u2800e\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"w\u2800e\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800", u8"we\u2800\u2800\u2800\u2800e", u8"we\u2800\u2800\u2800e\u2800", u8"we\u2800\u2800e\u2800\u2800", u8"we\u2800e\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800\u2800", u8"wee\u2800\u2800\u2800b", u8"wee\u2800\u2800b\u2800", u8"wee\u2800b\u2800\u2800", u8"weeb\u2800\u2800\u2800", u8"weeb\u2800\u2800w", u8"weeb\u2800w\u2800", u8"weebw\u2800a\u2800", u8"weebwa\u2800\u2800", u8"weebwar\u2800", u8"weebware", u8"weebware", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"\u2800\u2800\u2800\u2800\u2800\u2800\u2800", u8"weebware", u8"weebware" };
 
 	static int current;
 	int serverTime = g_weebware.g_global_vars->interval_per_tick * (float)this->local->get_tick_base() * 2.5;
 	int value = serverTime % 33;
 
 	if (value != current) {
-		set_clantag(stages[value], stages[value]);
+		set_clantag((const char*)stages[value], (const char*)stages[value]);
 		clantag_done = true;
 	}
 	current = value;
