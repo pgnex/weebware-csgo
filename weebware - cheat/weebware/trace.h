@@ -216,6 +216,22 @@ public:
 	void* pTarget;
 };
 
+class c_trace_customfilterworld : public ITraceFilter
+{
+public:
+	bool ShouldHitEntity(c_base_entity* pEntity, int contentsMask)
+	{
+		return pEntity == pTarget;
+	}
+
+	virtual TraceType_t	GetTraceType() const
+	{
+		return TRACE_EVERYTHING;
+	}
+
+	void* pTarget;
+};
+
 class ITraceListData
 {
 public:

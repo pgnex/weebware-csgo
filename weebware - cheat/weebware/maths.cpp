@@ -1,8 +1,6 @@
 #include "maths.h"
 #include "shared.h"
 
-
-
 c_maths g_maths;
 
 float c_maths::dot_product(Vector a, Vector b)
@@ -196,6 +194,33 @@ void c_maths::qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& v
 	vecUp.x = cr * sp * cy + -sr * -sy;
 	vecUp.y = cr * sp * sy + -sr * cy;
 	vecUp.z = cr * cp;
+}
+
+Vector CrossProduct(const Vector& a, const Vector& b)
+{
+	return Vector(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+}
+
+void c_maths::VectorAngles(const Vector& forward, Vector& up, QAngle& angles)
+{
+	Vector left = CrossProduct(up, forward);
+
+	float forwardDist = forward.length();
+
+	if (forwardDist > 0.001f)
+	{
+		angles.x = atan2f(-forward.z, forwardDist) * 180 / PI_F;
+		angles.y = atan2f(forward.y, forward.x) * 180 / PI_F;
+
+		float upZ = (left.y * forward.x) - (left.x * forward.y);
+		angles.z = atan2f(left.z, upZ) * 180 / PI_F;
+	}
+	else
+	{
+		angles.x = atan2f(-forward.z, forwardDist) * 180 / PI_F;
+		angles.y = atan2f(-left.x, left.y) * 180 / PI_F;
+		angles.z = 0;
+	}
 }
 
 void c_maths::normalize_angle(QAngle& angle)
