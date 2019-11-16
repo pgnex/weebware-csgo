@@ -77,6 +77,7 @@ public:
 #define Assert( _exp ) ((void)0)
 bool s_bMathlibInitialized = false;
 #define PI 3.14159265358979323846f
+#define PI_F	((float)(PI)) 
 #define DEG2RAD( x ) ( ( float )( x ) * ( float )( ( float )( PI ) / 180.0f ) )
 #define RAD2DEG( x ) ( ( float )( x ) * ( float )( 180.0f / ( float )( PI ) ) )
 
@@ -92,6 +93,7 @@ bool s_bMathlibInitialized = false;
 	void vector_qangles(Vector forward, QAngle& angles);
 	void qangle_vector(const QAngle& angles, Vector& forward);
 	void qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp);
+	void VectorAngles(const Vector& forward, Vector& up, QAngle& angles);
 	void vector_qangles3d(Vector& vecForward, Vector& vecAngles);
 	void calc_angle(Vector src, Vector dst, Vector& angles);
 

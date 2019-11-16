@@ -536,7 +536,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 							ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
 							ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-							ImGui::Checkbox("Target teammates (Danger Zone)", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
+							ImGui::Checkbox("Target teammates", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
 							ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov, false);
 
 							ImGui::Text("Maximum FOV");
@@ -555,7 +555,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							ImGui::SliderFloat("Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
 							ImGui::SliderFloat("Recoil compensation Y", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].yaw_rcs, 0, 100, "%.0f%%");
 
-							ImGui::Checkbox("Quick stop", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
+							ImGui::Checkbox("Quickstop##legit", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
 
 							ImGui::Checkbox("Aim through smoke", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_through_smoke, false);
 
@@ -625,11 +625,30 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region rage
 					if (selected_tab == tabs::rage)
 					{
+						ImGui::BeginChild("header", ImVec2(ImGui::GetContentRegionAvailWidth(), 35), true);
+						ImGui::Checkbox("Safe Mode", &g_weebwarecfg.safemode, false);
+						ImGui::SameLine();
+						ImGui::VerticalSeparator();
+						ImGui::SameLine();
+						style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(200, 10, 10, 255.f));
+						ImGui::Text("By disabling safe mode, you put your account at much greater risk of ban.");
+						style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
+						ImGui::EndChild();
+
 						ImGui::Columns(2, "rage", false);
 						{
 							ImGui::BeginChild("rage 1", ImVec2(0, 0), true);
 							{
-
+								ImGui::Checkbox("Enabled##rage", &g_weebwarecfg.ragebot_enabled, false);
+								ImGui::Checkbox("Silent Aim##ragebot", &g_weebwarecfg.ragebot_silent_aim, false);
+								ImGui::Checkbox("No Recoil", &g_weebwarecfg.no_recoil, false);
+								ImGui::Checkbox("Target Teammates##rage", &g_weebwarecfg.ragebot_target_team, false);
+								ImGui::Checkbox("Quickstop##rage", &g_weebwarecfg.ragebot_autostop, false);
+								ImGui::Checkbox("Autoshoot", &g_weebwarecfg.autoshoot_enabled, false);
+								ImGui::Text("Autowall Minimum Damage");
+								ImGui::SliderFloat("Autowall##mindamage", &g_weebwarecfg.autowall_min_dmg, 0, 100, "%.f%");
+								ImGui::Text("Hitchance");
+								ImGui::SliderFloat("Hitchance##rageslider", &g_weebwarecfg.ragebot_hitchance, 0, 100, "%.0f%%");
 							}
 							ImGui::EndChild();
 
@@ -1194,15 +1213,15 @@ void imgui_main(IDirect3DDevice9* pDevice)
 								ImGui::Text("Your Configs:");
 								ImGui::Separator();
 								ImGui::BeginChild("Configs##yours", ImVec2(0, 200), false);
-								int index = 0;
+								int index_yours = 0;
 								for (auto cfg : g_config_list.config_browser_yours)
 								{
 									if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_yours_name == cfg.c_str()))
 									{
 										g_config_list.cur_config_browser_yours_name = cfg.c_str();
-										g_config_list.cur_id_yours = std::stoi(g_config_list.your_configs_buffer[index].at("id").get_ref<std::string&>());
+										g_config_list.cur_id_yours = (g_config_list.your_configs_buffer[index_yours].at("id"));
 									}
-									index++;
+									index_yours++;
 								}
 								ImGui::EndChild();
 								ImGui::Separator();
@@ -1230,7 +1249,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 									if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_fav_name == cfg.c_str()))
 									{
 										g_config_list.cur_config_browser_fav_name = cfg.c_str();
-										g_config_list.cur_id_fav = std::stoi(g_config_list.your_configs_buffer[index_fav].at("id").get_ref<std::string&>());
+										g_config_list.cur_id_fav = (g_config_list.favorite_configs_buffer[index_fav].at("id"));
 									}
 									index_fav++;
 								}

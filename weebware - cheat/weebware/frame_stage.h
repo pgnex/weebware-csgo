@@ -16,6 +16,7 @@ public:
 	void preserve_killfeed();
 	void bullet_tracers();
 	void third_person();
+	void no_vis_recoil(bool restore = false);
 };
 
 extern std::vector< ImpactData_t > vis_impact_data;

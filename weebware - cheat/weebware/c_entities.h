@@ -265,6 +265,18 @@ public:
 		return get_value<QAngle>( offset );
 	}
 
+	QAngle* pm_aimPunchAngle()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_Local", "m_aimPunchAngle");
+		return get_pointer<QAngle>(offset);
+	}
+
+	QAngle* m_viewPunchAngle()
+	{
+		static uintptr_t offset = retrieve_offset("DT_BasePlayer", "localdata", "m_Local", "m_viewPunchAngle");
+		return get_pointer<QAngle>(offset);
+	}
+	
 	int m_iHealth( )
 	{
 		static uintptr_t offset = retrieve_offset( "DT_BasePlayer", "m_iHealth" );

@@ -73,8 +73,13 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 		else {
 			g_create_move.local->m_pActiveWeapon( )->Update_Accuracy_Penalty( );
 			g_legitbot.m_local = g_create_move.local;
-			//	g_create_move.legit_aa(cmd, sendpacket);		
-			ragebot::main( g_create_move.local, cmd );
+
+			// spooky stuff
+			if (!g_weebwarecfg.safemode) {
+				ragebot::main(g_create_move.local, cmd);
+			}
+
+			//	g_create_move.legit_aa(cmd, sendpacket);
 			g_legitbot.create_move( cmd );
 			g_accuracy.accuracy_boost( cmd );
 			g_ai.create_move( cmd, g_create_move.local );

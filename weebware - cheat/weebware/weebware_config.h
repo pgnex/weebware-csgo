@@ -22,6 +22,10 @@ static bool check_color(std::string key, json data) {
 	return false;
 }
 
+struct t_config_info {
+	std::string title = "";
+};
+
 class c_config_list
 {
 public:
@@ -69,7 +73,7 @@ public:
 	int legitbot_activation_key;
 	float maximum_fov;
 	float sensitivity;
-	int aimbot_target_switch_delay = 250;
+	int aimbot_target_switch_delay = 125;
 	float reaction_time;
 	float pitch_rcs;
 	float yaw_rcs;
@@ -364,6 +368,17 @@ public:
 	int auto_defuse_key;
 	bool no_duck_cooldown;
 	std::string weapon_option_name = "Weapon Options - Hold Out A Weapon";
+
+	// ragebot
+	bool ragebot_enabled;
+	bool safemode = true;
+	float autowall_min_dmg = 0.f;
+	bool ragebot_target_team;
+	bool autoshoot_enabled;
+	float ragebot_hitchance;
+	bool no_recoil;
+	bool ragebot_silent_aim;
+	bool ragebot_autostop;
 
 	// debug stuff
 	bool on_sendpacket = 0;
