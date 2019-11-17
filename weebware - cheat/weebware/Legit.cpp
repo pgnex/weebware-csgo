@@ -83,9 +83,10 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 
 	float rcs_power = g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power;
-
-	if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
-		aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
+	if (g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs) {
+		if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
+			aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
+		}
 	}
 	else {
 		aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs);
