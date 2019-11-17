@@ -48,7 +48,7 @@ void c_config_list::update_config_browser() {
 
 void c_config_list::get_your_configs() {
 	std::vector<std::string> info;
-	std::string content = networking::get_request("https://weebware.net/inc/web/?your=nex");
+	std::string content = networking::get_request("https://weebware.net/inc/web/?your=" + g_weebware.g_user_name);
 	g_config_list.your_configs_buffer = json::parse(content);
 	for (const auto& name : g_config_list.your_configs_buffer) {
 		info.push_back(name.at("title"));
@@ -58,7 +58,7 @@ void c_config_list::get_your_configs() {
 
 void c_config_list::get_favorited_configs() {
 	std::vector<std::string> info;
-	std::string content = networking::get_request("https://weebware.net/inc/web/?favourite=nex");
+	std::string content = networking::get_request("https://weebware.net/inc/web/?favourite=" + g_weebware.g_user_name);
 	g_config_list.favorite_configs_buffer = json::parse(content);
 	for (const auto& name : g_config_list.favorite_configs_buffer) {
 		info.push_back(name.at("title"));
