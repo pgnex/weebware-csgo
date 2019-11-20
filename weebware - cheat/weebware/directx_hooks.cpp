@@ -625,42 +625,42 @@ void imgui_main(IDirect3DDevice9* pDevice)
 #pragma region rage
 					if (selected_tab == tabs::rage)
 					{
-						ImGui::BeginChild("header", ImVec2(ImGui::GetContentRegionAvailWidth(), 35), true);
-						ImGui::Checkbox("Safe Mode", &g_weebwarecfg.safemode, false);
-						ImGui::SameLine();
-						ImGui::VerticalSeparator();
-						ImGui::SameLine();
-						style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(200, 10, 10, 255.f));
-						ImGui::Text("By disabling safe mode, you put your account at much greater risk of ban.");
-						style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
-						ImGui::EndChild();
+						//ImGui::BeginChild("header", ImVec2(ImGui::GetContentRegionAvailWidth(), 35), true);
+						//ImGui::Checkbox("Safe Mode", &g_weebwarecfg.safemode, false);
+						//ImGui::SameLine();
+						//ImGui::VerticalSeparator();
+						//ImGui::SameLine();
+						//style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(200, 10, 10, 255.f));
+						//ImGui::Text("By disabling safe mode, you put your account at much greater risk of ban.");
+						//style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
+						//ImGui::EndChild();
 
-						ImGui::Columns(2, "rage", false);
-						{
-							ImGui::BeginChild("rage 1", ImVec2(0, 0), true);
-							{
-								ImGui::Checkbox("Enabled##rage", &g_weebwarecfg.ragebot_enabled, false);
-								ImGui::Checkbox("Silent Aim##ragebot", &g_weebwarecfg.ragebot_silent_aim, false);
-								ImGui::Checkbox("No Recoil", &g_weebwarecfg.no_recoil, false);
-								ImGui::Checkbox("Target Teammates##rage", &g_weebwarecfg.ragebot_target_team, false);
-								ImGui::Checkbox("Quickstop##rage", &g_weebwarecfg.ragebot_autostop, false);
-								ImGui::Checkbox("Autoshoot", &g_weebwarecfg.autoshoot_enabled, false);
-								ImGui::Text("Autowall Minimum Damage");
-								ImGui::SliderFloat("Autowall##mindamage", &g_weebwarecfg.autowall_min_dmg, 0, 100, "%.f%");
-								ImGui::Text("Hitchance");
-								ImGui::SliderFloat("Hitchance##rageslider", &g_weebwarecfg.ragebot_hitchance, 0, 100, "%.0f%%");
-							}
-							ImGui::EndChild();
+						//ImGui::Columns(2, "rage", false);
+						//{
+						//	ImGui::BeginChild("rage 1", ImVec2(0, 0), true);
+						//	{
+						//		ImGui::Checkbox("Enabled##rage", &g_weebwarecfg.ragebot_enabled, false);
+						//		ImGui::Checkbox("Silent Aim##ragebot", &g_weebwarecfg.ragebot_silent_aim, false);
+						//		ImGui::Checkbox("No Recoil", &g_weebwarecfg.no_recoil, false);
+						//		ImGui::Checkbox("Target Teammates##rage", &g_weebwarecfg.ragebot_target_team, false);
+						//		ImGui::Checkbox("Quickstop##rage", &g_weebwarecfg.ragebot_autostop, false);
+						//		ImGui::Checkbox("Autoshoot", &g_weebwarecfg.autoshoot_enabled, false);
+						//		ImGui::Text("Autowall Minimum Damage");
+						//		ImGui::SliderFloat("Autowall##mindamage", &g_weebwarecfg.autowall_min_dmg, 0, 100, "%.f%");
+						//		ImGui::Text("Hitchance");
+						//		ImGui::SliderFloat("Hitchance##rageslider", &g_weebwarecfg.ragebot_hitchance, 0, 100, "%.0f%%");
+						//	}
+						//	ImGui::EndChild();
 
-							ImGui::NextColumn();
+						//	ImGui::NextColumn();
 
-							ImGui::BeginChild("rage 2", ImVec2(0, 0), true);
-							{
-						
-							}
-							ImGui::EndChild();
+						//	ImGui::BeginChild("rage 2", ImVec2(0, 0), true);
+						//	{
+						//
+						//	}
+						//	ImGui::EndChild();
 
-						}
+						//}
 
 					}
 #pragma endregion
@@ -1039,7 +1039,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							ImGui::Text("Knife Options");
 							ImGui::Separator();
 							ImGui::Checkbox("Enabled##knifechanger", &g_weebwarecfg.knifechanger_enabled, false);
-							const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic" };
+							const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic", "Paracord", "Nomad", "Skeleton", "Survival" };
 							ImGui::Combo("##knifecombo", &g_weebwarecfg.selected_knife_index[1], knives, ARRAYSIZE(knives));
 							g_weebwarecfg.selected_knife_index[0] = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]].weapon_index;
 						}
