@@ -13,6 +13,10 @@ typedef void(*recv_var_proxy_fn)(const c_recv_proxy_data* p_data, void* p_struct
 #define SEQUENCE_DEFAULT_IDLE2 2
 #define SEQUENCE_DEFAULT_LIGHT_MISS1 3
 #define SEQUENCE_DEFAULT_LIGHT_MISS2 4
+#define SEQUENCE_DEFAULT_LIGHT_HIT1 5
+#define SEQUENCE_DEFAULT_LIGHT_HIT2 6
+#define SEQUENCE_DEFAULT_LIGHT_BACKSTAB 7
+#define SEQUENCE_DEFAULT_LIGHT_BACKSTAB2 8
 #define SEQUENCE_DEFAULT_HEAVY_MISS1 9
 #define SEQUENCE_DEFAULT_HEAVY_HIT1 10
 #define SEQUENCE_DEFAULT_HEAVY_BACKSTAB 11
@@ -36,6 +40,32 @@ typedef void(*recv_var_proxy_fn)(const c_recv_proxy_data* p_data, void* p_struct
 #define SEQUENCE_DAGGERS_HEAVY_MISS1 12
 
 #define SEQUENCE_BOWIE_IDLE1 1
+
+#define SEQUENCE_SKELETON_DRAW2 0
+#define SEQUENCE_SKELETON_DRAW 1
+#define SEQUENCE_SKELETON_IDLE1 2
+#define SEQUENCE_SKELETON_IDLE2 3
+#define SEQUENCE_SKELETON_LIGHT_MISS1 4
+#define SEQUENCE_SKELETON_LIGHT_MISS2 5
+
+enum sequence_skeleton {
+	draw1 = 0,
+	draw2,
+	idle1,
+	idle2,
+	light_miss1,
+	light_miss2,
+	light_hit1,
+	light_hit2,
+	light_backstab,
+	light_backstab2,
+	heavy_miss1,
+	heavy_hit1,
+	heavy_backstab,
+	lookat01,
+	lookat02
+};
+
 
 inline int RandomSequence(int low, int high) {
 	return (rand() % (high - low + 1) + low);
@@ -100,6 +130,10 @@ std::map<int, int> init_knife_indexes() {
 	m.insert(std::make_pair(weapon_knife_widowmaker, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_widowmaker.mdl")));
 	m.insert(std::make_pair(weapon_knife_ursus, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_ursus.mdl")));
 	m.insert(std::make_pair(weapon_knife_css, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_css.mdl")));
+	m.insert(std::make_pair(weapon_knife_cord, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_cord.mdl")));
+	m.insert(std::make_pair(weapon_knife_canis, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_canis.mdl")));
+	m.insert(std::make_pair(weapon_knife_skeleton, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_skeleton.mdl")));
+	m.insert(std::make_pair(weapon_knife_outdoor, g_weebware.g_model_info->getmodelindex("models/weapons/v_knife_outdoor.mdl")));
 
 	return m;
 }
@@ -230,6 +264,114 @@ void set_view_model_sequence(const c_recv_proxy_data* pDataConst, void* p_struct
 				switch (m_nSequence) {
 				case SEQUENCE_DEFAULT_LOOKAT01:
 					m_nSequence = RandomInt(14, 15);
+					break;
+				}
+			}
+			else if (sz_model == "models/weapons/v_knife_skeleton.mdl") {
+				switch (m_nSequence) {
+				case SEQUENCE_DEFAULT_DRAW:
+					m_nSequence = RandomInt(sequence_skeleton::draw1, sequence_skeleton::draw2);
+					break;
+				case SEQUENCE_DEFAULT_LOOKAT01:
+					m_nSequence = RandomInt(sequence_skeleton::lookat01, sequence_skeleton::lookat02);
+					break;
+				case SEQUENCE_DEFAULT_LIGHT_MISS1:
+				case SEQUENCE_DEFAULT_LIGHT_MISS2:
+					m_nSequence = RandomInt(sequence_skeleton::light_miss1, sequence_skeleton::light_miss2);
+					break;
+				case SEQUENCE_DEFAULT_IDLE1:
+				case SEQUENCE_DEFAULT_IDLE2:
+					m_nSequence = sequence_skeleton::idle1;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+					m_nSequence = sequence_skeleton::heavy_backstab;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_HIT1:
+					m_nSequence = sequence_skeleton::heavy_hit1;
+				case SEQUENCE_DEFAULT_LIGHT_HIT1:
+				case SEQUENCE_DEFAULT_LIGHT_HIT2:
+					m_nSequence = RandomInt(sequence_skeleton::light_hit1, sequence_skeleton::light_hit2);
+					break;
+				}
+			}
+			else if (sz_model == "models/weapons/v_knife_outdoor.mdl") {
+				switch (m_nSequence) {
+				case SEQUENCE_DEFAULT_DRAW:
+					m_nSequence = RandomInt(sequence_skeleton::draw1, sequence_skeleton::draw2);
+					break;
+				case SEQUENCE_DEFAULT_LOOKAT01:
+					m_nSequence = RandomInt(sequence_skeleton::lookat01, sequence_skeleton::lookat02);
+					break;
+				case SEQUENCE_DEFAULT_LIGHT_MISS1:
+				case SEQUENCE_DEFAULT_LIGHT_MISS2:
+					m_nSequence = RandomInt(sequence_skeleton::light_miss1, sequence_skeleton::light_miss2);
+					break;
+				case SEQUENCE_DEFAULT_IDLE1:
+				case SEQUENCE_DEFAULT_IDLE2:
+					m_nSequence = sequence_skeleton::idle1;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+					m_nSequence = sequence_skeleton::heavy_backstab;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_HIT1:
+					m_nSequence = sequence_skeleton::heavy_hit1;
+				case SEQUENCE_DEFAULT_LIGHT_HIT1:
+				case SEQUENCE_DEFAULT_LIGHT_HIT2:
+					m_nSequence = RandomInt(sequence_skeleton::light_hit1, sequence_skeleton::light_hit2);
+					break;
+				}
+			}
+			else if (sz_model == "models/weapons/v_knife_canis.mdl") {
+				switch (m_nSequence) {
+				case SEQUENCE_DEFAULT_DRAW:
+					m_nSequence = RandomInt(sequence_skeleton::draw1, sequence_skeleton::draw2);
+					break;
+				case SEQUENCE_DEFAULT_LOOKAT01:
+					m_nSequence = RandomInt(sequence_skeleton::lookat01, sequence_skeleton::lookat02);
+					break;
+				case SEQUENCE_DEFAULT_LIGHT_MISS1:
+				case SEQUENCE_DEFAULT_LIGHT_MISS2:
+					m_nSequence = RandomInt(sequence_skeleton::light_miss1, sequence_skeleton::light_miss2);
+					break;
+				case SEQUENCE_DEFAULT_IDLE1:
+				case SEQUENCE_DEFAULT_IDLE2:
+					m_nSequence = sequence_skeleton::idle1;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+					m_nSequence = sequence_skeleton::heavy_backstab;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_HIT1:
+					m_nSequence = sequence_skeleton::heavy_hit1;
+				case SEQUENCE_DEFAULT_LIGHT_HIT1:
+				case SEQUENCE_DEFAULT_LIGHT_HIT2:
+					m_nSequence = RandomInt(sequence_skeleton::light_hit1, sequence_skeleton::light_hit2);
+					break;
+				}
+			}
+			else if (sz_model == "models/weapons/v_knife_cord.mdl") {
+				switch (m_nSequence) {
+				case SEQUENCE_DEFAULT_DRAW:
+					m_nSequence = RandomInt(sequence_skeleton::draw1, sequence_skeleton::draw2);
+					break;
+				case SEQUENCE_DEFAULT_LOOKAT01:
+					m_nSequence = RandomInt(sequence_skeleton::lookat01, sequence_skeleton::lookat02);
+					break;
+				case SEQUENCE_DEFAULT_LIGHT_MISS1:
+				case SEQUENCE_DEFAULT_LIGHT_MISS2:
+					m_nSequence = RandomInt(sequence_skeleton::light_miss1, sequence_skeleton::light_miss2);
+					break;
+				case SEQUENCE_DEFAULT_IDLE1:
+				case SEQUENCE_DEFAULT_IDLE2:
+					m_nSequence = sequence_skeleton::idle1;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_BACKSTAB:
+					m_nSequence = sequence_skeleton::heavy_backstab;
+					break;
+				case SEQUENCE_DEFAULT_HEAVY_HIT1:
+					m_nSequence = sequence_skeleton::heavy_hit1;
+				case SEQUENCE_DEFAULT_LIGHT_HIT1:
+				case SEQUENCE_DEFAULT_LIGHT_HIT2:
+					m_nSequence = RandomInt(sequence_skeleton::light_hit1, sequence_skeleton::light_hit2);
 					break;
 				}
 			}

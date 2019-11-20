@@ -212,6 +212,10 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list( ) {
 	tmp.push_back( knife_template( "models/weapons/v_knife_push.mdl", "Shadow Daggers", weapon_knife_push ) );
 	tmp.push_back( knife_template( "models/weapons/v_knife_survival_bowie.mdl", "Bowie", weapon_knife_survival_bowie ) );
 	tmp.push_back( knife_template( "models/weapons/v_knife_css.mdl", "Classic Knife", weapon_knife_css ) );
+	tmp.push_back(knife_template("models/weapons/v_knife_cord.mdl", "Paracord", weapon_knife_cord));
+	tmp.push_back(knife_template("models/weapons/v_knife_canis.mdl", "Nomad", weapon_knife_canis));
+	tmp.push_back(knife_template("models/weapons/v_knife_skeleton.mdl", "Skeleton", weapon_knife_skeleton));
+	tmp.push_back(knife_template("models/weapons/v_knife_outdoor.mdl", "Survival", weapon_knife_outdoor));
 
 	return tmp;
 }
