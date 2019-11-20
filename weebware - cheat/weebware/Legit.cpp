@@ -32,6 +32,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		if (!(cmd->buttons & in_attack)) {
 			m_last_time = get_epoch();
 			last_delay = 0.f;
+			cur_target = NULL;
 			return;
 		}
 		break;
@@ -39,6 +40,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_activation_key)) {
 			m_last_time = get_epoch();
 			last_delay = 0.f;
+			cur_target = NULL;
 			return;
 		}
 		break;
@@ -58,6 +60,8 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	cur_target = target;
 
 	if (!target->is_valid_player()) {
+		last_delay = 0.f;
+		cur_target = NULL;
 		m_last_time = get_epoch();
 		return;
 	}
