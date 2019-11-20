@@ -608,10 +608,14 @@ enum weapon_type_id
 	weapon_knife_survival_bowie = 514,
 	weapon_knife_butterfly,
 	weapon_knife_push,
+	weapon_knife_cord,
+	weapon_knife_canis,
 	weapon_knife_ursus = 519,
 	weapon_knife_gypsy_jackknife,
+	weapon_knife_outdoor,
 	weapon_knife_stiletto = 522,
 	weapon_knife_widowmaker,
+	weapon_knife_skeleton = 525,
 	glove_studded_bloodhound = 5027,
 	glove_t_side = 5028,
 	glove_ct_side = 5029,
@@ -623,35 +627,69 @@ enum weapon_type_id
 	glove_hydra = 5035
 };
 
+//class c_weapon_info
+//{
+//public:
+//	char pad_0000[4]; //0x0000
+//	char* szConsoleName; //0x0004
+//	char pad_0008[12]; //0x0008
+//	int32_t iMaxReservedAmmo; //0x0014
+//	char pad_0018[104]; //0x0018
+//	char* szBulletType; //0x0080
+//	char _unk[4];
+//	char* szHudName;
+//	char* _szHudName; //0x008C
+//	char pad_0090[56]; //0x0090
+//	int32_t WeaponType;
+//	int8_t pad4[4];
+//	int32_t iWeaponPrice;
+//	int32_t iKillAward;
+//	int8_t pad5[20];
+//	uint8_t bFullAuto;
+//	int8_t pad6[3];
+//	int32_t iDamage;
+//	float_t flArmorRatio;
+//	int32_t iBullets;
+//	float_t flPenetration;
+//	char pad_0100[8]; //0x0100
+//	float flRange; //0x0108
+//	float flRangeModifier; //0x010C
+//
+//};
+
+
 class c_weapon_info
 {
 public:
-	char pad_0000[4]; //0x0000
-	char* szConsoleName; //0x0004
-	char pad_0008[12]; //0x0008
-	int32_t iMaxReservedAmmo; //0x0014
-	char pad_0018[104]; //0x0018
-	char* szBulletType; //0x0080
-	char _unk[4];
-	char* szHudName;
-	char* _szHudName; //0x008C
-	char pad_0090[56]; //0x0090
-	int32_t WeaponType;
-	int8_t pad4[4];
-	int32_t iWeaponPrice;
-	int32_t iKillAward;
-	int8_t pad5[20];
-	uint8_t bFullAuto;
-	int8_t pad6[3];
-	int32_t iDamage;
-	float_t flArmorRatio;
-	int32_t iBullets;
-	float_t flPenetration;
-	char pad_0100[8]; //0x0100
-	float flRange; //0x0108
-	float flRangeModifier; //0x010C
+	std::uint8_t pad_0x0000[0x4]; //0x0000
+	char* szConsoleName; //0x0004 
+	std::uint8_t pad_0x0008[0xC]; //0x0008
+	std::uint32_t iMaxReservedAmmo; //0x0014 
+	std::uint8_t pad_0x0018[0x68]; //0x0018
+	char* m_ammo_name; //0x0080 
+	char* m_ammo_name_2; //0x0084 
+	char* m_hud_name; //0x0088 
+	char* m_weapon_id; //0x008C 
+	std::uint8_t pad_0x0090[0x3C]; //0x0090
+	std::uint32_t m_type; //0x00CC 
+	std::uint32_t m_price; //0x00D0 
+	std::uint32_t m_reward; //0x00D4 
+	std::uint8_t pad_0x00D8[0x14]; //0x00D8
+	std::uint8_t bFullAuto; //0x00EC 
+	std::uint8_t pad_0x00ED[0x3]; //0x00ED
+	std::uint32_t iDamage; //0x00F0 
+	float flArmorRatio; //0x00F4 
+	std::uint32_t iBullets; //0x00F8 
+	float flPenetration; //0x00FC 
+	std::uint8_t pad_0x0100[0x8]; //0x0100
+	float flRange; //0x0108 
+	float flRangeModifier; //0x010C 
+	std::uint8_t pad_0x0110[0x20]; //0x0110
+	float m_max_speed; //0x0130 
+	float m_max_speed_alt; //0x0134 
+	std::uint8_t pad_0x0138[0x108]; //0x0138
 
-};
+}; //Size=0x0240
 
 class c_basecombat_weapon : public c_base_entity
 {
@@ -661,7 +699,7 @@ public:
 	{
 		auto index = this->m_iItemDefinitionIndex( );
 
-		std::vector<int> knife_ids ={ 42, 59, 41, 500, 505, 506, 507, 508, 509, 515, 512, 523, 520, 519, 522, 503, 514, 516 };
+		std::vector<int> knife_ids = { 42, 59, 41, 500, 505, 506, 507, 508, 509, 515, 512, 523, 520, 519, 522, 503, 514, 516, weapon_knife_cord, weapon_knife_canis, weapon_knife_skeleton, weapon_knife_outdoor };
 
 		return (std::find( knife_ids.begin( ), knife_ids.end( ), index ) != knife_ids.end( ));
 	}
@@ -692,17 +730,17 @@ public:
 
 	float Get_Innacuracy( )
 	{
-		return getvfunc<float( __thiscall* )(void*)>( this, 478 )(this);
+		return getvfunc<float( __thiscall* )(void*)>( this, 479 )(this);
 	}
 
 	float GetSpread( )
 	{
-		return getvfunc<float( __thiscall* )(void*)>( this, 447 )(this);
+		return getvfunc<float( __thiscall* )(void*)>( this, 449 )(this);
 	}
 
 	void Update_Accuracy_Penalty( )
 	{
-		getvfunc<void( __thiscall* )(void*)>( this, 479 )(this);
+		getvfunc<void( __thiscall* )(void*)>( this, 480 )(this);
 	}
 
 	bool is_zeus( )
@@ -1029,7 +1067,7 @@ public:
 
 	c_weapon_info* get_weapon_info( )
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>( this, 456 )(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>( this, 457)(this);
 	}
 
 	int* get_paint_kit( )
