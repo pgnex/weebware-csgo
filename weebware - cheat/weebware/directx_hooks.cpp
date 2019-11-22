@@ -600,6 +600,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							ImGui::SliderFloat("FOV##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
 							ImGui::Text("Sensitivity");
 							ImGui::SliderFloat("Smooth##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
+							ImGui::Text("Target Switch Delay");
+							ImGui::SliderInt("Target Switch Delay##trigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_target_switch_delay, 0, 2000, "%.0f");
 							ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet, false);
 
 

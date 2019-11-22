@@ -95,6 +95,7 @@ public:
 	bool triggerbot_arms;
 	bool triggerbot_legs;
 	float triggerbot_hitchance;
+	int triggerbot_target_switch_delay = 125;
 	float legit_maximum_ticks = 12;
 	bool use_dynamicfov;
 	float triggerbot_reaction;

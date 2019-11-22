@@ -68,12 +68,14 @@ public:
 	int get_config_index();
 	void auto_stop(c_usercmd* cmd);
 	c_base_entity* closest_target_triggerbot();
+	bool is_visible_angle(c_base_entity* target, Vector dst2);
+	std::vector<int> get_triggerbot_hitboxes();
 
 
 private:
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
 	c_base_entity * closest_target_available();
-	bool is_visible(c_base_entity* target);
+	bool is_visible(c_base_entity* target, int bone = 8);
 	QAngle closest_hitbox(c_base_entity* target);
 	QAngle rcs_scaled(QAngle original_angle, float pitch, float yaw);
 	void standalone_rcs(c_usercmd* cmd);

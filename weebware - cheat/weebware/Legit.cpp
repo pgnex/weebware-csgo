@@ -6,7 +6,8 @@ c_legitbot g_legitbot;
 c_legitbot::c_accuracy_boost g_accuracy;
 
 c_base_entity* cur_target = NULL;
-int last_delay = 0;
+c_base_entity* cur_target_trig = NULL;
+int last_delay = 0, last_delay_trig = 0;
 void c_legitbot::create_move(c_usercmd* cmd)
 {
 	g_weapon = m_local->m_pActiveWeapon();
@@ -283,11 +284,11 @@ QAngle c_legitbot::calcute_delta(QAngle src, QAngle dst, float f)
 	return delta;
 }
 
-bool c_legitbot::is_visible(c_base_entity* target)
+bool c_legitbot::is_visible(c_base_entity* target, int bone)
 {
 	trace_t Trace;
 
-	Vector src = m_local->get_vec_eyepos(), dst2 = target->get_bone(8); // 8 is head. 
+	Vector src = m_local->get_vec_eyepos(), dst2 = target->get_bone(bone); // 8 is head. 
 
 	Ray_t ray;
 
@@ -307,6 +308,33 @@ bool c_legitbot::is_visible(c_base_entity* target)
 
 	return false;
 }
+
+
+bool c_legitbot::is_visible_angle(c_base_entity* target, Vector dst2)
+{
+	trace_t Trace;
+
+	Vector src = m_local->get_vec_eyepos(); 
+
+	Ray_t ray;
+
+	ray.Init(src, dst2);
+
+	ITraceFilter traceFilter;
+
+	traceFilter.pSkip = (void*)m_local;
+
+	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
+
+	if (Trace.m_pEnt == target)
+		return true;
+
+	if (Trace.fraction == 1.0f)
+		return true;
+
+	return false;
+}
+
 
 QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
 {
@@ -330,9 +358,27 @@ QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
 		aim_spots.push_back(csgohitboxid::stomach);
 	}
 
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_arms)
+	{
+		aim_spots.push_back(csgohitboxid::left_forearm);
+		aim_spots.push_back(csgohitboxid::left_upper_arm);
+		aim_spots.push_back(csgohitboxid::right_forearm);
+		aim_spots.push_back(csgohitboxid::right_upper_arm);
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_legs)
+	{
+		aim_spots.push_back(csgohitboxid::left_thigh);
+		aim_spots.push_back(csgohitboxid::right_thigh);
+		aim_spots.push_back(csgohitboxid::left_calf);
+		aim_spots.push_back(csgohitboxid::right_calf);
+	}
+
 	float marginal_fov = 180;
 
 	QAngle closest_hitbox = QAngle(0, 0, 0);
+	Vector best_hitbox;
+	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 
 	for (auto potential_hitbox : aim_spots)
 	{
@@ -342,8 +388,6 @@ QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
 
 		g_maths.vector_qangles(hitbox - m_local->get_vec_eyepos(), angle_to_hitbox);
 
-		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
-
 		g_weebware.g_engine->get_view_angles(view_angles);
 
 		float this_fov = g_maths.get_fov(view_angles, angle_to_hitbox);
@@ -352,9 +396,14 @@ QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
 		{
 			closest_hitbox = angle_to_hitbox;
 
+			best_hitbox = hitbox;
+
 			marginal_fov = this_fov;
 		}
 	}
+
+	if (!is_visible_angle(target, best_hitbox))
+		return view_angles;
 
 	return closest_hitbox;
 }
@@ -783,16 +832,17 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 }
 #endif
 
+
+
 c_base_entity* c_legitbot::closest_target_triggerbot()
 {
 	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov;
-
-	std::cout << best_fov << std::endl;
 
 	float closest_fov = 180.f;
 
 	c_base_entity* best_entity = nullptr;
 	c_base_entity* closest_ent = nullptr;
+	//std::vector<int> hitboxes = get_triggerbot_hitboxes();
 
 	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
@@ -802,9 +852,6 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 			continue;
 
 		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum())
-			continue;
-
-		if (!is_visible(cur_entity))
 			continue;
 
 		Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
@@ -844,6 +891,7 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 }
 
 void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
+
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].magnet_triggerbot_enabled)
 		return;
 
@@ -854,6 +902,14 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 
 	if (!is_visible(target))
 		return;
+
+	if (cur_target_trig != target)
+		if (cur_target_trig != NULL)
+			if (get_epoch() <= (last_delay_trig + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_target_switch_delay))
+				return;
+
+	last_delay_trig = get_epoch();
+	cur_target_trig = target;
 
 	if (target) {
 
@@ -887,6 +943,8 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	case 1:
 		if (!(GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_key))) {
 			m_last_delay = get_epoch();
+			last_delay_trig = 0;
+			cur_target_trig = NULL;
 			return;
 		}
 		break;
