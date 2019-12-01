@@ -695,13 +695,36 @@ class c_basecombat_weapon : public c_base_entity
 {
 public:
 
-	bool is_knife( )
+	bool is_knife()
 	{
-		auto index = this->m_iItemDefinitionIndex( );
+		auto index = this->m_iItemDefinitionIndex();
 
-		std::vector<int> knife_ids = { 42, 59, 41, 500, 505, 506, 507, 508, 509, 515, 512, 523, 520, 519, 522, 503, 514, 516, weapon_knife_cord, weapon_knife_canis, weapon_knife_skeleton, weapon_knife_outdoor };
-
-		return (std::find( knife_ids.begin( ), knife_ids.end( ), index ) != knife_ids.end( ));
+		std::vector<int> knife_ids = {
+			weapon_knife,
+			weapon_knife_t,
+			weapon_knifegg,
+			weapon_knife_bayonet,
+			weapon_knife_css,
+			weapon_knife_flip,
+			weapon_knife_gut,
+			weapon_knife_karambit,
+			weapon_knife_m9_bayonet, 
+			weapon_knife_tactical,
+			weapon_knife_falchion,
+			weapon_knife_survival_bowie,
+			weapon_knife_ursus,
+			weapon_knife_butterfly, 
+			weapon_knife_push, 
+			weapon_knife_gypsy_jackknife, 
+			weapon_knife_stiletto,
+			weapon_knife_widowmaker, 
+			weapon_knife_cord,
+			weapon_knife_canis,
+			weapon_knife_skeleton,
+			weapon_knife_outdoor
+		};
+	
+		return (std::find(knife_ids.begin(), knife_ids.end(), index) != knife_ids.end());
 	}
 
 
