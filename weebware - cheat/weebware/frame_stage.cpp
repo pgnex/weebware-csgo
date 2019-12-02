@@ -26,7 +26,7 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		{
-			g_frame_stage_notify.no_vis_recoil();
+		//	g_frame_stage_notify.no_vis_recoil();
 			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
@@ -43,8 +43,8 @@ void hook_functions::frame_stage_notify(clientframestage_t curStage)
 
 	g_hooking.o_fsn(curStage);
 
-	if (g_weebwarecfg.no_recoil)
-		g_frame_stage_notify.no_vis_recoil(true);
+	//if (g_weebwarecfg.no_recoil)
+	//	g_frame_stage_notify.no_vis_recoil(true);
 	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
 }
 #endif
@@ -103,7 +103,6 @@ void c_frame_stage_notify::no_smoke() {
 }
 
 static auto set_clantag = (int(__fastcall*)(const char*, const char*))(g_weebware.pattern_scan("engine.dll", "53 56 57 8B DA 8B F9 FF 15"));
-bool clantag_done = false;
 std::string current_clantag;
 void c_frame_stage_notify::run_clantag()
 {
@@ -408,12 +407,6 @@ void c_frame_stage_notify::run_skinchanger() {
 
 		*weapon->get_item_id_high() = -1;
 
-		if (weapon_id == 0 && weapon->is_knife() && !g_weebwarecfg.knifechanger_enabled)
-			continue;
-
-		if (weapon->is_firearm() && !g_weebwarecfg.skinchanger_enabled)
-			continue;
-
 		if (weapon->is_grenade())
 			continue;
 
@@ -423,7 +416,7 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon->is_zeus())
 			continue;
 
-		if (weapon->is_knife()) {
+		if (weapon_id == 0 && weapon->is_knife() && g_weebwarecfg.knifechanger_enabled) {
 
 			auto vm_handle = local->get_viewmodel_handle();
 
@@ -456,7 +449,8 @@ void c_frame_stage_notify::run_skinchanger() {
 				auto worldmodel_weapon = reinterpret_cast<c_weaponworldmodel*>(g_weebware.g_entlist->getcliententityfromhandle(viewmodel_weapon->GetWeaponWorldModelHandle()));
 
 				if (worldmodel_weapon)
-					* worldmodel_weapon->m_nModelIndex() = model_index + 1;
+					*worldmodel_weapon->m_nModelIndex() = model_index + 1;
+
 			}
 		}
 
@@ -475,8 +469,9 @@ void c_frame_stage_notify::run_skinchanger() {
 		*weapon->get_fallbackwear() = skin_config.m_wear == 100 ? FLT_MIN : (100 - skin_config.m_wear) / 100;
 		*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
 		*weapon->get_accountid() = local_inf.xuid_low;
-		if (weapon->is_knife())
-			* weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
+
+		if (weapon->is_knife() && g_weebwarecfg.knifechanger_enabled)
+			*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 
 		if (strlen(skin_config.weapon_name) > 0)
 			*weapon->get_custom_name() = std::regex_replace(skin_config.weapon_name, std::regex(" "), "\u0020");

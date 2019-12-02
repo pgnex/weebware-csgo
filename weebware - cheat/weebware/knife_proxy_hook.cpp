@@ -150,7 +150,7 @@ bool is_knife_index(std::map<int, int> map, int knife_index) {
 
 void hooked_recvproxy_viewmodel(c_recv_proxy_data* p_data, void* p_struct, void* p_out)noexcept {
 
-	if (!g_weebwarecfg.skinchanger_enabled)
+	if (!g_weebwarecfg.knifechanger_enabled)
 		return recv_model_index(p_data, p_struct, p_out);
 
 	std::map<int, int> knife_map = init_knife_indexes();
@@ -166,7 +166,7 @@ void hooked_recvproxy_viewmodel(c_recv_proxy_data* p_data, void* p_struct, void*
 	recv_model_index(p_data, p_struct, p_out);
 }
 
-void set_view_model_sequence(const c_recv_proxy_data* pDataConst, void* p_struct, void* p_out)noexcept {
+void set_view_model_sequence(const c_recv_proxy_data* pDataConst, void* p_struct, void* p_out) noexcept {
 	c_recv_proxy_data* p_data = const_cast<c_recv_proxy_data*>(pDataConst);
 	c_viewmodel* player_view_model = static_cast<c_viewmodel*>(p_struct);
 

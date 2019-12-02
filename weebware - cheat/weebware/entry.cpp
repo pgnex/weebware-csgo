@@ -184,10 +184,10 @@ std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list( ) {
 	return skin_list;
 }
 
-std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list( ) {
+std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list() {
 	std::vector<c_skinchanger::knife_type> tmp;
 
-	auto knife_template = []( std::string mdl_file, std::string weapon_name, int defindex ) {
+	auto knife_template = [](std::string mdl_file, std::string weapon_name, int defindex) {
 		c_skinchanger::knife_type tmp;
 		tmp.mdl = mdl_file;
 		tmp.weapon_name = weapon_name;
@@ -195,23 +195,23 @@ std::vector<c_skinchanger::knife_type> c_weebware::create_knife_list( ) {
 		return tmp;
 	};
 
-	tmp.push_back( knife_template( "models/weapons/v_knife_default_t.mdl", "Terrorist Knife", weapon_knife_t ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_default_ct.mdl", "Counter-Terrorist Knife", weapon_knife ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_flip.mdl", "Flip", weapon_knife_flip ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_gut.mdl", "Gut", weapon_knife_gut ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_karam.mdl", "Karambit", weapon_knife_karambit ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_m9_bay.mdl", "M9 Bayonet", weapon_knife_m9_bayonet ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_bayonet.mdl", "Bayonet", weapon_knife_bayonet ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_tactical.mdl", "Huntsman", weapon_knife_tactical ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_falchion_advanced.mdl", "Falchion", weapon_knife_falchion ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_stiletto.mdl", "Stiletto", weapon_knife_stiletto ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_ursus.mdl", "Ursus", weapon_knife_ursus ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_gypsy_jackknife.mdl", "Navaja", weapon_knife_gypsy_jackknife ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_widowmaker.mdl", "Talon", weapon_knife_widowmaker ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_butterfly.mdl", "Butterfly", weapon_knife_butterfly ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_push.mdl", "Shadow Daggers", weapon_knife_push ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_survival_bowie.mdl", "Bowie", weapon_knife_survival_bowie ) );
-	tmp.push_back( knife_template( "models/weapons/v_knife_css.mdl", "Classic Knife", weapon_knife_css ) );
+	tmp.push_back(knife_template("models/weapons/v_knife_default_t.mdl", "Terrorist Knife", weapon_knife_t));
+	tmp.push_back(knife_template("models/weapons/v_knife_default_ct.mdl", "Counter-Terrorist Knife", weapon_knife));
+	tmp.push_back(knife_template("models/weapons/v_knife_flip.mdl", "Flip", weapon_knife_flip));
+	tmp.push_back(knife_template("models/weapons/v_knife_gut.mdl", "Gut", weapon_knife_gut));
+	tmp.push_back(knife_template("models/weapons/v_knife_karam.mdl", "Karambit", weapon_knife_karambit));
+	tmp.push_back(knife_template("models/weapons/v_knife_m9_bay.mdl", "M9 Bayonet", weapon_knife_m9_bayonet));
+	tmp.push_back(knife_template("models/weapons/v_knife_bayonet.mdl", "Bayonet", weapon_knife_bayonet));
+	tmp.push_back(knife_template("models/weapons/v_knife_tactical.mdl", "Huntsman", weapon_knife_tactical));
+	tmp.push_back(knife_template("models/weapons/v_knife_falchion_advanced.mdl", "Falchion", weapon_knife_falchion));
+	tmp.push_back(knife_template("models/weapons/v_knife_stiletto.mdl", "Stiletto", weapon_knife_stiletto));
+	tmp.push_back(knife_template("models/weapons/v_knife_ursus.mdl", "Ursus", weapon_knife_ursus));
+	tmp.push_back(knife_template("models/weapons/v_knife_gypsy_jackknife.mdl", "Navaja", weapon_knife_gypsy_jackknife));
+	tmp.push_back(knife_template("models/weapons/v_knife_widowmaker.mdl", "Talon", weapon_knife_widowmaker));
+	tmp.push_back(knife_template("models/weapons/v_knife_butterfly.mdl", "Butterfly", weapon_knife_butterfly));
+	tmp.push_back(knife_template("models/weapons/v_knife_push.mdl", "Shadow Daggers", weapon_knife_push));
+	tmp.push_back(knife_template("models/weapons/v_knife_survival_bowie.mdl", "Bowie", weapon_knife_survival_bowie));
+	tmp.push_back(knife_template("models/weapons/v_knife_css.mdl", "Classic Knife", weapon_knife_css));
 	tmp.push_back(knife_template("models/weapons/v_knife_cord.mdl", "Paracord", weapon_knife_cord));
 	tmp.push_back(knife_template("models/weapons/v_knife_canis.mdl", "Nomad", weapon_knife_canis));
 	tmp.push_back(knife_template("models/weapons/v_knife_skeleton.mdl", "Skeleton", weapon_knife_skeleton));
