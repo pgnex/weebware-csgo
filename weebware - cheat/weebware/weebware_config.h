@@ -142,6 +142,7 @@ public:
 		tmp["magnet_trigger_smooth"] = magnet_trigger_smooth;
 		tmp["magnet_trigger_fov"] = magnet_trigger_fov;
 		tmp["quick_stop_magnet"] = quick_stop_magnet;
+		tmp["triggerbot_target_switch_delay"] = triggerbot_target_switch_delay;
 		return tmp;
 	}
 
@@ -181,6 +182,7 @@ public:
 		if (check("magnet_trigger_smooth", data)) magnet_trigger_smooth = data["magnet_trigger_smooth"];
 		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
 		if (check("quick_stop_magnet", data)) quick_stop_magnet = data["quick_stop_magnet"];
+		if (check("triggerbot_target_switch_delay", data)) triggerbot_target_switch_delay = data["triggerbot_target_switch_delay"];
 	}
 
 };
