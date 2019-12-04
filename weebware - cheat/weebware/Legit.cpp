@@ -333,6 +333,9 @@ bool c_legitbot::is_visible_angle(c_base_entity* target, Vector dst2)
 	if (Trace.m_pEnt == target)
 		return true;
 
+	if (Trace.m_pEnt->is_valid_player())
+		return true;
+
 	if (Trace.fraction == 1.0f)
 		return true;
 
