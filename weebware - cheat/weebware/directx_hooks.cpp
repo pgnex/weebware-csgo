@@ -603,7 +603,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 							ImGui::Text("Target Switch Delay");
 							ImGui::SliderInt("Target Switch Delay##trigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_target_switch_delay, 0, 2000, "%.0f");
 							ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet, false);
-
+							ImGui::Checkbox("Scoped Only", &g_weebwarecfg.triggerbot_scoped_only, false);
 
 						}
 						ImGui::EndChild();

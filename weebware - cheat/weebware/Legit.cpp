@@ -936,8 +936,21 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 
 		cmd->viewangles = delta;
 
+		if (g_weebwarecfg.triggerbot_scoped_only)
+			if (!sniper_scoped())
+				return;
+
 		g_weebware.g_engine->set_view_angles(cmd->viewangles);
 	}
+}
+
+bool c_legitbot::sniper_scoped() {
+
+	auto weapon = m_local->m_pActiveWeapon();
+
+	if (weapon->is_scout() || weapon->is_awp() || weapon->is_autosniper())
+		if (m_local->m_bIsScoped())
+			return true;
 }
 
 void c_legitbot::triggerbot_main(c_usercmd* cmd)
@@ -973,7 +986,8 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	// The ray
 	forward = m_local->get_vec_eyepos() + (forward * m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
-	c_weapon_info* info = m_local->m_pActiveWeapon()->get_weapon_info();
+	c_basecombat_weapon* weapon = m_local->m_pActiveWeapon();
+	c_weapon_info* info = weapon->get_weapon_info();
 
 	trace_t trace;
 
@@ -1043,13 +1057,15 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	static int queue_shot = 0;
 
-
-
 	if (has_hitgroup) {
 
-		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction)) {
-			return;
-		}
+		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction))
+			return;	
+
+		if (g_weebwarecfg.triggerbot_scoped_only) 
+			if (!sniper_scoped())
+				return;
+		
 
 		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
 			cmd->buttons |= in_attack;

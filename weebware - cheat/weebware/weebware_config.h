@@ -575,6 +575,7 @@ public:
 		tmp["no_duck_cooldown"] = no_duck_cooldown;
 		tmp["draw_grenade_traj"] = draw_grenade_traj;
 		tmp["anti_afk"] = anti_afk;
+		tmp["triggerbot_scoped_only"] = triggerbot_scoped_only;
 
 		// skinchanger, glovechanger, models
 		tmp["skinchanger_enabled"] = skinchanger_enabled;
@@ -697,6 +698,7 @@ public:
 		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
 		if (check("draw_grenade_traj", data)) draw_grenade_traj = data["draw_grenade_traj"];
 		if (check("spec_list", data)) spec_list = data["spec_list"];
+		if (check("triggerbot_scoped_only", data)) triggerbot_scoped_only = data["triggerbot_scoped_only"];
 
 
 		// misc

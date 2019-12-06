@@ -63,6 +63,7 @@ public:
 	};
 
 	void triggerbot_main(c_usercmd* cmd);
+	bool sniper_scoped();
 	void magnet_triggerbot(c_usercmd* cmd);
 	QAngle magnet_hitbox(c_base_entity* target);
 	int get_config_index();
