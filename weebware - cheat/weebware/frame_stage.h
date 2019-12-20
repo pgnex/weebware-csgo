@@ -9,6 +9,7 @@ public:
 
 	void pvs_fix();
 	void run_clantag();
+	bool clantag_done = false;
 	void wireframe_smoke();
 	void no_smoke();
 	void run_skinchanger();

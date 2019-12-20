@@ -159,13 +159,9 @@ static const std::vector<std::string> killsay_messaes = {
 	"Uhm by the way MOM They're not Chinese cartoons it's called ANIME!!"
 };
 
-void EventFuncs::player_death(i_game_event *event) {
-
-	if (!g_weebwarecfg.killsay)
-		return;
-
+void killsay(i_game_event* event) {
 	int attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
-	c_base_entity* attacker_ent = (c_base_entity *)g_weebware.g_entlist->getcliententity(attacker);
+	c_base_entity* attacker_ent = (c_base_entity*)g_weebware.g_entlist->getcliententity(attacker);
 
 	if (attacker_ent == g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local())) {
 		if (strlen(g_weebwarecfg.killsay_msg_custom) > 0) {
@@ -173,11 +169,19 @@ void EventFuncs::player_death(i_game_event *event) {
 			g_weebware.g_engine->execute_client_cmd(("say " + msg).c_str());
 		}
 		else {
-			int selection = int(static_cast<int>(killsay_messaes.size()) * rand() / (RAND_MAX + 1.0));
+			int selection = int(static_cast<int>(killsay_messaes.size())* rand() / (RAND_MAX + 1.0));
 			g_weebware.g_engine->execute_client_cmd(("say " + killsay_messaes.at(selection)).c_str());
 		}
 
 	}
+}
+
+
+
+void EventFuncs::player_death(i_game_event* event) {
+
+	if (g_weebwarecfg.killsay)
+		killsay(event);
 }
 
 void EventFuncs::round_end(i_game_event* event) {
@@ -193,6 +197,7 @@ void EventFuncs::round_start(i_game_event* event) {
 	if (g_weebwarecfg.visuals_nightmode) g_nightmode.done = false;
 	if (g_weebwarecfg.draw_grenade_traj) g_create_move.grenade_traj_disabled = false;
 	if (g_weebwarecfg.night_sky) g_create_move.is_sky_set = false;
+	if (g_weebwarecfg.misc_clantag_changer) g_frame_stage_notify.clantag_done = false;
 	flHurtTime = 0;
 }
 
