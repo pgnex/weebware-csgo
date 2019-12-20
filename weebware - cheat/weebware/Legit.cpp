@@ -1065,6 +1065,11 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		if (g_weebwarecfg.triggerbot_scoped_only) 
 			if (!sniper_scoped())
 				return;
+
+		if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
+			if (trace_entity->trace_from_smoke(*m_local->m_vecOrigin()))
+				return;
+		}
 		
 
 		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
