@@ -724,7 +724,7 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font, buf, tw, th);
 
 		if (bounds.has_w2s)
-			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), bounds.y - 5, draw_col, 0, player_name.c_str());
+			g_paint_traverse.draw_string(g_weebware.tahoma_font, (bounds.x + bounds.w / 2) - (tw / 2), bounds.y - 7, draw_col, 0, player_name.c_str());
 	}
 
 }
