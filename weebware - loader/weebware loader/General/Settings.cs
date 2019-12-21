@@ -14,6 +14,6 @@ namespace loader.Functions
         public static string RandomStringKey = "pw92UdN8BacNdbvvolcwEFj4PYV3uqMa";
         public static string PublicIP = string.Empty;
         public static string username = string.Empty;
-        public static string version = "b8TrGxsAAqk2vMyWwI1iohCHdhNACir2";
+        public static string version = "b8TrGxsAAqk2vMyWwI1iohCHdhNACir3";
     }
 }

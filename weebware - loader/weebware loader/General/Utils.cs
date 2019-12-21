@@ -146,7 +146,7 @@ namespace loader
             WebClient web = new WebClient();
             web.Proxy = null;
 
-            return web.DownloadString("https://pastebin.com/raw/RkcuBKCV");
+            return web.DownloadString("https://weebware.net/assets/colors.json");
         }
 
         public static Color get_color(string component) {
