@@ -1,7 +1,6 @@
 ﻿#include "Header.h"
 #include "shared.h"
 #include "esp.h"
-#include "frame_stage.h"
 #include "imgui_custom.h"
 #include "imgui\imgui_internal.h"
 #include "hook_funcs.h"
@@ -143,6 +142,18 @@ long c_hooking::hk_end_scene(IDirect3DDevice9* device)
 }
 #endif
 
+std::string eraseSubStr(std::string mainStr, std::string toErase)
+{
+	// Search for the substring in string
+	size_t pos = mainStr.find(toErase);
+
+	if (pos != std::string::npos)
+		mainStr.erase(pos, toErase.length());
+
+	return mainStr;
+
+}
+
 long hook_functions::end_scene(IDirect3DDevice9* device)
 {
 	static auto wanted_ret_address = _ReturnAddress();
@@ -251,16 +262,16 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.06f, 0.05f, 0.07f, 1.00f);
 
 	// Change active stuff later.
-	style->Colors[ImGuiCol_CheckMark] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
-	style->Colors[ImGuiCol_SliderGrab] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
-	style->Colors[ImGuiCol_SliderGrabActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
+	style->Colors[ImGuiCol_CheckMark] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+	style->Colors[ImGuiCol_SliderGrab] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+	style->Colors[ImGuiCol_SliderGrabActive] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 200.0f));
 	style->Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_PopupBg] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style->Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
-	style->Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
-	style->Colors[ImGuiCol_Header] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 100.f));
-	style->Colors[ImGuiCol_HeaderHovered] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 200.f));
-	style->Colors[ImGuiCol_HeaderActive] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+	style->Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+	style->Colors[ImGuiCol_Header] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 100.0f));
+	style->Colors[ImGuiCol_HeaderHovered] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
+	style->Colors[ImGuiCol_HeaderActive] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 
 	style->Colors[ImGuiCol_Column] = ImVec4(0.56f, 0.56f, 0.58f, 0.30f);
 	style->Colors[ImGuiCol_ColumnHovered] = ImVec4(0.24f, 0.23f, 0.29f, 1.00f);
@@ -297,15 +308,6 @@ void imgui_setup(IDirect3DDevice9* pDevice)
 	// https://github.com/ocornut/imgui/tree/master/misc/fonts
 	has_d3d = true;
 }
-enum tabs {
-	legit,
-	rage,
-	vis,
-	misc,
-	sets,
-	skins
-};
-
 
 std::vector<c_skinchanger::gun_type> filtered_guns()
 {
@@ -377,6 +379,15 @@ std::vector<c_skinchanger::skin_type> filtered_skins()
 
 int convert_index_id(int index);
 
+enum tabs {
+	legit,
+	//	rage,
+	vis,
+	misc,
+	skins,
+	settings
+};
+
 
 void imgui_main(IDirect3DDevice9* pDevice)
 {
@@ -413,9 +424,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		// Apply default font
 		ImGui::PushFont(pFont[1]);
-		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(0, 0, 0, 255.f));
-		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(27, 27, 27, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(0, 0, 0, 255.f));
+		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
+		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
+		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
 
 		static const constexpr int padding = 40;
 
@@ -437,10 +448,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
 		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f)); 
+		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
 
 		if (tab_selection == tabs::legit) {
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 		}
 		if (ImGui::Button("Legit", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::legit;
@@ -453,7 +464,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		ImGui::BeginChild("COL3", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 
 		if (tab_selection == tabs::vis)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 
 		if (ImGui::Button("Visual", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::vis;
@@ -465,7 +476,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL4", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::misc)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 
 		if (ImGui::Button("Misc", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::misc;
@@ -478,7 +489,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 		ImGui::BeginChild("COL5", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
 		if (tab_selection == tabs::skins)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 
 		if (ImGui::Button("Skins", ImVec2(column_width / 6, 20))) {
 			tab_selection = tabs::skins;
@@ -490,10 +501,10 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 
 		ImGui::BeginChild("COL6", ImVec2(0, 0), true, ImGuiWindowFlags_NoScrollbar);
-		if (tab_selection == tabs::sets)
-			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+		if (tab_selection == tabs::settings)
+			style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(138, 43, 226, 255.f));
 		if (ImGui::Button("Configs", ImVec2(column_width / 6, 20))) {
-			tab_selection = tabs::sets;
+			tab_selection = tabs::settings;
 		}
 		style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
 
@@ -603,7 +614,7 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 				ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
 				ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-				ImGui::Checkbox("Target teammates (Danger Zone)", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
+				ImGui::Checkbox("Target teammates", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
 				ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov, false);
 
 				ImGui::Text("Maximum FOV");
@@ -615,21 +626,14 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::Text("First Shot Delay");
 				ImGui::SliderFloat("First Shot Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
 
-<<<<<<< HEAD
-							ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type, ARRAYSIZE(activation_type));
-							ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim, false);
-							ImGui::Checkbox("Target teammates", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates, false);
-							ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov, false);
-=======
 				ImGui::Text("Target Switch Delay");
 				ImGui::SliderInt("Target Switch Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_target_switch_delay, 0, 2000, "%.0f");
->>>>>>> parent of 083f2c8... new config browser
 
 				ImGui::Text("Recoil compensation (P/Y)");
 				ImGui::SliderFloat("Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
 				ImGui::SliderFloat("Recoil compensation Y", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].yaw_rcs, 0, 100, "%.0f%%");
 
-				ImGui::Checkbox("Quick stop", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
+				ImGui::Checkbox("Quickstop##legit", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
 
 				ImGui::Checkbox("Aim through smoke", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_through_smoke, false);
 
@@ -639,12 +643,8 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest, false);
 				ImGui::Checkbox("Stomach", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach, false);
 
-<<<<<<< HEAD
-							ImGui::Checkbox("Quickstop##legit", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop, false);
-=======
 			}
 			ImGui::EndChild();
->>>>>>> parent of 083f2c8... new config browser
 
 			ImGui::NextColumn();
 
@@ -678,8 +678,15 @@ void imgui_main(IDirect3DDevice9* pDevice)
 				ImGui::SliderFloat("FOV##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
 				ImGui::Text("Sensitivity");
 				ImGui::SliderFloat("Smooth##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
+				ImGui::Text("Target Switch Delay");
+				ImGui::SliderInt("Target Switch Delay##trigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_target_switch_delay, 0, 2000, "%.0f");
 				ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet, false);
 
+				if (g_weebwarecfg.legit_cfg_index == 5 || g_weebwarecfg.legit_cfg_index == 6 || g_weebwarecfg.legit_cfg_index == 7) {
+					ImGui::Checkbox("Scoped Only", &g_weebwarecfg.triggerbot_scoped_only, false);
+				}
+
+				ImGui::Checkbox("Aim Through Smoke##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_aim_through_smoke, false);
 
 			}
 			ImGui::EndChild();
@@ -699,42 +706,9 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		}
 #pragma endregion
 
-<<<<<<< HEAD
-						ImGui::BeginChild("Triggerbot", ImVec2(0, ImGui::GetContentRegionAvail().y / 3 * 2), true);
-						{
-							ImGui::Text("Triggerbot");
-							ImGui::Separator();
+#pragma region Ragebot
 
-							ImGui::Text("Activation type");
-							imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key, key_counter);
-							const char* activation_type[] = { "Off", "On Key", "Active" };
-							ImGui::Combo("", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active, activation_type, ARRAYSIZE(activation_type));
-							ImGui::Text("Hitchance");
-							ImGui::SliderFloat("Hitchance", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_hitchance, 0, 100, "%.0f%%");
-							ImGui::Text("Reaction time");
-							ImGui::SliderFloat("Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
-
-							ImGui::Checkbox("Head##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head, false);
-							ImGui::SameLine();
-							ImGui::Checkbox("Chest##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest, false);
-							ImGui::SameLine();
-							ImGui::Checkbox("Stomach##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach, false);
-							ImGui::Checkbox("Arms##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms, false);
-							ImGui::SameLine();
-							ImGui::Checkbox("Legs##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs, false);
-							ImGui::Separator();
-							ImGui::Text("Magnet Triggerbot");
-							ImGui::Separator();
-							ImGui::Checkbox("Enable##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled, false);
-							ImGui::Text("Maximum FOV");
-							ImGui::SliderFloat("FOV##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
-							ImGui::Text("Sensitivity");
-							ImGui::SliderFloat("Smooth##magnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
-							ImGui::Text("Target Switch Delay");
-							ImGui::SliderInt("Target Switch Delay##trigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_target_switch_delay, 0, 2000, "%.0f");
-							ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet, false);
-							ImGui::Checkbox("Scoped Only", &g_weebwarecfg.triggerbot_scoped_only, false);
-=======
+#pragma endregion
 
 #pragma region Visuals
 		if (tab_selection == tabs::vis) {
@@ -753,7 +727,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						imgui_custom::custom_color_inline(g_weebwarecfg.team_visible_col, g_weebwarecfg.team_hidden_col, true, "Visible Color (Team)##Team1", "Hidden Color (Team)##Team2");
 					}
 					ImGui::Checkbox("Visible only", &g_weebwarecfg.visuals_visible_only, false);
->>>>>>> parent of 083f2c8... new config browser
 
 					ImGui::Checkbox("Bounding Box", &g_weebwarecfg.visuals_bounding_box, false);
 					if (g_weebwarecfg.visuals_bounding_box) {
@@ -770,47 +743,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##skele1", "Hidden Color (Enemy)##skele2");
 					}
 
-<<<<<<< HEAD
-#pragma region rage
-					if (selected_tab == tabs::rage)
-					{
-						//ImGui::BeginChild("header", ImVec2(ImGui::GetContentRegionAvailWidth(), 35), true);
-						//ImGui::Checkbox("Safe Mode", &g_weebwarecfg.safemode, false);
-						//ImGui::SameLine();
-						//ImGui::VerticalSeparator();
-						//ImGui::SameLine();
-						//style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(200, 10, 10, 255.f));
-						//ImGui::Text("By disabling safe mode, you put your account at much greater risk of ban.");
-						//style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.f);
-						//ImGui::EndChild();
-
-						//ImGui::Columns(2, "rage", false);
-						//{
-						//	ImGui::BeginChild("rage 1", ImVec2(0, 0), true);
-						//	{
-						//		ImGui::Checkbox("Enabled##rage", &g_weebwarecfg.ragebot_enabled, false);
-						//		ImGui::Checkbox("Silent Aim##ragebot", &g_weebwarecfg.ragebot_silent_aim, false);
-						//		ImGui::Checkbox("No Recoil", &g_weebwarecfg.no_recoil, false);
-						//		ImGui::Checkbox("Target Teammates##rage", &g_weebwarecfg.ragebot_target_team, false);
-						//		ImGui::Checkbox("Quickstop##rage", &g_weebwarecfg.ragebot_autostop, false);
-						//		ImGui::Checkbox("Autoshoot", &g_weebwarecfg.autoshoot_enabled, false);
-						//		ImGui::Text("Autowall Minimum Damage");
-						//		ImGui::SliderFloat("Autowall##mindamage", &g_weebwarecfg.autowall_min_dmg, 0, 100, "%.f%");
-						//		ImGui::Text("Hitchance");
-						//		ImGui::SliderFloat("Hitchance##rageslider", &g_weebwarecfg.ragebot_hitchance, 0, 100, "%.0f%%");
-						//	}
-						//	ImGui::EndChild();
-
-						//	ImGui::NextColumn();
-
-						//	ImGui::BeginChild("rage 2", ImVec2(0, 0), true);
-						//	{
-						//
-						//	}
-						//	ImGui::EndChild();
-
-						//}
-=======
 
 					ImGui::Checkbox("Health Bar", &g_weebwarecfg.visuals_health_bars, false);
 
@@ -828,7 +760,6 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					if (g_weebwarecfg.visuals_ammo_esp) {
 						imgui_custom::custom_color_inline(g_weebwarecfg.visuals_ammo_esp_col, "Ammo ESP Color");
 					}
->>>>>>> parent of 083f2c8... new config browser
 
 					ImGui::Checkbox("Defusing Indicator", &g_weebwarecfg.defusing_indicator, false);
 					if (g_weebwarecfg.defusing_indicator) {
@@ -988,38 +919,151 @@ void imgui_main(IDirect3DDevice9* pDevice)
 		}
 #pragma endregion
 
+#pragma region Misc
+		if (tab_selection == tabs::misc) {
+			ImGui::Columns(2, "Miscs", false);
+			{
+				ImGui::BeginChild("Misc 1", ImVec2(0, 0), true);
+				{
+					ImGui::Text("Misc");
+					ImGui::Separator();
+					ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
+					if (g_weebwarecfg.misc_clantag_changer) {
+						ImGui::InputText("empty for default##clantag", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
+					}
+					ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
+					ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed, false);
+					ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
+					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
+					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
+					if (g_weebwarecfg.killsay) {
+						ImGui::InputText("empty for default##killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
+					}
+					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
+					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
+					//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
+					//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson_key, key_counter);
+					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
+					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
+					if (g_weebwarecfg.viewmodel_changer) {
+						ImGui::SliderInt("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
+					}
+					ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name, false);
+					ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
+					ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
 
+					//	ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
+
+					ImGui::Separator();
+					ImGui::Text("Movement");
+					ImGui::Separator();
+
+					ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
+					if (g_weebwarecfg.auto_jump) {
+						ImGui::SliderInt("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
+					}
+					//		ImGui::Checkbox("Auto Jump Bug", &g_weebwarecfg.auto_jumpbug, false);
+					//		imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_jumpbug_key, key_counter);
+					ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown, false);
+					ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk, false);
+					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
+					if (g_weebwarecfg.edge_jump) {
+						ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air, false);
+					}
+					ImGui::Text("Auto Strafe");
+					const char* strafe_type[] = { "Off", "Legit", "Fast" };
+					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
+
+					//ImGui::Separator();
+					//ImGui::Text("Legit HVH");
+					//ImGui::Separator();
+					//ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					//ImGui::Checkbox("On Sendpacket", &g_weebwarecfg.on_sendpacket, false);
+					//ImGui::Text("Tickcount mod");
+					//ImGui::SliderInt("Tickcount mod", &g_weebwarecfg.tick_count_mod, 1, 20);
+					//ImGui::Text("Command num mod");
+					//ImGui::SliderInt("Command num mod", &g_weebwarecfg.command_num_mod, 1, 20);
+					//ImGui::SliderFloat("Yaw offset", &g_weebwarecfg.yaw_offset, -180, 180);
+				}
+				ImGui::EndChild();
+
+				ImGui::NextColumn();
+
+				ImGui::BeginChild("Misc 2", ImVec2(0, 0), true);
+				{
+					ImGui::Text("Smartbot");
+					ImGui::Separator();
+					ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai, false);
+					ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
+					ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
+					ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
+					//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
+					ImGui::Text("Rotation Speed");
+					ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
+					ImGui::Text("Aim Speed");
+					ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
+
+					ImGui::Separator();
+					ImGui::Text("Fake Lag");
+					ImGui::Separator();
+					ImGui::Text("Activation type");
+					imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
+
+					const char* fakelag_type[] = { "Off", "On Key", "Always On" };
+					ImGui::Combo("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
+					if (g_weebwarecfg.fake_lag > 0) {
+						ImGui::SliderInt("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 6);
+					}
+
+					//ImGui::Separator();
+
+					//	ImGui::Text("Legit Anti-Aim");
+					//	ImGui::Separator();
+
+					//	// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
+					//ImGui::Text("Anti Triggerbot");
+					//imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
+					//const char* activation[] = { "Off", "On Key" };
+					//ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
+
+					//	ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
+					//	ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
+					//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
+					//	ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);
+						//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
+
+
+					ImGui::Separator();
+				}
+				ImGui::EndChild();
+
+			}
+
+		}
+#pragma endregion
+
+#pragma region skinchanger
 		if (tab_selection == tabs::skins) {
 
-<<<<<<< HEAD
-						float skin_tab_height = ImGui::GetContentRegionAvail().y;
-						ImGui::BeginChild("Knife", ImVec2(0, skin_tab_height / 5), true);
-						{
-							ImGui::Text("Knife Options");
-							ImGui::Separator();
-							ImGui::Checkbox("Enabled##knifechanger", &g_weebwarecfg.knifechanger_enabled, false);
-							const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic", "Paracord", "Survival", "Skeleton", "Nomad" };
-							ImGui::Combo("##knifecombo", &g_weebwarecfg.selected_knife_index[1], knives, ARRAYSIZE(knives));
-							g_weebwarecfg.selected_knife_index[0] = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]].weapon_index;
-						}
-						ImGui::EndChild();
-=======
 			ImGui::Columns(2, "SkinChanger", false);
 
-
-			ImGui::BeginChild("Knife", ImVec2(0, ImGui::GetContentRegionAvail().y / 5), true);
+			float skin_tab_height = ImGui::GetContentRegionAvail().y;
+			ImGui::BeginChild("Knife", ImVec2(0, skin_tab_height / 5), true);
 			{
 				ImGui::Text("Knife Options");
 				ImGui::Separator();
 				ImGui::Checkbox("Enabled##knifechanger", &g_weebwarecfg.knifechanger_enabled, false);
-				const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic" };
+				const char* knives[] = { "Terrorist Knife", "Counter-Terrorist Knife", "Flip", "Gut", "Karambit", "M9 Bayonet", "Bayonet", "Huntsman", "Falchion", "Stiletto", "Ursus", "Navaja", "Talon", "Butterfly", "Shadow Daggers", "Bowie", "Classic", "Paracord", "Survival", "Skeleton", "Nomad" };
 				ImGui::Combo("##knifecombo", &g_weebwarecfg.selected_knife_index[1], knives, ARRAYSIZE(knives));
 				g_weebwarecfg.selected_knife_index[0] = g_weebware.g_knife_list[g_weebwarecfg.selected_knife_index[1]].weapon_index;
 			}
 			ImGui::EndChild();
->>>>>>> parent of 083f2c8... new config browser
 
-			ImGui::BeginChild("Gloves", ImVec2(0, ImGui::GetContentRegionAvail().y / 5 * 3), true);
+			ImGui::BeginChild("Gloves", ImVec2(0, ((skin_tab_height / 5) * 3) - 5), true);
 			{
 				ImGui::Text("Glove Options");
 				ImGui::Separator();
@@ -1118,143 +1162,16 @@ void imgui_main(IDirect3DDevice9* pDevice)
 			ImGui::EndChild();
 		}
 
-#pragma region Misc
-		if (tab_selection == tabs::misc) {
-
-			ImGui::Columns(2, "Miscs", false);
-			{
-				ImGui::BeginChild("Misc 1", ImVec2(0, 0), true);
-				{
-					ImGui::Text("Misc");
-					ImGui::Separator();
-					ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer, false);
-					if (g_weebwarecfg.misc_clantag_changer) {
-						ImGui::InputText("empty for default##clantag", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
-					}
-					ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer, false);
-					ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed, false);
-					ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol, false);
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
-					ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal, false);
-					ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay, false);
-					if (g_weebwarecfg.killsay) {
-						ImGui::InputText("empty for default##killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
-					}
-					ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing, false);
-					ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk, false);
-				//	ImGui::Checkbox("Third Person", &g_weebwarecfg.thirdperson, false);
-				//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.thirdperson_key, key_counter);
-					ImGui::Checkbox("Auto accept", &g_weebwarecfg.misc_autoAccept, false);
-					ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer, false);
-					if (g_weebwarecfg.viewmodel_changer) {
-						ImGui::SliderInt("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
-					}
-					ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name, false);
-					ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot, false);
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
-					ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse, false);
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
-
-				//	ImGui::Checkbox("No Flash", &g_weebwarecfg.remove_flash, false);
-
-					ImGui::Separator();
-					ImGui::Text("Movement");
-					ImGui::Separator();
-
-					ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump, false);
-					if (g_weebwarecfg.auto_jump) {
-						ImGui::SliderInt("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
-					}
-			//		ImGui::Checkbox("Auto Jump Bug", &g_weebwarecfg.auto_jumpbug, false);
-			//		imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_jumpbug_key, key_counter);
-					ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown, false);
-					ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk, false);
-					ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump, false);
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
-					if (g_weebwarecfg.edge_jump) {
-						ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air, false);
-					}
-					ImGui::Text("Auto Strafe");
-					const char* strafe_type[] = { "Off", "Legit", "Fast" };
-					ImGui::Combo("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
-
-					//ImGui::Separator();
-					//ImGui::Text("Legit HVH");
-					//ImGui::Separator();
-					//ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-					//ImGui::Checkbox("On Sendpacket", &g_weebwarecfg.on_sendpacket, false);
-					//ImGui::Text("Tickcount mod");
-					//ImGui::SliderInt("Tickcount mod", &g_weebwarecfg.tick_count_mod, 1, 20);
-					//ImGui::Text("Command num mod");
-					//ImGui::SliderInt("Command num mod", &g_weebwarecfg.command_num_mod, 1, 20);
-					//ImGui::SliderFloat("Yaw offset", &g_weebwarecfg.yaw_offset, -180, 180);
-				}
-				ImGui::EndChild();
-
-				ImGui::NextColumn();
-
-				ImGui::BeginChild("Misc 2", ImVec2(0, 0), true);
-				{
-					ImGui::Text("Smartbot");
-					ImGui::Separator();
-					ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai, false);
-					ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random, false);
-					ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest, false);
-					ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse, false);
-					//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
-					ImGui::Text("Rotation Speed");
-					ImGui::SliderFloat("Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
-					ImGui::Text("Aim Speed");
-					ImGui::SliderFloat("Aim Speed##ai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
-
-					ImGui::Separator();
-					ImGui::Text("Fake Lag");
-					ImGui::Separator();
-					ImGui::Text("Activation type");
-					imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
-
-					const char* fakelag_type[] = { "Off", "On Key", "Always On" };
-					ImGui::Combo("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
-					if (g_weebwarecfg.fake_lag > 0) {
-						ImGui::SliderInt("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 12);
-					}
-
-					//ImGui::Separator();
-
-					//	ImGui::Text("Legit Anti-Aim");
-					//	ImGui::Separator();
-
-					//	// ImGui::Checkbox("Anti Triggerbot", &g_weebwarecfg.anti_triggerbot, false);
-					//ImGui::Text("Anti Triggerbot");
-					//imgui_custom::custom_inline_keyinput(g_weebwarecfg.anti_triggerbot_key, key_counter);
-					//const char* activation[] = { "Off", "On Key" };
-					//ImGui::Combo("##antitrigtype", &g_weebwarecfg.anti_triggerbot, activation, ARRAYSIZE(activation));
-
-					//	ImGui::Checkbox("Enable AA", &g_weebwarecfg.misc_legit_aa_enabled, false);
-					//	ImGui::Checkbox("Jitter", &g_weebwarecfg.misc_legit_aa_jitter, false);
-					//	ImGui::Checkbox("Resolver", &g_weebwarecfg.misc_legit_aa_resolver, false);
-					//	ImGui::Checkbox("Edge", &g_weebwarecfg.misc_legit_aa_edge, false);
-						//	ImGui::Checkbox("Slide walk", &g_weebwarecfg.misc_slidewalk, false);
-
-
-					ImGui::Separator();
-				}
-				ImGui::EndChild();
-
-			}
-
-		}
 #pragma endregion
 
 #pragma region Configs
-		if (tab_selection == tabs::sets) {
-
+		if (tab_selection == tabs::settings) {
 			ImGui::Columns(2, "Settings", false);
 			{
 
 				ImGui::BeginChild("configs", ImVec2(0, 0), true);
 				{
-					ImGui::Text("Configs");
+					ImGui::Text("Local Configs:");
 					ImGui::Separator();
 
 					if (ImGui::Button("Refresh", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
@@ -1271,96 +1188,33 @@ void imgui_main(IDirect3DDevice9* pDevice)
 					ImGui::Separator();
 					ImGui::Text("Load");
 					ImGui::Separator();
-					ImGui::BeginChild("Existing Configs", ImVec2(0, new_height - 220), false);
+					ImGui::BeginChild("Existing Configs", ImVec2(0, ImGui::GetFrameHeight() - 55), false);
 					for (auto cfg : g_config_list.config_names)
 					{
 						if (!strstr(cfg.c_str(), "weebwareskins")) {
-							if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_load_name == cfg.c_str()))
+							if (ImGui::Selectable(eraseSubStr(cfg, ".weebware").c_str(), g_config_list.cur_load_name == cfg.c_str()))
 							{
-<<<<<<< HEAD
-								ImGui::Text("Online Configs:");
-								ImGui::Separator();
-								ImGui::Text("Your Configs:");
-								ImGui::Separator();
-								ImGui::BeginChild("Configs##yours", ImVec2(0, 200), false);
-								int index_yours = 0;
-								for (auto cfg : g_config_list.config_browser_yours)
-								{
-									if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_yours_name == cfg.c_str()))
-									{
-										g_config_list.cur_config_browser_yours_name = cfg.c_str();
-										g_config_list.cur_id_yours = (g_config_list.your_configs_buffer[index_yours].at("id"));
-									}
-									index_yours++;
-								}
-								ImGui::EndChild();
-								ImGui::Separator();
-								float your_config_width = ImGui::GetContentRegionAvailWidth() - 12;
-								ImGui::BeginChild("Your Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-								if (ImGui::Button("Refresh##yours", ImVec2(your_config_width / 3, 20), ImGuiButtonFlags_Outlined))
-								{
-									g_config_list.get_your_configs();
-								}
-								ImGui::SameLine();
-								if (ImGui::Button("Load##yours", ImVec2(your_config_width / 3, 20), ImGuiButtonFlags_Outlined))
-								{
-									g_config_list.load_config_from_memory(g_config_list.cur_id_yours);
-									g_weebwarecfg.skinchanger_apply_nxt = 1;
-								}
-								ImGui::EndChild();
-								ImGui::Separator();
-								ImGui::Text("Favorited Configs:");
-								ImGui::Separator();
-								ImGui::BeginChild("Configs##fav", ImVec2(0, ImGui::GetFrameHeight() - 55), false);
-								int index_fav = 0;
-								for (auto cfg : g_config_list.config_browser_fav)
-								{
-									if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_fav_name == cfg.c_str()))
-									{
-										g_config_list.cur_config_browser_fav_name = cfg.c_str();
-										g_config_list.cur_id_fav = (g_config_list.favorite_configs_buffer[index_fav].at("id"));
-									}
-									index_fav++;
-								}
-								ImGui::EndChild();
-								ImGui::Separator();
-								float fav_config_width = ImGui::GetContentRegionAvailWidth() - 12;
-								ImGui::BeginChild("Favorited Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-								if (ImGui::Button("Refresh##fav", ImVec2(fav_config_width / 3, 20), ImGuiButtonFlags_Outlined))
-								{
-									g_config_list.get_favorited_configs();
-								}
-								ImGui::SameLine();
-								if (ImGui::Button("Load##fav", ImVec2(fav_config_width / 3, 20), ImGuiButtonFlags_Outlined))
-								{
-									g_config_list.load_config_from_memory(g_config_list.cur_id_fav);
-									g_weebwarecfg.skinchanger_apply_nxt = 1;
-								}
-								ImGui::EndChild();
-=======
 								g_config_list.cur_load_name = cfg.c_str();
->>>>>>> parent of 083f2c8... new config browser
 							}
 						}
 					}
 					ImGui::EndChild();
 					ImGui::Separator();
+					float config_width = ImGui::GetContentRegionAvailWidth() - 12;
 					ImGui::BeginChild("Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-					if (ImGui::Button("Update", ImVec2(ImGui::GetContentRegionAvailWidth() / 3, 20), ImGuiButtonFlags_Outlined))
+					if (ImGui::Button("Update", ImVec2(config_width / 3, 20), ImGuiButtonFlags_Outlined))
 					{
 						g_config_list.save_existing_weebware();
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("Load", ImVec2(ImGui::GetContentRegionAvailWidth() / 3, 20), ImGuiButtonFlags_Outlined))
+					if (ImGui::Button("Load", ImVec2(config_width / 3, 20), ImGuiButtonFlags_Outlined))
 					{
 						g_config_list.load_weebware_config(g_config_list.cur_load_name);
 						g_weebwarecfg.skinchanger_apply_nxt = 1;
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("Delete", ImVec2(ImGui::GetContentRegionAvailWidth(), 20), ImGuiButtonFlags_Outlined))
+					if (ImGui::Button("Delete", ImVec2(config_width / 3, 20), ImGuiButtonFlags_Outlined))
 					{
 						g_config_list.delete_weebware_config();
 					}
@@ -1370,55 +1224,73 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 				ImGui::NextColumn();
 
-				//ImGui::BeginChild("Browser", ImVec2(0, 0), true);
-				//{
-				//	ImGui::Text("Config Browser");
-				//	ImGui::Separator();
+				ImGui::BeginChild("Browser", ImVec2(0, 0), true);
+				{
+					ImGui::Text("Online Configs:");
+					ImGui::Separator();
+					ImGui::Text("Your Configs:");
+					ImGui::Separator();
+					ImGui::BeginChild("Configs##yours", ImVec2(0, 200), false);
+					int index_yours = 0;
+					for (auto cfg : g_config_list.config_browser_yours)
+					{
+						if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_yours_name == cfg.c_str()))
+						{
+							g_config_list.cur_config_browser_yours_name = cfg.c_str();
+							g_config_list.cur_id_yours = (g_config_list.your_configs_buffer[index_yours].at("id"));
+						}
+						index_yours++;
+					}
+					ImGui::EndChild();
+					ImGui::Separator();
+					float your_config_width = ImGui::GetContentRegionAvailWidth() - 12;
+					ImGui::BeginChild("Your Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-				//	ImGui::BeginChild("Configs", ImVec2(0, new_height - 123), false);
-				//	for (auto cfg : g_config_list.config_browser_info)
-				//	{
-				//		if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_name == cfg.c_str()))
-				//		{
-				//			g_config_list.cur_config_browser_name = cfg.c_str();
-				//			auto last = std::find(std::begin(g_config_list.config_browser_info), std::end(g_config_list.config_browser_info), g_config_list.cur_config_browser_name);
-				//			int index = std::distance(std::begin(g_config_list.config_browser_info), last);
-				//			g_config_list.cur_creator = "Created by: " + (std::string)g_config_list.config_browser_buffer.at("username")[index];
-				//			g_config_list.cur_desc = "Description: " + (std::string)g_config_list.config_browser_buffer.at("description")[index];
-				//			g_config_list.cur_secret = (std::string)g_config_list.config_browser_buffer.at("secret")[index];
-				//			g_config_list.cur_config_browser_name = (std::string)g_config_list.config_browser_buffer.at("name")[index];
-				//		}
-				//	}
-				//	ImGui::EndChild();
-				//	ImGui::Separator();
-				//	ImGui::Text(g_config_list.cur_creator.c_str());
-				//	ImGui::Text(g_config_list.cur_desc.c_str());
-				//	ImGui::Separator();
-				//	ImGui::BeginChild("Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-				//	ImGui::Columns(3, "LoadSettings", false);
-				//	ImGui::SetColumnOffset(1, 85);
-				//	ImGui::SetColumnOffset(2, 180);
-				//	if (ImGui::Button("Refresh", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-				//		// load config info from server
-				//		g_config_list.update_config_browser();
-				//	}
+					if (ImGui::Button("Refresh##yours", ImVec2(your_config_width / 3, 20), ImGuiButtonFlags_Outlined))
+					{
+						g_config_list.get_your_configs();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Load##yours", ImVec2(your_config_width / 3, 20), ImGuiButtonFlags_Outlined))
+					{
+						g_config_list.load_config_from_memory(g_config_list.cur_id_yours);
+						g_weebwarecfg.skinchanger_apply_nxt = 1;
+					}
+					ImGui::EndChild();
+					ImGui::Separator();
+					ImGui::Text("Favorited Configs:");
+					ImGui::Separator();
+					ImGui::BeginChild("Configs##fav", ImVec2(0, ImGui::GetFrameHeight() - 55), false);
+					int index_fav = 0;
+					for (auto cfg : g_config_list.config_browser_fav)
+					{
+						if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_fav_name == cfg.c_str()))
+						{
+							g_config_list.cur_config_browser_fav_name = cfg.c_str();
+							g_config_list.cur_id_fav = (g_config_list.favorite_configs_buffer[index_fav].at("id"));
+						}
+						index_fav++;
+					}
+					ImGui::EndChild();
+					ImGui::Separator();
+					float fav_config_width = ImGui::GetContentRegionAvailWidth() - 12;
+					ImGui::BeginChild("Favorited Config Loading", ImVec2(0, 22), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-				//	ImGui::NextColumn();
-				//	if (ImGui::Button("Load", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-				//		// load config from server
-				//		g_config_list.load_browser_config();
-				//	}
-				////	ImGui::NextColumn();
-				////	if (ImGui::Button("Save", ImVec2(80, 20), ImGuiButtonFlags_Outlined)) {
-				////		// save config from server
-				//////		g_config_list.save_browser_config();
-				////	}
-				//	ImGui::EndChild();
-				//}
-				//ImGui::EndChild();
+					if (ImGui::Button("Refresh##fav", ImVec2(fav_config_width / 3, 20), ImGuiButtonFlags_Outlined))
+					{
+						g_config_list.get_favorited_configs();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Load##fav", ImVec2(fav_config_width / 3, 20), ImGuiButtonFlags_Outlined))
+					{
+						g_config_list.load_config_from_memory(g_config_list.cur_id_fav);
+						g_weebwarecfg.skinchanger_apply_nxt = 1;
+					}
+					ImGui::EndChild();
+				}
+				ImGui::EndChild();
 			}
 		}
-
 #pragma endregion
 
 		ImGui::End();
@@ -1434,39 +1306,3 @@ void imgui_main(IDirect3DDevice9* pDevice)
 
 	ImGui::Render();
 }
-
-// https://msdn.microsoft.com/en-us/library/windows/desktop/bb174369(v=vs.85).aspx 
-// STDMETHOD(DrawIndexedPrimitive)(THIS_ D3DPRIMITIVETYPE,INT BaseVertexIndex,UINT MinVertexIndex,UINT NumVertices,UINT startIndex,UINT primCount) PURE;
-// 82
-
-struct d3dchams_indexing
-{
-	D3DPRIMITIVETYPE type;
-	INT base_vertex_index;
-	UINT min_index;
-	UINT num_vertices;
-	UINT start_index;
-	UINT prim_count;
-};
-
-d3dchams_indexing ent_data[99];
-
-#if 0
-HRESULT draw_indexed_primitive(IDirect3DDevice9 *device, D3DPRIMITIVETYPE type, INT base_vertex_index, UINT min_index, UINT num_vertices, UINT start_index, UINT prim_count)
-{
-	// Save the data to the struct.
-	if (m_ent)
-	{
-		d3dchams_indexing tmp;
-		tmp.type = type;
-		tmp.base_vertex_index = base_vertex_index;
-		tmp.min_index = min_index;
-		tmp.num_vertices = num_vertices;
-		tmp.start_index = start_index;
-		tmp.prim_count = prim_count;
-		ent_data[m_ent->index] = tmp;
-	}
-	// Return original
-}
-
-#endif
