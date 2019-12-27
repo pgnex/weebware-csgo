@@ -806,11 +806,21 @@ public:
 			weapon_id == weapon_type_id::weapon_mp5sd;
 	}
 
+	bool is_scoped_weapon() {
+		int weapon_id = this->m_iItemDefinitionIndex();
+
+		return weapon_id == weapon_type_id::weapon_scar20 || weapon_id == weapon_type_id::weapon_g3sg1;
+	}
+
 	bool is_autosniper( )
 	{
 		int weapon_id = this->m_iItemDefinitionIndex( );
 
-		return weapon_id == weapon_type_id::weapon_scar20 || weapon_id == weapon_type_id::weapon_g3sg1;
+		return
+			weapon_id == weapon_type_id::weapon_scar20 ||
+			weapon_id == weapon_type_id::weapon_g3sg1 ||
+			weapon_id == weapon_type_id::weapon_awp ||
+			weapon_id == weapon_type_id::weapon_ssg08;
 	}
 
 	bool is_awp( )

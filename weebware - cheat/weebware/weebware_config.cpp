@@ -46,7 +46,6 @@ void c_config_list::update_config_browser() {
 	config_browser_info = info;
 }
 
-<<<<<<< HEAD
 void c_config_list::get_your_configs() {
 	std::vector<std::string> info;
 	std::string content = networking::get_request("https://weebware.net/inc/web/?your=" + g_weebware.g_user_name);
@@ -76,8 +75,6 @@ void c_config_list::load_config_from_memory(int index) {
 }
 
 
-=======
->>>>>>> parent of 083f2c8... new config browser
 void c_config_list::load_browser_config() {
 
 	// nothing selected

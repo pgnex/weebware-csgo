@@ -31,14 +31,23 @@ class c_config_list
 public:
 	// config browser
 	std::vector<std::string> config_browser_info;
-	json config_browser_buffer;
+	std::vector<std::string> config_browser_yours;
+	std::vector<std::string> config_browser_fav;
+	json config_browser_buffer, your_configs_buffer, favorite_configs_buffer;
 	void update_config_browser();
 	void load_browser_config();
 	void save_browser_config();
+	void get_your_configs();
+	void load_config_from_memory(int index);
+	void get_favorited_configs();
+	int cur_id_yours;
+	int cur_id_fav;
 	std::string cur_secret = "";
 	std::string cur_desc = "Description: ";
 	std::string cur_creator = "Created by: ";
 	std::string cur_config_browser_name = "";
+	std::string cur_config_browser_yours_name = "";
+	std::string cur_config_browser_fav_name = "";
 
 	// configs
 	std::vector<std::string> config_names;
@@ -95,6 +104,7 @@ public:
 	bool quick_stop_magnet;
 	float magnet_trigger_smooth;
 	float magnet_trigger_fov;
+	bool triggerbot_aim_through_smoke = false;
 
 	json convert()
 	{
@@ -134,6 +144,7 @@ public:
 		tmp["magnet_trigger_fov"] = magnet_trigger_fov;
 		tmp["quick_stop_magnet"] = quick_stop_magnet;
 		tmp["triggerbot_target_switch_delay"] = triggerbot_target_switch_delay;
+		tmp["triggerbot_aim_through_smoke"] = triggerbot_aim_through_smoke;
 		return tmp;
 	}
 
@@ -174,6 +185,7 @@ public:
 		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
 		if (check("quick_stop_magnet", data)) quick_stop_magnet = data["quick_stop_magnet"];
 		if (check("triggerbot_target_switch_delay", data)) triggerbot_target_switch_delay = data["triggerbot_target_switch_delay"];
+		if (check("triggerbot_aim_through_smoke", data)) triggerbot_aim_through_smoke = data["triggerbot_aim_through_smoke"];
 	}
 
 };
@@ -343,6 +355,7 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	int thirdperson_key;
+	int thirdperson_distance = 0;
 	bool killsay;
 	char killsay_msg_custom[256];
 	char custom_clantag_static[256];
@@ -361,6 +374,8 @@ public:
 	bool auto_defuse;
 	int auto_defuse_key;
 	bool no_duck_cooldown;
+	bool flashlight;
+	bool triggerbot_scoped_only;
 	std::string weapon_option_name = "Weapon Options - Hold Out A Weapon";
 
 	// ragebot
@@ -584,7 +599,7 @@ public:
 		tmp["selected_knife_index0"] = selected_knife_index[0];
 		tmp["selected_knife_index1"] = selected_knife_index[1];
 		tmp["selected_gun_index"] = selected_gun_index;
-		  
+
 
 		save_color(water_mark_col, tmp, "water_mark_col");
 		save_color(visuals_bounding_col, tmp, "visuals_bounding_col");
@@ -826,7 +841,7 @@ public:
 		if (check_color("visuals_weapon_esp_col", data)) read_color(visuals_weapon_esp_col, data, "visuals_weapon_esp_col");
 		if (check_color("hand_cham_col", data)) read_color(hand_cham_col, data, "hand_cham_col");
 		if (check_color("hand_cham_col_xqz", data)) read_color(hand_cham_col_xqz, data, "hand_cham_col_xqz");
-		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");		
+		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");
 		if (check_color("visuals_chams_glow_col", data)) read_color(visuals_chams_glow_col, data, "visuals_chams_glow_col");
 
 		json skin_tmp = data["skins"];
@@ -857,6 +872,13 @@ public:
 		catch (...) {}
 	}
 
+	void load_cfg_mem(json main)
+	{
+		try {
+			convert(main);
+		}
+		catch (...) {}
+	}
 
 };
 

@@ -940,6 +940,13 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 			if (!sniper_scoped())
 				return;
 
+
+		if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
+			if (target->trace_from_smoke(*m_local->m_vecOrigin()))
+				return;
+		}
+
+
 		g_weebware.g_engine->set_view_angles(cmd->viewangles);
 	}
 }
@@ -951,6 +958,8 @@ bool c_legitbot::sniper_scoped() {
 	if (weapon->is_scout() || weapon->is_awp() || weapon->is_autosniper())
 		if (m_local->m_bIsScoped())
 			return true;
+
+	return false;
 }
 
 void c_legitbot::triggerbot_main(c_usercmd* cmd)
@@ -1062,7 +1071,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction))
 			return;	
 
-		if (g_weebwarecfg.triggerbot_scoped_only) 
+		if (g_weebwarecfg.triggerbot_scoped_only && weapon->is_scoped_weapon())
 			if (!sniper_scoped())
 				return;
 
