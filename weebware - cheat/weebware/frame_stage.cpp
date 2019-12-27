@@ -451,6 +451,9 @@ void c_frame_stage_notify::run_skinchanger() {
 				if (worldmodel_weapon)
 					*worldmodel_weapon->m_nModelIndex() = model_index + 1;
 
+				*weapon->get_original_owner_xuidhigh() = 0;
+				*weapon->get_original_owner_xuidlow() = 0;
+
 			}
 		}
 
@@ -476,8 +479,6 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (strlen(skin_config.weapon_name) > 0)
 			*weapon->get_custom_name() = std::regex_replace(skin_config.weapon_name, std::regex(" "), "\u0020");
 
-		*weapon->get_original_owner_xuidhigh() = 0;
-		*weapon->get_original_owner_xuidlow() = 0;
 	}
 }
 
