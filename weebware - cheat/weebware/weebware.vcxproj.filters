@@ -252,6 +252,9 @@
     <ClCompile Include="Ragebot.cpp">
       <Filter>Source Files\hooking\CreateMove\Ragebot</Filter>
     </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Source Files\Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -342,15 +345,6 @@
       <Filter>Source Files\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>Source Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_rect_pack.h">
-      <Filter>Source Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_textedit.h">
-      <Filter>Source Files\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\stb_truetype.h">
       <Filter>Source Files\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="imgui\dx9\imgui_dx9.h">
@@ -490,6 +484,21 @@
     </ClInclude>
     <ClInclude Include="Ragebot.h">
       <Filter>Source Files\hooking\CreateMove\Ragebot</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\stb_truetype.h">
+      <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Source Files\hooking\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="raleway_font.h">
+      <Filter>Source Files\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

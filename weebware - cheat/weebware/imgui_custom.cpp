@@ -32,9 +32,10 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 	auto& style = ImGui::GetStyle();
 
 	// Set it to the same color as background
-	style.Colors[ImGuiCol_Button] = style.Colors[ImGuiCol_ChildWindowBg];
-	style.Colors[ImGuiCol_ButtonHovered] = style.Colors[ImGuiCol_ChildWindowBg];
-	style.Colors[ImGuiCol_ButtonActive] = style.Colors[ImGuiCol_ChildWindowBg];
+	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+
 
 	static auto has_input = 0xDEDFED;
 
@@ -143,6 +144,16 @@ void imgui_custom::custom_key_button(int& key)
 	}
 }
 
+void imgui_custom::custom_label_header(std::string text) {
+	auto& style = ImGui::GetStyle();
+	style.Colors[ImGuiCol_Text] = (ConvertFromRGBA(ImVec4(217, 80, 196, 255)));
+	ImGui::PushFont(g_weebware.pFont[1]);
+	ImGui::Text(text.c_str());
+	ImGui::PopFont();
+	style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(92, 92, 92, 255));
+}
+
+
 inline ImVec4 imgui_custom::ConvertFromRGBA(ImVec4 imVec)
 {
 	return ImVec4(imVec.x / 255.f, imVec.y / 255.f, imVec.z / 255.f, imVec.w / 255.f);
@@ -229,46 +240,44 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 	}
 }
 
-void imgui_custom::create_button_tab(int& tab, int set, const char* title, int width) {
+void imgui_custom::create_button_tab(int& tab, int set, const char* title, int width, int height) {
 
 	auto& style = ImGui::GetStyle();
 
 	if (tab == set)
 	{
-		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+		style.Colors[ImGuiCol_Button] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_ButtonHovered] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_ButtonActive] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 	}
 	else
 	{
-		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17, 17, 17, 255.f));
-		style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-
-	float ratio = 9.2f;
-
-	switch (width) {
-	case 1400:
-		ratio = 9.5f;
-		break;
-	case 1920:
-		ratio = 9.0f;
-		break;
-	default:
-		ratio = 9.2f;
-		break;
+		style.Colors[ImGuiCol_Button] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_ButtonHovered] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_ButtonActive] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(92, 92, 92, 255));
 	}
 
 
-	if (ImGui::Button(title, ImVec2((width / 2) / ratio, 20)))
+	if (ImGui::Button(title, ImVec2(width, height)))
 	{
 		tab = set;
 	}
 }
 
+void imgui_custom::horizontal_margin(std::string tag, int margin) {
+	ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(0, 0, 0, 0)));
+	ImGui::BeginChild(("margin##" + tag).c_str(), ImVec2(0, margin));
+	ImGui::EndChild();
+	ImGui::PopStyleColor();
+}
+
+void imgui_custom::fix_gay_padding_shit(std::string tag) {
+	ImGui::Columns(2, ("kill_me##" + tag).c_str(), false);
+	ImGui::SetColumnWidth(0, 6);
+	ImGui::NextColumn();
+}
 
 void imgui_custom::create_tab(int& tab, int set, int pos, const char* title)
 {

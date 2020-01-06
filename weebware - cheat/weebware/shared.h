@@ -18,6 +18,7 @@ public:
 	bool check_models_installed();
 	bool round_end = false;
 	bool send_packet = true;
+	ImFont* pFont[3];
 	QAngle real_angle;
 
 

@@ -143,6 +143,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dme.cpp" />
     <ClCompile Include="glovechanger.cpp" />
+    <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="networking.cpp" />
     <ClCompile Include="Ragebot.cpp" />
     <ClCompile Include="scene_end.cpp" />
@@ -200,8 +201,10 @@
     <ClInclude Include="c_surface.h" />
     <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
+    <ClInclude Include="gui.h" />
     <ClInclude Include="networking.h" />
     <ClInclude Include="Ragebot.h" />
+    <ClInclude Include="raleway_font.h" />
     <ClInclude Include="scene_end.h" />
     <ClInclude Include="drawing.h" />
     <ClInclude Include="esp.h" />
@@ -224,8 +227,8 @@
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_win32.h" />
     <ClInclude Include="imgui\imgui_internal.h" />
-    <ClInclude Include="imgui\stb_rect_pack.h" />
-    <ClInclude Include="imgui\stb_textedit.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="imgui_custom.h" />
     <ClInclude Include="IViewRenderBeams.h" />

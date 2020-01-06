@@ -1,10 +1,13 @@
 ﻿#include "Header.h"
 #include "shared.h"
+#include "imgui/imgui_impl_win32.h"
+#include "gui.h"
 
 // #include "Polyhook\PolyHook\PolyHook.hpp"
 // Update 
 
 c_hooking g_hooking;
+GUI g_gui;
 
 #if 0
 BOOL WINAPI hk_set_cursor_pos(int x, int y)
@@ -60,8 +63,9 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 {
 	auto protecc = g_hooking.VEH_RESET->getProtectionObject();
 
-	return hook_functions::reset(device, presentation_param);
+	return g_hooking.o_reset(device, presentation_param);
 }
+
 
 #if 0
 long __stdcall hk_endscene(IDirect3DDevice9* device)
@@ -74,9 +78,32 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 
 long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
-	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
+	auto protecc = g_hooking.VEH_PRESENT->getProtectionObject();
 
-	return hook_functions::present(device, src, dest, wnd_override, dirty_region);
+	static bool imguiInit{ ImGui_ImplDX9_Init(device) };
+
+	device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
+	IDirect3DVertexDeclaration9* vertexDeclaration;
+	device->GetVertexDeclaration(&vertexDeclaration);
+
+	ImGui_ImplDX9_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	// ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
+
+	if (g_weebware.menu_opened)
+		g_gui.render();
+
+	ImGui::EndFrame();
+	ImGui::Render();
+	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+
+	device->SetVertexDeclaration(vertexDeclaration);
+	vertexDeclaration->Release();
+
+
+	return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
 }
 #endif
 
@@ -262,8 +289,8 @@ void c_hooking::hook_all_functions()
 	o_reset = reinterpret_cast<decltype(o_reset)>(reset_addr);
 
 	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
-	VEH_ENDSCENE = new PLH::BreakPointHook((char*)present_addr, (char*)&hk_present);
-	VEH_ENDSCENE->hook();
+	VEH_PRESENT = new PLH::BreakPointHook((char*)present_addr, (char*)&hk_present);
+	VEH_PRESENT->hook();
 	original_present = reinterpret_cast<decltype(original_present)>(present_addr);
 
 	auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
@@ -350,7 +377,7 @@ void c_hooking::unhook_all_functions()
 	VEH_CM->unHook();
 	VEH_RESET->unHook();
 	VEH_FSN->unHook();
-	VEH_ENDSCENE->unHook();
+	VEH_PRESENT->unHook();
 	VEH_SCENEEND->unHook();
 	VEH_SOUNDS->unHook();
 	VEH_MDL->unHook();

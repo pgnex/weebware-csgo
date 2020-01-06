@@ -1,6 +1,7 @@
 // File: 'fa-solid-900.ttf' (105784 bytes)
 // Exported using binary_to_compressed_c.cpp
-unsigned int myfont_compressed_data[71052 / 4] =
+
+unsigned int icon_font_i_think[71052 / 4] =
 {
 	0x0000bc57, 0x00000000, 0x389d0100, 0x00000400, 0x00010037, 0x000b0000, 0x00030080, 0x55534730, 0x258b2042, 0x0100007a, 0x28158238, 0x2f534f54,
 	0x50b83f32, 0x200f82f7, 0x370f828c, 0x616d6356, 0x86205070, 0x09000028, 0x210000b4, 0x796c67ba, 0xe4d8fe66, 0x2f2d2f82, 0x5201005c, 0x61656858,
