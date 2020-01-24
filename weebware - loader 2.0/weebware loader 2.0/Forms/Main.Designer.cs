@@ -1,4 +1,4 @@
-﻿namespace weebware_loader_2._0.Forms {
+﻿namespace weebware_loader.Forms {
     partial class Main {
         /// <summary>
         /// Required designer variable.
@@ -23,22 +23,23 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.pnlBackground = new System.Windows.Forms.Panel();
-            this.pnlSelContainer = new System.Windows.Forms.Panel();
-            this.pnlCheat2 = new System.Windows.Forms.Panel();
-            this.pnlCheat1 = new System.Windows.Forms.Panel();
-            this.lblWeebware = new System.Windows.Forms.Label();
-            this.pbLogo = new weebware_loader_2._0.CPictureBox();
-            this.btnInject = new System.Windows.Forms.Button();
-            this.btnExit = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.Label();
             this.pnlInfo = new System.Windows.Forms.Panel();
             this.lblWelcomeBack = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.btnInject = new System.Windows.Forms.Button();
+            this.pnlSelContainer = new System.Windows.Forms.Panel();
+            this.lblWeebware = new System.Windows.Forms.Label();
+            this.lblCheatSelected = new System.Windows.Forms.Label();
+            this.lblSessionExp = new System.Windows.Forms.Label();
+            this.tmrExpire = new System.Windows.Forms.Timer(this.components);
+            this.pbLogo = new weebware_loader.CPictureBox();
             this.pnlBackground.SuspendLayout();
-            this.pnlSelContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.pnlInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlBackground
@@ -56,69 +57,39 @@
             this.pnlBackground.Size = new System.Drawing.Size(483, 327);
             this.pnlBackground.TabIndex = 0;
             // 
-            // pnlSelContainer
+            // pnlInfo
             // 
-            this.pnlSelContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
-            this.pnlSelContainer.Controls.Add(this.pnlCheat2);
-            this.pnlSelContainer.Controls.Add(this.pnlCheat1);
-            this.pnlSelContainer.Location = new System.Drawing.Point(25, 81);
-            this.pnlSelContainer.Name = "pnlSelContainer";
-            this.pnlSelContainer.Size = new System.Drawing.Size(264, 86);
-            this.pnlSelContainer.TabIndex = 6;
+            this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
+            this.pnlInfo.Controls.Add(this.lblSessionExp);
+            this.pnlInfo.Controls.Add(this.lblCheatSelected);
+            this.pnlInfo.Controls.Add(this.lblWelcomeBack);
+            this.pnlInfo.Location = new System.Drawing.Point(25, 219);
+            this.pnlInfo.Name = "pnlInfo";
+            this.pnlInfo.Size = new System.Drawing.Size(437, 84);
+            this.pnlInfo.TabIndex = 11;
             // 
-            // pnlCheat2
+            // lblWelcomeBack
             // 
-            this.pnlCheat2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
-            this.pnlCheat2.Location = new System.Drawing.Point(0, 43);
-            this.pnlCheat2.Name = "pnlCheat2";
-            this.pnlCheat2.Size = new System.Drawing.Size(264, 43);
-            this.pnlCheat2.TabIndex = 1;
+            this.lblWelcomeBack.AutoSize = true;
+            this.lblWelcomeBack.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblWelcomeBack.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.lblWelcomeBack.Location = new System.Drawing.Point(13, 11);
+            this.lblWelcomeBack.Name = "lblWelcomeBack";
+            this.lblWelcomeBack.Size = new System.Drawing.Size(193, 13);
+            this.lblWelcomeBack.TabIndex = 0;
+            this.lblWelcomeBack.Text = "Welcome back to weebware, ";
             // 
-            // pnlCheat1
+            // lblStatus
             // 
-            this.pnlCheat1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
-            this.pnlCheat1.Location = new System.Drawing.Point(0, 0);
-            this.pnlCheat1.Name = "pnlCheat1";
-            this.pnlCheat1.Size = new System.Drawing.Size(264, 43);
-            this.pnlCheat1.TabIndex = 0;
-            // 
-            // lblWeebware
-            // 
-            this.lblWeebware.AutoSize = true;
-            this.lblWeebware.BackColor = System.Drawing.Color.Transparent;
-            this.lblWeebware.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblWeebware.ForeColor = System.Drawing.Color.White;
-            this.lblWeebware.Location = new System.Drawing.Point(21, 32);
-            this.lblWeebware.Name = "lblWeebware";
-            this.lblWeebware.Size = new System.Drawing.Size(110, 19);
-            this.lblWeebware.TabIndex = 5;
-            this.lblWeebware.Text = "weebware";
-            // 
-            // pbLogo
-            // 
-            this.pbLogo.BackColor = System.Drawing.Color.Black;
-            this.pbLogo.Image = ((System.Drawing.Image)(resources.GetObject("pbLogo.Image")));
-            this.pbLogo.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
-            this.pbLogo.Location = new System.Drawing.Point(386, 27);
-            this.pbLogo.Name = "pbLogo";
-            this.pbLogo.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
-            this.pbLogo.Size = new System.Drawing.Size(76, 33);
-            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pbLogo.TabIndex = 4;
-            this.pbLogo.TabStop = false;
-            // 
-            // btnInject
-            // 
-            this.btnInject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
-            this.btnInject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInject.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
-            this.btnInject.ForeColor = System.Drawing.Color.White;
-            this.btnInject.Location = new System.Drawing.Point(347, 81);
-            this.btnInject.Name = "btnInject";
-            this.btnInject.Size = new System.Drawing.Size(115, 40);
-            this.btnInject.TabIndex = 8;
-            this.btnInject.Text = "Inject";
-            this.btnInject.UseVisualStyleBackColor = false;
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lblStatus.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblStatus.ForeColor = System.Drawing.Color.White;
+            this.lblStatus.Location = new System.Drawing.Point(21, 187);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(56, 13);
+            this.lblStatus.TabIndex = 10;
+            this.lblStatus.Text = "Status";
             // 
             // btnExit
             // 
@@ -134,37 +105,79 @@
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // lblStatus
+            // btnInject
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.BackColor = System.Drawing.Color.Transparent;
-            this.lblStatus.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblStatus.ForeColor = System.Drawing.Color.White;
-            this.lblStatus.Location = new System.Drawing.Point(21, 187);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(56, 13);
-            this.lblStatus.TabIndex = 10;
-            this.lblStatus.Text = "Status";
+            this.btnInject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
+            this.btnInject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInject.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.btnInject.ForeColor = System.Drawing.Color.White;
+            this.btnInject.Location = new System.Drawing.Point(347, 81);
+            this.btnInject.Name = "btnInject";
+            this.btnInject.Size = new System.Drawing.Size(115, 40);
+            this.btnInject.TabIndex = 8;
+            this.btnInject.Text = "Inject";
+            this.btnInject.UseVisualStyleBackColor = false;
             // 
-            // pnlInfo
+            // pnlSelContainer
             // 
-            this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
-            this.pnlInfo.Controls.Add(this.lblWelcomeBack);
-            this.pnlInfo.Location = new System.Drawing.Point(25, 219);
-            this.pnlInfo.Name = "pnlInfo";
-            this.pnlInfo.Size = new System.Drawing.Size(437, 84);
-            this.pnlInfo.TabIndex = 11;
+            this.pnlSelContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.pnlSelContainer.Location = new System.Drawing.Point(25, 81);
+            this.pnlSelContainer.Name = "pnlSelContainer";
+            this.pnlSelContainer.Size = new System.Drawing.Size(264, 86);
+            this.pnlSelContainer.TabIndex = 6;
             // 
-            // lblWelcomeBack
+            // lblWeebware
             // 
-            this.lblWelcomeBack.AutoSize = true;
-            this.lblWelcomeBack.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
-            this.lblWelcomeBack.ForeColor = System.Drawing.Color.White;
-            this.lblWelcomeBack.Location = new System.Drawing.Point(13, 11);
-            this.lblWelcomeBack.Name = "lblWelcomeBack";
-            this.lblWelcomeBack.Size = new System.Drawing.Size(193, 13);
-            this.lblWelcomeBack.TabIndex = 0;
-            this.lblWelcomeBack.Text = "Welcome back to weebware, ";
+            this.lblWeebware.AutoSize = true;
+            this.lblWeebware.BackColor = System.Drawing.Color.Transparent;
+            this.lblWeebware.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblWeebware.ForeColor = System.Drawing.Color.White;
+            this.lblWeebware.Location = new System.Drawing.Point(21, 32);
+            this.lblWeebware.Name = "lblWeebware";
+            this.lblWeebware.Size = new System.Drawing.Size(110, 19);
+            this.lblWeebware.TabIndex = 5;
+            this.lblWeebware.Text = "weebware";
+            // 
+            // lblCheatSelected
+            // 
+            this.lblCheatSelected.AutoSize = true;
+            this.lblCheatSelected.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblCheatSelected.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.lblCheatSelected.Location = new System.Drawing.Point(13, 34);
+            this.lblCheatSelected.Name = "lblCheatSelected";
+            this.lblCheatSelected.Size = new System.Drawing.Size(140, 13);
+            this.lblCheatSelected.TabIndex = 1;
+            this.lblCheatSelected.Text = "- Currently Selected";
+            // 
+            // lblSessionExp
+            // 
+            this.lblSessionExp.AutoSize = true;
+            this.lblSessionExp.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblSessionExp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.lblSessionExp.Location = new System.Drawing.Point(13, 59);
+            this.lblSessionExp.Name = "lblSessionExp";
+            this.lblSessionExp.Size = new System.Drawing.Size(252, 13);
+            this.lblSessionExp.TabIndex = 2;
+            this.lblSessionExp.Text = "Your session will expire in: 5 minutes ";
+            // 
+            // tmrExpire
+            // 
+            this.tmrExpire.Enabled = true;
+            this.tmrExpire.Interval = 10000;
+            this.tmrExpire.Tick += new System.EventHandler(this.tmrExpire_Tick);
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.BackColor = System.Drawing.Color.Black;
+            this.pbLogo.Image = global::weebware_loader.Properties.Resources.logo;
+            this.pbLogo.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
+            this.pbLogo.Location = new System.Drawing.Point(382, 28);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
+            this.pbLogo.Size = new System.Drawing.Size(80, 32);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbLogo.TabIndex = 4;
+            this.pbLogo.TabStop = false;
             // 
             // Main
             // 
@@ -174,15 +187,15 @@
             this.ClientSize = new System.Drawing.Size(492, 334);
             this.Controls.Add(this.pnlBackground);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Main";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Main_FormClosed);
             this.pnlBackground.ResumeLayout(false);
             this.pnlBackground.PerformLayout();
-            this.pnlSelContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.pnlInfo.ResumeLayout(false);
             this.pnlInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -193,12 +206,13 @@
         private CPictureBox pbLogo;
         private System.Windows.Forms.Label lblWeebware;
         private System.Windows.Forms.Panel pnlSelContainer;
-        private System.Windows.Forms.Panel pnlCheat1;
-        private System.Windows.Forms.Panel pnlCheat2;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Button btnInject;
         private System.Windows.Forms.Panel pnlInfo;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label lblWelcomeBack;
+        private System.Windows.Forms.Label lblSessionExp;
+        private System.Windows.Forms.Label lblCheatSelected;
+        private System.Windows.Forms.Timer tmrExpire;
     }
 }

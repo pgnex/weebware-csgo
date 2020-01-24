@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{802F73D1-AEA6-40D0-B032-E4B08A10D23F}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>weebware_loader_2._0</RootNamespace>
+    <RootNamespace>weebware_loader</RootNamespace>
     <AssemblyName>weebware loader 2.0</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,11 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CPictureBox.cs">
+    <Compile Include="Custom Components\CheatSelection.cs" />
+    <Compile Include="Custom Components\CPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CPictureBox.Designer.cs">
+    <Compile Include="Custom Components\CPictureBox.Designer.cs">
       <DependentUpon>CPictureBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Custom Components\OutlineLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\OutlineLabel.Designer.cs">
+      <DependentUpon>OutlineLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Login.cs">
       <SubType>Form</SubType>
@@ -66,6 +76,12 @@
     </Compile>
     <Compile Include="General\formstuff.cs" />
     <Compile Include="General\imports.cs" />
+    <Compile Include="Custom Components\PlaceholderTextbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Custom Components\PlaceholderTextbox.Designer.cs">
+      <DependentUpon>PlaceholderTextbox.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\Login.resx">
@@ -75,7 +91,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -98,10 +114,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\logo.png" />
+    <EmbeddedResource Include="Resources\CircularStd.ttf" />
+    <EmbeddedResource Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\isla.png" />
+    <None Include="Resources\csgo_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\defaultbg.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\welcome.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\filler_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

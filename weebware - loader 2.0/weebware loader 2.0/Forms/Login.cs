@@ -1,37 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows.Forms;
-using weebware_loader_2._0.Forms;
-using weebware_loader_2._0.General;
+using weebware_loader.Forms;
+using weebware_loader.General;
 
 
-namespace weebware_loader_2._0 {
+namespace weebware_loader {
 
     public partial class Login : Form {
 
-        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
-
+        PrivateFontCollection pfc = formstuff.createfont();
         public Login() {
 
             InitializeComponent();
 
+            lblLoginBtn.Font = new Font(pfc.Families[0], 13, FontStyle.Bold);
+            txtUsername.Font = new Font(pfc.Families[0], 10, FontStyle.Bold);
+            txtPassword.Font = new Font(pfc.Families[0], 10, FontStyle.Bold);
+            btnLogin.Font = new Font(pfc.Families[0], 10, FontStyle.Bold);
+            cbRememberMe.Font = new Font(pfc.Families[0], 7.25f, FontStyle.Bold);
+            cbDisableSound.Font = new Font(pfc.Families[0], 7.25f, FontStyle.Bold);
+            lblDisableSound.Font = new Font(pfc.Families[0], 8.25f, FontStyle.Regular);
+
+            lblLoginBtn.TabStop = true;
+            pnlUsername.TabStop = true;
+            pnlPassword.TabStop = true;
+            pnlSlide.TabStop = true;
+            pnlContainer.TabStop = true;
+
             formstuff.movable(pbBackground, this);
             formstuff.movable(pnlSlide, this);
             formstuff.movable(pbLogo, this);
-            
 
-            Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
-            pnlContainer.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
+
+            Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
+            pnlContainer.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
             lblLoginBtn.Parent = pbBackground;
+            cbDisableSound.Parent = pbBackground;
+            lblDisableSound.Parent = pbBackground;
 
             pbLogo.Parent = pnlSlide;
             pbLogo.Location = new Point((228 - pbLogo.Width) / 2, 35);
@@ -40,15 +52,15 @@ namespace weebware_loader_2._0 {
 
             pnlUsername.Parent = pnlSlide;
             pnlUsername.Location = new Point((228 - pnlUsername.Width) / 2, 100);
-            pnlUsername.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, pnlUsername.Width, pnlUsername.Height, 6, 6));
+            pnlUsername.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, pnlUsername.Width, pnlUsername.Height, 6, 6));
 
             pnlPassword.Parent = pnlSlide;
             pnlPassword.Location = new Point((228 - pnlPassword.Width) / 2, 140);
-            pnlPassword.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, pnlPassword.Width, pnlPassword.Height, 6, 6));
+            pnlPassword.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, pnlPassword.Width, pnlPassword.Height, 6, 6));
 
             btnLogin.Parent = pnlSlide;
             btnLogin.FlatAppearance.BorderSize = 0;
-            btnLogin.Region = Region.FromHrgn(CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 6, 6));
+            btnLogin.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 6, 6));
             btnLogin.Location = new Point((pnlPassword.Location.X + pnlPassword.Width) - btnLogin.Width, 180);
 
             cbRememberMe.Parent = pnlSlide;
@@ -57,57 +69,59 @@ namespace weebware_loader_2._0 {
             pbBackground.InterpolationMode = InterpolationMode.HighQualityBilinear;
             pbBackground.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
+            txtUsername.PlaceHolder = "Username";
+            txtPassword.PlaceHolder = "Password";
+            txtPassword.usePasswordChar = true;
+
         }
 
         int total_pixels = 0;
         private void animation_timer_Tick(object sender, EventArgs e) {
             // main panel & label
             if (total_pixels <= 228) {
-                pnlSlide.Width += 6;
-                pnlSlide.Location = new Point(pnlSlide.Location.X - 6, pnlSlide.Location.Y);
-            //    lblLoginBtn.Location = new Point(lblLoginBtn.Location.X - 2, lblLoginBtn.Location.Y);
+                try {
+                    pnlSlide.Width += 6;
+                    pnlSlide.Location = new Point(pnlSlide.Location.X - 6, pnlSlide.Location.Y);
+                } catch (Exception ex) {
+                    MessageBox.Show(ex.Message, "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
-
             total_pixels += 6;
         }
 
-        private void label1_Click(object sender, EventArgs e) { animation_timer.Start(); lblLoginBtn.Hide(); }
-        private void label1_MouseEnter(object sender, EventArgs e) { Cursor = Cursors.Hand; }
-        private void label1_MouseLeave(object sender, EventArgs e) { Cursor = DefaultCursor; }
-        private void txtUsername_Enter(object sender, EventArgs e) {
-            if (txtUsername.Text == "Username") {
-                txtUsername.Text = string.Empty;
-                txtUsername.ForeColor = Color.FromArgb(137, 137, 137);
-            }
-        }
-
-        private void txtUsername_Leave(object sender, EventArgs e) {
-            if (txtUsername.Text == string.Empty) {
-                txtUsername.Text = "Username";
-                txtUsername.ForeColor = Color.FromArgb(117, 117, 117);
-            }
-        }
-
-        private void txtPassword_Enter(object sender, EventArgs e) {
-            if (txtPassword.Text == "Password") {
-                txtPassword.Text = string.Empty;
-                txtPassword.ForeColor = Color.FromArgb(137, 137, 137);
-                txtPassword.PasswordChar = '*';
-            }
-        }
-
-        private void txtPassword_Leave(object sender, EventArgs e) {
-            if (txtPassword.Text == string.Empty) {
-                txtPassword.Text = "Password";
-                txtPassword.ForeColor = Color.FromArgb(117, 117, 117);
-                txtPassword.PasswordChar = '\0';
-            }
+        private void lblLoginBtn_Click(object sender, EventArgs e) { animation_timer.Start(); pnlSlide.Visible = true; lblLoginBtn.Hide(); txtUsername.Select(); }
+        private void lblLoginBtn_MouseEnter(object sender, EventArgs e) { Cursor = Cursors.Hand; }
+        private void lblLoginBtn_MouseLeave(object sender, EventArgs e) { Cursor = DefaultCursor; }
+        private void lblDisableSound_Click(object sender, EventArgs e) { cbDisableSound.Checked = !cbDisableSound.Checked; }
+        private void cbDisableSound_CheckedChanged(object sender, EventArgs e) {
+            Properties.Settings.Default.disablesounds = cbDisableSound.Checked;
+            Properties.Settings.Default.Save();
         }
 
         private void btnLogin_Click(object sender, EventArgs e) {
-            Form main = new Main(this.Location.X, this.Location.Y);
-            main.Show();
-            this.Hide();
+            Hide();
+            Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2);
+            main.Show();     
         }
+
+
+        private void load_bg_image() {
+            WebClient web = new WebClient();
+            string raw = web.DownloadString("https://pastebin.com/raw/nFHkktDV");
+
+            List<string> urls = raw.Split(',').ToList();
+            Random rand = new Random();
+            int index = rand.Next(0, urls.Count());
+
+            pbBackground.LoadAsync(urls[index]);
+        }
+
+        private void Login_Load(object sender, EventArgs e) {
+
+            load_bg_image();
+            formstuff.play_welcome(cbDisableSound);
+
+        }
+
     }
 }
