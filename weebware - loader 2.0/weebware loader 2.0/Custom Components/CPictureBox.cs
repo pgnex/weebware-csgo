@@ -8,8 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace weebware_loader_2._0 {
-    public class CPictureBox : PictureBox {
+namespace weebware_loader {
+    public partial class CPictureBox : PictureBox {
         public InterpolationMode InterpolationMode { get; set; }
         public PixelOffsetMode PixelOffsetMode { get; set; }
 
