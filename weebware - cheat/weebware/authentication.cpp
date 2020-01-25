@@ -13,7 +13,7 @@ __int64 auth::GetEpochS() {
 
 std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
-	std::string content = networking::post_request(base64_decode("aHR0cHM6Ly9hdXRoLndlZWJ3YXJlLm5ldC9pcF9sb2cucGhw"), "key=" + key);
+	std::string content = networking::post_request("https://auth.weebware.net/", "authenticate=true&key=" + key);
 
 	if (content == "REQUESTFAILED") {
 		std::string exceptionError = "==gUPJlUFBySS90VUVkT";
@@ -28,12 +28,14 @@ std::string auth::GetServerVariable(std::string key) {
 		MessageBox(NULL, (base64_decode(exceptionError).c_str()), ("Error"), MB_ICONWARNING);
 		exit(EXIT_SUCCESS);
 	}
+
 	if (content == base64_decode("U0VTU0lPTiBFWFBJUkVE").c_str()) {
 		std::string test = "==gLkVmcpBHelBychhGIu9WazNXZzBSZyF2diVWZ3Bic19WW";
 		reverseString(test);
 		MessageBox(NULL, (base64_decode(test).c_str()), ("Error"), MB_ICONWARNING);
 		exit(EXIT_SUCCESS);
 	}
+
 	reverseString(content);;
 	content = base64_decode(content);
 	reverseString(content);

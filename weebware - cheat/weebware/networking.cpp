@@ -17,10 +17,10 @@ std::string networking::post_request(std::string url, std::string post_data) {
 	curl = curl_easy_init();
 	if (curl) {
 		curl_easy_setopt(curl, CURLOPT_URL, url);
-		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.c_str());
+		curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data);
 		curl_easy_setopt(curl, CURLOPT_WRITEDATA, &content);
 		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writer);
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, ("weebware"));
+		curl_easy_setopt(curl, CURLOPT_USERAGENT, ("weebware_hack"));
 		CURLcode code = curl_easy_perform(curl);
 		curl_easy_cleanup(curl);
 		return content;
