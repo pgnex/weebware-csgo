@@ -1,25 +1,24 @@
-﻿using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
+﻿using loader;
+using Newtonsoft.Json.Linq;
+using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
-using weebware_loader.Custom_Components;
 using weebware_loader.General;
 
-namespace weebware_loader.Forms {
+using static weebware_loader.Custom_Components.CheatSelection;
 
+namespace weebware_loader.Forms {
+    [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     public partial class Main : Form {
 
-        public Main(int px, int py) {
+        public Main(int px, int py, JArray cheatData) {
 
             InitializeComponent();
 
@@ -35,8 +34,6 @@ namespace weebware_loader.Forms {
             btnExit.Font = new Font(pfc.Families[0], 9, FontStyle.Bold);
             lblCheatSelected.Font = new Font(pfc.Families[0], 9, FontStyle.Bold);
             lblSessionExp.Font = new Font(pfc.Families[0], 9, FontStyle.Bold);
-
-            lblCheatSelected.Text = String.Format("Currently Selected: {0}", CheatSelection.cheat_names[CheatSelection.cheat_selection_index]);
 
             formstuff.movable(lblWeebware, this);
             formstuff.movable(pnlBackground, this);
@@ -56,10 +53,19 @@ namespace weebware_loader.Forms {
             pbLogo.InterpolationMode = InterpolationMode.HighQualityBilinear;
             pbLogo.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            CheatSelection.aLabel[0] = lblCheatSelected;
-            CheatSelection.aLabel[1] = lblCheatStatus;
+            foreach (JObject cheat in cheatData) {
+                cheat_names.Add(cheat.GetValue("name").ToString());
+                cheat_status.Add(cheat.GetValue("status").ToString());
+                cheat_downloads.Add(cheat.GetValue("download").ToString());
+                cheat_keys.Add(cheat.GetValue("key").ToString());
+                cheat_version.Add(cheat.GetValue("version").ToString());
+                cheat_enabled.Add(cheat.GetValue("enabled").ToObject<bool>());
+            }
+            cheat_name_labels.Add(lblCheatSelected);
+            cheat_name_labels.Add(lblCheatStatus);
+            InitSelections(pnlSelContainer, cheatData.Count);
 
-            CheatSelection.InitSelections(pnlSelContainer, 2);
+            lblCheatSelected.Text = string.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
         }
 
 
@@ -72,20 +78,31 @@ namespace weebware_loader.Forms {
             session_max_expire -= 10000;
 
             if (session_max_expire <= 0) {
-                lblSessionExp.Text = "Session Expired";
+                lblSessionExp.Text = "Your current session has expired. Please restart launcher";
+                lblSessionExp.ForeColor = Color.Red;
                 tmrExpire.Stop();
             }
         }
 
+        string cheatFile = string.Empty;
+        private void InitInject() {
+            WebClient web = new WebClient { Proxy = null };
+            web.Headers.Add("user-agent", "weebware");
+            cheatFile = Path.GetTempFileName();
+            web.DownloadFile(cheat_downloads[cheat_selection_index], cheatFile);
+            InjectionHelper.InjectPreset(cheatFile, Utils.DecryptString(cheat_keys[cheat_selection_index], "zgJoEYlViXJXpsFN"));
+
+        }
+
         private void btnInject_Click(object sender, EventArgs e) {
             AntiTamper.IntegrityCheck();
-            Process[] processList = Process.GetProcessesByName("csgo");
-            if (processList.Length < 1) {
-                MessageBox.Show("Please open your game before injecting.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (!cheat_enabled[cheat_selection_index]) {
+                MessageBox.Show("Please select a valid cheat.\n", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
-          //  loadTimer.Start();
-            AntiTamper.IntegrityCheck();
+            new Thread(InitInject).Start();
+            MessageBox.Show("Injection thread started.\nThis window will now hide itself.\n", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Hide();
         }
     }
 }

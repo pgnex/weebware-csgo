@@ -122,8 +122,8 @@ namespace loader {
         }
 
 
-        public static void UnknownError() {
-            MessageBox.Show("An unknown error has occurred.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        public static void ConnectionError() {
+            MessageBox.Show("A connection error has occurred.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static void CreateFiles() {

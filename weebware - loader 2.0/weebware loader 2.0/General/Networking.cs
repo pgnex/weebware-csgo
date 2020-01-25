@@ -15,9 +15,9 @@ namespace loader.Authentication {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     class Networking {
 
-        private const string URL = "https://auth.weebware.net/";
+        private const string URL = "https://auth.weebware.net";
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
-        private const string VERSION_STRING = "3.0";
+        private const string VERSION_STRING = "4.0";
 
         public static SafeRequest.NET.SafeRequest safeRequest = new SafeRequest.NET.SafeRequest(ENCRYPTION_KEY);
 
@@ -25,27 +25,17 @@ namespace loader.Authentication {
             NameValueCollection values = new NameValueCollection();
             values["username"] = username;
             values["password"] = password;
-            values["version_key"] = VERSION_STRING;
             values["hwid"] = HWID.getHWID();
             values["loader_version"] = VERSION_STRING;
-            values["login"] = ":3";
+            values["login"] = "yeet";
             return safeRequest.Request(URL, values);
         }
 
-        public static Response check_ban() {
+        public static Response SafeAlert(string ExitReason) {
             NameValueCollection values = new NameValueCollection();
-            values["hwid"] = HWID.getHWID();
-            return safeRequest.Request(URL, values);
-        }
-
-        public static void Alert(string ExitReason) {
-            WebClient web = new WebClient();
-            web.Proxy = null;
-            web.Headers.Add("user-agent", "weebware");
-            NameValueCollection values = new NameValueCollection();
-            values["hwid"] = HWID.getHWID();
             values["reason"] = ExitReason;
-            web.UploadValues(URL, values);
+            values["alert"] = "weeeeeeee";
+            return safeRequest.Request(URL, values);
         }
 
     }

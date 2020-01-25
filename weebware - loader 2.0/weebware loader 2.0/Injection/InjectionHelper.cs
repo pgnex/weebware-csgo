@@ -44,7 +44,7 @@ public class InjectionHelper {
                 if (module.ModuleName == "client_panorama.dll") client = (int)module.BaseAddress;
                 if (module.ModuleName == "engine.dll") engine = (int)module.BaseAddress;
             }
-            exitThread = engine > 0;
+            exitThread = engine > 0 && client > 0;
         }
         Thread.Sleep(5000);
         AntiTamper.IntegrityCheck();

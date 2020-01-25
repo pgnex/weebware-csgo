@@ -1,4 +1,7 @@
-﻿using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
+﻿using loader;
+using loader.Authentication;
+using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
+using SafeRequest.NET;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,10 +13,13 @@ using System.Net;
 using System.Windows.Forms;
 using weebware_loader.Forms;
 using weebware_loader.General;
-
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using weebware_loader.Custom_Components;
+using System.Reflection;
 
 namespace weebware_loader {
-
+    [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     public partial class Login : Form {
 
         PrivateFontCollection pfc = formstuff.createfont();
@@ -74,6 +80,14 @@ namespace weebware_loader {
             txtPassword.PlaceHolder = "Password";
             txtPassword.usePasswordChar = true;
 
+            if (Properties.Settings.Default.username != string.Empty
+                && Properties.Settings.Default.password != string.Empty) {
+                cbRememberMe.Checked = true;
+                txtUsername.Text = Properties.Settings.Default.username;
+                txtPassword.Text = Properties.Settings.Default.password;
+                txtPassword.PasswordChar = '*';
+            }
+
         }
 
         int total_pixels = 0;
@@ -99,10 +113,66 @@ namespace weebware_loader {
             Properties.Settings.Default.Save();
         }
 
+        private void FailedSafeLogin(Response response) {
+            string issue = response.GetData<string>("detail");
+            switch (issue) {
+                case "invalid account":
+                case "invalid password":
+                    MessageBox.Show("Incorrect username or password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                case "invalid request":
+                case "connection error":
+                    Utils.ConnectionError();
+                    return;
+                case "server offline":
+                    MessageBox.Show($"The server is currently disabled.\nReason: {response.GetData<string>("reason")}", "Server Disabled", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                case "update loader":
+                    MessageBox.Show("Please update by signing in at weebware.net and downloading a new loader.", "Update Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                case "banned":
+                    MessageBox.Show("You have been banned.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                case "hwid mismatch":
+                    MessageBox.Show("Your PC is not authorized. Sign in at weebware.net to request a reset", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                case "sub invalid":
+                    MessageBox.Show("Your subscription is invalid or expired.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+            }
+        }
+
         private void btnLogin_Click(object sender, EventArgs e) {
-            Hide();
-            Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2);
-            main.Show();     
+
+            Response response = Networking.SafeLogin(txtUsername.Text, txtPassword.Text);
+
+            if (response == null) {
+                Utils.ConnectionError();
+                return;
+            }
+
+            if (!response.status) {
+                FailedSafeLogin(response);
+                return;
+            }
+
+            if (response.status) {
+                // successful login
+
+                if (cbRememberMe.Checked) {
+                    Properties.Settings.Default.username = txtUsername.Text;
+                    Properties.Settings.Default.password = txtPassword.Text;
+                    Properties.Settings.Default.Save();
+                }
+
+                MessageBox.Show(string.Format("Successfully logged in.\nWelcome back, {0}!", txtUsername.Text), "weebware", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                Hide();
+                Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2, response.GetData<JArray>("cheatInfo"));
+                main.Show();
+            }
+
+
         }
 
 

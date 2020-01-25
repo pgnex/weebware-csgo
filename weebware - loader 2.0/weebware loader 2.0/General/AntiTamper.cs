@@ -23,27 +23,11 @@ class AntiTamper {
         instance = t;
     }
 
-    public static void ip_check() {
-
-        Response response = Networking.check_ban();
-
-        if (response.status) return;
-
-        if (response.GetData<string>("detail") == "connection error") {
-            MessageBox.Show("An unexpected error has occured. Server may be down. Please try again later or contact support for further information.");
-            Environment.Exit(1337);
-        }
-
-        if (response.GetData<string>("detail") == "banned") {
-            MessageBox.Show("You have been banned. Contact support for more information.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            Environment.Exit(1337);
-        }
-    }
-
     [Obfuscation(Feature = "inline", Exclude = false)]
     public static void IntegrityCheck() {
+
         if (instance == null || !instance.IsAlive) {
-            Networking.Alert("\nUnable to verify integrity of security thread.");
+            Networking.SafeAlert("\nUnable to verify integrity of security thread.");
             MessageBox.Show("unable to verify");
             Environment.Exit(1337);
         }
@@ -103,7 +87,7 @@ class AntiTamper {
         bool isDebuggerPresent = false;
         while (true) {
             if (Exit) {
-                Networking.Alert(ExitReason);
+                Networking.SafeAlert(ExitReason);
                 Environment.Exit(ExitCode);
             }
             CheckRemoteDebuggerPresent(ProcessHandle, ref isDebuggerPresent);
