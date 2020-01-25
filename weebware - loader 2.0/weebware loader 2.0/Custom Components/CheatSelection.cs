@@ -1,4 +1,5 @@
-﻿using System;
+﻿using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -11,16 +12,15 @@ namespace weebware_loader.Custom_Components {
 
         public static Bitmap[] icons = { Properties.Resources.csgo_icon, Properties.Resources.filler_icon };
         public static string[] cheat_names = { "Counter-Strike: Global Offensive", "Unavailable" };
+        public static string[] cheat_status = { };
         public static int cheat_selection_index = 0;
         public static Panel[] panels = { new Panel(), new Panel() };
         public static Label lblSelectedCheat = null;
+        public static Label[] aLabel = { new Label(), new Label() };
 
-        public static void InitSelections(Panel parent, Label lblSelected, int count) {
+        public static void InitSelections(Panel parent, int count) {
+
             PrivateFontCollection pfc = formstuff.createfont();
-
-            if (lblSelectedCheat == null)
-                lblSelectedCheat = lblSelected;
-
             for (int i = 0; i < count; i++) {
                 Panel p = new Panel();
                 p = CreateSelectionPanel(
@@ -83,7 +83,7 @@ namespace weebware_loader.Custom_Components {
             pbIcon.SizeMode = PictureBoxSizeMode.StretchImage;
             pbIcon.Size = new Size(28, 28);
             pbIcon.Location = new Point(12, (parent.Height - pbIcon.Height) / 2);
-            pbIcon.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, pbIcon.Width, pbIcon.Height, 3, 3));
+            pbIcon.Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, pbIcon.Width, pbIcon.Height, 3, 3));
             pbIcon.InterpolationMode = InterpolationMode.HighQualityBilinear;
             pbIcon.PixelOffsetMode = PixelOffsetMode.HighQuality;
             parent.Controls.Add(pbIcon);
@@ -107,14 +107,18 @@ namespace weebware_loader.Custom_Components {
 
         private static void cheatSelection1(object sender, EventArgs e) {
             cheat_selection_index = 0;
-            lblSelectedCheat.Text = String.Format("{0} Selected", cheat_names[cheat_selection_index]);
+            aLabel[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
+            aLabel[1].Text = "Undetected";
+            aLabel[1].ForeColor = Color.Lime;
             panels[cheat_selection_index + 1].BackColor = Color.FromArgb(34, 34, 34);
             panels[cheat_selection_index].BackColor = Color.FromArgb(54, 54, 54);
         }
 
         private static void cheatSelection2(object sender, EventArgs e) {
             cheat_selection_index = 1;
-            lblSelectedCheat.Text = String.Format("{0} Selected", cheat_names[cheat_selection_index]);
+            aLabel[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
+            aLabel[1].Text = "Unknown";
+            aLabel[1].ForeColor = Color.Yellow;
             panels[cheat_selection_index - 1].BackColor = Color.FromArgb(34, 34, 34);
             panels[cheat_selection_index].BackColor = Color.FromArgb(54, 54, 54);
         }
