@@ -1,4 +1,5 @@
-﻿using System;
+﻿using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -39,8 +40,8 @@ namespace weebware_loader {
             formstuff.movable(pbLogo, this);
 
 
-            Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
-            pnlContainer.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
+            Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
+            pnlContainer.Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, Width, Height, 6, 6));
             lblLoginBtn.Parent = pbBackground;
             cbDisableSound.Parent = pbBackground;
             lblDisableSound.Parent = pbBackground;
@@ -52,15 +53,15 @@ namespace weebware_loader {
 
             pnlUsername.Parent = pnlSlide;
             pnlUsername.Location = new Point((228 - pnlUsername.Width) / 2, 100);
-            pnlUsername.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, pnlUsername.Width, pnlUsername.Height, 6, 6));
+            pnlUsername.Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, pnlUsername.Width, pnlUsername.Height, 6, 6));
 
             pnlPassword.Parent = pnlSlide;
             pnlPassword.Location = new Point((228 - pnlPassword.Width) / 2, 140);
-            pnlPassword.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, pnlPassword.Width, pnlPassword.Height, 6, 6));
+            pnlPassword.Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, pnlPassword.Width, pnlPassword.Height, 6, 6));
 
             btnLogin.Parent = pnlSlide;
             btnLogin.FlatAppearance.BorderSize = 0;
-            btnLogin.Region = Region.FromHrgn(imports.CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 6, 6));
+            btnLogin.Region = Region.FromHrgn(Imports.CreateRoundRectRgn(0, 0, btnLogin.Width, btnLogin.Height, 6, 6));
             btnLogin.Location = new Point((pnlPassword.Location.X + pnlPassword.Width) - btnLogin.Width, 180);
 
             cbRememberMe.Parent = pnlSlide;

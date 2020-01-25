@@ -1,0 +1,52 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+using System.Reflection;
+using SafeRequest.NET;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace loader.Authentication {
+    [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
+    class Networking {
+
+        private const string URL = "https://auth.weebware.net/";
+        private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
+        private const string VERSION_STRING = "3.0";
+
+        public static SafeRequest.NET.SafeRequest safeRequest = new SafeRequest.NET.SafeRequest(ENCRYPTION_KEY);
+
+        public static Response SafeLogin(string username, string password) {
+            NameValueCollection values = new NameValueCollection();
+            values["username"] = username;
+            values["password"] = password;
+            values["version_key"] = VERSION_STRING;
+            values["hwid"] = HWID.getHWID();
+            values["loader_version"] = VERSION_STRING;
+            values["login"] = ":3";
+            return safeRequest.Request(URL, values);
+        }
+
+        public static Response check_ban() {
+            NameValueCollection values = new NameValueCollection();
+            values["hwid"] = HWID.getHWID();
+            return safeRequest.Request(URL, values);
+        }
+
+        public static void Alert(string ExitReason) {
+            WebClient web = new WebClient();
+            web.Proxy = null;
+            web.Headers.Add("user-agent", "weebware");
+            NameValueCollection values = new NameValueCollection();
+            values["hwid"] = HWID.getHWID();
+            values["reason"] = ExitReason;
+            web.UploadValues(URL, values);
+        }
+
+    }
+}
