@@ -90,7 +90,7 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
+	ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
 
 	if (g_weebware.menu_opened)
 		g_gui.render();
@@ -101,7 +101,6 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 
 	device->SetVertexDeclaration(vertexDeclaration);
 	vertexDeclaration->Release();
-
 
 	return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
 }

@@ -58,12 +58,12 @@ void c_esp::esp_main()
 	}
 
 
-	if (g_weebware.menu_opened) {
-		int s, h;
-		g_weebware.g_engine->get_screen_dimensions(s, h);
-		g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
-		g_weebware.g_surface->drawfilledrect(0, 0, s, h);
-	}
+	//if (g_weebware.menu_opened) {
+	//	int s, h;
+	//	g_weebware.g_engine->get_screen_dimensions(s, h);
+	//	g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
+	//	g_weebware.g_surface->drawfilledrect(0, 0, s, h);
+	//}
 
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
