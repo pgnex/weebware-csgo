@@ -273,6 +273,24 @@ void imgui_custom::horizontal_margin(std::string tag, int margin) {
 	ImGui::PopStyleColor();
 }
 
+void imgui_custom::a_better_slider_float(const char* label, float* v, float v_min, float v_max, const char* format) {
+	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::SliderFloat(label, v, v_min, v_max, format);
+	ImGui::PopStyleColor();
+}
+
+void imgui_custom::a_better_slider_int(const char* label, int* v, int v_min, int v_max, const char* format) {
+	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::SliderInt(label, v, v_min, v_max, format);
+	ImGui::PopStyleColor();
+}
+
+void imgui_custom::a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items) {
+	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::Combo(label, current_item, items, items_count);
+	ImGui::PopStyleColor();
+}
+
 void imgui_custom::fix_gay_padding_shit(std::string tag) {
 	ImGui::Columns(2, ("kill_me##" + tag).c_str(), false);
 	ImGui::SetColumnWidth(0, 6);
