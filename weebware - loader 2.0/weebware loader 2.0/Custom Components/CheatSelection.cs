@@ -1,19 +1,32 @@
 ﻿using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
 using weebware_loader.Forms;
 using weebware_loader.General;
+using System.Linq;
+using System.Reflection;
 
 namespace weebware_loader.Custom_Components {
+    [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     class CheatSelection {
 
         public static Bitmap[] icons = { Properties.Resources.csgo_icon, Properties.Resources.filler_icon };
-        public static string[] cheat_names = { "Counter-Strike: Global Offensive", "Unavailable" };
-        public static string[] cheat_status = { };
+
+        // lists to dynamically add cheat selections
         public static int cheat_selection_index = 0;
+        public static List<string> cheat_names = new List<string>();
+        public static List<string> cheat_status = new List<string>();
+        public static List<string> cheat_downloads = new List<string>();
+        public static List<string> cheat_keys = new List<string>();
+        public static List<string> cheat_version = new List<string>();
+        public static List<bool> cheat_enabled = new List<bool>();
+        public static List<Label> cheat_name_labels = new List<Label>(); 
+
+
         public static Panel[] panels = { new Panel(), new Panel() };
         public static Label lblSelectedCheat = null;
         public static Label[] aLabel = { new Label(), new Label() };
@@ -105,20 +118,33 @@ namespace weebware_loader.Custom_Components {
             return label;
         }
 
+        private static Color GetStatusColor(string status) {
+            switch (status) {
+                case "Undetected":
+                    return Color.Lime;
+                case "Unknown":
+                    return Color.Yellow;
+                case "Detected":
+                    return Color.Red;
+                default:
+                    return Color.White;
+            }
+        }
+
         private static void cheatSelection1(object sender, EventArgs e) {
             cheat_selection_index = 0;
-            aLabel[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
-            aLabel[1].Text = "Undetected";
-            aLabel[1].ForeColor = Color.Lime;
+            cheat_name_labels[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
+            cheat_name_labels[1].Text = cheat_status[cheat_selection_index];
+            cheat_name_labels[1].ForeColor = GetStatusColor(cheat_status[cheat_selection_index]);
             panels[cheat_selection_index + 1].BackColor = Color.FromArgb(34, 34, 34);
             panels[cheat_selection_index].BackColor = Color.FromArgb(54, 54, 54);
         }
 
         private static void cheatSelection2(object sender, EventArgs e) {
             cheat_selection_index = 1;
-            aLabel[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
-            aLabel[1].Text = "Unknown";
-            aLabel[1].ForeColor = Color.Yellow;
+            cheat_name_labels[0].Text = String.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
+            cheat_name_labels[1].Text = cheat_status[cheat_selection_index];
+            cheat_name_labels[1].ForeColor = GetStatusColor(cheat_status[cheat_selection_index]);
             panels[cheat_selection_index - 1].BackColor = Color.FromArgb(34, 34, 34);
             panels[cheat_selection_index].BackColor = Color.FromArgb(54, 54, 54);
         }

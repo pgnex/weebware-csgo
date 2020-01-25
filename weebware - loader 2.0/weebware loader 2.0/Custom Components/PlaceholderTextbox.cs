@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace weebware_loader.General {
+    [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     public partial class PlaceholderTextbox : TextBox {
         private static bool TextReset = false;
         public string placeHolder = "Placeholder";
