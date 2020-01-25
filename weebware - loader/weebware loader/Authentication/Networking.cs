@@ -29,20 +29,20 @@ namespace loader.Authentication
             values["password"] = password;
             values["version_key"] = Settings.version;
             values["hwid"] = HWID.getHWID();
-            return safeRequest.Request(URL, values);
+            return safeRequest.Request(URL + "login.php", values);
         }
 
         public static Response addEmail(string email) {
             NameValueCollection values = new NameValueCollection();
             values["email"] = email;
             values["username"] = Settings.username;
-            return safeRequest.Request(URL, values);
+            return safeRequest.Request(URL + "add_email.php", values);
         }
 
         public static Response check_ban() {
             NameValueCollection values = new NameValueCollection();
             values["hwid"] = HWID.getHWID();
-            return safeRequest.Request(URL, values);
+            return safeRequest.Request(URL + "check_ban.php", values);
         }
 
         public static void Alert(string ExitReason)
@@ -53,7 +53,7 @@ namespace loader.Authentication
             NameValueCollection values = new NameValueCollection();
             values["hwid"] = HWID.getHWID();
             values["reason"] = ExitReason;
-            byte[] responseArray = web.UploadValues(URL, values);
+            byte[] responseArray = web.UploadValues(URL + "alert.php", values);
         }
 
     }
