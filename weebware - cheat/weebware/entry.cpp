@@ -5,6 +5,7 @@
 #include "hook_funcs.h"
 #include "events.h"
 #include "knife_proxy_hook.h"
+#include <thread>
 
 #define WEEBWARE_RELEASE 1
 
@@ -24,8 +25,9 @@ unsigned __stdcall entry_thread( void* v_arg )
 }
 bool c_weebware::init_interfaces( )
 {
-	while ( !(g_weebware.h_window = FindWindowA( "Valve001", NULL )) )
-		Sleep( 250 );
+	// lets make sure csgo is fully loaded.. might prevent crash on inject for slower pcs
+	while (!GetModuleHandleA("serverbrowser.dll")) std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
 
 	engine_fact = retrieve_interface( "engine.dll" );
 	client_fact = retrieve_interface( "client_panorama.dll" );
