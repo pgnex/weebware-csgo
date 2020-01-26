@@ -735,7 +735,6 @@ void GUI::render() noexcept {
 			ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing);
 			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
 			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
-			ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer);
 			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
 
 			ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
