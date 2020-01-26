@@ -105,6 +105,7 @@ public:
 	float magnet_trigger_smooth;
 	float magnet_trigger_fov;
 	bool triggerbot_aim_through_smoke = false;
+	bool triggerbot_scoped_only = false;
 
 	json convert()
 	{
@@ -145,6 +146,7 @@ public:
 		tmp["quick_stop_magnet"] = quick_stop_magnet;
 		tmp["triggerbot_target_switch_delay"] = triggerbot_target_switch_delay;
 		tmp["triggerbot_aim_through_smoke"] = triggerbot_aim_through_smoke;
+		tmp["triggerbot_scoped_only"] = triggerbot_scoped_only;
 		return tmp;
 	}
 
@@ -186,6 +188,7 @@ public:
 		if (check("quick_stop_magnet", data)) quick_stop_magnet = data["quick_stop_magnet"];
 		if (check("triggerbot_target_switch_delay", data)) triggerbot_target_switch_delay = data["triggerbot_target_switch_delay"];
 		if (check("triggerbot_aim_through_smoke", data)) triggerbot_aim_through_smoke = data["triggerbot_aim_through_smoke"];
+		if (check("triggerbot_scoped_only", data)) triggerbot_scoped_only = data["triggerbot_scoped_only"];
 	}
 
 };
@@ -375,8 +378,7 @@ public:
 	int auto_defuse_key;
 	bool no_duck_cooldown;
 	bool flashlight;
-	bool triggerbot_scoped_only;
-	std::string weapon_option_name = "Weapon Options - Hold Out A Weapon";
+	std::string weapon_option_name = "Weapon Options - None";
 
 	// ragebot
 	bool ragebot_enabled;
@@ -581,7 +583,6 @@ public:
 		tmp["no_duck_cooldown"] = no_duck_cooldown;
 		tmp["draw_grenade_traj"] = draw_grenade_traj;
 		tmp["anti_afk"] = anti_afk;
-		tmp["triggerbot_scoped_only"] = triggerbot_scoped_only;
 
 		// skinchanger, glovechanger, models
 		tmp["skinchanger_enabled"] = skinchanger_enabled;
@@ -704,7 +705,6 @@ public:
 		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
 		if (check("draw_grenade_traj", data)) draw_grenade_traj = data["draw_grenade_traj"];
 		if (check("spec_list", data)) spec_list = data["spec_list"];
-		if (check("triggerbot_scoped_only", data)) triggerbot_scoped_only = data["triggerbot_scoped_only"];
 
 
 		// misc

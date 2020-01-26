@@ -467,7 +467,7 @@ void GUI::render() noexcept {
 			ImGui::Checkbox("Aim Through Smoke##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_aim_through_smoke);
 
 			if (g_weebwarecfg.legit_cfg_index == 5 || g_weebwarecfg.legit_cfg_index == 6 || g_weebwarecfg.legit_cfg_index == 7) {
-				ImGui::Checkbox("Scoped Only", &g_weebwarecfg.triggerbot_scoped_only);
+				ImGui::Checkbox("Scoped Only", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only);
 			}
 
 			ImGui::Text("Maximum FOV");
@@ -1002,128 +1002,125 @@ void GUI::render() noexcept {
 		if (tab_selection == settings) {
 			// begin tab
 
-			imgui_custom::custom_label_header("I got sleepy, will finish in 4 hrs");
-
-
 			// margin top column 1
-			//imgui_custom::horizontal_margin("misc1");
+			imgui_custom::horizontal_margin("misc1");
 
-			//ImGui::SetColumnWidth(2, 328);
-			//ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
-			//ImGui::BeginChild("misc 1", ImVec2(0, 330), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
-			//imgui_custom::fix_gay_padding_shit("miscgb1");
-			//imgui_custom::horizontal_margin("misctxtmargintop1", 2);
-			//imgui_custom::custom_label_header("Misc");
+			ImGui::SetColumnWidth(2, 328);
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::BeginChild("misc 1", ImVec2(0, 330), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			imgui_custom::fix_gay_padding_shit("miscgb1");
+			imgui_custom::horizontal_margin("misctxtmargintop1", 2);
+			imgui_custom::custom_label_header("Misc");
 
-			//ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer);
-			//ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed);
-			//ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal);
-			//ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing);
-			//ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
-			//ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
-			//ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer);
-			//ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
+			ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer);
+			ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed);
+			ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal);
+			ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing);
+			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
+			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
+			ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer);
+			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
 
-			//ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
-			//if (g_weebwarecfg.misc_clantag_changer) {
-			//	ImGui::InputTextWithHint("Custom Clantag", "empty for default", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
-			//}
+			ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
+			if (g_weebwarecfg.misc_clantag_changer) {
+				ImGui::InputTextWithHint("Custom Clantag", "empty for default", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
+			}
 
-			//ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay);
-			//if (g_weebwarecfg.killsay) {
-			//	ImGui::InputTextWithHint("Custom Killsay", "empty for default", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
-			//}
+			ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay);
+			if (g_weebwarecfg.killsay) {
+				ImGui::InputTextWithHint("Custom Killsay", "empty for default", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
+			}
 
-			//if (g_weebwarecfg.viewmodel_changer) {
-			//	imgui_custom::a_better_slider_int("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
-			//}
+			if (g_weebwarecfg.viewmodel_changer) {
+				imgui_custom::a_better_slider_int("Viewmodel Offset", &g_weebwarecfg.viewmodel_offset, -100, 135);
+			}
 
-			//ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot);
-			//if (g_weebwarecfg.block_bot)
-			//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
-			//ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol);
-			//if (g_weebwarecfg.auto_pistol)
-			//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
-			//ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse);
-			//if (g_weebwarecfg.auto_defuse)
-			//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
+			ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot);
+			if (g_weebwarecfg.block_bot)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
+			ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol);
+			if (g_weebwarecfg.auto_pistol)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
+			ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse);
+			if (g_weebwarecfg.auto_defuse)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
 
-			//ImGui::EndChild();
+			ImGui::EndChild();
 
-			//imgui_custom::horizontal_margin("miscspace1", 4);
+			imgui_custom::horizontal_margin("miscspace1", 4);
 
-			//ImGui::BeginChild("misc 2", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
-			//imgui_custom::fix_gay_padding_shit("miscgb2");
-			//imgui_custom::horizontal_margin("misctxtmargintop2", 2);
-			//imgui_custom::custom_label_header("Movement");
-			//ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown);
-			//ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk);
-			//ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump);
-			//if (g_weebwarecfg.auto_jump) {
-			//	imgui_custom::a_better_slider_int("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
-			//}
-			//ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump);
-			//if (g_weebwarecfg.edge_jump)
-			//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
-			//if (g_weebwarecfg.edge_jump) {
-			//	ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air);
-			//}
-			//ImGui::Text("Auto Strafe");
-			//const char* strafe_type[] = { "Off", "Legit", "Fast" };
-			//imgui_custom::a_better_combo_box("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
+			ImGui::BeginChild("misc 2", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			imgui_custom::fix_gay_padding_shit("miscgb2");
+			imgui_custom::horizontal_margin("misctxtmargintop2", 2);
+			imgui_custom::custom_label_header("Movement");
+			ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown);
+			ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk);
+			ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump);
+			if (g_weebwarecfg.auto_jump) {
+				imgui_custom::a_better_slider_int("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
+			}
+			ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump);
+			if (g_weebwarecfg.edge_jump)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
+			if (g_weebwarecfg.edge_jump) {
+				ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air);
+			}
+			ImGui::Text("Auto Strafe");
+			const char* strafe_type[] = { "Off", "Legit", "Fast" };
+			imgui_custom::a_better_combo_box("##Autostrafe", &g_weebwarecfg.auto_strafe, strafe_type, ARRAYSIZE(strafe_type));
 
-			//ImGui::EndChild();
+			ImGui::EndChild();
 
-			//ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 
-			//ImGui::NextColumn();
+			ImGui::NextColumn();
 
-			//// margin top column 2
-			//imgui_custom::horizontal_margin("misc2");
+			// margin top column 2
+			imgui_custom::horizontal_margin("misc2");
 
-			//ImGui::SetColumnWidth(3, 328);
-			//ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
-			//ImGui::BeginChild("misc 3", ImVec2(0, 220), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
-			//imgui_custom::fix_gay_padding_shit("miscgb3");
-			//imgui_custom::horizontal_margin("misctxtmargintop3", 2);
-			//imgui_custom::custom_label_header("Smartbot");
-			//ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai);
-			//ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random);
-			//ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest);
-			//ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse);
-			////	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
-			//ImGui::Text("Rotation Speed");
-			//imgui_custom::a_better_slider_float("##Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
-			//ImGui::Text("Aim Speed");
-			//imgui_custom::a_better_slider_float("##Aim Speedai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
+			ImGui::SetColumnWidth(3, 328);
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::BeginChild("misc 3", ImVec2(0, 220), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			imgui_custom::fix_gay_padding_shit("miscgb3");
+			imgui_custom::horizontal_margin("misctxtmargintop3", 2);
+			imgui_custom::custom_label_header("Smartbot");
+			ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai);
+			ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random);
+			ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest);
+			ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse);
+			//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
+			ImGui::Text("Rotation Speed");
+			imgui_custom::a_better_slider_float("##Roatation Speed", &g_weebwarecfg.misc_ai_rotationspeed, 0, 100, "%.0f%%");
+			ImGui::Text("Aim Speed");
+			imgui_custom::a_better_slider_float("##Aim Speedai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
 
-			//ImGui::EndChild();
+			ImGui::EndChild();
 
-			//imgui_custom::horizontal_margin("miscspace2", 4);
+			imgui_custom::horizontal_margin("miscspace2", 4);
 
-			//ImGui::BeginChild("misc 4", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
-			//imgui_custom::fix_gay_padding_shit("miscgb4");
-			//imgui_custom::horizontal_margin("misctxtmargintop4", 2);
-			//imgui_custom::custom_label_header("Fake Lag");
-			//ImGui::Text("Activation type");
-			//if (g_weebwarecfg.fake_lag == 1)
-			//	imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
+			ImGui::BeginChild("misc 4", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			imgui_custom::fix_gay_padding_shit("miscgb4");
+			imgui_custom::horizontal_margin("misctxtmargintop4", 2);
+			imgui_custom::custom_label_header("Fake Lag");
+			ImGui::Text("Activation type");
+			if (g_weebwarecfg.fake_lag == 1)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
 
-			//const char* fakelag_type[] = { "Off", "On Key", "Always On" };
-			//imgui_custom::a_better_combo_box("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
-			//if (g_weebwarecfg.fake_lag > 0) {
-			//	imgui_custom::a_better_slider_int("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 6);
-			//}
+			const char* fakelag_type[] = { "Off", "On Key", "Always On" };
+			imgui_custom::a_better_combo_box("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
+			if (g_weebwarecfg.fake_lag > 0) {
+				imgui_custom::a_better_slider_int("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 6);
+			}
 
-			//ImGui::EndChild();
+			ImGui::EndChild();
 
-			//ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 
-			//// padding side
-			//ImGui::NextColumn();
-			//ImGui::SetColumnWidth(4, 8);
+			// padding side
+			ImGui::NextColumn();
+			ImGui::SetColumnWidth(4, 8);
 
-			//ImGui::EndColumns();
+			ImGui::EndColumns();
 
 
 			// end tab

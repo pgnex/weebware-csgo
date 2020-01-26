@@ -936,7 +936,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 
 		cmd->viewangles = delta;
 
-		if (g_weebwarecfg.triggerbot_scoped_only)
+		if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only)
 			if (!sniper_scoped())
 				return;
 
@@ -955,7 +955,10 @@ bool c_legitbot::sniper_scoped() {
 
 	auto weapon = m_local->m_pActiveWeapon();
 
-	if (weapon->is_scout() || weapon->is_awp() || weapon->is_autosniper())
+	if (!weapon)
+		return false;
+
+	if (weapon->is_scoped_weapon())
 		if (m_local->m_bIsScoped())
 			return true;
 
@@ -1071,9 +1074,10 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction))
 			return;	
 
-		if (g_weebwarecfg.triggerbot_scoped_only && weapon->is_scoped_weapon())
+		if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only)
 			if (!sniper_scoped())
 				return;
+
 
 		if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
 			if (trace_entity->trace_from_smoke(*m_local->m_vecOrigin()))
