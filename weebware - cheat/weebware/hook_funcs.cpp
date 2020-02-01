@@ -1,41 +1,26 @@
 ﻿#include "Header.h"
 #include "shared.h"
-#include "imgui/imgui_impl_win32.h"
 #include "gui.h"
+#include <intrin.h>
 
 // #include "Polyhook\PolyHook\PolyHook.hpp"
 // Update 
 
 c_hooking g_hooking;
-GUI g_gui;
+gui g_gui;
 
-#if 0
-BOOL WINAPI hk_set_cursor_pos(int x, int y)
-{
-	if (g_weebware.menu_opened) {
-		return 1;
-	}
-
-	return g_hooking.o_cursor(x, y);
-}
-void __stdcall hk_unlock_cursor()
-{
-	auto protecc = g_hooking.VEH_CURSORLOCK->getProtectionObject();
-
-	if (g_weebware.menu_opened) {
-		g_weebware.g_surface->unlockcursor();
-	}
-	else {
-		g_weebware.g_surface->lockcursor();
-	}
-}
-#endif
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
 	auto protecc = g_hooking.VEH_PAINT->getProtectionObject();
 
-	hook_functions::paint_traverse(v, f, a);
+	// stuff while testing for stream proof.. remove later
+
+	if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel"))
+		g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
+
+	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
+	// hook_functions::paint_traverse(v, f, a);
 }
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
@@ -63,48 +48,49 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 {
 	auto protecc = g_hooking.VEH_RESET->getProtectionObject();
 
-	return g_hooking.o_reset(device, presentation_param);
+	return hook_functions::reset(device, presentation_param);
 }
 
 
-#if 0
+bool font_setup = false;
 long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
-	return hook_functions::end_scene(device);
+	static uintptr_t gameoverlay_return_address = 0;
+
+	if (!gameoverlay_return_address) {
+		MEMORY_BASIC_INFORMATION info;
+		VirtualQuery(_ReturnAddress(), &info, sizeof(MEMORY_BASIC_INFORMATION));
+
+		char mod[MAX_PATH];
+		GetModuleFileNameA((HMODULE)info.AllocationBase, mod, MAX_PATH);
+
+		if (strstr(mod, "gameoverlay"))
+			gameoverlay_return_address = (uintptr_t)(_ReturnAddress());
+	}
+
+	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress()))
+		return g_hooking.o_endscene(device);
+
+
+	// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
+	hook_functions::end_scene(device);
+
+
+	return g_hooking.o_endscene(device);
 }
-#else
+
 
 long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
 	auto protecc = g_hooking.VEH_PRESENT->getProtectionObject();
 
-	static bool imguiInit{ ImGui_ImplDX9_Init(device) };
 
-	device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_RED | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_BLUE);
-	IDirect3DVertexDeclaration9* vertexDeclaration;
-	device->GetVertexDeclaration(&vertexDeclaration);
-
-	ImGui_ImplDX9_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
-
-	if (g_weebware.menu_opened)
-		g_gui.render();
-
-	ImGui::EndFrame();
-	ImGui::Render();
-	ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
-	device->SetVertexDeclaration(vertexDeclaration);
-	vertexDeclaration->Release();
-
-	return g_hooking.original_present(device, src, dest, wnd_override, dirty_region);
+	return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
+	// return hook_functions::present(device, src, dest, wnd_override, dirty_region);
 }
-#endif
+
 
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
@@ -233,10 +219,16 @@ void c_hooking::hook_all_functions()
 	DETOUR_CM->hook();
 	o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
 
-	auto reset_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_direct_x))[16];
-	DETOUR_RESET = new PLH::x86Detour((char*)reset_addr, (char*)& hk_reset, &reset_tramp, dis);
+
+	auto reset_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16];
+	DETOUR_RESET = new PLH::x86Detour((char*)reset_addr, (char*)&hk_reset, &reset_tramp, dis);
 	DETOUR_RESET->hook();
 	o_reset = reinterpret_cast<decltype(o_reset)>(reset_addr);
+
+	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
+	DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
+	DETOUR_PRESENT->hook();
+	o_present = reinterpret_cast<decltype(o_present)>(present_addr);
 
 	// present
 
@@ -290,7 +282,7 @@ void c_hooking::hook_all_functions()
 	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
 	VEH_PRESENT = new PLH::BreakPointHook((char*)present_addr, (char*)&hk_present);
 	VEH_PRESENT->hook();
-	original_present = reinterpret_cast<decltype(original_present)>(present_addr);
+	o_present = reinterpret_cast<decltype(o_present)>(present_addr);
 
 	auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
 	VEH_SCENEEND = new PLH::BreakPointHook((char*)scene_end_addr, (char*)&hk_scene_end);
@@ -317,15 +309,16 @@ void c_hooking::hook_all_functions()
 	VEH_SOUNDS->hook();
 	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 
-	//auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-	//VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
-	//VEH_ENDSCENE->hook();
-	//o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
+	VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
+	VEH_ENDSCENE->hook();
+	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
 
 	//auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
 	//VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);
 	//VEH_DME->hook();
 	//o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
+
 
 #endif
 
@@ -381,6 +374,7 @@ void c_hooking::unhook_all_functions()
 	VEH_SOUNDS->unHook();
 	VEH_MDL->unHook();
 	VEH_VM->unHook();
+	VEH_ENDSCENE->unHook();
 #endif
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 //	knife_changer::remove_proxyhooks();

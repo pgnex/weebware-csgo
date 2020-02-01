@@ -6,7 +6,6 @@
 
 c_esp g_esp;
 FeatureFuncs g_event_features;
-bool has_esp_init = false;
 int specs = 0;
 
 void c_esp::esp_main()
@@ -24,10 +23,10 @@ void c_esp::esp_main()
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
 		return;
 
-	g_event_features.on_paint();
-
 	if (!local)
 		return;
+
+	g_event_features.on_paint();
 
 	// call things here if no ent loop needed 
 

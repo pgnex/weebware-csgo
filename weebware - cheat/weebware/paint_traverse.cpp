@@ -39,6 +39,8 @@ void c_paint_traverse::draw_water_mark()
 		return;
 	}
 
+	std::cout << "watermark" << std::endl;
+
 	c_color col = c_color(g_weebwarecfg.water_mark_col);
 	std::string weebware = "weebware - " + g_weebware.g_user_name;
 	std::transform(weebware.begin(), weebware.end(), weebware.begin(), ::tolower);

@@ -14,7 +14,7 @@ namespace hook_functions
 	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
-	void frame_stage_notify(clientframestage_t curStage);
+	void frame_stage_notify(int curStage);
 	long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
 	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
@@ -60,6 +60,12 @@ public:
 	PLH::BreakPointHook* VEH_MDL;
 	PLH::BreakPointHook* VEH_VM;
 
+
+	uint64_t present_tramp = NULL;
+	uint64_t reset_tramp = NULL;
+	PLH::x86Detour* DETOUR_RESET;
+	PLH::x86Detour* DETOUR_PRESENT;
+
 #endif
 
 private:
@@ -93,12 +99,16 @@ private:
 public:
 	using fn_reset = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 	fn_reset o_reset;
+
 	using fn_endscene = long(__stdcall*)(IDirect3DDevice9*);
 	fn_endscene o_endscene;
+
+	using fn_present = long(__stdcall*)(IDirect3DDevice9*, const RECT*, const RECT*, HWND, const RGNDATA*);
+	fn_present o_present;
 #pragma endregion
 
 #pragma region FSN
-	using fn_fsn = void(__stdcall*)(clientframestage_t);
+	using fn_fsn = void(__stdcall*)(int);
 	fn_fsn o_fsn;
 
 #if 0

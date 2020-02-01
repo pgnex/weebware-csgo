@@ -5,9 +5,8 @@
 #include "hook_funcs.h"
 #include "events.h"
 #include "knife_proxy_hook.h"
-#include <thread>
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -25,8 +24,11 @@ unsigned __stdcall entry_thread( void* v_arg )
 }
 bool c_weebware::init_interfaces( )
 {
-	// lets make sure csgo is fully loaded.. might prevent crash on inject for slower pcs
-	while (!GetModuleHandleA("serverbrowser.dll")) std::this_thread::sleep_for(std::chrono::milliseconds(250));
+
+
+	while (!(g_weebware.h_window = FindWindowW(L"Valve001", NULL))) { Sleep(250); }
+
+	while (!GetModuleHandleA("serverbrowser.dll")) { Sleep(250); }
 
 
 	engine_fact = retrieve_interface( "engine.dll" );
@@ -66,12 +68,13 @@ bool c_weebware::init_interfaces( )
 	g_mat_sys = reinterpret_cast<c_mat_system*>(mat_system_fact( "VMaterialSystem080", NULL ));
 	g_client_state = *reinterpret_cast<c_clientstate***>(getvfunc<std::uintptr_t>( g_engine, 12 ) + 0x10);
 	g_model_render = reinterpret_cast<c_model_render*>(engine_fact( "VEngineModel016", NULL ));
-	g_present_address = pattern_scan( "gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB" ) + 0x2;
 	g_mdlcache = reinterpret_cast<IMDLCache*>(cache_fact( "MDLCache004", NULL ));
 	g_NetworkContainer = reinterpret_cast<CNetworkStringTableContainer*>(engine_fact( "VEngineClientStringTable001", NULL ));
 	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan( "client_panorama.dll", "8D 04 24 50 A1 ? ? ? ? B9" ) + 5);
 	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan( "client_panorama.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9" ) + 0x2);
-	g_reset_address = pattern_scan( "gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 FF 78 18 85 F6 74 14 FF 75 E0 8B CE 53 FF 75 EC E8 ? ? ? ? 8A 45 E1 88 46 4D" ) + 0x2;
+	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
+	g_reset_address = pattern_scan( "gameoverlayrenderer.dll", "C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8" ) + 9;
+	// wtf is the past address kite >? new ? (C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8)
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact( "GameMovement001", NULL ));
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact( "VClientPrediction001", NULL ));
 	g_move_helper = **(c_move_helper***)(pattern_scan( "client_panorama.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01" ) + 0x2);

@@ -35,7 +35,8 @@ void c_draw::Line(float x1, float y1, float x2, float y2, float width, bool anti
 
 void c_draw::Circle(float x, float y, float radius, int rotate, int type, bool smoothing, int resolution, DWORD color)
 {
-	std::vector<vertex> circle(resolution + 2);
+	std::vector<vertex> circle;
+	circle.reserve(resolution + 2);
 	float angle = rotate * D3DX_PI / 180;
 	float pi;
 
@@ -171,20 +172,21 @@ void c_draw::BoxOutlined(float x, float y, float w, float h, D3DCOLOR color)
 	Line(x + w, y, x + w, y + h, 0, 0, color);
 }
 
-void c_draw::Text(char *text, int x, int y, int orientation, int font, DWORD color)
+void c_draw::Text(LPCSTR text, int x, int y, int orientation, int font, int r, int g, int b, int a)
 {
-	RECT rect = RECT{ x,y,x,y };
+	RECT rect = RECT { x,y,x,y };
+	D3DCOLOR fontColor = D3DCOLOR_ARGB(a, r, g, b);
 
 	switch (orientation)
 	{
 	case lefted:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, 0x00000100, color);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, 0x00000100, fontColor);
 		break;
 	case centered:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_CENTER | 0x00000100, color);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_CENTER | 0x00000100, fontColor);
 		break;
 	case righted:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_RIGHT | 0x00000100, color);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_RIGHT | 0x00000100, fontColor);
 		break;
 	}
 }

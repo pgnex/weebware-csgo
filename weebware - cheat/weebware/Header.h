@@ -70,6 +70,7 @@
 #include "weebware_config.h"
 #include "networking.h"
 #include "raleway_font.h"
+#include "icon_font.h"
 
 
 // custom include files

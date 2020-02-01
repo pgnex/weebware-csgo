@@ -255,8 +255,8 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_impl_dx9.cpp">
-      <Filter>Source Files\Imgui</Filter>
+    <ClCompile Include="d9esp.cpp">
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -508,6 +508,9 @@
     </ClInclude>
     <ClInclude Include="imgui_impl_dx9.h">
       <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="d9esp.h">
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

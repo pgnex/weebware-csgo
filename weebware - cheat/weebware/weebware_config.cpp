@@ -36,20 +36,12 @@ std::vector<std::string> get_all_files_names_within_folder(std::string folder)
 	return names;
 }
 
-void c_config_list::update_config_browser() {
-	std::vector<std::string> info;
-	std::string content = networking::post_request("https://auth.weebware.net/configs/request.php", " ");
-	g_config_list.config_browser_buffer = json::parse(content);
-	for (const auto& name : g_config_list.config_browser_buffer.at("name")) {
-		info.push_back(name);
-	}
-	config_browser_info = info;
-}
 
 void c_config_list::get_your_configs() {
 	std::vector<std::string> info;
-	std::string content = networking::get_request("https://weebware.net/inc/web/?your=" + g_weebware.g_user_name);
+	std::string content = networking::get_request("https://weebware.net/api/cheat/config/own?name=" + g_weebware.g_user_name);
 	g_config_list.your_configs_buffer = json::parse(content);
+
 	for (const auto& name : g_config_list.your_configs_buffer) {
 		info.push_back(name.at("title"));
 	}
@@ -58,8 +50,9 @@ void c_config_list::get_your_configs() {
 
 void c_config_list::get_favorited_configs() {
 	std::vector<std::string> info;
-	std::string content = networking::get_request("https://weebware.net/inc/web/?favourite=" + g_weebware.g_user_name);
+	std::string content = networking::get_request("https://weebware.net/api/cheat/config/favourite/?name=" + g_weebware.g_user_name);
 	g_config_list.favorite_configs_buffer = json::parse(content);
+
 	for (const auto& name : g_config_list.favorite_configs_buffer) {
 		info.push_back(name.at("title"));
 	}
@@ -68,7 +61,7 @@ void c_config_list::get_favorited_configs() {
 
 void c_config_list::load_config_from_memory(int index) {
 
-	std::string content = networking::get_request("https://weebware.net/inc/web/?config=" + std::to_string(index));
+	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" + std::to_string(index));
 	json data = json::parse(content);
 	g_weebwarecfg.load_cfg_mem(data);
 	g_weebwarecfg.skinchanger_apply_nxt = 1;
