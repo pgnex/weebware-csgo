@@ -753,17 +753,17 @@ public:
 
 	float Get_Innacuracy( )
 	{
-		return getvfunc<float( __thiscall* )(void*)>( this, 479 )(this);
+		return getvfunc<float( __thiscall* )(void*)>( this, 481 )(this);
 	}
 
 	float GetSpread( )
 	{
-		return getvfunc<float( __thiscall* )(void*)>( this, 449 )(this);
+		return getvfunc<float( __thiscall* )(void*)>( this, 451 )(this);
 	}
 
 	void Update_Accuracy_Penalty( )
 	{
-		getvfunc<void( __thiscall* )(void*)>( this, 480 )(this);
+		getvfunc<void( __thiscall* )(void*)>( this, 482 )(this);
 	}
 
 	bool is_zeus( )
@@ -1101,7 +1101,7 @@ public:
 
 	c_weapon_info* get_weapon_info( )
 	{
-		return getvfunc<c_weapon_info*(__thiscall*)(void*)>( this, 457)(this);
+		return getvfunc<c_weapon_info*(__thiscall*)(void*)>( this, 459)(this);
 	}
 
 	int* get_paint_kit( )
