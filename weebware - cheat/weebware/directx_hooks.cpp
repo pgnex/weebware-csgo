@@ -1,7 +1,8 @@
 ﻿#include "Header.h"
 #include "shared.h"
 #include "esp.h"
-#include "d9esp.h"
+#include "drawing.h"
+#include "d3dx9esp.h"
 #include "gui.h"
 #include "imgui_custom.h"
 #include "imgui\imgui_internal.h"
@@ -15,7 +16,7 @@ using namespace imgui_custom;
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-c_d9esp g_d9esp;
+c_d3dxesp g_d3dxesp;
 
 
 LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
@@ -66,8 +67,11 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	IDirect3DVertexDeclaration9* vertexDeclaration;
 	IDirect3DVertexShader9* vertexShader;
 
-	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0)
+	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0) {
+		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
+	}
+
 
 	pixelState->Capture();
 	device->GetVertexDeclaration(&vertexDeclaration);
@@ -76,15 +80,19 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
-	g_d9esp.d9esp_main(device);
 
+	// if they DONT have screenshot proof on and user is taking a screenshot, render esp
+	if (!(g_weebwarecfg.screenshot_proof && g_weebware.g_engine->is_taking_screenshot())) {
+		g_d3dxesp.d9esp_main(device);
+	}
+	
 
 	pixelState->Apply();
 	pixelState->Release();
 	device->SetVertexShader(vertexShader);
 	device->SetVertexDeclaration(vertexDeclaration);
 
-
+	//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 	return g_hooking.o_endscene(device);
 }
 
@@ -102,8 +110,8 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	if (hr == D3D_OK) {
 		ImGui_ImplDX9_CreateDeviceObjects();
 		g_weebware.init_fonts();
+		g_d3dxesp.d3dx_reset();
 	}
-
 	return hr;
 }
 

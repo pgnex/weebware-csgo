@@ -32,6 +32,7 @@ public:
 	uint64_t endscene_tramp = NULL;
 	uint64_t dme_tramp = NULL;
 	uint64_t fsn_tramp = NULL;
+	uint64_t present_tramp = NULL;
 
 	PLH::x86Detour* DETOUR_PAINT;
 	PLH::x86Detour* DETOUR_CM;
@@ -42,9 +43,6 @@ public:
 	PLH::x86Detour* DETOUR_DME;
 	PLH::x86Detour* DETOUR_CURSORLOCK;
 #else
-
-	//PLH::x86Detour* DETOUR_SCENEEND;
-	//uint64_t sceneend_tramp = NULL;
 
 	PLH::BreakPointHook* VEH_PAINT;
 	PLH::BreakPointHook* VEH_CM;
@@ -59,12 +57,6 @@ public:
 	PLH::BreakPointHook* VEH_SOUNDS;
 	PLH::BreakPointHook* VEH_MDL;
 	PLH::BreakPointHook* VEH_VM;
-
-
-	uint64_t present_tramp = NULL;
-	uint64_t reset_tramp = NULL;
-	PLH::x86Detour* DETOUR_RESET;
-	PLH::x86Detour* DETOUR_PRESENT;
 
 #endif
 

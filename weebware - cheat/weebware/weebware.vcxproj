@@ -142,7 +142,7 @@
     <ClCompile Include="configuration.cpp" />
     <ClCompile Include="create_move.cpp" />
     <ClCompile Include="c_entities.cpp" />
-    <ClCompile Include="d9esp.cpp" />
+    <ClCompile Include="d3dx9esp.cpp" />
     <ClCompile Include="directx_hooks.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dme.cpp" />
@@ -202,7 +202,7 @@
     <ClInclude Include="c_misc_sdk.h" />
     <ClInclude Include="c_rec.h" />
     <ClInclude Include="c_surface.h" />
-    <ClInclude Include="d9esp.h" />
+    <ClInclude Include="d3dx9esp.h" />
     <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="gui.h" />

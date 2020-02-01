@@ -70,15 +70,14 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 			gameoverlay_return_address = (uintptr_t)(_ReturnAddress());
 	}
 
-	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress()))
+	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress())) {
+		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
+	}
 
 
 	// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
-	hook_functions::end_scene(device);
-
-
-	return g_hooking.o_endscene(device);
+	return hook_functions::end_scene(device);
 }
 
 
@@ -250,19 +249,28 @@ void c_hooking::hook_all_functions()
 
 	// sound
 
+	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
+
 	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
 	DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
 	DETOUR_ENDSCENE->hook();
 	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
 
-	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
 
 	auto scene_end_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_render_view))[9];
 	DETOUR_SCENEEND = new PLH::x86Detour((char*)scene_end_addr, (char*)& hk_scene_end, &sceneend_tramp, dis);
 	DETOUR_SCENEEND->hook();
 	o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
 
+	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
+
+	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
+	DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
+	DETOUR_ENDSCENE->hook();
+	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+
 #else
+
 
 	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
 	VEH_PAINT = new PLH::BreakPointHook((char*)paint_addr, (char*)&hk_paint_traverse);

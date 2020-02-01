@@ -661,35 +661,28 @@ enum weapon_type_id
 class c_weapon_info
 {
 public:
-	std::uint8_t pad_0x0000[0x4]; //0x0000
-	char* szConsoleName; //0x0004 
-	std::uint8_t pad_0x0008[0xC]; //0x0008
-	std::uint32_t iMaxReservedAmmo; //0x0014 
-	std::uint8_t pad_0x0018[0x68]; //0x0018
-	char* m_ammo_name; //0x0080 
-	char* m_ammo_name_2; //0x0084 
-	char* m_hud_name; //0x0088 
-	char* m_weapon_id; //0x008C 
-	std::uint8_t pad_0x0090[0x3C]; //0x0090
-	std::uint32_t m_type; //0x00CC 
-	std::uint32_t m_price; //0x00D0 
-	std::uint32_t m_reward; //0x00D4 
-	std::uint8_t pad_0x00D8[0x14]; //0x00D8
-	std::uint8_t bFullAuto; //0x00EC 
-	std::uint8_t pad_0x00ED[0x3]; //0x00ED
-	std::uint32_t iDamage; //0x00F0 
-	float flArmorRatio; //0x00F4 
-	std::uint32_t iBullets; //0x00F8 
-	float flPenetration; //0x00FC 
-	std::uint8_t pad_0x0100[0x8]; //0x0100
-	float flRange; //0x0108 
-	float flRangeModifier; //0x010C 
-	std::uint8_t pad_0x0110[0x20]; //0x0110
-	float m_max_speed; //0x0130 
-	float m_max_speed_alt; //0x0134 
-	std::uint8_t pad_0x0138[0x108]; //0x0138
-
-}; //Size=0x0240
+	void* vtable;           // 0x0000
+	char* name;             // 0x0004
+	char  pad_0x0008[0xC];  // 0x0008
+	int   max_ammo;         // 0x0014
+	char  pad_0x0018[0xC];  // 0x0018
+	int   max_reserve_ammo; // 0x0024
+	char  pad_0x0028[0x58]; // 0x0028
+	char* bullet_type;      // 0x0080
+	char  pad_0x0084[0x44]; // 0x0084
+	int   type;             // 0x00C8
+	char  pad_0x00CC[0x24]; // 0x00CC
+	int   iDamage;           // 0x00F0
+	float flArmorRatio;      // 0x00F4
+	char  pad_0x00F8[0x4];  // 0x00F8
+	float flPenetration;      // 0x00FC
+	char  pad_0x0100[0x8];  // 0x0100
+	float flRange;            // 0x0108
+	float flRangeModifier;   // 0x010C
+	char  pad_0x0110[0x20]; // 0x0110
+	float max_speed;        // 0x0130
+	float max_speed_alt;    // 0x0134
+};
 
 class c_basecombat_weapon : public c_base_entity
 {
@@ -776,11 +769,11 @@ public:
 	{
 		int weapon_id = this->m_iItemDefinitionIndex( );
 
-		return (weapon_id == weapon_type_id::weapon_glock || weapon_id == weapon_type_id::weapon_p2000
+		return weapon_id == weapon_type_id::weapon_glock || weapon_id == weapon_type_id::weapon_p2000
 				 || weapon_id == weapon_type_id::weapon_p250 || weapon_id == weapon_type_id::weapon_deagle
 				 || weapon_id == weapon_type_id::weapon_revolver || weapon_id == weapon_type_id::weapon_elite
 				 || weapon_id == weapon_type_id::weapon_tec9 || weapon_id == weapon_type_id::weapon_fiveseven
-				 || weapon_id == weapon_type_id::weapon_usps || weapon_id == weapon_type_id::weapon_cz75);
+				 || weapon_id == weapon_type_id::weapon_usps || weapon_id == weapon_type_id::weapon_cz75;
 	}
 
 	bool is_rifle( )
