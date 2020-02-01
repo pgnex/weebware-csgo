@@ -72,11 +72,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\programmingbinarys\binarys;C:\programmingbinarys\curl-master;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
     <LibraryPath>E:\weebware\weebware\weebware\curl;C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -151,7 +154,6 @@
     <ClCompile Include="entry.cpp" />
     <ClCompile Include="esp.cpp" />
     <ClCompile Include="events.cpp" />
-    <ClCompile Include="font.cpp" />
     <ClCompile Include="frame_stage.cpp" />
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="gui_baserelational.cpp" />
@@ -202,6 +204,8 @@
     <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="icon_font.h" />
+    <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="networking.h" />
     <ClInclude Include="Ragebot.h" />
     <ClInclude Include="raleway_font.h" />

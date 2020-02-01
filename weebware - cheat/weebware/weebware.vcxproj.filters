@@ -150,9 +150,6 @@
     <ClCompile Include="maths.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClCompile>
-    <ClCompile Include="font.cpp">
-      <Filter>Source Files\Imgui</Filter>
-    </ClCompile>
     <ClCompile Include="frame_stage.cpp">
       <Filter>Source Files\hooking\Frame Stage Notify</Filter>
     </ClCompile>
@@ -185,6 +182,9 @@
     </ClCompile>
     <ClCompile Include="events.cpp">
       <Filter>Source Files\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>Source Files\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="nightmode.cpp">
       <Filter>Source Files\hooking\CreateMove\nightmode</Filter>
@@ -253,6 +253,9 @@
       <Filter>Source Files\hooking\CreateMove\Ragebot</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Source Files\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx9.cpp">
       <Filter>Source Files\Imgui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -498,6 +501,12 @@
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="raleway_font.h">
+      <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="icon_font.h">
+      <Filter>Source Files\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx9.h">
       <Filter>Source Files\Imgui</Filter>
     </ClInclude>
   </ItemGroup>
