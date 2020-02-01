@@ -18,6 +18,10 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 c_d3dxesp g_d3dxesp;
 
+IDirect3DStateBlock9* pixelState = NULL;
+IDirect3DVertexDeclaration9* vertexDeclaration;
+IDirect3DVertexShader9* vertexShader;
+
 
 LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
@@ -35,10 +39,6 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
 
-	IDirect3DStateBlock9* pixelState = NULL;
-	IDirect3DVertexDeclaration9* vertexDeclaration;
-	IDirect3DVertexShader9* vertexShader;
-
 	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0)
 		return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
 
@@ -46,10 +46,8 @@ long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RE
 	device->GetVertexDeclaration(&vertexDeclaration);
 	device->GetVertexShader(&vertexShader);
 
-
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
-
 
 
 	pixelState->Apply();
@@ -63,10 +61,6 @@ long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RE
 long hook_functions::end_scene(IDirect3DDevice9* device)
 {
 
-	IDirect3DStateBlock9* pixelState = NULL;
-	IDirect3DVertexDeclaration9* vertexDeclaration;
-	IDirect3DVertexShader9* vertexShader;
-
 	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0) {
 		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
@@ -76,7 +70,6 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	pixelState->Capture();
 	device->GetVertexDeclaration(&vertexDeclaration);
 	device->GetVertexShader(&vertexShader);
-
 
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
@@ -466,6 +459,7 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky);
 			ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode);
 			ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof);
+			ImGui::Checkbox("OBS Proof", &g_weebwarecfg.obs_proof);
 			ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke);
 			ImGui::Checkbox("Spectator List", &g_weebwarecfg.spec_list);
 			ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj);

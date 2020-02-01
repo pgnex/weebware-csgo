@@ -2,6 +2,7 @@
 #include "Header.h"
 #include "maths.h"
 
+class CRender;
 
 struct mstudiobone_t
 {

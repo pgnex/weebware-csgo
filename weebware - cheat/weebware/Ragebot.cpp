@@ -408,7 +408,7 @@ namespace ragebot
 		return damage;
 	}
 
-	Vector center_hitbox( c_base_entity* ent, int id )
+	Vector center_hitbox_r( c_base_entity* ent, int id )
 	{
 		if ( !ent ) {
 			return {};
@@ -495,7 +495,7 @@ namespace ragebot
 				break;
 				case static_cast<int>(target_method::crosshair) :
 				{
-					Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
+					Vector center_head = center_hitbox_r(cur_entity, (int)csgohitboxid::head);
 					QAngle angle_to_head;
 
 					g_maths.vector_qangles(center_head - local->get_vec_eyepos(), angle_to_head);
@@ -545,7 +545,7 @@ namespace ragebot
 		*can_fire = false;
 
 		for ( auto hitbox : hitbox_simple ) {
-			auto hitbox_pos = center_hitbox( target, hitbox );
+			auto hitbox_pos = center_hitbox_r( target, hitbox );
 			float dmg = 9999, min_dmg = 0;
 
 			if (g_weebwarecfg.autowall_min_dmg > 0) {

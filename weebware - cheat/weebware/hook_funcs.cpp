@@ -15,12 +15,16 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 	auto protecc = g_hooking.VEH_PAINT->getProtectionObject();
 
 	// stuff while testing for stream proof.. remove later
+	
+	if (!g_weebwarecfg.obs_proof) {
+		hook_functions::paint_traverse(v, f, a);
+	}
+	else {
+		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel"))
+			g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
 
-	if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel"))
-		g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
-
-	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
-	// hook_functions::paint_traverse(v, f, a);
+		g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
+	}
 }
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
@@ -57,6 +61,10 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
+	if (!g_weebwarecfg.obs_proof) {
+		return g_hooking.o_endscene(device);
+	}
+
 	static uintptr_t gameoverlay_return_address = 0;
 
 	if (!gameoverlay_return_address) {
@@ -85,9 +93,11 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 {
 	auto protecc = g_hooking.VEH_PRESENT->getProtectionObject();
 
+	if (!g_weebwarecfg.obs_proof) {
+		return hook_functions::present(device, src, dest, wnd_override, dirty_region);		
+	}
 
 	return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
-	// return hook_functions::present(device, src, dest, wnd_override, dirty_region);
 }
 
 

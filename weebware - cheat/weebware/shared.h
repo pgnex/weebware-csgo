@@ -7,6 +7,7 @@
 
 typedef void* (__cdecl* create_interface)(const char*, int*);
 
+
 class c_weebware
 {
 public:

@@ -285,16 +285,12 @@ bool c_maths::ClipTransform(Vector& in, Vector& out)
 {
 	const matrix3x4& worldToScreen = GetWorldToScreen();
 
-	std::cout << "w2s: " << worldToScreen << std::endl;
-
 	float w;
 	out.x = worldToScreen[0][0] * in.x + worldToScreen[0][1] * in.y + worldToScreen[0][2] * in.z + worldToScreen[0][3];
 	out.y = worldToScreen[1][0] * in.x + worldToScreen[1][1] * in.y + worldToScreen[1][2] * in.z + worldToScreen[1][3];
 	w = worldToScreen[3][0] * in.x + worldToScreen[3][1] * in.y + worldToScreen[3][2] * in.z + worldToScreen[3][3];
 	out.z = 0.0f;
 
-
-	std::cout << "w: " << w << std::endl;
 
 	bool behind;
 	if (w < 0.001f)

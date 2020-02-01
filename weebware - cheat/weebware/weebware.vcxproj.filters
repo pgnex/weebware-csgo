@@ -258,6 +258,9 @@
     <ClCompile Include="d3dx9esp.cpp">
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="visuals_shared.cpp">
+      <Filter>Source Files\hooking\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -512,8 +515,8 @@
     <ClInclude Include="d3dx9esp.h">
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="UtlStack.h">
-      <Filter>Source Files\Source Development Kit</Filter>
+    <ClInclude Include="visuals_shared.h">
+      <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

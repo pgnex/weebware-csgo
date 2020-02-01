@@ -89,7 +89,6 @@ void c_esp::esp_main()
 					g_accuracy.accuracy_records[i].m_has_w2s = true;
 				}
 			}
-
 		}
 
 	}

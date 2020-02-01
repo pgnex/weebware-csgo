@@ -105,7 +105,7 @@ private:
 class c_surface // : iappsystem
 {
 public:
-
+	
 	// vitual functions
 	virtual void padfunction0() = 0;
 	virtual void padfunction1() = 0;

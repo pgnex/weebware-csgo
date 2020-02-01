@@ -26,7 +26,10 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 
 			g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
 
-			g_esp.esp_main();
+			// if they DONT have screenshot proof on and user is taking a screenshot, render esp
+			if (!(g_weebwarecfg.screenshot_proof && g_weebware.g_engine->is_taking_screenshot())) {
+				g_esp.esp_main();
+			}
 		}
 	}
 	catch(...) { }
@@ -38,8 +41,6 @@ void c_paint_traverse::draw_water_mark()
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
 		return;
 	}
-
-	std::cout << "watermark" << std::endl;
 
 	c_color col = c_color(g_weebwarecfg.water_mark_col);
 	std::string weebware = "weebware - " + g_weebware.g_user_name;

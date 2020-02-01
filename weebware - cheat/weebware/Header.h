@@ -71,6 +71,7 @@
 #include "networking.h"
 #include "raleway_font.h"
 #include "icon_font.h"
+#include "visuals_shared.h"
 
 
 // custom include files

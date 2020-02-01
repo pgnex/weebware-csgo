@@ -347,6 +347,7 @@ public:
 	bool color_smoke = 0;
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
+	bool obs_proof = 0;
 	bool hand_chams = 0;
 	bool wireframe_hands = 0;
 	bool hand_chams_xqz = 0;

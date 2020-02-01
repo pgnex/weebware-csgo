@@ -172,18 +172,33 @@ void c_draw::BoxOutlined(float x, float y, float w, float h, D3DCOLOR color)
 	Line(x + w, y, x + w, y + h, 0, 0, color);
 }
 
-int c_draw::GetTextWidth(const char* szText, LPD3DXFONT pFont)
+int c_draw::GetTextWidth(const char* szText, int font)
 {
+
 	RECT rcRect = { 0,0,0,0 };
-	if (pFont)
+	if (pFont[font])
 	{
 		// calculate required rect
-		pFont->DrawText(NULL, szText, strlen(szText), &rcRect, DT_CALCRECT,
+		pFont[font]->DrawText(NULL, szText, strlen(szText), &rcRect, DT_CALCRECT,
 			D3DCOLOR_XRGB(0, 0, 0));
 	}
 
 	// return width
 	return rcRect.right - rcRect.left;
+}
+
+int c_draw::GetTextHeight(const char* szText, int font)
+{
+	RECT rcRect = { 0,0,0,0 };
+	if (pFont[font])
+	{
+		// calculate required rect
+		pFont[font]->DrawText(NULL, szText, strlen(szText), &rcRect, DT_CALCRECT,
+			D3DCOLOR_XRGB(0, 0, 0));
+	}
+
+	// return height
+	return rcRect.bottom - rcRect.top;
 }
 
 void c_draw::Text(LPCSTR text, int x, int y, int orientation, int font, D3DCOLOR color)
