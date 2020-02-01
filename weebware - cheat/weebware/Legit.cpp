@@ -121,35 +121,46 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 int c_legitbot::get_config_index()
 {
-	if (g_weapon->is_pistol())
+	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	auto weapon = local->m_pActiveWeapon();
+
+	if (!local) {
+		return 0;
+	}
+
+	if (!weapon) {
+		return 0;
+	}
+
+	if (weapon->is_pistol())
 	{
 		return 0;
 	}
-	else if (g_weapon->is_rifle())
+	else if (weapon->is_rifle())
 	{
 		return 1;
 	}
-	else if (g_weapon->is_smg())
+	else if (weapon->is_smg())
 	{
 		return 2;
 	}
-	else if (g_weapon->is_shotgun())
+	else if (weapon->is_shotgun())
 	{
 		return 3;
 	}
-	else if (g_weapon->is_heavy())
+	else if (weapon->is_heavy())
 	{
 		return 4;
 	}
-	else if (g_weapon->is_autosniper())
+	else if (weapon->is_autosniper())
 	{
 		return 5;
 	}
-	else if (g_weapon->is_awp())
+	else if (weapon->is_awp())
 	{
 		return 6;
 	}
-	else if (g_weapon->is_scout())
+	else if (weapon->is_scout())
 	{
 		return 7;
 	}
