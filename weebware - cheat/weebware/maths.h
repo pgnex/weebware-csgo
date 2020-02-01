@@ -102,6 +102,10 @@ bool s_bMathlibInitialized = false;
 	void clamp_angle(QAngle& angle);
 	void sin_cos(float value, float &sr, float &cr);
 
+	// some test w2s with crender
+	const matrix3x4& GetWorldToScreen();
+	bool ClipTransform(Vector& in, Vector& out);
+	bool CRWorldToScreen(Vector& in, Vector& out);
 };
 
 extern c_maths g_maths;

@@ -55,6 +55,7 @@ public:
 	IViewRenderBeams* g_beams;
 	uintptr_t g_animoffset;
 	CNetworkStringTableContainer* g_NetworkContainer;
+	CRender* g_render;
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;

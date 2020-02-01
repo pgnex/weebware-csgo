@@ -84,6 +84,7 @@ bool c_weebware::init_interfaces( )
 	g_enginesound = reinterpret_cast<uintptr_t*>(engine_fact( "IEngineSoundClient003", NULL ));
 	g_input = *(c_input**)(pattern_scan( "client_panorama.dll", "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10" ) + 0x1);
 	g_surface_props = reinterpret_cast<c_phys_surface_props*>(phys_fact( "VPhysicsSurfaceProps001", NULL ));
+	g_render = *reinterpret_cast<CRender**>(pattern_scan("engine.dll", "56 57 0F 57 C0 C7 05 ? ? ? ? ? ? ? ? 51") + 0x7);
 
 	// lets make sure models are installed to display on menu
 	models_installed = check_models_installed( );

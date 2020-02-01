@@ -12,6 +12,7 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 
 	if (!init) {
 		draw.AddFont("Tahoma", 11, false, false);
+		draw.AddFont("Tahoma", 18, false, false);
 		draw.Reset();
 		init = true;
 	}
@@ -41,6 +42,28 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	draw_sniper_crosshair();
 	recoil_crosshair();
 
+
+	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+	{
+		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
+
+		if (!ent || ent == nullptr)
+			continue;
+
+		// check if entity is bomb
+		if (strstr(ent->get_client_class()->m_networkedname, "CPlantedC4")) {
+			bomb_timer(ent);
+		}
+
+
+		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != class_ids::ccsplayer) {
+			continue;
+		}
+
+		//if (g_weebwarecfg.anime_model > 0)
+		//	set_player_models(ent);
+	}
+
 }
 
 
@@ -53,7 +76,7 @@ void c_d3dxesp::water_mark() {
 	std::string watermark_text = ("weebware - " + g_weebware.g_user_name);
 	std::transform(watermark_text.begin(), watermark_text.end(), watermark_text.begin(), ::tolower);
 
-	draw.Text(watermark_text.c_str(), 5, 5, lefted, 0, col.r, col.g, col.b, col.a);
+	draw.Text(watermark_text.c_str(), 5, 5, lefted, tahoma, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
 }
 
 void c_d3dxesp::draw_inaccuracy_circle() {
@@ -117,9 +140,71 @@ void c_d3dxesp::recoil_crosshair() {
 
 	c_color col = g_weebwarecfg.visuals_recoil_crosshair_col;
 
-	if (g_maths.world_to_screen(end, end_screen)) {
+	if (g_maths.CRWorldToScreen(end, end_screen)) {
 		draw.Line(end_screen.x - 10, end_screen.y, end_screen.x + 10, end_screen.y, 2, false, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
 		draw.Line(end_screen.x, end_screen.y - 10, end_screen.x, end_screen.y + 10, 2, false, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
+	}
+}
+
+void c_d3dxesp::bomb_timer(c_base_entity* ent) {
+
+	if (!g_weebwarecfg.visuals_bomb_timer)
+		return;
+
+	float remaining = reinterpret_cast<c_bomb*>(ent)->get_blow_time() - g_weebware.g_global_vars->curtime;
+
+	// So c4 is still going!
+	if (reinterpret_cast<c_bomb*>(ent)->is_ticking() && remaining > 0.f) {
+
+		int offset_y = 15.f;
+
+		if (g_weebwarecfg.visuals_watermark) {
+			offset_y += 35.f;
+		}
+
+		int Damage = 500;
+		float BombRadius = 1750;
+
+		auto vecToTarget = ent->get_vec_eyepos() - local->get_vec_eyepos();
+
+		// + 1 to account for imprecision, also magic number btw.
+
+		float predicted_damage = 500.f * exp(-((vecToTarget.size() * vecToTarget.size()) / 680555.582778f));
+
+		if ((local->m_ArmorValue() > 0)) {
+
+			predicted_damage *= 0.5f;
+
+			if ((predicted_damage / 2) > local->m_ArmorValue())
+			{
+				predicted_damage += (local->m_ArmorValue() * 2);
+			}
+		}
+		predicted_damage += 1.f;
+
+		predicted_damage = ceilf(predicted_damage);
+
+
+		Vector bomb_pos = ent->getrenderorigin();
+		Vector screen_pos;
+
+		if (!g_maths.CRWorldToScreen(bomb_pos, screen_pos))
+			return;
+
+		char time_text[55];
+		char damage_text[55];
+
+		sprintf(damage_text, "Damage: %.0f", floor(predicted_damage));
+		sprintf(time_text, "Time: %.2fs", remaining);
+
+		int tw1, tw2;
+
+		tw1 = draw.GetTextWidth(time_text, draw.pFont[tahoma_large]);
+		tw2 = draw.GetTextWidth(damage_text, draw.pFont[tahoma_large]);
+
+
+		draw.Text(time_text, screen_pos.x - (tw1 / 2), screen_pos.y - 40, lefted, tahoma_large, predicted_damage < local->m_iHealth() ? D3DCOLOR_ARGB(255, 0, 255, 0) : D3DCOLOR_ARGB(255, 255, 0, 0));
+		draw.Text(damage_text, screen_pos.x - (tw2 / 2), screen_pos.y - 25, lefted, tahoma_large, predicted_damage < local->m_iHealth() ? D3DCOLOR_ARGB(255, 0, 255, 0) : D3DCOLOR_ARGB(255, 255, 0, 0));
 	}
 }
 

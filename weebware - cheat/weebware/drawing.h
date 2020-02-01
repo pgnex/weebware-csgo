@@ -64,7 +64,8 @@ public:
 	void BoxOutlined(float x, float y, float w, float h, D3DCOLOR color);
 	void Circle(float x, float y, float radius, int rotate, int type, bool smoothing, int resolution, DWORD color);
 	void CircleFilled(float x, float y, float rad, float rotate, int type, int resolution, DWORD color);
-	void Text(LPCSTR text, int x, int y, int orientation, int font, int r, int g, int b, int a);
+	void Text(LPCSTR text, int x, int y, int orientation, int font, D3DCOLOR color);
+	int GetTextWidth(const char* szText, LPD3DXFONT pFont);
 	bool Font();
 	void AddFont(char* Caption, float size, bool bold, bool italic);
 	void FontReset();

@@ -48,6 +48,8 @@ bool c_maths::screen_transform(Vector& point, Vector& screen)
 	return behind;
 }
 
+
+
 bool c_maths::world_to_screen(Vector& origin, Vector& screen)
 {
 	if (!screen_transform(origin, screen))
@@ -271,3 +273,60 @@ float c_maths::get_fov(QAngle& viewAngle, QAngle& aimAngle, bool distance_scalin
 	return 0.f; // this should never happen
 }
 
+
+
+const matrix3x4& c_maths::GetWorldToScreen()
+{
+	const matrix3x4& pMatrix = *reinterpret_cast<matrix3x4*>(0x210 * 2 + *(unsigned long*)((unsigned long)g_weebware.g_render + 0xDC) - 0x44);
+	return pMatrix;
+}
+
+bool c_maths::ClipTransform(Vector& in, Vector& out)
+{
+	const matrix3x4& worldToScreen = GetWorldToScreen();
+
+	std::cout << "w2s: " << worldToScreen << std::endl;
+
+	float w;
+	out.x = worldToScreen[0][0] * in.x + worldToScreen[0][1] * in.y + worldToScreen[0][2] * in.z + worldToScreen[0][3];
+	out.y = worldToScreen[1][0] * in.x + worldToScreen[1][1] * in.y + worldToScreen[1][2] * in.z + worldToScreen[1][3];
+	w = worldToScreen[3][0] * in.x + worldToScreen[3][1] * in.y + worldToScreen[3][2] * in.z + worldToScreen[3][3];
+	out.z = 0.0f;
+
+
+	std::cout << "w: " << w << std::endl;
+
+	bool behind;
+	if (w < 0.001f)
+	{
+		behind = true;
+		out.x *= 100000;
+		out.y *= 100000;
+	}
+	else
+	{
+		behind = false;
+		float invw = 1.0f / w;
+		out.x *= invw;
+		out.y *= invw;
+	}
+	return behind;
+}
+
+bool c_maths::CRWorldToScreen(Vector& in, Vector& out)
+{
+	if (!ClipTransform(in, out))
+	{
+		int ScreenWidth, ScreenHeight;
+		g_weebware.g_engine->get_screen_dimensions(ScreenWidth, ScreenHeight);
+		float x = ScreenWidth / 2;
+		float y = ScreenHeight / 2;
+		x += 0.5 * out.x * ScreenWidth + 0.5;
+		y -= 0.5 * out.y * ScreenHeight + 0.5;
+		out.x = x;
+		out.y = y;
+		return true;
+	}
+
+	return false;
+}

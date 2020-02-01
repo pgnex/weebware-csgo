@@ -172,21 +172,34 @@ void c_draw::BoxOutlined(float x, float y, float w, float h, D3DCOLOR color)
 	Line(x + w, y, x + w, y + h, 0, 0, color);
 }
 
-void c_draw::Text(LPCSTR text, int x, int y, int orientation, int font, int r, int g, int b, int a)
+int c_draw::GetTextWidth(const char* szText, LPD3DXFONT pFont)
+{
+	RECT rcRect = { 0,0,0,0 };
+	if (pFont)
+	{
+		// calculate required rect
+		pFont->DrawText(NULL, szText, strlen(szText), &rcRect, DT_CALCRECT,
+			D3DCOLOR_XRGB(0, 0, 0));
+	}
+
+	// return width
+	return rcRect.right - rcRect.left;
+}
+
+void c_draw::Text(LPCSTR text, int x, int y, int orientation, int font, D3DCOLOR color)
 {
 	RECT rect = RECT { x,y,x,y };
-	D3DCOLOR fontColor = D3DCOLOR_ARGB(a, r, g, b);
 
 	switch (orientation)
 	{
 	case lefted:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, 0x00000100, fontColor);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, 0x00000100, color);
 		break;
 	case centered:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_CENTER | 0x00000100, fontColor);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_CENTER | 0x00000100, color);
 		break;
 	case righted:
-		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_RIGHT | 0x00000100, fontColor);
+		pFont[font]->DrawTextA(NULL, text, -1, &rect, DT_RIGHT | 0x00000100, color);
 		break;
 	}
 }
