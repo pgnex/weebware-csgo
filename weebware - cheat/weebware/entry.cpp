@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -42,6 +42,7 @@ bool c_weebware::init_interfaces( )
 	phys_fact = retrieve_interface( "vphysics.dll" );
 	input_fact = retrieve_interface( "inputsystem.dll" );
 
+	networking::curl_init();
 
 #if WEEBWARE_RELEASE
 	g_user_name = auth::GetServerVariable( auth::base64_decode( "ZG9n" ).c_str( ) );

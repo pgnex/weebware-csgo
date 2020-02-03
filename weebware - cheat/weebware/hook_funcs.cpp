@@ -394,6 +394,7 @@ void c_hooking::unhook_all_functions()
 	VEH_VM->unHook();
 	VEH_ENDSCENE->unHook();
 #endif
+	networking::curl_cleanup();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 //	knife_changer::remove_proxyhooks();
 	g_vars.g_unload.set(1.0f);
