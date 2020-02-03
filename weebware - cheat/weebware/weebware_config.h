@@ -203,7 +203,8 @@ public:
 	int m_seed = 69;
 	bool stattrak_enabled = false;
 	int stattrak_kill_count = 0;
-	char weapon_name[256];
+	std::string weapon_name;
+	char weapon_name_buf[256];
 
 	json to_json()
 	{
@@ -229,9 +230,10 @@ public:
 		if (check("m_seed", data)) m_seed = data["m_seed"];
 		if (check("stattrak_enabled", data)) stattrak_enabled = data["stattrak_enabled"];
 		if (check("stattrak_kill_count", data)) stattrak_kill_count = data["stattrak_kill_count"];
+
 		if (check("weapon_name", data)) {
-			std::string msg = data["weapon_name"];
-			strncpy(weapon_name, msg.c_str(), sizeof(weapon_name));
+			if (!data["weapon_name"].empty())
+				weapon_name = data["weapon_name"];
 		}
 	}
 };
@@ -361,8 +363,10 @@ public:
 	int thirdperson_key;
 	int thirdperson_distance = 0;
 	bool killsay;
-	char killsay_msg_custom[256];
-	char custom_clantag_static[256];
+	char killsay_msg_custom_buf[256];
+	std::string killsay_msg_custom = "";
+	char custom_clantag_static_buf[256];
+	std::string custom_clantag_static = "";
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
 	int fake_lag = 0;
@@ -666,6 +670,7 @@ public:
 		if (check("awp", data)) legit_cfg[6].convert(data["awp"]);
 		if (check("scout", data)) legit_cfg[7].convert(data["scout"]);
 
+
 		if (check("enable_visuals", data)) enable_visuals = data["enable_visuals"];
 		if (check("enable_visuals_key", data)) enable_visuals_key = data["enable_visuals_key"];
 		if (check("visuals_watermark", data)) visuals_watermark = data["visuals_watermark"];
@@ -733,6 +738,7 @@ public:
 			if (selected_knife_index > 0)
 				knifechanger_enabled = true;
 		}
+
 		if (check("selected_knife_index1", data)) selected_knife_index[1] = data["selected_knife_index1"];
 		if (check("selected_gun_index", data)) selected_gun_index = data["selected_gun_index"];
 		if (check("visuals_backtrack_style", data)) visuals_backtrack_style = data["visuals_backtrack_style"];
@@ -770,6 +776,7 @@ public:
 			if (glove_model > 0)
 				glovechanger_enabled = true;
 		}
+
 		if (check("glove_skin", data)) glove_skin = data["glove_skin"];
 		if (check("rainbow_name", data)) rainbow_name = data["rainbow_name"];
 		if (check("fake_lag_factor", data)) fake_lag_factor = data["fake_lag_factor"];
@@ -788,17 +795,20 @@ public:
 		if (check("knifechanger_enabled", data)) knifechanger_enabled = data["knifechanger_enabled"];
 		if (check("glovechanger_enabled", data)) glovechanger_enabled = data["glovechanger_enabled"];
 		if (check("glove_wearz", data)) glove_wearz = data["glove_wearz"];
-		if (check("glove_skin_cur", data)) glove_skin_cur = data["glove_skin_cur"];
 
-
+		if (check("glove_skin_cur", data)) {
+			if (!data["glove_skin_cur"].empty())
+				glove_skin_cur = data["glove_skin_cur"];
+		}
 
 		if (check("killsay_msg_custom", data)) {
-			std::string msg = data["killsay_msg_custom"];
-			strncpy(killsay_msg_custom, msg.c_str(), sizeof(killsay_msg_custom));
+			if (!data["killsay_msg_custom"].empty())
+				killsay_msg_custom = data["killsay_msg_custom"];
 		}
+
 		if (check("custom_clantag_static", data)) {
-			std::string msg = data["custom_clantag_static"];
-			strncpy(custom_clantag_static, msg.c_str(), sizeof(custom_clantag_static));
+			if (!data["custom_clantag_static"].empty())
+				custom_clantag_static = data["custom_clantag_static"];
 		}
 
 		// colors
@@ -845,9 +855,10 @@ public:
 		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");
 		if (check_color("visuals_chams_glow_col", data)) read_color(visuals_chams_glow_col, data, "visuals_chams_glow_col");
 
+		
 		json skin_tmp = data["skins"];
 
-		for (auto i = 0; i < 35; i++) {
+		for (int i = 0; i < 35; i++) {
 			skin_wheel[i].from_json(skin_tmp[i]);
 		}
 

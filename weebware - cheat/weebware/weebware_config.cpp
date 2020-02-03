@@ -40,6 +40,7 @@ std::vector<std::string> get_all_files_names_within_folder(std::string folder)
 void c_config_list::get_your_configs() {
 	std::vector<std::string> info;
 	std::string content = networking::get_request("https://weebware.net/api/cheat/config/own?name=" + g_weebware.g_user_name);
+
 	g_config_list.your_configs_buffer = json::parse(content);
 
 	for (const auto& name : g_config_list.your_configs_buffer) {
@@ -61,7 +62,7 @@ void c_config_list::get_favorited_configs() {
 
 void c_config_list::load_config_from_memory(int index) {
 
-	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" + std::to_string(index));
+	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" +std::to_string(index));
 	json data = json::parse(content);
 	g_weebwarecfg.load_cfg_mem(data);
 	g_weebwarecfg.skinchanger_apply_nxt = 1;

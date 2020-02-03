@@ -547,13 +547,21 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
 
 			ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
-			if (g_weebwarecfg.misc_clantag_changer) {
-				ImGui::InputTextWithHint("##Custom Clantag", "Enter Custom Clantag", g_weebwarecfg.custom_clantag_static, ARRAYSIZE(g_weebwarecfg.custom_clantag_static));
+			if (g_weebwarecfg.misc_clantag_changer)
+			{
+				if (ImGui::InputTextWithHint("##Custom Clantag", "Enter Custom Clantag", g_weebwarecfg.custom_clantag_static_buf, ARRAYSIZE(g_weebwarecfg.custom_clantag_static_buf)))
+				{
+					g_weebwarecfg.custom_clantag_static = g_weebwarecfg.custom_clantag_static_buf;
+				}
 			}
 
 			ImGui::Checkbox("Killsay", &g_weebwarecfg.killsay);
-			if (g_weebwarecfg.killsay) {
-				ImGui::InputTextWithHint("##Custom Killsay", "Enter Custom Killsay", g_weebwarecfg.killsay_msg_custom, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom));
+			if (g_weebwarecfg.killsay)
+			{
+				if (ImGui::InputTextWithHint("##Custom Killsay", "Enter Custom Killsay", g_weebwarecfg.killsay_msg_custom_buf, ARRAYSIZE(g_weebwarecfg.killsay_msg_custom_buf)))
+				{
+					g_weebwarecfg.killsay_msg_custom = g_weebwarecfg.killsay_msg_custom_buf;
+				}
 			}
 
 			ImGui::Checkbox("Viewmodel Changer", &g_weebwarecfg.viewmodel_changer);
@@ -765,8 +773,12 @@ void gui::imgui_main() {
 
 			ImGui::Text("Nametag");
 			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
-			ImGui::InputText("##weaponname", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name));
+			if (ImGui::InputText("##weaponname", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf)))
+			{
+				g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name = g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf;
+			}
 			ImGui::PopStyleColor();
+
 			ImGui::Text("Wear");
 			imgui_custom::a_better_slider_float("##Wearskins", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear, 0, 100, "%.0f%%");
 			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
