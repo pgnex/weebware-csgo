@@ -10,7 +10,7 @@ c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
 
 #if 1
-void hook_functions::frame_stage_notify(clientframestage_t curStage)
+void hook_functions::frame_stage_notify(int curStage)
 {
 	QAngle aim_punch;
 	QAngle o_aim_punch;
@@ -117,7 +117,7 @@ void c_frame_stage_notify::run_clantag()
 		return;
 	}
 
-	if (strlen(g_weebwarecfg.custom_clantag_static) > 0) {
+	if (g_weebwarecfg.custom_clantag_static.length() > 0) {
 
 		if (current_clantag == g_weebwarecfg.custom_clantag_static)
 			return;
@@ -476,7 +476,7 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (weapon->is_knife() && g_weebwarecfg.knifechanger_enabled)
 			*weapon->m_iItemDefinitionIndexPtr() = knife_cfg.weapon_index;
 
-		if (strlen(skin_config.weapon_name) > 0)
+		if (strlen(skin_config.weapon_name.c_str()) > 0)
 			*weapon->get_custom_name() = std::regex_replace(skin_config.weapon_name, std::regex(" "), "\u0020");
 
 	}
