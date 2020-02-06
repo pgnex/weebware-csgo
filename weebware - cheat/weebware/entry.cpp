@@ -25,7 +25,6 @@ unsigned __stdcall entry_thread( void* v_arg )
 bool c_weebware::init_interfaces( )
 {
 
-
 	while (!(g_weebware.h_window = FindWindowW(L"Valve001", NULL))) { Sleep(250); }
 
 	while (!GetModuleHandleA("serverbrowser.dll")) { Sleep(250); }
@@ -120,10 +119,20 @@ bool c_weebware::init_interfaces( )
 }
 
 void c_weebware::init_fonts( ) {
-	tahoma_font = g_weebware.g_surface->create_font( );
-	g_weebware.g_surface->setfontglyphset( tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow );
-	tahoma_font_large = g_weebware.g_surface->create_font( );
-	g_weebware.g_surface->setfontglyphset( tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow );
+
+	static bool init = false;
+
+	if (!init) {
+		tahoma_font = g_weebware.g_surface->create_font();
+		tahoma_font_large = g_weebware.g_surface->create_font();
+		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
+		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
+
+		init = true;
+	} else {
+		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
+		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
+	}
 }
 
 void c_weebware::setup_thread( ) {

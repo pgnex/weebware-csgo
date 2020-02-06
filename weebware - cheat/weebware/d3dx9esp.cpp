@@ -9,17 +9,14 @@ c_draw draw;
 void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	static bool init = false;
 
-	draw.GetDevice(pDevice);
-
 	if (!init) {
+		get_device(pDevice);
 		draw.AddFont("Tahoma", 11, false, false);
 		draw.AddFont("Tahoma", 18, false, false);
 		draw.Reset();
 		init = true;
 	}
 	
-	if (draw.Font()) draw.OnLostDevice();
-
 	// draw anything before any checks..
 	water_mark();
 
@@ -646,6 +643,14 @@ void c_d3dxesp::spectator_list(c_base_entity* ent) {
 		draw.Text(spec_name.c_str(), (sw - tw) - 5, (spec_count * th) + 2, lefted, tahoma_large, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
 	}
 
+}
+
+void c_d3dxesp::on_lost_device() {
+	if (draw.Font()) draw.OnLostDevice();
+}
+
+void c_d3dxesp::get_device(IDirect3DDevice9* pDevice) {
+	draw.GetDevice(pDevice);
 }
 
 void c_d3dxesp::d3dx_reset() {

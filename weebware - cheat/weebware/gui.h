@@ -8,8 +8,6 @@ using namespace imgui_custom;
 class gui {
 public:
 
-	bool imgui_initialized = false;
-
 	enum tabs {
 		legit,
 		//rage,
@@ -23,16 +21,17 @@ public:
 
 	void render_menu(IDirect3DDevice9* device)
 	{
+		static bool initialized = false;
 
-		if (!imgui_initialized) {
+		if (!initialized) {
 			ImGui::CreateContext();
 			ImGui_ImplWin32_Init(g_weebware.h_window);
 			ImGui_ImplDX9_Init(device);
 			style_setup();
-			imgui_initialized = true;
+			initialized = true;
 		}
 
-		renderstate_setup(device);
+	//	renderstate_setup(device);
 		ImGui_ImplDX9_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();

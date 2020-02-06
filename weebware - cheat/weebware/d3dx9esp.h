@@ -12,6 +12,8 @@ public:
 
 	void d9esp_main(IDirect3DDevice9* pDevice);
 	void d3dx_reset();
+	void on_lost_device();
+	void get_device(IDirect3DDevice9* pDevice);
 
 private:
 	c_base_entity* local;

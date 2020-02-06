@@ -61,15 +61,18 @@ long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RE
 long hook_functions::end_scene(IDirect3DDevice9* device)
 {
 
-	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0) {
-		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
-		return g_hooking.o_endscene(device);
-	}
+	DWORD colorwrite, srgbwrite;
+	device->GetRenderState(D3DRS_COLORWRITEENABLE, &colorwrite);
+	device->GetRenderState(D3DRS_SRGBWRITEENABLE, &srgbwrite);
 
+	//fix drawing without calling engine functons/cl_showpos
+	device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
+	//removes the source engine color correction
+	device->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	pixelState->Capture();
-	device->GetVertexDeclaration(&vertexDeclaration);
-	device->GetVertexShader(&vertexShader);
+	IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
+	device->GetVertexDeclaration(&vertDec);
+	device->GetVertexShader(&vertShader);
 
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
@@ -80,10 +83,10 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	}
 	
 
-	pixelState->Apply();
-	pixelState->Release();
-	device->SetVertexShader(vertexShader);
-	device->SetVertexDeclaration(vertexDeclaration);
+	device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
+	device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
+	device->SetVertexDeclaration(vertDec);
+	device->SetVertexShader(vertShader);
 
 	//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 	return g_hooking.o_endscene(device);
@@ -92,18 +95,15 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 
 long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param) 
 {
-	if (!g_gui.imgui_initialized) {
-		return g_hooking.o_reset(device, presentation_param);
-	}
-
 	ImGui_ImplDX9_InvalidateDeviceObjects();
+	g_d3dxesp.on_lost_device();
 
 	auto hr = g_hooking.o_reset(device, presentation_param);
 
-	if (hr == D3D_OK) {
+	if (hr >= 0) {
 		ImGui_ImplDX9_CreateDeviceObjects();
+		g_d3dxesp.get_device(device);
 		g_weebware.init_fonts();
-		g_d3dxesp.d3dx_reset();
 	}
 	return hr;
 }
@@ -199,7 +199,7 @@ void gui::imgui_main() {
 			imgui_custom::a_better_combo_box("##aimcombo", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot, activation_type_trigger, ARRAYSIZE(activation_type_trigger));
 			ImGui::Checkbox("Silent aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].silent_aim);
 			ImGui::Checkbox("Target teammates", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].target_teammates);
-			ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov);
+			// ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov);
 
 			ImGui::Text("Maximum FOV");
 			imgui_custom::a_better_slider_float("##Maximum FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].maximum_fov, 0, 30, "%.1f");
