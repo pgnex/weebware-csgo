@@ -212,6 +212,10 @@ public:
 		return *reinterpret_cast<int*>((uintptr_t)this + (uintptr_t)0x25C);
 	}
 
+	bool is_stationary() {
+		return !(*(bool*)((DWORD)this + 0xE9));
+	}
+
 	int draw_model( int flags, uint8_t alpha ) {
 		auto client_renderable = reinterpret_cast<void*>((uintptr_t)this + 0x4);
 		return getvfunc<int( __thiscall* )(void*, int, uint8_t)>( client_renderable, 9 )(client_renderable, flags, alpha);
