@@ -147,6 +147,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dme.cpp" />
     <ClCompile Include="glovechanger.cpp" />
+    <ClCompile Include="imesp.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="networking.cpp" />
     <ClCompile Include="Ragebot.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="icon_font.h" />
+    <ClInclude Include="imesp.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="networking.h" />
     <ClInclude Include="Ragebot.h" />

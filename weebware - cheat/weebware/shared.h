@@ -57,6 +57,7 @@ public:
 	uintptr_t g_animoffset;
 	CNetworkStringTableContainer* g_NetworkContainer;
 	CRender* g_render;
+	IWeaponSystem* g_weapon_system;
 	HWND h_window;
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;

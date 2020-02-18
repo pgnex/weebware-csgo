@@ -261,6 +261,9 @@
     <ClCompile Include="visuals_shared.cpp">
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClCompile>
+    <ClCompile Include="imesp.cpp">
+      <Filter>Source Files\hooking\Drawing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -516,6 +519,9 @@
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
     <ClInclude Include="visuals_shared.h">
+      <Filter>Source Files\hooking\Drawing</Filter>
+    </ClInclude>
+    <ClInclude Include="imesp.h">
       <Filter>Source Files\hooking\Drawing</Filter>
     </ClInclude>
   </ItemGroup>
