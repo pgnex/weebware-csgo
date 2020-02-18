@@ -6,6 +6,8 @@
 
 c_draw draw;
 
+void reclass_test(c_base_entity* local);
+
 void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	static bool init = false;
 
@@ -49,6 +51,8 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 
 	if (!local)
 		return;
+
+	//reclass_test(local);
 
 	// on key visuals.. not sure why anyone would use but :shrug:
 	if (g_weebwarecfg.enable_visuals == 2)
@@ -127,7 +131,6 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	}
 }
 
-
 void c_d3dxesp::water_mark() {
 
 	if (!g_weebwarecfg.visuals_watermark)
@@ -142,20 +145,21 @@ void c_d3dxesp::water_mark() {
 
 void c_d3dxesp::draw_inaccuracy_circle() {
 
-	if (!g_weebwarecfg.visuals_inacc_circle)
-		return;
+	//if (!g_weebwarecfg.visuals_inacc_circle)
+	//	return;
 
-	auto weapon = local->m_pActiveWeapon();
+	//c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(local->m_pActiveWeapon()->m_iItemDefinitionIndex());
 
-	if (!weapon)
-		return;
+	//if (!weapon_data)
+	//	return;
 
-	if (!weapon->is_firearm())
-		return;
+	//// make sure it is a weapon
+	//if (weapon_data->type < weapon_info_type::WEAPON_KNIFE || weapon_data->type > weapon_info_type::WEAPON_SNIPER)
+	//	return;
 
-	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
+	//c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
 
-	draw.Circle(draw.Screen.x_center, draw.Screen.y_center, weapon->Get_Innacuracy() * 200, 0, full, true, 24, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
+	//draw.Circle(draw.Screen.x_center, draw.Screen.y_center, weapon_data->spread * 200, 0, full, true, 24, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
 }
 
 void c_d3dxesp::render_health(s_boundaries bounds, c_base_entity* ent) {
@@ -288,18 +292,23 @@ void c_d3dxesp::render_weapon(s_boundaries bounds, c_base_entity* ent) {
 	if (!bounds.has_w2s)
 		return;
 
-	c_basecombat_weapon* weapon = ent->m_pActiveWeapon();
+	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(ent->m_pActiveWeapon()->m_iItemDefinitionIndex());
 
-	if (!weapon)
+	if (!weapon_data)
 		return;
 
-	std::string weapon_name = weapon->get_weapon_name_from_id();
+	std::string weapon_name = weapon_data->name;
 	
 	int tw = draw.GetTextWidth(weapon_name.c_str(), tahoma);
 	int th = draw.GetTextHeight(weapon_name.c_str(), tahoma);
 	draw.Text(weapon_name.c_str(), (bounds.x + bounds.w / 2) - (tw / 2), (bounds.y + bounds.h + th) + 2, lefted, tahoma, D3DCOLOR_ARGB(255, 255, 255, 255));
 
 }
+
+//void reclass_test(c_base_entity* local) {
+//	std::cout << g_weebware.g_weapon_system->GetWpnData(local->m_pActiveWeapon()->m_iItemDefinitionIndex()) << std::endl;
+//}
+
 
 
 void c_d3dxesp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
@@ -310,18 +319,19 @@ void c_d3dxesp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 	if (!bounds.has_w2s)
 		return;
 
-	c_basecombat_weapon* weapon = ent->m_pActiveWeapon();
+	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(ent->m_pActiveWeapon()->m_iItemDefinitionIndex());
 
-	if (!weapon)
+	if (!weapon_data)
 		return;
 
-	int max_ammo = weapon->m_iPrimaryReserveAmmoCount();
-	int current_ammo = weapon->Clip1();
+	int max_ammo = weapon_data->max_ammo;
+//	int current_ammo = weapon_data->m_iAmmo;
 
-	std::string out = std::to_string(current_ammo) + "/" + std::to_string(max_ammo);
+	std::string out = "??/" + std::to_string(max_ammo);
 
-	if (!weapon->is_firearm())
-		out = "";
+
+	if (weapon_data->type == weapon_info_type::WEAPON_KNIFE)
+		out = "Infinite";
 
 	int offset = 0;
 
@@ -340,15 +350,17 @@ void c_d3dxesp::draw_sniper_crosshair() {
 	if (!g_weebwarecfg.visuals_sniper_crosshair)
 		return;
 
-	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
+	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(local->m_pActiveWeapon()->m_iItemDefinitionIndex());
 
-	if (!weapon || weapon == nullptr)
+	if (!weapon_data)
 		return;
 
-	if (!weapon->is_firearm())
+	// make sure it is a weapon
+	if (weapon_data->type < weapon_info_type::WEAPON_KNIFE || weapon_data->type > weapon_info_type::WEAPON_SNIPER)
 		return;
 
-	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())
+	// make sure its a sniper 
+	if (!weapon_data->type == weapon_info_type::WEAPON_SNIPER)
 		return;
 
 
