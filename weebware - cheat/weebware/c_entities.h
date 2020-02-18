@@ -662,6 +662,16 @@ enum weapon_type_id
 //};
 
 
+enum weapon_info_type : int {
+	WEAPON_KNIFE = 0,
+	WEAPON_PISTOL,
+	WEAPON_SMG,
+	WEAPON_RIFLE,
+	WEAPON_SHOTGUN,
+	WEAPON_SNIPER
+};
+
+
 class c_weapon_info
 {
 public:
@@ -686,6 +696,8 @@ public:
 	char  pad_0x0110[0x20]; // 0x0110
 	float max_speed;        // 0x0130
 	float max_speed_alt;    // 0x0134
+	float spread;
+
 };
 
 class c_basecombat_weapon : public c_base_entity

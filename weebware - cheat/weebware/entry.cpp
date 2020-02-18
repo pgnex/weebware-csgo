@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -85,7 +85,8 @@ bool c_weebware::init_interfaces( )
 	g_input = *(c_input**)(pattern_scan( "client_panorama.dll", "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10" ) + 0x1);
 	g_surface_props = reinterpret_cast<c_phys_surface_props*>(phys_fact( "VPhysicsSurfaceProps001", NULL ));
 	g_render = *reinterpret_cast<CRender**>(pattern_scan("engine.dll", "56 57 0F 57 C0 C7 05 ? ? ? ? ? ? ? ? 51") + 0x7);
-
+	g_weapon_system = *(IWeaponSystem**)(pattern_scan("client_panorama.dll", "8B 35 ? ? ? ? FF 10 0F B7 C0") + 0x2);
+	
 	// lets make sure models are installed to display on menu
 	models_installed = check_models_installed( );
 

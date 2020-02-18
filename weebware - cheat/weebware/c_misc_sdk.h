@@ -4,6 +4,14 @@
 
 class CRender;
 
+class IWeaponSystem
+{
+	virtual void unused0() = 0;
+	virtual void unused1() = 0;
+public:
+	virtual c_weapon_info* GetWpnData(unsigned ItemDefinitionIndex) = 0;
+};
+
 struct mstudiobone_t
 {
 	int sznameindex;
