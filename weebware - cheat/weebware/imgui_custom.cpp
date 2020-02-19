@@ -1,6 +1,7 @@
 #include "Header.h"
 #include "shared.h"
 #include "imgui_custom.h"
+#include "imgui/imgui_internal.h"
 
 char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
 "_", "Backspace", "TAB", "_", "_", "_", "ENTER", "_", "_", "SHIFT", "CTRL", "ALT", "PAUSE",
@@ -21,11 +22,9 @@ char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
 "_", "_", "_", "_", "_", "_", "_", "_", "_", "_", "_" };
 
 
-void imgui_custom::custom_inline_keyinput(int& key, int& id)
-{
-	++id;
+/*
 
-	// Set same line.
+// Set same line.
 	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
 
 	// Get the style.
@@ -91,14 +90,124 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 
 	// Restore original.
 
+*/
+
+
+void imgui_custom::custom_inline_keyinput(int& key, int& id)
+{
+
+	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
+
+	// Get the style.
+	auto& style = ImGui::GetStyle();
+
+	// Set it to the same color as background
+	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+
+
+	static auto has_input = 0xDEDFED;
+
+	std::string button_text = "[";
+	// Display original text.
+	if (key && key != has_input)
+	{
+		button_text.append(KeyboardKeys[key]);
+	}
+	else
+	{
+		button_text.append("-");
+	}
+	// Some values
+	static bool CurrentKeys[256][99] = { false };
+	static bool LastKeys[256][99] = { false };
+	static bool bSelected[99] = { false };
+
+	std::copy(&CurrentKeys[0][id], &CurrentKeys[254][id], &LastKeys[0][id]);
+
+	for (int i = 0; i < 255; i++)
+	{
+		if (GetAsyncKeyState(i)) CurrentKeys[i][id] = true;
+		else CurrentKeys[i][id] = false;
+	}
+	button_text.append("]");
+
+	// Stupid imgui
+	button_text.append("##");
+
+	button_text.append(std::to_string(id));
+
+	// Define unique key.
+	if (ImGui::Button(button_text.c_str(), ImVec2(80, 20)))
+	{
+		// printf("WUBBA LUBBA DUB DUB\n");
+		bSelected[id] = true;
+		key = has_input;
+	}
+
+	if (bSelected[id])
+	{
+		for (int i = 0; i < 255; i++) {
+
+			if (CurrentKeys[i][id] && !LastKeys[i][id])
+			{
+				key = i;
+				bSelected[id] = false;
+				break;
+			}
+		}
+	}
+
+	// Restore original.
 	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
 	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
+
+	//++id;
+
+	//ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
+
+	//// Get the style.
+	//auto& style = ImGui::GetStyle();
+
+	//// Set it to the same color as background
+	//style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	//style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	//style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+
+
+	//// create the button text
+	//std::string button_text = "[ - ]";
+
+	//// make it unique XDXDXDDDDDDDDDDDDDDDDDDDDDDDDDDD imgui
+	//button_text.append("##");
+	//button_text.append(std::to_string(id));
+
+	//if (ImGui::Button(button_text.c_str(), ImVec2(80, 20))) {
+	//	g_weebware.waiting_key = true;
+
+	//	std::cout << g_weebware.pressed_key << std::endl;
+	//	key = g_weebware.pressed_key;
+	//	button_text = "[ " + std::string(KeyboardKeys[g_weebware.pressed_key]) + " ]";
+	////	std::cout << g_weebware.pressed_key << std::endl;
+	//	g_weebware.waiting_key = false;
+	//}
+
+
+	//style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
+	//style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
+	//style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
 }
+
+
 
 
 void imgui_custom::custom_key_button(int& key)
 {
+
+	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
+
 	static const constexpr unsigned int long long  has_input = 0x1337;
 	std::string button_text;
 	// Display original text.

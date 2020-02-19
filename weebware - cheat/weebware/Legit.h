@@ -57,9 +57,6 @@ public:
 		void invalidate_bone_cache(c_base_entity* entity);
 		c_accuracy_records create_record(c_base_entity* entity, c_usercmd* cmd);
 		void set_record(c_base_entity* player, c_accuracy_records record);
-
-
-
 	};
 
 	void triggerbot_main(c_usercmd* cmd);

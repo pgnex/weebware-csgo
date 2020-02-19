@@ -50,6 +50,7 @@
 #include "net_channel.h"
 #include "key_values.h"
 #include "i_game_event_manager.h"
+#include "frame_stage.h"
 #include "c_entities.h"
 #include "c_misc_sdk.h"
 #include "c_input.h"
@@ -72,6 +73,7 @@
 #include "raleway_font.h"
 #include "icon_font.h"
 #include "visuals_shared.h"
+
 
 
 // custom include files

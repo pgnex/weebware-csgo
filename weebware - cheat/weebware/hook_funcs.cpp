@@ -1,6 +1,7 @@
 ﻿#include "Header.h"
 #include "shared.h"
 #include "gui.h"
+#include "key_values.h"
 #include <intrin.h>
 
 // #include "Polyhook\PolyHook\PolyHook.hpp"
@@ -14,7 +15,14 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
 	auto protecc = g_hooking.VEH_PAINT->getProtectionObject();
 
-	// stuff while testing for stream proof.. remove later
+	if (g_weebwarecfg.auto_queue) {
+		if (!g_weebware.g_engine->is_connected() && !g_weebware.g_engine->is_in_game()) {
+			g_ai.auto_queue();
+		}
+		else {
+			g_ai.needs_queue = true;
+		}
+	}
 	
 	if (!g_weebwarecfg.obs_proof) {
 		hook_functions::paint_traverse(v, f, a);
@@ -26,6 +34,7 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 		g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
 	}
 }
+
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
@@ -62,6 +71,7 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
 
 	if (!g_weebwarecfg.obs_proof) {
+		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
 	}
 
@@ -281,6 +291,12 @@ void c_hooking::hook_all_functions()
 
 #else
 
+	//PLH::CapstoneDisassembler dis(PLH::Mode::x86);
+
+	//auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
+	//DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
+	//DETOUR_ENDSCENE->hook();
+	//o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
 
 	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
 	VEH_PAINT = new PLH::BreakPointHook((char*)paint_addr, (char*)&hk_paint_traverse);
@@ -331,6 +347,14 @@ void c_hooking::hook_all_functions()
 	VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
 	VEH_ENDSCENE->hook();
 	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+
+
+
+
+
+
+
+	// DO NOT UNCOMMENT
 
 	//auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
 	//VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);

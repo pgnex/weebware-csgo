@@ -20,5 +20,6 @@ public:
 	void no_vis_recoil(bool restore = false);
 };
 
+struct ImpactData_t;
 extern std::vector< ImpactData_t > vis_impact_data;
 extern c_frame_stage_notify g_frame_stage_notify;

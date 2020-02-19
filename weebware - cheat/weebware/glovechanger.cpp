@@ -1,3 +1,4 @@
+#include "Header.h"
 #include "glovechanger.h"
 
 c_glovechanger glove_changer;
@@ -215,7 +216,7 @@ void c_glovechanger::run() noexcept {
 	if (glove) {
 		apply_glove_model(glove);
 
-		set_glove_skin_array();
+		// set_glove_skin_array();
 
 		apply_glove_skin(glove, get_glove_model(), get_skin(), g_weebware.g_model_info->getmodelindex(glove_map[get_glove_model()]), 3, g_weebwarecfg.glove_wearz);
 

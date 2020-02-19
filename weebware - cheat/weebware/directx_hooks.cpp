@@ -30,6 +30,10 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 			g_weebware.menu_opened = !g_weebware.menu_opened;
 			g_weebware.g_input_system->EnableInput(!g_weebware.menu_opened);
 		}
+
+		if (g_weebware.menu_opened) {
+			g_weebware.pressed_key = wParam;
+		}
 	}
 
 	return (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam) && g_weebware.menu_opened) ? 1 : CallWindowProcA(g_weebware.old_window_proc, hWnd, uMsg, wParam, lParam);
@@ -107,6 +111,24 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	}
 	return hr;
 }
+
+
+KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
+{
+	static auto key_values_find_key = reinterpret_cast<KeyValues * (__thiscall*)(void*, const char*, bool)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 1C 53 8B D9 85 DB"));
+	return key_values_find_key(this, keyName, bCreate);
+}
+
+void KeyValues::set_string(const char* keyName, const char* value)
+{
+	auto key = FindKey(keyName, true);
+	if (key)
+	{
+		static auto key_values_set_string = reinterpret_cast<void(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC A1 ? ? ? ? 53 56 57 8B F9 8B 08 8B 01"));
+		key_values_set_string(key, value);
+	}
+}
+
 
 
 static int tab_selection = 0;
@@ -192,7 +214,7 @@ void gui::imgui_main() {
 
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot == 2)
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key);
 
 			const char* activation_type_trigger[] = { "Off", "On Fire", "On Key", "Magnetic" };
 
@@ -256,7 +278,7 @@ void gui::imgui_main() {
 			ImGui::Text("Activation type");
 
 			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active == 1)
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key);
 
 
 			const char* activation_type[] = { "Off", "On Key", "Active" };
@@ -333,7 +355,7 @@ void gui::imgui_main() {
 
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.enable_visuals == 2) {
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.enable_visuals_key);
 			}
 
 			const char* activation_type[] = { "Off", "Enabled", "On Key" };
@@ -545,6 +567,7 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
 			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
 			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
+			// ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled);
 
 			ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
 			if (g_weebwarecfg.misc_clantag_changer)
@@ -571,17 +594,17 @@ void gui::imgui_main() {
 
 			ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot);
 			if (g_weebwarecfg.block_bot) {
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.block_bot_key);
 			}
 
 			ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol);
 			if (g_weebwarecfg.auto_pistol) {
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.auto_pistol_key);
 			}
 
 			ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse);
 			if (g_weebwarecfg.auto_defuse) {
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.auto_defuse_key);
 			}
 
 			ImGui::EndChild();
@@ -600,7 +623,7 @@ void gui::imgui_main() {
 			}
 			ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump);
 			if (g_weebwarecfg.edge_jump)
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.edge_jump_key);
 			if (g_weebwarecfg.edge_jump) {
 				ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air);
 			}
@@ -619,11 +642,12 @@ void gui::imgui_main() {
 
 			ImGui::SetColumnWidth(3, 328);
 			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
-			ImGui::BeginChild("misc 3", ImVec2(0, 220), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			ImGui::BeginChild("misc 3", ImVec2(0, 240), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("miscgb3");
 			imgui_custom::horizontal_margin("misctxtmargintop3", 2);
 			imgui_custom::custom_label_header("Smartbot");
 			ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai);
+			ImGui::Checkbox("Autoqueue", &g_weebwarecfg.auto_queue);
 			ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random);
 			ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest);
 			ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse);
@@ -643,7 +667,7 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Fake Lag");
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.fake_lag == 1)
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
+				imgui_custom::custom_key_button(g_weebwarecfg.fake_lag_key);
 
 			const char* fakelag_type[] = { "Off", "On Key", "Always On" };
 			imgui_custom::a_better_combo_box("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));

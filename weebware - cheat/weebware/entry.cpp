@@ -40,6 +40,7 @@ bool c_weebware::init_interfaces( )
 	cache_fact = retrieve_interface( "datacache.dll" );
 	phys_fact = retrieve_interface( "vphysics.dll" );
 	input_fact = retrieve_interface( "inputsystem.dll" );
+	match_fact = retrieve_interface("matchmaking.dll");
 
 	networking::curl_init();
 
@@ -55,6 +56,7 @@ bool c_weebware::init_interfaces( )
 	g_client_mode = **(unsigned long***)(pattern_scan( "client_panorama.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA" ) + 0x2);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact( "VClientEntityList003", NULL ));
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact( "VGUI_Panel009", NULL ));
+	g_matchframework = reinterpret_cast<c_match_framework*>(match_fact("MATCHFRAMEWORK_001", NULL));
 	g_surface = reinterpret_cast<c_surface*>(surface_fact( "VGUI_Surface031", NULL ));
 	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1);
 	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan( "client_panorama.dll", "0F 11 05 ? ? ? ? 83 C8 01" ) + 3);
@@ -246,6 +248,18 @@ bool c_weebware::check_models_installed( ) {
 		std::filesystem::exists( path + "/csgo/models/player/custom_player/bbs_93x_net_2016/kimono_luka/update_2016_08_05/kimono_luka.mdl" ) &&
 		std::filesystem::exists( path + "/csgo/models/player/custom_player/monsterko/inori_yuzuriha/inori.mdl" )
 		);
+}
+
+DWORD c_weebware::GetCallOffset(DWORD offset)
+{
+	auto call = *(DWORD*)((DWORD)offset + 1);
+	return (DWORD)((DWORD)offset + call + 5);
+}
+
+DWORD c_weebware::pattern_scan_from_call(const char* module, const char* signature, DWORD offset)
+{
+	auto pat_offset = (DWORD)g_weebware.pattern_scan(module, signature);
+	return GetCallOffset(pat_offset) + offset;
 }
 
 // credits: learn_more

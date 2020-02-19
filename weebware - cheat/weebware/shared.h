@@ -14,6 +14,8 @@ public:
 	std::string g_user_name = "";
 	void setup_thread();
 	uintptr_t pattern_scan(const char* szModule, const char* szSignature);
+	static DWORD pattern_scan_from_call(const char* module, const char* signature, DWORD offset = 0);
+	static DWORD GetCallOffset(DWORD offset);
 	void init_fonts();
 	bool models_installed = false;
 	bool check_models_installed();
@@ -26,6 +28,7 @@ public:
 	HMODULE h_module;
 	c_engine_client* g_engine;
 	c_entity_list* g_entlist;
+	c_match_framework* g_matchframework;
 	i_base_client* g_client;
 	c_panel* g_panel;
 	c_surface* g_surface;
@@ -64,7 +67,8 @@ public:
 	unsigned long tahoma_font_large;
 
 	bool menu_opened = false;
-	bool pressed_keys[256];
+	int pressed_key;
+	bool waiting_key = false;
 
 	std::vector<c_skinchanger::skin_type> create_skin_list();
 	std::vector<c_skinchanger::skin_type> g_skin_list;
@@ -92,6 +96,7 @@ private:
 	create_interface cache_fact;
 	create_interface phys_fact;
 	create_interface input_fact;
+	create_interface match_fact;
 };
 
 extern c_weebware g_weebware;

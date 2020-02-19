@@ -1,3 +1,4 @@
+#include "Header.h"
 #include "Ragebot.h"
 
 namespace ragebot

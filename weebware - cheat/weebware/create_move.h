@@ -20,7 +20,6 @@ public:
 	bool is_visible(c_base_entity* target);
 	void auto_strafe(c_usercmd* cmd);
 	void slidewalk(c_usercmd* cmd);
-	void auto_queue();
 	void disable_post_processing();
 	void draw_grenade_trajectory();
 	bool grenade_traj_disabled = false;

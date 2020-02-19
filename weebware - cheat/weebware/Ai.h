@@ -25,7 +25,8 @@ class c_ai
 {
 public:
 	void create_move(c_usercmd* cmd, c_base_entity* local);
-
+	void auto_queue();
+	bool needs_queue = true;
 
 private:
 	c_base_entity* m_local;

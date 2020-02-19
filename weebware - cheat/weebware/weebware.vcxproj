@@ -89,6 +89,8 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <ExceptionHandling>Async</ExceptionHandling>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -96,6 +98,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -147,8 +151,15 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="dme.cpp" />
     <ClCompile Include="glovechanger.cpp" />
-    <ClCompile Include="imesp.cpp" />
-    <ClCompile Include="imgui_widgets.cpp" />
+    <ClCompile Include="Header.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="legit_aa.cpp" />
     <ClCompile Include="networking.cpp" />
     <ClCompile Include="Ragebot.cpp" />
     <ClCompile Include="scene_end.cpp" />
@@ -160,24 +171,75 @@
     <ClCompile Include="graphics.cpp" />
     <ClCompile Include="gui_baserelational.cpp" />
     <ClCompile Include="authentication.cpp" />
-    <ClCompile Include="imgui\dx9\imgui_dx9.cpp" />
-    <ClCompile Include="imgui\imgui.cpp" />
-    <ClCompile Include="imgui\imgui_draw.cpp" />
-    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
-    <ClCompile Include="imgui_custom.cpp" />
+    <ClCompile Include="imgui\dx9\imgui_dx9.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="imgui_custom.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="nightmode.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\IatHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VFuncSwapHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VTableSwapHook.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x64Detour.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp" />
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\IatHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VFuncSwapHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VTableSwapHook.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x64Detour.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="knife_proxy_hook.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="visuals_shared.cpp" />
@@ -209,8 +271,8 @@
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="gui.h" />
     <ClInclude Include="icon_font.h" />
-    <ClInclude Include="imesp.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
+    <ClInclude Include="legit_aa.h" />
     <ClInclude Include="networking.h" />
     <ClInclude Include="Ragebot.h" />
     <ClInclude Include="raleway_font.h" />

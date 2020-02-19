@@ -9,6 +9,47 @@ CSGO Automated by Kite.
 
 c_ai g_ai;
 
+void c_ai::auto_queue() {
+
+	using create_session_fn = void* (__stdcall*)(void);
+	using handle_match_start_fn = bool(__thiscall*)(void*, const char*, char*, char*, char*);
+
+	static auto singleton = *(uint8_t**)(g_weebware.pattern_scan("client_panorama.dll", "A1 ? ? ? ? 85 C0 75 2F A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 13 8B C8 E8 ? ? ? ? A3 ? ? ? ? 8B C8 E9 ? ? ? ? 33 C0 A3 ? ? ? ? 8B C8 E9 ? ? ? ? CC 55 8B EC 8B 4D 08") + 1);
+	static auto handle_match_start = (handle_match_start_fn)g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 51 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01");
+	static auto create_session = (create_session_fn)g_weebware.pattern_scan_from_call("client_panorama.dll", "E8 ? ? ? ? 83 EC 14 E8");
+
+	if (!needs_queue)
+		return;
+
+	static auto search_started = []() {
+		if (!singleton)
+			return false;
+		if (auto ls = *(uint8_t**)singleton; ls) {
+			return *(uint32_t*)(ls + 12) != 0;
+		}
+		return false;
+	};
+
+	auto match_session = g_weebware.g_matchframework->get_match_session();
+
+	if (match_session) {
+		if (!search_started() || needs_queue) {
+			auto session_settings = match_session->get_session_settings();
+			session_settings->set_string("game/type", "classic");
+			session_settings->set_string("game/mode", "casual");
+			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
+			match_session->update_session_settings(session_settings);
+			handle_match_start(*(uint8_t**)singleton, "", "", "", "");
+			needs_queue = false;
+		}
+	}
+	else {
+		create_session();
+	}
+
+}
+
+
 void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 {
 	m_localview = cmd->viewangles;
