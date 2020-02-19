@@ -1,3 +1,4 @@
+#include "Header.h"
 #include "authentication.h"
 
 __int64 auth::GetEpochMS() {

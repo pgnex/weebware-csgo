@@ -1,3 +1,4 @@
+#include "Header.h"
 #include "visuals_shared.h"
 
 Vector center_hitbox(c_base_entity* ent, int id)
