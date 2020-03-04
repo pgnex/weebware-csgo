@@ -1,6 +1,0 @@
-[
-    "https://auth.weebware.net/dependencies/gasaiyuno.zip",
-    "https://auth.weebware.net/dependencies/inori.zip",
-    "https://auth.weebware.net/dependencies/reinakousaka.zip",
-    "https://auth.weebware.net/dependencies/kimono.zip"
-]
