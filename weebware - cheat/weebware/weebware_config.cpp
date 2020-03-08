@@ -75,7 +75,7 @@ void c_config_list::load_browser_config() {
 	if (g_config_list.cur_secret == "")
 		return;
 
-	networking::download_file("https://auth.weebware.net/configs/" + g_config_list.cur_secret + ".weebware", "c:/weebware/cfgs/" + g_config_list.cur_config_browser_name + (std::string)".weebware");
+	networking::download_file("https://api.weebware.net/configs/" + g_config_list.cur_secret + ".weebware", "c:/weebware/cfgs/" + g_config_list.cur_config_browser_name + (std::string)".weebware");
 	load_weebware_config(g_config_list.cur_config_browser_name + ".weebware");
 	std::string full_config = weebware_dir;
 	full_config.append("\\");
