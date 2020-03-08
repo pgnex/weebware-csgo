@@ -25,7 +25,7 @@ void c_ai::auto_queue() {
 		if (!singleton)
 			return false;
 		if (auto ls = *(uint8_t**)singleton; ls) {
-			return *(uint32_t*)(ls + 12) != 0;
+			return *(uint32_t*)(ls + 0xC) != 0;
 		}
 		return false;
 	};
@@ -35,8 +35,8 @@ void c_ai::auto_queue() {
 	if (match_session) {
 		if (!search_started() || needs_queue) {
 			auto session_settings = match_session->get_session_settings();
-			session_settings->set_string("game/type", "classic");
-			session_settings->set_string("game/mode", "casual");
+			session_settings->set_string("game/type", "gungame");
+			session_settings->set_string("game/mode", "deathmatch");
 			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
 			match_session->update_session_settings(session_settings);
 			handle_match_start(*(uint8_t**)singleton, "", "", "", "");
