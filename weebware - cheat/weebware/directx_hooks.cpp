@@ -155,7 +155,7 @@ void gui::imgui_main() {
 		ImGui::SetWindowSize(ImVec2(800, 600));
 
 
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+		ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 0.f);
 		style.ItemSpacing = ImVec2(0, 6);
 		ImGui::Columns(5, "columns", false);
@@ -206,7 +206,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("legit11", 1);
 
 			ImGui::SetColumnWidth(2, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("legit 1", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("legitgb1");
 			imgui_custom::horizontal_margin("legittxtmargintop1", 2);
@@ -214,7 +214,7 @@ void gui::imgui_main() {
 
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot == 2)
-				imgui_custom::custom_key_button(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
 
 			const char* activation_type_trigger[] = { "Off", "On Fire", "On Key", "Magnetic" };
 
@@ -269,7 +269,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("legit22", 1);
 
 			ImGui::SetColumnWidth(3, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 
 			ImGui::BeginChild("legit 2", ImVec2(0, 340), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("legitgb2");
@@ -278,7 +278,7 @@ void gui::imgui_main() {
 			ImGui::Text("Activation type");
 
 			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active == 1)
-				imgui_custom::custom_key_button(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key, key_counter);
 
 
 			const char* activation_type[] = { "Off", "On Key", "Active" };
@@ -347,7 +347,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("vis1");
 
 			ImGui::SetColumnWidth(2, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("misc 1", ImVec2(0, 340), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("visgb1");
 			imgui_custom::horizontal_margin("vistxtmargintop1", 2);
@@ -355,7 +355,7 @@ void gui::imgui_main() {
 
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.enable_visuals == 2) {
-				imgui_custom::custom_key_button(g_weebwarecfg.enable_visuals_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.enable_visuals_key, key_counter);
 			}
 
 			const char* activation_type[] = { "Off", "Enabled", "On Key" };
@@ -454,7 +454,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("vis2");
 
 			ImGui::SetColumnWidth(3, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("misc 3", ImVec2(0, 400), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("visgb3");
 			imgui_custom::horizontal_margin("vistxtmargintop3", 2);
@@ -554,7 +554,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("misc1");
 
 			ImGui::SetColumnWidth(2, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("misc 1", ImVec2(0, 350), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("miscgb1");
 			imgui_custom::horizontal_margin("misctxtmargintop1", 2);
@@ -594,17 +594,17 @@ void gui::imgui_main() {
 
 			ImGui::Checkbox("Block Bot", &g_weebwarecfg.block_bot);
 			if (g_weebwarecfg.block_bot) {
-				imgui_custom::custom_key_button(g_weebwarecfg.block_bot_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.block_bot_key, key_counter);
 			}
 
 			ImGui::Checkbox("Auto Pistol", &g_weebwarecfg.auto_pistol);
 			if (g_weebwarecfg.auto_pistol) {
-				imgui_custom::custom_key_button(g_weebwarecfg.auto_pistol_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_pistol_key, key_counter);
 			}
 
 			ImGui::Checkbox("Auto Defuse", &g_weebwarecfg.auto_defuse);
 			if (g_weebwarecfg.auto_defuse) {
-				imgui_custom::custom_key_button(g_weebwarecfg.auto_defuse_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.auto_defuse_key, key_counter);
 			}
 
 			ImGui::EndChild();
@@ -623,7 +623,7 @@ void gui::imgui_main() {
 			}
 			ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump);
 			if (g_weebwarecfg.edge_jump)
-				imgui_custom::custom_key_button(g_weebwarecfg.edge_jump_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
 			if (g_weebwarecfg.edge_jump) {
 				ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air);
 			}
@@ -641,7 +641,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("misc2");
 
 			ImGui::SetColumnWidth(3, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("misc 3", ImVec2(0, 240), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("miscgb3");
 			imgui_custom::horizontal_margin("misctxtmargintop3", 2);
@@ -667,7 +667,7 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Fake Lag");
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.fake_lag == 1)
-				imgui_custom::custom_key_button(g_weebwarecfg.fake_lag_key);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.fake_lag_key, key_counter);
 
 			const char* fakelag_type[] = { "Off", "On Key", "Always On" };
 			imgui_custom::a_better_combo_box("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
@@ -696,7 +696,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("skins1");
 
 			ImGui::SetColumnWidth(2, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("skins 1", ImVec2(0, 100), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("skinsgb1");
 			imgui_custom::horizontal_margin("skinstxtmargintop1", 2);
@@ -754,8 +754,8 @@ void gui::imgui_main() {
 				imgui_custom::a_better_combo_box("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
 				// https://gamebanana.com/skins/148058
 
-				ImGui::PushStyleColor(ImGuiCol_Button, ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+				ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 
 				if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25))) {
@@ -784,7 +784,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("skins2");
 
 			ImGui::SetColumnWidth(3, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("skins 5", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("skinsgb4");
 			imgui_custom::horizontal_margin("skinstxtmargintop4", 2);
@@ -796,7 +796,7 @@ void gui::imgui_main() {
 				ImGui::InputInt("Kills", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_kill_count);
 
 			ImGui::Text("Nametag");
-			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+			ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 			if (ImGui::InputText("##weaponname", g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf, ARRAYSIZE(g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf)))
 			{
 				g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name = g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].weapon_name_buf;
@@ -805,13 +805,13 @@ void gui::imgui_main() {
 
 			ImGui::Text("Wear");
 			imgui_custom::a_better_slider_float("##Wearskins", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_wear, 0, 100, "%.0f%%");
-			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+			ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 			ImGui::InputInt("Seed", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].m_seed);
 			ImGui::PopStyleColor();
 			
 			ImGui::PushItemWidth(ImGui::GetContentRegionAvailWidth() - 5);
 			imgui_custom::custom_label_header("Skins");
-			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+			ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 			ImGui::InputText("##Search Skin", g_config_list.skinchanger_skinsearch, ARRAYSIZE(g_config_list.skinchanger_skinsearch));
 			ImGui::PopStyleColor();
 			ImGui::PopItemWidth();
@@ -830,8 +830,8 @@ void gui::imgui_main() {
 				}
 			}
 			ImGui::EndChild();
-			ImGui::PushStyleColor(ImGuiCol_Button, ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+			ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 			if (ImGui::Button("Force Update", ImVec2(ImGui::GetContentRegionAvailWidth() - 5, 25))) {
 				g_weebwarecfg.skinchanger_apply_nxt = 1;
@@ -861,7 +861,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("cfggm1");
 
 			ImGui::SetColumnWidth(2, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("cfg 1", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("cfggb1");
 			imgui_custom::horizontal_margin("cfgtxtmargintop1", 2);
@@ -870,8 +870,8 @@ void gui::imgui_main() {
 			ImGui::InputText("Config Name", g_config_list.cur_save_name, ARRAYSIZE(g_config_list.cur_save_name));
 
 
-			ImGui::PushStyleColor(ImGuiCol_Button, ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+			ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 			if (ImGui::Button("Save", ImVec2(80, 20)))
 			{
@@ -933,7 +933,7 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("cfg2");
 
 			ImGui::SetColumnWidth(3, 328);
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("cfg 3", ImVec2(0, 260), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("cfggb3");
 			imgui_custom::horizontal_margin("cfgtxtmargintop3", 2);
@@ -952,8 +952,8 @@ void gui::imgui_main() {
 			ImGui::EndChild();
 			float your_config_width = ImGui::GetContentRegionAvailWidth() - 12;
 
-			ImGui::PushStyleColor(ImGuiCol_Button, ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+			ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 			if (ImGui::Button("Refresh##yours", ImVec2(your_config_width / 3, 20)))
 			{
@@ -962,8 +962,11 @@ void gui::imgui_main() {
 			ImGui::SameLine();
 			if (ImGui::Button("Load##yours", ImVec2(your_config_width / 3, 20)))
 			{
-				g_config_list.load_config_from_memory(g_config_list.cur_id_yours);
-				g_weebwarecfg.skinchanger_apply_nxt = 1;
+				if (g_config_list.cur_id_yours) {
+
+					g_config_list.load_config_from_memory(g_config_list.cur_id_yours);
+					g_weebwarecfg.skinchanger_apply_nxt = 1;
+				}
 			}
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
@@ -973,7 +976,7 @@ void gui::imgui_main() {
 
 			ImGui::PopStyleColor();
 
-			ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
+			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
 			ImGui::BeginChild("cfg 4", ImVec2(0, ImGui::GetContentRegionAvail().y - 24), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("cfggb4");
 			imgui_custom::horizontal_margin("cfgtxtmargintop3", 2);
@@ -992,8 +995,8 @@ void gui::imgui_main() {
 			ImGui::EndChild();
 			float fav_config_width = ImGui::GetContentRegionAvailWidth() - 12;
 
-			ImGui::PushStyleColor(ImGuiCol_Button, ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+			ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 			if (ImGui::Button("Refresh##fav", ImVec2(fav_config_width / 3, 20)))
 			{
@@ -1002,8 +1005,11 @@ void gui::imgui_main() {
 			ImGui::SameLine();
 			if (ImGui::Button("Load##fav", ImVec2(fav_config_width / 3, 20)))
 			{
-				g_config_list.load_config_from_memory(g_config_list.cur_id_fav);
-				g_weebwarecfg.skinchanger_apply_nxt = 1;
+				if (g_config_list.cur_id_fav) {
+
+					g_config_list.load_config_from_memory(g_config_list.cur_id_fav);
+					g_weebwarecfg.skinchanger_apply_nxt = 1;
+				}
 			}
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
@@ -1018,7 +1024,6 @@ void gui::imgui_main() {
 			ImGui::SetColumnWidth(4, 8);
 
 			ImGui::EndColumns();
-
 
 			// end tab
 		}

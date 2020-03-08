@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 0
+#define WEEBWARE_RELEASE 1
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -100,6 +100,8 @@ bool c_weebware::init_interfaces( )
 	init_fonts( );
 
 	g_config_list.update_all_configs( );
+	g_config_list.get_favorited_configs();
+	g_config_list.get_your_configs();
 
 	knife_hook.knife_animation( );
 
