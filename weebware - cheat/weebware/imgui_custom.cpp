@@ -31,7 +31,7 @@ char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
 	auto& style = ImGui::GetStyle();
 
 	// Set it to the same color as background
-	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
+	style.Colors[ImGuiCol_Button] = imgui_custom::imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
 	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
 	style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
 
@@ -95,30 +95,16 @@ char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
 
 void imgui_custom::custom_inline_keyinput(int& key, int& id)
 {
-
-	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
-
-	// Get the style.
-	auto& style = ImGui::GetStyle();
-
-	// Set it to the same color as background
-	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
-	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
-	style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(17.f, 17.f, 17.f, 255.f));
-
+	id++;
 
 	static auto has_input = 0xDEDFED;
+	std::string button_text = "Select a Key";
 
-	std::string button_text = "[";
-	// Display original text.
 	if (key && key != has_input)
 	{
-		button_text.append(KeyboardKeys[key]);
+		button_text = KeyboardKeys[key];
 	}
-	else
-	{
-		button_text.append("-");
-	}
+
 	// Some values
 	static bool CurrentKeys[256][99] = { false };
 	static bool LastKeys[256][99] = { false };
@@ -131,7 +117,6 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 		if (GetAsyncKeyState(i)) CurrentKeys[i][id] = true;
 		else CurrentKeys[i][id] = false;
 	}
-	button_text.append("]");
 
 	// Stupid imgui
 	button_text.append("##");
@@ -139,9 +124,9 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 	button_text.append(std::to_string(id));
 
 	// Define unique key.
+	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
 	if (ImGui::Button(button_text.c_str(), ImVec2(80, 20)))
 	{
-		// printf("WUBBA LUBBA DUB DUB\n");
 		bSelected[id] = true;
 		key = has_input;
 	}
@@ -158,11 +143,6 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 			}
 		}
 	}
-
-	// Restore original.
-	style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
-	style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(30.f, 30.f, 30.f, 255.f));
-	style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.161f, 0.502f, 0.725f, 1.0f);
 
 	//++id;
 
@@ -203,8 +183,9 @@ void imgui_custom::custom_inline_keyinput(int& key, int& id)
 
 
 
-void imgui_custom::custom_key_button(int& key)
+void imgui_custom::custom_key_button(int& key, int& id)
 {
+	id++;
 
 	ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 80);
 
@@ -231,6 +212,9 @@ void imgui_custom::custom_key_button(int& key)
 		if (GetAsyncKeyState(i)) CurrentKeys[i] = true;
 		else CurrentKeys[i] = false;
 	}
+
+	button_text.append("##");
+	button_text.append(std::to_string(id));
 
 	// Define unique key.
 	if (ImGui::Button(button_text.c_str(), ImVec2(80, 20)))
@@ -259,7 +243,7 @@ void imgui_custom::custom_label_header(std::string text) {
 	ImGui::PushFont(g_weebware.pFont[1]);
 	ImGui::Text(text.c_str());
 	ImGui::PopFont();
-	style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(92, 92, 92, 255));
+	style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(92, 92, 92, 255));
 }
 
 
@@ -277,13 +261,13 @@ void imgui_custom::custom_color_options(ImVec4& col, const char* name)
 {
 	ImGui::Text(name); ImGui::SameLine(ImGui::GetContentRegionAvailWidth() - 30);
 
-	if (ImGui::ColorButton(name, ConvertFromRGBA(col)))
+	if (ImGui::ColorButton(name, imgui_custom::ConvertFromRGBA(col)))
 	{
 		ImGui::OpenPopup(name);
 	}
 	if (ImGui::BeginPopup(name))
 	{
-		ImVec4 toRgb = ConvertFromRGBA(col);
+		ImVec4 toRgb = imgui_custom::ConvertFromRGBA(col);
 		ImGui::ColorPicker4("", (float*)&toRgb, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_AlphaBar);
 		col = ConvertToRGBA(toRgb);
 		ImGui::EndPopup();
@@ -301,7 +285,7 @@ void imgui_custom::custom_color_inline(ImVec4& col, const char* id)
 	}
 	if (ImGui::BeginPopup(id))
 	{
-		ImVec4 toRgb = ConvertFromRGBA(col);
+		ImVec4 toRgb = imgui_custom::ConvertFromRGBA(col);
 		ImGui::ColorPicker4("", (float*)&toRgb, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_AlphaBar);
 		col = ConvertToRGBA(toRgb);
 		ImGui::EndPopup();
@@ -334,13 +318,13 @@ void imgui_custom::custom_color_inline(ImVec4& col, ImVec4& col2, bool should_dr
 
 		std::string ids = id2;
 
-		if (ImGui::ColorButton(ids.c_str(), ConvertFromRGBA(col2)))
+		if (ImGui::ColorButton(ids.c_str(), imgui_custom::ConvertFromRGBA(col2)))
 		{
 			ImGui::OpenPopup(ids.c_str());
 		}
 		if (ImGui::BeginPopup(ids.c_str()))
 		{
-			ImVec4 toRgb = ConvertFromRGBA(col2);
+			ImVec4 toRgb = imgui_custom::ConvertFromRGBA(col2);
 			ImGui::ColorPicker4("", (float*)&toRgb, ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_AlphaBar);
 			col2 = ConvertToRGBA(toRgb);
 			ImGui::EndPopup();
@@ -355,17 +339,17 @@ void imgui_custom::create_button_tab(int& tab, int set, const char* title, int w
 
 	if (tab == set)
 	{
-		style.Colors[ImGuiCol_Button] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
-		style.Colors[ImGuiCol_ButtonHovered] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
-		style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
+		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(16, 16, 16, 255.f));
+		style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(217, 80, 196, 255.f));
 	}
 	else
 	{
-		style.Colors[ImGuiCol_Button] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
-		style.Colors[ImGuiCol_ButtonHovered] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
-		style.Colors[ImGuiCol_ButtonActive] = ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
-		style.Colors[ImGuiCol_Text] = ConvertFromRGBA(ImVec4(92, 92, 92, 255));
+		style.Colors[ImGuiCol_Button] = imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_ButtonHovered] = imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_ButtonActive] = imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255.f));
+		style.Colors[ImGuiCol_Text] = imgui_custom::ConvertFromRGBA(ImVec4(92, 92, 92, 255));
 	}
 
 
@@ -376,26 +360,26 @@ void imgui_custom::create_button_tab(int& tab, int set, const char* title, int w
 }
 
 void imgui_custom::horizontal_margin(std::string tag, int margin) {
-	ImGui::PushStyleColor(ImGuiCol_ChildBg, ConvertFromRGBA(ImVec4(0, 0, 0, 0)));
+	ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(0, 0, 0, 0)));
 	ImGui::BeginChild(("margin##" + tag).c_str(), ImVec2(0, margin));
 	ImGui::EndChild();
 	ImGui::PopStyleColor();
 }
 
 void imgui_custom::a_better_slider_float(const char* label, float* v, float v_min, float v_max, const char* format) {
-	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 	ImGui::SliderFloat(label, v, v_min, v_max, format);
 	ImGui::PopStyleColor();
 }
 
 void imgui_custom::a_better_slider_int(const char* label, int* v, int v_min, int v_max, const char* format) {
-	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 	ImGui::SliderInt(label, v, v_min, v_max, format);
 	ImGui::PopStyleColor();
 }
 
 void imgui_custom::a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items) {
-	ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
 	ImGui::Combo(label, current_item, items, items_count);
 	ImGui::PopStyleColor();
 }

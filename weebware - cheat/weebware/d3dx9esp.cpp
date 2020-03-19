@@ -7,8 +7,6 @@
 
 c_draw draw;
 
-void reclass_test(c_base_entity* local);
-
 void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	static bool init = false;
 
@@ -293,12 +291,19 @@ void c_d3dxesp::render_weapon(s_boundaries bounds, c_base_entity* ent) {
 	if (!bounds.has_w2s)
 		return;
 
-	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(ent->m_pActiveWeapon()->m_iItemDefinitionIndex());
+	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
 
-	if (!weapon_data)
+	if (!weapon || weapon == nullptr)
 		return;
 
-	std::string weapon_name = weapon_data->name;
+	if (!weapon->is_firearm())
+		return;
+
+	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())
+		return;
+
+
+	std::string weapon_name = weapon->get_weapon_name_from_id();
 	
 	int tw = draw.GetTextWidth(weapon_name.c_str(), tahoma);
 	int th = draw.GetTextHeight(weapon_name.c_str(), tahoma);
@@ -320,18 +325,18 @@ void c_d3dxesp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 	if (!bounds.has_w2s)
 		return;
 
-	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(ent->m_pActiveWeapon()->m_iItemDefinitionIndex());
+	c_basecombat_weapon* weapon = ent->m_pActiveWeapon();
 
-	if (!weapon_data)
+	if (!weapon)
 		return;
 
-	int max_ammo = weapon_data->max_ammo;
-//	int current_ammo = weapon_data->m_iAmmo;
+	int max_ammo = weapon->m_iPrimaryReserveAmmoCount();
+	int current_ammo = weapon->Clip1();
 
-	std::string out = "??/" + std::to_string(max_ammo);
+	std::string out = std::to_string(current_ammo) + "/" + std::to_string(max_ammo);
 
 
-	if (weapon_data->type == weapon_info_type::WEAPON_KNIFE)
+	if (weapon->is_knife())
 		out = "Infinite";
 
 	int offset = 0;
@@ -351,17 +356,15 @@ void c_d3dxesp::draw_sniper_crosshair() {
 	if (!g_weebwarecfg.visuals_sniper_crosshair)
 		return;
 
-	c_weapon_info* weapon_data = g_weebware.g_weapon_system->GetWpnData(local->m_pActiveWeapon()->m_iItemDefinitionIndex());
+	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
 
-	if (!weapon_data)
+	if (!weapon || weapon == nullptr)
 		return;
 
-	// make sure it is a weapon
-	if (weapon_data->type < weapon_info_type::WEAPON_KNIFE || weapon_data->type > weapon_info_type::WEAPON_SNIPER)
+	if (!weapon->is_firearm())
 		return;
 
-	// make sure its a sniper 
-	if (!weapon_data->type == weapon_info_type::WEAPON_SNIPER)
+	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())
 		return;
 
 
@@ -642,7 +645,6 @@ void c_d3dxesp::spectator_list(c_base_entity* ent) {
 	g_weebware.g_engine->get_player_info(obv->EntIndex(), &target_info);
 
 	if (strcmp(local_info.name, target_info.name) == 0) {
-		spec_count++;
 
 		int sw, sh, tw, th;
 		g_weebware.g_engine->get_screen_dimensions(sw, sh);
@@ -654,6 +656,8 @@ void c_d3dxesp::spectator_list(c_base_entity* ent) {
 		th = draw.GetTextHeight(spec_name.c_str(), tahoma_large);
 		std::transform(spec_name.begin(), spec_name.end(), spec_name.begin(), ::tolower);
 		draw.Text(spec_name.c_str(), (sw - tw) - 5, (spec_count * th) + 2, lefted, tahoma_large, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
+
+		spec_count++;
 	}
 
 }

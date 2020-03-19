@@ -1,6 +1,7 @@
 #pragma once
 #ifndef SHARED
 #define SHARED
+#define DEBUG_HOOKS 0
 
 #include "Header.h"
 #include "IViewRenderBeams.h"

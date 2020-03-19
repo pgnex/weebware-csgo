@@ -3,7 +3,7 @@
 
 namespace imgui_custom
 {
-	void custom_key_button(int& key);
+	void custom_key_button(int& key, int& id);
 
 	inline ImVec4 ConvertFromRGBA(ImVec4 imVec);
 

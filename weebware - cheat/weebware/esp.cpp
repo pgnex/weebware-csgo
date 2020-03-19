@@ -845,6 +845,14 @@ void c_esp::draw_fov_circle() {
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
 
+	float vm = 0;
+
+#if DEBUG_HOOKS
+	vm = PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
+#else
+	vm = g_hooking.o_vm();
+#endif
+
 	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(g_hooking.o_vm()) / 2) * x;
 
 	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);

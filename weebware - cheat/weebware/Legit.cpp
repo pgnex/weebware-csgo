@@ -1,3 +1,4 @@
+#include "Header.h"
 #include "Legit.h"
 #include "esp.h"
 
@@ -206,7 +207,7 @@ c_base_entity* c_legitbot::closest_target_available()
 		view_angles += m_local->m_aimPunchAngle() * 2.f;
 
 		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
-		float this_fov = g_maths.get_fov(view_angles, angle_to_head, g_weebwarecfg.legit_cfg[get_config_index()].use_dynamicfov, Vector(m_local->get_vec_eyepos() - center_head).size());
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head, false, Vector(m_local->get_vec_eyepos() - center_head).size());
 		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
 
 		if (normal_fov < closest_fov) {
@@ -433,6 +434,33 @@ QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 
 	std::vector<int> aim_spots;
 
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_all)
+	{
+		for (int i = 0; i != csgohitboxid::max; i++) {
+			aim_spots.push_back(static_cast<csgohitboxid>(i));
+		}
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_legs)
+	{
+		aim_spots.push_back(csgohitboxid::right_thigh);
+		aim_spots.push_back(csgohitboxid::left_thigh);
+		aim_spots.push_back(csgohitboxid::right_calf);
+		aim_spots.push_back(csgohitboxid::left_calf);
+		aim_spots.push_back(csgohitboxid::right_foot);
+		aim_spots.push_back(csgohitboxid::left_foot);
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_arms)
+	{
+		aim_spots.push_back(csgohitboxid::right_hand);
+		aim_spots.push_back(csgohitboxid::left_hand);
+		aim_spots.push_back(csgohitboxid::right_upper_arm);
+		aim_spots.push_back(csgohitboxid::right_forearm);
+		aim_spots.push_back(csgohitboxid::left_upper_arm);
+		aim_spots.push_back(csgohitboxid::left_forearm);
+	}
+
 	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_head)
 	{
 		aim_spots.push_back(csgohitboxid::head);
@@ -559,7 +587,7 @@ void c_legitbot::c_accuracy_boost::invalidate_bone_cache(c_base_entity* entity)
 	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client_panorama.dll", "80 3D ?? ?? ?? ?? ?? 74 16 A1 ?? ?? ?? ?? 48 C7 81");
 	uintptr_t iModelBoneCounter = **(uintptr_t**)(dwBoneCache + 10);
 	*(uintptr_t*)((DWORD)entity + 0x2914) = 0xFF7FFFFF;
-	*(uintptr_t*)((DWORD)entity + 0x2680) = (iModelBoneCounter - 1);
+	*(uintptr_t*)((DWORD)entity + 0x2680) = (iModelBoneCounter - 1); 
 }
 
 
@@ -705,7 +733,7 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 	// Create some records...
 	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
-		c_base_entity * cur_entity = g_weebware.g_entlist->getcliententity(i);
+		c_base_entity* cur_entity = g_weebware.g_entlist->getcliententity(i);
 
 		if (!cur_entity->is_valid_player())
 			continue;
@@ -719,10 +747,13 @@ void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
 		if (cur_entity->m_bGunGameImmunity())
 			continue;
 
+		if (cur_entity->is_stationary())
+			continue;
+
 		accuracy_records.push_back(create_record(cur_entity, cmd));
 	}
 
-	float marginal_fov = 180.f;
+	float marginal_fov = 20;
 
 	for (size_t i = 0; i < accuracy_records.size(); i++)
 	{
@@ -1048,6 +1079,16 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	HITGROUP_RIGHTLEG   7
 	HITGROUP_GEAR       10
 	*/
+
+	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_all) {
+		hitboxes.push_back(1);
+		hitboxes.push_back(2);
+		hitboxes.push_back(3);
+		hitboxes.push_back(4);
+		hitboxes.push_back(5);
+		hitboxes.push_back(6);
+		hitboxes.push_back(7);
+	}
 
 	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_head)
 		hitboxes.push_back(1);

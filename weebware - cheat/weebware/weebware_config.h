@@ -70,7 +70,7 @@ class c_legit_cfg
 {
 public:
 	int enable_legitbot;
-	int legitbot_activation_key;
+	int legitbot_activation_key = VK_XBUTTON2;
 	float maximum_fov;
 	float sensitivity;
 	int aimbot_target_switch_delay = 125;
@@ -80,15 +80,19 @@ public:
 	bool quick_stop;
 	bool aim_through_smoke;
 	bool aim_while_blind;
+	bool hitbox_all;
 	bool hitbox_head = true;
 	bool hitbox_chest;
 	bool hitbox_stomach;
+	bool hitbox_arms;
+	bool hitbox_legs;
 	bool standalone_rcs;
 	float standalone_rcs_power = 60.f;
 	int accuracy_boost;
 	bool silent_aim;
 	int triggerbot_active;
-	int triggerbot_key;
+	int triggerbot_key = VK_XBUTTON1;
+	bool triggerbot_all;
 	bool triggerbot_head = true;
 	bool triggerbot_chest;
 	bool triggerbot_stomach;
@@ -264,7 +268,7 @@ public:
 
 
 	int enable_visuals;
-	int enable_visuals_key;
+	int enable_visuals_key = 67;
 	bool visuals_watermark = true;
 	bool visuals_teammates;
 	bool visuals_bounding_box;
@@ -306,7 +310,7 @@ public:
 	int auto_pistol_key = VK_LBUTTON;
 	int auto_strafe = 0;
 	bool edge_jump;
-	int edge_jump_key = 0;
+	int edge_jump_key = VK_XBUTTON2;
 	bool duck_in_air;
 	bool misc_ai;
 	float misc_ai_legitfactor;
@@ -372,16 +376,16 @@ public:
 	int viewmodel_offset = 0;
 	int fake_lag = 0;
 	int fake_lag_factor = 0;
-	int fake_lag_key = 0;
+	int fake_lag_key = VK_XBUTTON1;
 	int glove_model;
 	bool glovechanger_enabled;
 	float glove_wearz = 100.f;
 	int glove_skin;
 	std::string glove_skin_cur;
 	bool block_bot;
-	int block_bot_key;
+	int block_bot_key = 86;
 	bool auto_defuse;
-	int auto_defuse_key;
+	int auto_defuse_key = VK_MENU;
 	bool no_duck_cooldown;
 	bool flashlight;
 	std::string weapon_option_name = "Weapon Options - None";

@@ -40,7 +40,11 @@ void hook_functions::frame_stage_notify(int curStage)
 	}
 	catch (...) {}
 
+#if DEBUG_HOOKS
+	PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
+#else
 	g_hooking.o_fsn(curStage);
+#endif
 
 	//if (g_weebwarecfg.no_recoil)
 	//	g_frame_stage_notify.no_vis_recoil(true);
@@ -381,6 +385,8 @@ void c_frame_stage_notify::run_skinchanger() {
 	if (!weapons)
 		return;
 
+	static bool knife_animation = false;
+
 	c_skinchanger::knife_type knife_cfg;
 	for (size_t i = 0; weapons[i] != 0xFFFFFFFF; i++) {
 		if (weapons[i] == 0xFFFFFFFF)
@@ -454,6 +460,11 @@ void c_frame_stage_notify::run_skinchanger() {
 				*weapon->get_original_owner_xuidlow() = 0;
 
 			}
+		}
+
+		if (!knife_animation && g_weebwarecfg.knifechanger_enabled) {
+			knife_hook.knife_animation();
+			knife_animation = true;
 		}
 
 		auto skin_config = g_weebwarecfg.skin_wheel[weapon_id];

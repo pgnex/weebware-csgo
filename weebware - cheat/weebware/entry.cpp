@@ -100,10 +100,10 @@ bool c_weebware::init_interfaces( )
 	init_fonts( );
 
 	g_config_list.update_all_configs( );
+#if WEEBWARE_RELEASE
 	g_config_list.get_favorited_configs();
 	g_config_list.get_your_configs();
-
-	knife_hook.knife_animation( );
+#endif
 
 	// initialise 
 	for ( auto i = 0; i < 35; i++ ) {

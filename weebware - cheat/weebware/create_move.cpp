@@ -1,5 +1,6 @@
 #include "Header.h"
 #include "events.h"
+#include "legit_aa.h"
 #include "shared.h"
 #include "create_move.h"
 #include "Legit.h"
@@ -13,8 +14,14 @@ c_utils g_utils;
 
 bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
 {
-	if ( cmd->command_number == 0 && sendpacket )
-		return g_hooking.o_createmove( g_weebware.g_client_mode, input_sample_time, cmd );
+	if (cmd->command_number == 0 && sendpacket) {
+#if !DEBUG_HOOKS
+		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
+#else
+		return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+#endif
+	}
+
 
 
 	if ( !cmd || !cmd->command_number ) {
@@ -43,6 +50,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_create_move.chat_spam( );
 	g_create_move.rank_reveal( );
 	g_create_move.slidewalk( cmd );
+	g_LegitAntiAim.Run(cmd);
 	g_create_move.auto_pistol( cmd );
 	g_create_move.auto_jumpbug( cmd );
 	g_create_move.rainbow_name( );
@@ -99,6 +107,7 @@ void load_named_sky( const char* sky_name ) {
 	static auto load_named_sky_fn = reinterpret_cast<Fn>(g_weebware.pattern_scan( ("engine.dll"), "55 8B EC 81 EC ? ? ? ? 56 57 8B F9 C7 45" ));
 	load_named_sky_fn( sky_name );
 }
+
 
 
 void c_create_move::skybox_changer( ) {
@@ -385,6 +394,7 @@ void c_create_move::rainbow_name( ) {
 		noname_done = false;
 	}
 }
+
 
 void c_create_move::auto_jump( c_usercmd* cmd ) {
 	if ( !g_weebwarecfg.auto_jump )

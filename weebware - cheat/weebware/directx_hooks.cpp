@@ -43,8 +43,14 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
 
-	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0)
+	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0) {
+#if DEBUG_HOOKS
+		return PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
+#else
 		return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
+#endif
+	}
+
 
 	pixelState->Capture();
 	device->GetVertexDeclaration(&vertexDeclaration);
@@ -59,7 +65,11 @@ long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RE
 	device->SetVertexShader(vertexShader);
 	device->SetVertexDeclaration(vertexDeclaration);
 
+#if DEBUG_HOOKS
+	return PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
+#else
 	return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
+#endif
 }
 
 long hook_functions::end_scene(IDirect3DDevice9* device)
@@ -92,8 +102,11 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	device->SetVertexDeclaration(vertDec);
 	device->SetVertexShader(vertShader);
 
-	//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
+#if !DEBUG_HOOKS
 	return g_hooking.o_endscene(device);
+#else
+	return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);;
+#endif
 }
 
 
@@ -102,7 +115,11 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 	g_d3dxesp.on_lost_device();
 
+#if DEBUG_HOOKS
+	auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
+#else
 	auto hr = g_hooking.o_reset(device, presentation_param);
+#endif
 
 	if (hr >= 0) {
 		ImGui_ImplDX9_CreateDeviceObjects();
@@ -245,9 +262,25 @@ void gui::imgui_main() {
 
 			ImGui::Checkbox("Aim while blind", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_while_blind);
 
-			ImGui::Checkbox("Head", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head);
-			ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest);
-			ImGui::Checkbox("Stomach", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach);
+			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(217, 80, 196, 255)));
+			ImGui::Text("Hitboxes");
+			ImGui::PopStyleColor();
+
+			ImGui::BeginChild("hitboxes##aimbot", ImVec2(0, ImGui::GetContentRegionAvail().y - 4), false);
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			if (ImGui::Selectable("All (overrides below)##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all; }
+			if (ImGui::Selectable("Head##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head; }
+			if (ImGui::Selectable("Chest##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest; }
+			if (ImGui::Selectable("Stomach##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach; }
+			if (ImGui::Selectable("Arms##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms; }
+			if (ImGui::Selectable("Legs##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs; }
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+			ImGui::EndChild();
+			//ImGui::Checkbox("Head", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head);
+			//ImGui::Checkbox("Chest", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest);
+			//ImGui::Checkbox("Stomach", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach);
 			ImGui::EndChild();
 
 			ImGui::PopStyleColor();
@@ -287,15 +320,25 @@ void gui::imgui_main() {
 			imgui_custom::a_better_slider_float("##Hitchance", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_hitchance, 0, 100, "%.0f%%");
 			ImGui::Text("Reaction time");
 			imgui_custom::a_better_slider_float("##Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_reaction, 0, 200, "%.0fms");
+		
+			
+			ImGui::PushStyleColor(ImGuiCol_Text, ConvertFromRGBA(ImVec4(217, 80, 196, 255)));
+			ImGui::Text("Hitboxes");
+			ImGui::PopStyleColor();
 
-			ImGui::Checkbox("Head##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head);
-			ImGui::SameLine();
-			ImGui::Checkbox("Chest##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest);
-			ImGui::SameLine();
-			ImGui::Checkbox("Stomach##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach);
-			ImGui::Checkbox("Arms##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms);
-			ImGui::SameLine();
-			ImGui::Checkbox("Legs##tb", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs);
+		//	ImGui::BeginChild("hitboxes##trigger", ImVec2(0, ImGui::GetContentRegionAvail().y - 4), false);
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			if (ImGui::Selectable("All (overrides below)##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all; }
+			if (ImGui::Selectable("Head##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head; }
+			if (ImGui::Selectable("Chest##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest; }
+			if (ImGui::Selectable("Stomach##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach; }
+			if (ImGui::Selectable("Arms##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_arms; }
+			if (ImGui::Selectable("Legs##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_legs; }
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
+		//	ImGui::EndChild();
+
 			imgui_custom::custom_label_header("Magnet Triggerbot");
 			ImGui::Checkbox("Enable##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled);
 			ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet);

@@ -13,7 +13,9 @@ gui g_gui;
 
 void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_PAINT->getProtectionObject();
+#endif
 
 	if (g_weebwarecfg.auto_queue) {
 		if (!g_weebware.g_engine->is_connected() && !g_weebware.g_engine->is_in_game()) {
@@ -31,14 +33,24 @@ void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
 		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel"))
 			g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
 
+#if DEBUG_HOOKS
+		 PLH::FnCast(g_hooking.paint_tramp, g_hooking.o_painttraverse)(g_weebware.g_panel, v, f, a);
+#else
 		g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
+#endif
 	}
 }
 
 
 bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_CM->getProtectionObject();
+	//auto orig = g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
+#else
+	auto orig = PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+#endif
+
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
@@ -53,13 +65,13 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 	else
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
 
-	//	return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
-
 }
 
 long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_RESET->getProtectionObject();
+#endif
 
 	return hook_functions::reset(device, presentation_param);
 }
@@ -68,12 +80,18 @@ long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* present
 bool font_setup = false;
 long __stdcall hk_endscene(IDirect3DDevice9* device)
 {
+
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
+//	auto orig = g_hooking.o_endscene(device);
 
 	if (!g_weebwarecfg.obs_proof) {
-		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
 	}
+#else
+	auto orig = PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
+#endif
+
 
 	static uintptr_t gameoverlay_return_address = 0;
 
@@ -89,7 +107,6 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	}
 
 	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress())) {
-		//return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 		return g_hooking.o_endscene(device);
 	}
 
@@ -101,7 +118,12 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 
 long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_PRESENT->getProtectionObject();
+//	auto orig = g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
+#else
+	auto orig = PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
+#endif
 
 	if (!g_weebwarecfg.obs_proof) {
 		return hook_functions::present(device, src, dest, wnd_override, dirty_region);		
@@ -113,14 +135,16 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 
 void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_DME->getProtectionObject();
+#endif
 
 	//if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 	////	hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 	//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	//}
 	//else
-		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+	//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 
 	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	//
@@ -129,10 +153,12 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 
 void __fastcall hk_scene_end(void* thisptr, void* edx) {
 
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_SCENEEND->getProtectionObject();
-
 	g_hooking.o_sceneend(thisptr, edx);
-	//PLH::FnCast(g_hooking.sceneend_tramp, g_hooking.o_sceneend)(thisptr, edx);
+#else
+	PLH::FnCast(g_hooking.sceneend_tramp, g_hooking.o_sceneend)(thisptr, edx);
+#endif
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		hook_functions::scene_end(thisptr, edx);
@@ -157,7 +183,13 @@ bool PrecacheModel(const char* szModelName)
 
 MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 {
+
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
+//	auto orig = g_hooking.o_mdl(ecx, edx, FilePath);
+#else
+	auto orig = PLH::FnCast(g_hooking.mdl_tramp, g_hooking.o_mdl)(ecx, edx, FilePath);
+#endif
 
 	if (!g_weebware.models_installed)
 		return g_hooking.o_mdl(ecx, edx, FilePath);
@@ -171,13 +203,18 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 }
 
 float __stdcall hk_viewmodel() {
-
+#if DEBUG_HOOKS
+	auto orig = PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
+#else
 	auto protecc = g_hooking.VEH_VM->getProtectionObject();
+	//auto orig = g_hooking.o_vm();
+#endif
 
 	if (!g_weebwarecfg.viewmodel_changer)
 		return g_hooking.o_vm();
 
 	auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
 
 	if (local_player && local_player->is_valid_player()) {
 		return g_hooking.o_vm() + g_weebwarecfg.viewmodel_offset;
@@ -189,22 +226,21 @@ float __stdcall hk_viewmodel() {
 
 void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_FSN->getProtectionObject();
+#endif
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		hook_functions::frame_stage_notify(curStage);
-	else
+	else {
+#if DEBUG_HOOKS
+		PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
+#else
 		g_hooking.o_fsn(curStage);
-	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
+#endif
+	}
 }
 // 80 B9 ? ? ? ? ? 74 14 F3 0F 10 81 ? ? ? ? 
-
-bool __fastcall hk_ShouldHideGrenadeDuringThrow(int ecx, int edx, void* animstate)
-{
-	auto protecc = g_hooking.VEH_HideGrenade->getProtectionObject();
-
-	return g_hooking.o_grenade(animstate);
-}
 
 void SetLocalPlayerReady()
 {
@@ -213,14 +249,21 @@ void SetLocalPlayerReady()
 		SetLocalPlayerReadyFn("");
 }
 
-void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, int iChannel, const char *pSoundEntry, unsigned int nSoundEntryHash, const char *pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const Vector *pOrigin, const Vector *pDirection, Vector * pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int& params)
+void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, Vector* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int& params)
 {
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_SOUNDS->getProtectionObject();
+#endif
 
 	if (!strcmp(pSoundEntry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
 		SetLocalPlayerReady();
 
+
+#if DEBUG_HOOKS
+	return PLH::FnCast(g_hooking.sound_tramp, g_hooking.o_sounds)(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
+#else
 	return g_hooking.o_sounds(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
+#endif
 }
 
 void c_hooking::hook_all_functions()
@@ -291,12 +334,55 @@ void c_hooking::hook_all_functions()
 
 #else
 
-	//PLH::CapstoneDisassembler dis(PLH::Mode::x86);
+	
+#if DEBUG_HOOKS
+		PLH::CapstoneDisassembler dis(PLH::Mode::x86);
 
-	//auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-	//DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
-	//DETOUR_ENDSCENE->hook();
-	//o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+		auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
+		DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
+		DETOUR_ENDSCENE->hook();
+		o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+
+		auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
+		DETOUR_PAINT = new PLH::x86Detour((char*)paint_addr, (char*)&hk_paint_traverse, &paint_tramp, dis);
+		DETOUR_PAINT->hook();
+		o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
+
+		auto cm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24];
+		DETOUR_CM = new PLH::x86Detour((char*)cm_addr, (char*)&hk_clientmode_cm, &cm_tramp, dis);
+		DETOUR_CM->hook();
+		o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
+
+		//auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
+		//DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
+		//DETOUR_PRESENT->hook();
+		//o_present = reinterpret_cast<decltype(o_present)>(present_addr);
+
+		auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
+		DETOUR_SCENEEND = new PLH::x86Detour((char*)scene_end_addr, (char*)&hk_scene_end, &sceneend_tramp, dis);
+		DETOUR_SCENEEND->hook();
+		o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
+
+		auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[37];
+		DETOUR_FSN = new PLH::x86Detour((char*)fsn_addr, (char*)&hk_frame_stage_notify, &fsn_tramp, dis);
+		DETOUR_FSN->hook();
+		o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
+
+		auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
+		DETOUR_MDL = new PLH::x86Detour((char*)mdl_addr, (char*)&hk_findmdl, &mdl_tramp, dis);
+		DETOUR_MDL->hook();
+		o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
+
+		auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
+		DETOUR_VM = new PLH::x86Detour((char*)vm_addr, (char*)&hk_viewmodel, &vm_tramp, dis);
+		DETOUR_VM->hook();
+		o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
+
+		auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+		DETOUR_SOUNDS = new PLH::x86Detour((char*)sound_addr, (char*)&hkEmitSound, &sound_tramp, dis);
+		DETOUR_SOUNDS->hook();
+		o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+#else
 
 	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
 	VEH_PAINT = new PLH::BreakPointHook((char*)paint_addr, (char*)&hk_paint_traverse);
@@ -349,6 +435,7 @@ void c_hooking::hook_all_functions()
 	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
 
 
+#endif
 
 
 
@@ -398,7 +485,7 @@ void c_hooking::unhook_all_functions()
 
 	// wait for shit to register
 	Sleep(100);
-#if 0
+#if DEBUG_HOOKS
 	DETOUR_PAINT->unHook();
 	DETOUR_CM->unHook();
 	DETOUR_RESET->unHook();

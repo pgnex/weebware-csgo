@@ -5,6 +5,7 @@
 #include "PolyHook2/PolyHook_2_0/headers/Detour/ADetour.hpp"
 #include "PolyHook2/PolyHook_2_0/headers/Detour/x86Detour.hpp"
 #include "PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
+#include "shared.h"
 
 #ifndef HOOKFUNCS
 #define HOOKFUNCS
@@ -24,7 +25,7 @@ namespace hook_functions
 class c_hooking
 {
 public:
-#if 0
+#if DEBUG_HOOKS
 	uint64_t paint_tramp = NULL;
 	uint64_t lock_tramp = NULL;
 	uint64_t cm_tramp = NULL;
@@ -33,6 +34,10 @@ public:
 	uint64_t dme_tramp = NULL;
 	uint64_t fsn_tramp = NULL;
 	uint64_t present_tramp = NULL;
+	uint64_t vm_tramp = NULL;
+	uint64_t mdl_tramp = NULL;
+	uint64_t sound_tramp = NULL;
+	uint64_t sceneend_tramp = NULL;
 
 	PLH::x86Detour* DETOUR_PAINT;
 	PLH::x86Detour* DETOUR_CM;
@@ -42,6 +47,10 @@ public:
 	PLH::x86Detour* DETOUR_ENDSCENE;
 	PLH::x86Detour* DETOUR_DME;
 	PLH::x86Detour* DETOUR_CURSORLOCK;
+	PLH::x86Detour* DETOUR_SCENEEND;
+	PLH::x86Detour* DETOUR_MDL;
+	PLH::x86Detour* DETOUR_VM;
+	PLH::x86Detour* DETOUR_SOUNDS;
 #else
 
 	PLH::BreakPointHook* VEH_PAINT;
@@ -57,6 +66,11 @@ public:
 	PLH::BreakPointHook* VEH_SOUNDS;
 	PLH::BreakPointHook* VEH_MDL;
 	PLH::BreakPointHook* VEH_VM;
+
+	//PLH::x86Detour* DETOUR_ENDSCENE;
+	//uint64_t endscene_tramp = NULL;
+	PLH::x86Detour* DETOUR_PRESENT;
+	uint64_t present_tramp = NULL;
 
 #endif
 
