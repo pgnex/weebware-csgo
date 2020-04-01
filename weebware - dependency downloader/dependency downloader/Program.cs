@@ -19,7 +19,7 @@ namespace dependency_downloader {
 
             // parse list of archive urls on runtime
             using (WebClient web = new WebClient()) {
-                string archivesRaw = web.DownloadString("https://auth.weebware.net/dependencies/models.txt");
+                string archivesRaw = web.DownloadString("https://api.weebware.net/dependencies/models.txt");
                 archives = JsonConvert.DeserializeObject<List<string>>(archivesRaw);
             }
 
