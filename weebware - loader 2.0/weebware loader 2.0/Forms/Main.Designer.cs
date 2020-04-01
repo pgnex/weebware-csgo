@@ -26,6 +26,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.pnlBackground = new System.Windows.Forms.Panel();
+            this.lblCheatStatus = new System.Windows.Forms.Label();
             this.pnlInfo = new System.Windows.Forms.Panel();
             this.lblSessionExp = new System.Windows.Forms.Label();
             this.lblCheatSelected = new System.Windows.Forms.Label();
@@ -37,7 +38,6 @@
             this.lblWeebware = new System.Windows.Forms.Label();
             this.pbLogo = new weebware_loader.CPictureBox();
             this.tmrExpire = new System.Windows.Forms.Timer(this.components);
-            this.lblCheatStatus = new System.Windows.Forms.Label();
             this.pnlBackground.SuspendLayout();
             this.pnlInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
@@ -59,6 +59,18 @@
             this.pnlBackground.Size = new System.Drawing.Size(483, 327);
             this.pnlBackground.TabIndex = 0;
             // 
+            // lblCheatStatus
+            // 
+            this.lblCheatStatus.AutoSize = true;
+            this.lblCheatStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lblCheatStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.lblCheatStatus.ForeColor = System.Drawing.Color.Lime;
+            this.lblCheatStatus.Location = new System.Drawing.Point(63, 187);
+            this.lblCheatStatus.Name = "lblCheatStatus";
+            this.lblCheatStatus.Size = new System.Drawing.Size(73, 13);
+            this.lblCheatStatus.TabIndex = 12;
+            this.lblCheatStatus.Text = "Undetected";
+            // 
             // pnlInfo
             // 
             this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
@@ -73,33 +85,33 @@
             // lblSessionExp
             // 
             this.lblSessionExp.AutoSize = true;
-            this.lblSessionExp.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblSessionExp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.lblSessionExp.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
             this.lblSessionExp.Location = new System.Drawing.Point(13, 59);
             this.lblSessionExp.Name = "lblSessionExp";
-            this.lblSessionExp.Size = new System.Drawing.Size(252, 13);
+            this.lblSessionExp.Size = new System.Drawing.Size(225, 16);
             this.lblSessionExp.TabIndex = 2;
             this.lblSessionExp.Text = "Your session will expire in: 5 minutes ";
             // 
             // lblCheatSelected
             // 
             this.lblCheatSelected.AutoSize = true;
-            this.lblCheatSelected.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblCheatSelected.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.lblCheatSelected.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
             this.lblCheatSelected.Location = new System.Drawing.Point(13, 34);
             this.lblCheatSelected.Name = "lblCheatSelected";
-            this.lblCheatSelected.Size = new System.Drawing.Size(129, 13);
+            this.lblCheatSelected.Size = new System.Drawing.Size(117, 16);
             this.lblCheatSelected.TabIndex = 1;
             this.lblCheatSelected.Text = "Currently Selected";
             // 
             // lblWelcomeBack
             // 
             this.lblWelcomeBack.AutoSize = true;
-            this.lblWelcomeBack.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.lblWelcomeBack.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.lblWelcomeBack.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
             this.lblWelcomeBack.Location = new System.Drawing.Point(13, 11);
             this.lblWelcomeBack.Name = "lblWelcomeBack";
-            this.lblWelcomeBack.Size = new System.Drawing.Size(193, 13);
+            this.lblWelcomeBack.Size = new System.Drawing.Size(184, 16);
             this.lblWelcomeBack.TabIndex = 0;
             this.lblWelcomeBack.Text = "Welcome back to weebware, ";
             // 
@@ -107,11 +119,11 @@
             // 
             this.lblStatus.AutoSize = true;
             this.lblStatus.BackColor = System.Drawing.Color.Transparent;
-            this.lblStatus.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 8F, System.Drawing.FontStyle.Bold);
+            this.lblStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
             this.lblStatus.ForeColor = System.Drawing.Color.White;
             this.lblStatus.Location = new System.Drawing.Point(21, 187);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(56, 11);
+            this.lblStatus.Size = new System.Drawing.Size(51, 13);
             this.lblStatus.TabIndex = 10;
             this.lblStatus.Text = "Status: ";
             // 
@@ -119,7 +131,7 @@
             // 
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(54)))), ((int)(((byte)(54)))), ((int)(((byte)(54)))));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExit.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.btnExit.ForeColor = System.Drawing.Color.White;
             this.btnExit.Location = new System.Drawing.Point(347, 127);
             this.btnExit.Name = "btnExit";
@@ -133,7 +145,7 @@
             // 
             this.btnInject.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
             this.btnInject.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnInject.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.btnInject.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.btnInject.ForeColor = System.Drawing.Color.White;
             this.btnInject.Location = new System.Drawing.Point(347, 81);
             this.btnInject.Name = "btnInject";
@@ -155,11 +167,11 @@
             // 
             this.lblWeebware.AutoSize = true;
             this.lblWeebware.BackColor = System.Drawing.Color.Transparent;
-            this.lblWeebware.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblWeebware.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblWeebware.ForeColor = System.Drawing.Color.White;
             this.lblWeebware.Location = new System.Drawing.Point(21, 32);
             this.lblWeebware.Name = "lblWeebware";
-            this.lblWeebware.Size = new System.Drawing.Size(110, 19);
+            this.lblWeebware.Size = new System.Drawing.Size(106, 24);
             this.lblWeebware.TabIndex = 5;
             this.lblWeebware.Text = "weebware";
             // 
@@ -181,18 +193,6 @@
             this.tmrExpire.Enabled = true;
             this.tmrExpire.Interval = 10000;
             this.tmrExpire.Tick += new System.EventHandler(this.tmrExpire_Tick);
-            // 
-            // lblCheatStatus
-            // 
-            this.lblCheatStatus.AutoSize = true;
-            this.lblCheatStatus.BackColor = System.Drawing.Color.Transparent;
-            this.lblCheatStatus.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 8F, System.Drawing.FontStyle.Bold);
-            this.lblCheatStatus.ForeColor = System.Drawing.Color.Lime;
-            this.lblCheatStatus.Location = new System.Drawing.Point(63, 187);
-            this.lblCheatStatus.Name = "lblCheatStatus";
-            this.lblCheatStatus.Size = new System.Drawing.Size(77, 11);
-            this.lblCheatStatus.TabIndex = 12;
-            this.lblCheatStatus.Text = "Undetected";
             // 
             // Main
             // 

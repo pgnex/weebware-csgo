@@ -31,14 +31,14 @@ namespace weebware_loader {
             this.animation_timer = new System.Windows.Forms.Timer(this.components);
             this.pnlSlide = new System.Windows.Forms.Panel();
             this.pnlUsername = new System.Windows.Forms.Panel();
+            this.txtUsername = new weebware_loader.General.PlaceholderTextbox();
             this.pnlPassword = new System.Windows.Forms.Panel();
+            this.txtPassword = new weebware_loader.General.PlaceholderTextbox();
             this.pnlContainer = new System.Windows.Forms.Panel();
+            this.lblDisableSound = new weebware_loader.Custom_Components.CustomLabel();
             this.cbDisableSound = new System.Windows.Forms.CheckBox();
             this.cbRememberMe = new System.Windows.Forms.CheckBox();
             this.btnLogin = new System.Windows.Forms.Button();
-            this.lblDisableSound = new weebware_loader.Custom_Components.CustomLabel();
-            this.txtPassword = new weebware_loader.General.PlaceholderTextbox();
-            this.txtUsername = new weebware_loader.General.PlaceholderTextbox();
             this.pbLogo = new weebware_loader.CPictureBox();
             this.lblLoginBtn = new weebware_loader.Custom_Components.CustomLabel();
             this.pbBackground = new weebware_loader.CPictureBox();
@@ -71,6 +71,20 @@ namespace weebware_loader {
             this.pnlUsername.Size = new System.Drawing.Size(170, 30);
             this.pnlUsername.TabIndex = 5;
             // 
+            // txtUsername
+            // 
+            this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtUsername.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.txtUsername.Location = new System.Drawing.Point(11, 7);
+            this.txtUsername.Name = "txtUsername";
+            this.txtUsername.PlaceHolder = "Placeholder";
+            this.txtUsername.Size = new System.Drawing.Size(148, 15);
+            this.txtUsername.TabIndex = 0;
+            this.txtUsername.Text = "Username";
+            this.txtUsername.usePasswordChar = false;
+            // 
             // pnlPassword
             // 
             this.pnlPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
@@ -79,6 +93,20 @@ namespace weebware_loader {
             this.pnlPassword.Name = "pnlPassword";
             this.pnlPassword.Size = new System.Drawing.Size(170, 30);
             this.pnlPassword.TabIndex = 6;
+            // 
+            // txtPassword
+            // 
+            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
+            this.txtPassword.Location = new System.Drawing.Point(11, 7);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PlaceHolder = "Placeholder";
+            this.txtPassword.Size = new System.Drawing.Size(148, 15);
+            this.txtPassword.TabIndex = 1;
+            this.txtPassword.Text = "Password";
+            this.txtPassword.usePasswordChar = false;
             // 
             // pnlContainer
             // 
@@ -98,11 +126,27 @@ namespace weebware_loader {
             this.pnlContainer.Size = new System.Drawing.Size(483, 259);
             this.pnlContainer.TabIndex = 1;
             // 
+            // lblDisableSound
+            // 
+            this.lblDisableSound.AutoSize = true;
+            this.lblDisableSound.BackColor = System.Drawing.Color.Transparent;
+            this.lblDisableSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblDisableSound.ForeColor = System.Drawing.Color.White;
+            this.lblDisableSound.Location = new System.Drawing.Point(23, 240);
+            this.lblDisableSound.Name = "lblDisableSound";
+            this.lblDisableSound.OutlineForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(82)))), ((int)(((byte)(173)))));
+            this.lblDisableSound.OutlineWidth = 1F;
+            this.lblDisableSound.Size = new System.Drawing.Size(152, 13);
+            this.lblDisableSound.TabIndex = 9;
+            this.lblDisableSound.Text = "Disable Launcher Sounds";
+            this.lblDisableSound.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+            this.lblDisableSound.Click += new System.EventHandler(this.lblDisableSound_Click);
+            // 
             // cbDisableSound
             // 
             this.cbDisableSound.AutoSize = true;
             this.cbDisableSound.BackColor = System.Drawing.Color.Transparent;
-            this.cbDisableSound.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.cbDisableSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.cbDisableSound.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
             this.cbDisableSound.Location = new System.Drawing.Point(7, 239);
             this.cbDisableSound.Name = "cbDisableSound";
@@ -114,11 +158,11 @@ namespace weebware_loader {
             // cbRememberMe
             // 
             this.cbRememberMe.AutoSize = true;
-            this.cbRememberMe.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.cbRememberMe.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.cbRememberMe.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
             this.cbRememberMe.Location = new System.Drawing.Point(305, 219);
             this.cbRememberMe.Name = "cbRememberMe";
-            this.cbRememberMe.Size = new System.Drawing.Size(98, 15);
+            this.cbRememberMe.Size = new System.Drawing.Size(95, 17);
             this.cbRememberMe.TabIndex = 2;
             this.cbRememberMe.Text = "Remember Me";
             this.cbRememberMe.UseVisualStyleBackColor = true;
@@ -127,7 +171,7 @@ namespace weebware_loader {
             // 
             this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogin.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F);
+            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F);
             this.btnLogin.ForeColor = System.Drawing.Color.White;
             this.btnLogin.Location = new System.Drawing.Point(403, 210);
             this.btnLogin.Name = "btnLogin";
@@ -136,50 +180,6 @@ namespace weebware_loader {
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
-            // 
-            // lblDisableSound
-            // 
-            this.lblDisableSound.AutoSize = true;
-            this.lblDisableSound.BackColor = System.Drawing.Color.Transparent;
-            this.lblDisableSound.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.lblDisableSound.ForeColor = System.Drawing.Color.White;
-            this.lblDisableSound.Location = new System.Drawing.Point(23, 240);
-            this.lblDisableSound.Name = "lblDisableSound";
-            this.lblDisableSound.OutlineForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(82)))), ((int)(((byte)(173)))));
-            this.lblDisableSound.OutlineWidth = 1F;
-            this.lblDisableSound.Size = new System.Drawing.Size(162, 11);
-            this.lblDisableSound.TabIndex = 9;
-            this.lblDisableSound.Text = "Disable Launcher Sounds";
-            this.lblDisableSound.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
-            this.lblDisableSound.Click += new System.EventHandler(this.lblDisableSound_Click);
-            // 
-            // txtPassword
-            // 
-            this.txtPassword.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPassword.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtPassword.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
-            this.txtPassword.Location = new System.Drawing.Point(11, 7);
-            this.txtPassword.Name = "txtPassword";
-            this.txtPassword.PlaceHolder = "Placeholder";
-            this.txtPassword.Size = new System.Drawing.Size(148, 13);
-            this.txtPassword.TabIndex = 1;
-            this.txtPassword.Text = "Password";
-            this.txtPassword.usePasswordChar = false;
-            // 
-            // txtUsername
-            // 
-            this.txtUsername.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
-            this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtUsername.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.txtUsername.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(137)))), ((int)(((byte)(137)))), ((int)(((byte)(137)))));
-            this.txtUsername.Location = new System.Drawing.Point(11, 7);
-            this.txtUsername.Name = "txtUsername";
-            this.txtUsername.PlaceHolder = "Placeholder";
-            this.txtUsername.Size = new System.Drawing.Size(148, 13);
-            this.txtUsername.TabIndex = 0;
-            this.txtUsername.Text = "Username";
-            this.txtUsername.usePasswordChar = false;
             // 
             // pbLogo
             // 
@@ -198,13 +198,13 @@ namespace weebware_loader {
             // 
             this.lblLoginBtn.AutoSize = true;
             this.lblLoginBtn.BackColor = System.Drawing.Color.Transparent;
-            this.lblLoginBtn.Font = new System.Drawing.Font("UD Digi Kyokasho NP-R", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.lblLoginBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.lblLoginBtn.ForeColor = System.Drawing.Color.White;
             this.lblLoginBtn.Location = new System.Drawing.Point(203, 120);
             this.lblLoginBtn.Name = "lblLoginBtn";
             this.lblLoginBtn.OutlineForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(218)))), ((int)(((byte)(80)))), ((int)(((byte)(196)))));
             this.lblLoginBtn.OutlineWidth = 2F;
-            this.lblLoginBtn.Size = new System.Drawing.Size(77, 19);
+            this.lblLoginBtn.Size = new System.Drawing.Size(72, 24);
             this.lblLoginBtn.TabIndex = 0;
             this.lblLoginBtn.Text = "LOGIN";
             this.lblLoginBtn.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;

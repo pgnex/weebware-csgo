@@ -133,7 +133,7 @@ namespace loader {
             WebClient web = new WebClient();
             if (!Directory.Exists(@"c:\weebware\sounds")) {
                 Directory.CreateDirectory(@"c:\weebware\sounds\");
-                web.DownloadFile("https://auth.weebware.net/dependencies/sounds.zip", "c:\\weebware\\sounds\\sounds.zip");
+                web.DownloadFile("https://api.weebware.net/dependencies/sounds.zip", "c:\\weebware\\sounds\\sounds.zip");
                 System.IO.Compression.ZipFile.ExtractToDirectory("c:\\weebware\\sounds\\sounds.zip", "c:\\weebware\\sounds");
                 File.Delete("c:\\weebware\\sounds\\sounds.zip");
             }
@@ -141,8 +141,8 @@ namespace loader {
             if (!Directory.Exists(@"c:\weebware\dependencies")) {
                 Directory.CreateDirectory(@"c:\weebware\dependencies");
             }
-            web.DownloadFile("https://auth.weebware.net/dependencies/skins.txt", "c:\\weebware\\dependencies\\skins.txt");
-            web.DownloadFile("https://auth.weebware.net/dependencies/guns.txt", "c:\\weebware\\dependencies\\guns.txt");
+            web.DownloadFile("https://api.weebware.net/dependencies/skins.txt", "c:\\weebware\\dependencies\\skins.txt");
+            web.DownloadFile("https://api.weebware.net/dependencies/guns.txt", "c:\\weebware\\dependencies\\guns.txt");
             if (!File.Exists(@"c:\weebware\dependencies\notify")) File.Create(@"c:\weebware\dependencies\notify");
         }
     }

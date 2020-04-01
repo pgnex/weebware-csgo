@@ -15,7 +15,7 @@ namespace loader.Authentication {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     class Networking {
 
-        private const string URL = "https://auth.weebware.net";
+        private const string URL = "https://api.weebware.net";
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
         private const string VERSION_STRING = "4.0";
 

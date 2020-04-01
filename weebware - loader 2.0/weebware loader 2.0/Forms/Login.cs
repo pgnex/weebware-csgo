@@ -165,8 +165,6 @@ namespace weebware_loader {
                     Properties.Settings.Default.Save();
                 }
 
-                MessageBox.Show(string.Format("Successfully logged in.\nWelcome back, {0}!", txtUsername.Text), "weebware", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                 Hide();
                 Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2, response.GetData<JArray>("cheatInfo"));
                 main.Show();
