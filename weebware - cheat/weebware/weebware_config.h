@@ -228,9 +228,9 @@ public:
 		if (check("weapon_id", data)) weapon_id = data["weapon_id"];
 		if (check("m_paint_kit", data)) m_paint_kit = data["m_paint_kit"];
 		if (check("m_wear", data)) {
-			if (data["m_wear"] == FLT_MIN)
-				m_wear = 100;
+				m_wear = data["m_wear"];
 		}
+
 		if (check("m_seed", data)) m_seed = data["m_seed"];
 		if (check("stattrak_enabled", data)) stattrak_enabled = data["stattrak_enabled"];
 		if (check("stattrak_kill_count", data)) stattrak_kill_count = data["stattrak_kill_count"];
@@ -321,6 +321,7 @@ public:
 	bool visuals_chams_render_team = false;
 	bool skinchanger_enabled = false;
 	bool knifechanger_enabled = false;
+	bool skinchanger_weapon_override = false;
 	int skinchanger_selected_gun = 0;
 	int previous_knife_index = 0;
 	int next_knife_index = 0;
@@ -339,6 +340,7 @@ public:
 	int anti_triggerbot = 0;
 	bool misc_clantag_changer = 0;
 	bool misc_chat_spammer = 0;
+	bool misc_shout_box = 0;
 	bool misc_slidewalk = 0;
 	int anti_triggerbot_key = 0;
 	bool misc_legit_aa_resolver = 0;

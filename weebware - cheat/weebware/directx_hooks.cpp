@@ -8,6 +8,7 @@
 #include "imgui\imgui_internal.h"
 #include "imgui\imgui_impl_win32.h"
 #include "hook_funcs.h"
+#include "frame_stage.h"
 #include <intrin.h>
 
 using namespace imgui_custom;
@@ -147,9 +148,95 @@ void KeyValues::set_string(const char* keyName, const char* value)
 }
 
 
+void gui::shoutbox_chat() {
+	int mouse_x, mouse_y;
+	g_weebware.g_input_system->GetCursorPosition(&mouse_x, &mouse_y);
+	ImGuiIO& io = ImGui::GetIO();
+	auto& style = ImGui::GetStyle();
+	io.MousePos.x = (float)(mouse_x);
+	io.MousePos.y = (float)(mouse_y);
+
+	ImGui::Begin("shoutbox", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
+	ImGui::SetWindowSize(ImVec2(500, 240));
+
+	ImGui::BeginChild("shoutbox");
+
+	ImGui::Columns(2, "padmsg", false);
+	ImGui::SetColumnWidth(0, 5);
+	ImGui::NextColumn();
+	imgui_custom::custom_label_header("Shoutbox");
+
+	ImGui::BeginChild("messages", ImVec2(500, ImGui::GetContentRegionAvail().y - 25));
+	static int max = 2;
+	static bool needs_scroll = false;
+
+	// display the messages
+	// make function to parse into pwetty msg
+	for (int i = 1; i < max; i++) {
+		ImGui::Text(std::to_string(i).c_str());
+	}
+
+	// scroll to bottom
+	if (needs_scroll) {
+		ImGui::SetScrollHere(1.0f);
+		needs_scroll = false;
+	}
+
+	ImGui::EndChild();
+
+	// hypothetical new packet
+	if (ImGui::Button("add msg", ImVec2(60, 15))) {
+		max++;
+		needs_scroll = true;
+	}
+	//
+
+	ImGui::EndChild();
+
+
+	ImGui::End();
+}
+
+void gui::weapon_override() {
+	int mouse_x, mouse_y;
+	g_weebware.g_input_system->GetCursorPosition(&mouse_x, &mouse_y);
+	ImGuiIO& io = ImGui::GetIO();
+	auto& style = ImGui::GetStyle();
+	io.MousePos.x = (float)(mouse_x);
+	io.MousePos.y = (float)(mouse_y);
+
+	ImGui::Begin("shoutbox", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
+	ImGui::SetWindowSize(ImVec2(260, 400));
+
+	static auto gun_list = g_gui.filtered_guns();
+
+	ImGui::BeginChild("weapon override");
+	imgui_custom::custom_label_header("Weapon Override");
+	ImGui::Separator();
+
+	ImGui::BeginChild("Existing Guns", ImVec2(0, ImGui::GetContentRegionAvail().y - 25), false);
+	for (auto gun_part : gun_list)
+	{
+		if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
+		{
+			g_weebwarecfg.skinchanger_selected_gun = g_frame_stage_notify.convert_index_id(gun_part.id);
+			g_weebwarecfg.selected_gun_index = gun_part.id;
+			g_weebwarecfg.weapon_option_name = "Weapon Options - " + gun_part.name;
+		}
+	}
+	ImGui::EndChild();
+	ImGui::EndChild();
+
+	ImGui::End();
+}
+
 
 static int tab_selection = 0;
 void gui::imgui_main() {
+
+	if (g_weebwarecfg.misc_shout_box) {
+		shoutbox_chat();
+	}
 
 	ImGui::GetIO().MouseDrawCursor = g_weebware.menu_opened;
 
@@ -602,7 +689,7 @@ void gui::imgui_main() {
 			imgui_custom::fix_gay_padding_shit("miscgb1");
 			imgui_custom::horizontal_margin("misctxtmargintop1", 2);
 			imgui_custom::custom_label_header("Misc");
-
+		//	ImGui::Checkbox("Shoutbox", &g_weebwarecfg.misc_shout_box);
 			ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer);
 			ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed);
 			ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal);
@@ -768,6 +855,8 @@ void gui::imgui_main() {
 				std::vector<const char*> v = glove_changer.set_glove_skin_array();
 				//ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
 				int loopi = 0;
+				ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 				for (auto skin_part : v)
 				{
 					std::string name = std::string(skin_part) + "##" + std::string(skin_part);
@@ -778,6 +867,8 @@ void gui::imgui_main() {
 						g_weebwarecfg.skinchanger_apply_nxt = 1;
 					}
 					loopi++;
+					ImGui::PopStyleColor();
+					ImGui::PopStyleColor();
 				}
 			}
 
@@ -834,6 +925,10 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header(g_weebwarecfg.weapon_option_name.c_str());
 
 			ImGui::Checkbox("Enabled", &g_weebwarecfg.skinchanger_enabled);
+			ImGui::Checkbox("Override Weapon", &g_weebwarecfg.skinchanger_weapon_override);
+			if (g_weebwarecfg.skinchanger_weapon_override) {
+				weapon_override();
+			}
 			ImGui::Checkbox("StatTrak", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_enabled);
 			if (g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_enabled)
 				ImGui::InputInt("Kills", &g_weebwarecfg.skin_wheel[g_weebwarecfg.skinchanger_selected_gun].stattrak_kill_count);
@@ -863,6 +958,8 @@ void gui::imgui_main() {
 
 			ImGui::BeginChild("Existing Skins", ImVec2(0, ImGui::GetContentRegionAvail().y - 40), false);
 			// Enumerate skins at start of game and filter them out b4 drawing
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			for (c_skinchanger::skin_type skin_part : skin_list)
 			{
 				std::string name = skin_part.name + "##" + std::to_string(skin_part.id);
@@ -872,6 +969,8 @@ void gui::imgui_main() {
 					g_weebwarecfg.skinchanger_apply_nxt = 1;
 				}
 			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 			ImGui::EndChild();
 			ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
@@ -983,6 +1082,8 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Your Configs");
 			ImGui::BeginChild("Configs##yours", ImVec2(0, 180), false);
 			int index_yours = 0;
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			for (auto cfg : g_config_list.config_browser_yours)
 			{
 				if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_yours_name == cfg.c_str()))
@@ -992,6 +1093,8 @@ void gui::imgui_main() {
 				}
 				index_yours++;
 			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 			ImGui::EndChild();
 			float your_config_width = ImGui::GetContentRegionAvailWidth() - 12;
 
@@ -1026,6 +1129,8 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Favorited Configs");
 			ImGui::BeginChild("Configs##fav", ImVec2(0, ImGui::GetFrameHeight() - 55), false);
 			int index_fav = 0;
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			for (auto cfg : g_config_list.config_browser_fav)
 			{
 				if (ImGui::Selectable(cfg.c_str(), g_config_list.cur_config_browser_fav_name == cfg.c_str()))
@@ -1035,6 +1140,8 @@ void gui::imgui_main() {
 				}
 				index_fav++;
 			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 			ImGui::EndChild();
 			float fav_config_width = ImGui::GetContentRegionAvailWidth() - 12;
 
@@ -1076,3 +1183,5 @@ void gui::imgui_main() {
 
 	}
 }
+
+

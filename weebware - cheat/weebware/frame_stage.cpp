@@ -405,9 +405,13 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (!local)
 			continue;
 
-		if (weapon == local->m_pActiveWeapon()) {
+		if (weapon == local->m_pActiveWeapon() && !g_weebwarecfg.skinchanger_weapon_override) {
 			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
 			g_weebwarecfg.weapon_option_name = "Weapon Options - " + local->m_pActiveWeapon()->get_weapon_name_from_id();
+		}
+		else if (weapon_id == g_weebwarecfg.selected_gun_index) {
+			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
+			g_weebwarecfg.weapon_option_name = "Weapon Options - " + weapon->get_weapon_name_from_id();
 		}
 
 		*weapon->get_item_id_high() = -1;
@@ -492,7 +496,7 @@ void c_frame_stage_notify::run_skinchanger() {
 	}
 }
 
-int convert_index_id(int index)
+int c_frame_stage_notify::convert_index_id(int index)
 {
 	switch (index) {
 	case  69:			return	0;
