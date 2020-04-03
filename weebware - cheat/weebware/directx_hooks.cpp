@@ -208,13 +208,13 @@ void gui::weapon_override() {
 	ImGui::Begin("shoutbox", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
 	ImGui::SetWindowSize(ImVec2(260, 400));
 
-	static auto gun_list = g_gui.filtered_guns();
+	auto gun_list = g_gui.filtered_guns();
 
 	ImGui::BeginChild("weapon override");
 	imgui_custom::custom_label_header("Weapon Override");
 	ImGui::Separator();
 
-	ImGui::BeginChild("Existing Guns", ImVec2(0, ImGui::GetContentRegionAvail().y - 25), false);
+	ImGui::BeginChild("Existing Guns", ImVec2(0, ImGui::GetContentRegionAvail().y), false);
 	for (auto gun_part : gun_list)
 	{
 		if (ImGui::Selectable(gun_part.name.c_str(), g_weebwarecfg.selected_gun_index == gun_part.id))
@@ -787,6 +787,8 @@ void gui::imgui_main() {
 			ImGui::Text("Aim Speed");
 			imgui_custom::a_better_slider_float("##Aim Speedai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
 
+			// imgui_custom::custom_label_header("Buy Bot");
+
 			ImGui::EndChild();
 
 			imgui_custom::horizontal_margin("miscspace2", 4);
@@ -851,12 +853,12 @@ void gui::imgui_main() {
 			ImGui::Text("Wear");
 			imgui_custom::a_better_slider_float("##Weargloves", &g_weebwarecfg.glove_wearz, 0, 100, "%.0f%%");
 
+			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			if (g_weebwarecfg.glove_model > 0) {
-				std::vector<const char*> v = glove_changer.set_glove_skin_array();
+				static std::vector<const char*> v = glove_changer.set_glove_skin_array();
 				//ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
 				int loopi = 0;
-				ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
-				ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 				for (auto skin_part : v)
 				{
 					std::string name = std::string(skin_part) + "##" + std::string(skin_part);
@@ -867,10 +869,10 @@ void gui::imgui_main() {
 						g_weebwarecfg.skinchanger_apply_nxt = 1;
 					}
 					loopi++;
-					ImGui::PopStyleColor();
-					ImGui::PopStyleColor();
 				}
 			}
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 
 			ImGui::EndChild();
 

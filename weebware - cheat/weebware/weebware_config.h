@@ -314,7 +314,7 @@ public:
 	bool duck_in_air;
 	bool misc_ai;
 	float misc_ai_legitfactor;
-	bool misc_ai_random;
+	bool misc_ai_random = true;
 	bool misc_ai_nearest;
 	bool misc_ai_defuse;
 	bool misc_ai_defend;

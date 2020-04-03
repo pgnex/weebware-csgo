@@ -409,7 +409,7 @@ void c_frame_stage_notify::run_skinchanger() {
 			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
 			g_weebwarecfg.weapon_option_name = "Weapon Options - " + local->m_pActiveWeapon()->get_weapon_name_from_id();
 		}
-		else if (weapon_id == g_weebwarecfg.selected_gun_index) {
+		else if (weapon_id == g_weebwarecfg.selected_gun_index && g_weebwarecfg.skinchanger_weapon_override) {
 			g_weebwarecfg.skinchanger_selected_gun = weapon_id;
 			g_weebwarecfg.weapon_option_name = "Weapon Options - " + weapon->get_weapon_name_from_id();
 		}

@@ -18,6 +18,8 @@ public:
 	};
 
 	void imgui_main();
+	void shoutbox_chat();
+	void weapon_override();
 
 	void render_menu(IDirect3DDevice9* device)
 	{
@@ -31,7 +33,7 @@ public:
 			initialized = true;
 		}
 
-	//	renderstate_setup(device);
+		//	renderstate_setup(device);
 		ImGui_ImplDX9_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
@@ -173,42 +175,41 @@ public:
 		return filtered_skins;
 	}
 
-	// deprecated, we dnt have weapon list its active weapon
-/*
+
 	std::vector<c_skinchanger::gun_type> filtered_guns()
-{
-	// Get text
-	std::string filter = g_config_list.skinchanger_gunsearch;
+	{
+		// Get text
+		std::string filter = g_config_list.skinchanger_gunsearch;
 
-	static std::vector<c_skinchanger::gun_type> filtered_guns = g_weebware.g_gun_list;
+		static std::vector<c_skinchanger::gun_type> filtered_guns = g_weebware.g_gun_list;
 
-	static std::string change = filter;
+		static std::string change = filter;
 
-	if (change != filter) {
+		if (change != filter) {
 
-		// Empty buffer
-		filtered_guns.clear();
-		// update, execute code for cpu saving
+			// Empty buffer
+			filtered_guns.clear();
+			// update, execute code for cpu saving
 
-		for (auto part : g_weebware.g_gun_list) {
+			for (auto part : g_weebware.g_gun_list) {
 
-			std::string lower_search = filter;
-			std::transform(lower_search.begin(), lower_search.end(), lower_search.begin(), ::tolower);
-			std::string lower_skin = part.name;
-			std::transform(lower_skin.begin(), lower_skin.end(), lower_skin.begin(), ::tolower);
+				std::string lower_search = filter;
+				std::transform(lower_search.begin(), lower_search.end(), lower_search.begin(), ::tolower);
+				std::string lower_skin = part.name;
+				std::transform(lower_skin.begin(), lower_skin.end(), lower_skin.begin(), ::tolower);
 
-			if (strstr(lower_skin.c_str(), lower_search.c_str())) {
-				filtered_guns.push_back(part);
+				if (strstr(lower_skin.c_str(), lower_search.c_str())) {
+					filtered_guns.push_back(part);
+				}
 			}
+
+			change = filter;
 		}
 
-		change = filter;
+		return filtered_guns;
 	}
 
-	return filtered_guns;
-}
 
-*/
 
 
 };
