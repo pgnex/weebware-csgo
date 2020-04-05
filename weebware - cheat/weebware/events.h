@@ -14,9 +14,50 @@ namespace EventFuncs {
 }
 
 class FeatureFuncs {
-
 public:
+	// some buybot maps
+	std::map<int, std::string> prim_buy_bot_map = { {M4A4AK47, "buy ak47"}, {FamasGalil, "buy famas"}, {UMP, "buy ump45"}, {P90, "buy p90"} };
+	std::map<int, std::string> sec_buy_bot_map = { {Deagle, "buy deagle"}, {Elites, "buy elite"}, {Five7Tec9, "buy fn57"}, {P250, "buy p250"} };
+	void buy_bot();
 	void on_paint();
+	void killsay(i_game_event* event);
+
+
+private:
+	// 	const char* primary_weapons[] = { "M4A4", "AK-47", "Famas", "Galil", "UMP-45", "P90" };
+	enum buy_bot_primary {
+		M4A4AK47 = 1,
+		FamasGalil,
+		UMP,
+		P90
+	};
+
+	//	const char* secondary_weapons[] = { "None", "Desert Eagle", "Dual Berettas", "Five Seven / Tec-9", "P250" };
+	enum buy_bot_secondary {
+		Deagle = 1,
+		Elites,
+		Five7Tec9,
+		P250
+	};
+
+	const std::vector<std::string> killsay_messages = {
+	"Supa kawaii desu!!!!!!!! ___________________^",
+	"SUPA SUPA SUPA KAWAII SASUKE-SAMA!!!!!",
+	"Nyaaaaa!!! (________<) _________________;;;;;;;;;;;;;;;;",
+	"I absolutely luuuv @_____@ anime <3",
+	"What the desu did you just kawaii say about me, you little baka",
+	"wigglez booty n' squirms",
+	"please punish me licks lips nyea~",
+	"notices buldge OwO what's that",
+	"that's a penis UwU you towd me you wewe a giww!!",
+	"Cummy desu, you are my senpai",
+	"uguu desu desu kawaii neee~~~~~ <3",
+	"wiww shit fuwwies aww ovew you and you wiww dwown in them",
+	"AYAYA!~ >__<",
+	"Nani the fuck did omae just fucking iimasu about watashi, you chiisai bitch desuka?",
+	"Uhm by the way MOM They're not Chinese cartoons it's called ANIME!!"
+	};
+
 };
 extern FeatureFuncs g_events_features;
 
@@ -28,6 +69,7 @@ private:
 		std::string m_name;
 		eventfunc_t m_func;
 	};
+
 
 	std::vector< Event_t > m_events;
 
@@ -72,6 +114,7 @@ public:
 	// setup class.
 	// add your events here.
 	void init();
+
 };
 
 extern GameEvents g_events;

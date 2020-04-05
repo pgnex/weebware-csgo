@@ -7,6 +7,8 @@
 
 int flHurtTime;
 
+FeatureFuncs g_events_features;
+
 void EventFuncs::bullet_impact(i_game_event *event) {
 	static int          old_tickbase{ -1 };
 	static bool         insert_once{ false };
@@ -142,25 +144,7 @@ void FeatureFuncs::on_paint()
 	g_weebware.g_surface->drawline(x + 8, y - 8, x + (8 / 4), y - (8 / 4));
 };
 
-static const std::vector<std::string> killsay_messaes = {
-	"Supa kawaii desu!!!!!!!! ___________________^",
-	"SUPA SUPA SUPA KAWAII SASUKE-SAMA!!!!!",
-	"Nyaaaaa!!! (________<) _________________;;;;;;;;;;;;;;;;",
-	"I absolutely luuuv @_____@ anime <3",
-	"What the desu did you just kawaii say about me, you little baka",
-	"wigglez booty n' squirms",
-	"please punish me licks lips nyea~",
-	"notices buldge OwO what's that",
-	"that's a penis UwU you towd me you wewe a giww!!",
-	"Cummy desu, you are my senpai",
-	"uguu desu desu kawaii neee~~~~~ <3",
-	"wiww shit fuwwies aww ovew you and you wiww dwown in them",
-	"AYAYA!~ >__<",
-	"Nani the fuck did omae just fucking iimasu about watashi, you chiisai bitch desuka?",
-	"Uhm by the way MOM They're not Chinese cartoons it's called ANIME!!"
-};
-
-void killsay(i_game_event* event) {
+void FeatureFuncs::killsay(i_game_event* event) {
 	int attacker = g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker"));
 	c_base_entity* attacker_ent = (c_base_entity*)g_weebware.g_entlist->getcliententity(attacker);
 
@@ -170,19 +154,31 @@ void killsay(i_game_event* event) {
 			g_weebware.g_engine->execute_client_cmd(("say " + g_weebwarecfg.killsay_msg_custom).c_str());
 		}
 		else {
-			int selection = int(static_cast<int>(killsay_messaes.size())* rand() / (RAND_MAX + 1.0));
-			g_weebware.g_engine->execute_client_cmd(("say " + killsay_messaes.at(selection)).c_str());
+			int selection = int(killsay_messages.size()) * (rand() / (RAND_MAX + 1.0));
+			g_weebware.g_engine->execute_client_cmd(("say " + killsay_messages.at(selection)).c_str());
 		}
 
 	}
 }
 
+void FeatureFuncs::buy_bot() {
+
+	if (g_weebwarecfg.buy_bot_primary > 0)
+		g_weebware.g_engine->execute_client_cmd(prim_buy_bot_map[g_weebwarecfg.buy_bot_primary].c_str());
+
+	if (g_weebwarecfg.buy_bot_secondary > 0)
+		g_weebware.g_engine->execute_client_cmd(sec_buy_bot_map[g_weebwarecfg.buy_bot_secondary].c_str());
+
+	if (g_weebwarecfg.buy_bot_armor)
+		g_weebware.g_engine->execute_client_cmd("buy vest");
+
+}
 
 
 void EventFuncs::player_death(i_game_event* event) {
 
 	if (g_weebwarecfg.killsay)
-		killsay(event);
+		g_events_features.killsay(event);
 }
 
 void EventFuncs::round_end(i_game_event* event) {
@@ -200,6 +196,10 @@ void EventFuncs::round_start(i_game_event* event) {
 	if (g_weebwarecfg.night_sky) g_create_move.is_sky_set = false;
 	if (g_weebwarecfg.misc_clantag_changer) g_frame_stage_notify.clantag_done = false;
 	flHurtTime = 0;
+
+	if (g_weebwarecfg.buy_bot_enabled) {
+		g_events_features.buy_bot();
+	}
 }
 
 // initialize our events

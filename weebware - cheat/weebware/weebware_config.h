@@ -390,6 +390,10 @@ public:
 	int auto_defuse_key = VK_MENU;
 	bool no_duck_cooldown;
 	bool flashlight;
+	int buy_bot_primary;
+	int buy_bot_secondary;
+	bool buy_bot_armor;
+	bool buy_bot_enabled;
 	std::string weapon_option_name = "Weapon Options - None";
 
 	// ragebot

@@ -772,7 +772,7 @@ void gui::imgui_main() {
 
 			ImGui::SetColumnWidth(3, 328);
 			ImGui::PushStyleColor(ImGuiCol_ChildBg, imgui_custom::ConvertFromRGBA(ImVec4(20, 20, 20, 255)));
-			ImGui::BeginChild("misc 3", ImVec2(0, 240), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
+			ImGui::BeginChild("misc 3", ImVec2(0, 350), false, ImGuiWindowFlags_AlwaysUseWindowPadding | ImGuiWindowFlags_NoScrollbar);
 			imgui_custom::fix_gay_padding_shit("miscgb3");
 			imgui_custom::horizontal_margin("misctxtmargintop3", 2);
 			imgui_custom::custom_label_header("Smartbot");
@@ -787,8 +787,15 @@ void gui::imgui_main() {
 			ImGui::Text("Aim Speed");
 			imgui_custom::a_better_slider_float("##Aim Speedai", &g_weebwarecfg.misc_ai_aimspeed, 0, 100, "%.0f%%");
 
-			// imgui_custom::custom_label_header("Buy Bot");
-
+			const char* primary_weapons[] = { "None", "M4A4 / AK-47", "Famas / Galil", "UMP-45", "P90" };
+			const char* secondary_weapons[] = { "None", "Desert Eagle", "Dual Berettas", "Five Seven / Tec-9", "P250" };
+			imgui_custom::custom_label_header("Buy Bot");
+			ImGui::Checkbox("Enabled##buybot", &g_weebwarecfg.buy_bot_enabled);
+			ImGui::Checkbox("Kevlar", &g_weebwarecfg.buy_bot_armor);
+			ImGui::Text("Primary");
+			imgui_custom::a_better_combo_box("##buybotprim", &g_weebwarecfg.buy_bot_primary, primary_weapons, ARRAYSIZE(primary_weapons));
+			ImGui::Text("Secondary");
+			imgui_custom::a_better_combo_box("##buybotsec", &g_weebwarecfg.buy_bot_secondary, secondary_weapons, ARRAYSIZE(secondary_weapons));
 			ImGui::EndChild();
 
 			imgui_custom::horizontal_margin("miscspace2", 4);
