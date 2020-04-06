@@ -877,7 +877,7 @@ void c_esp::draw_inaccuracy_circle()
 	c_color col = c_color(g_weebwarecfg.visuals_innacc_circle_col);
 
 	g_weebware.g_surface->drawfilledcircle(x / 2.f, y / 2.f, col, weapon->Get_Innacuracy() * 200, 20);
-	g_weebware.g_surface->drawcoloredcircle(x / 2.f, y / 2.f, (weapon->Get_Innacuracy() * 200) + 1, 0, 0, 0, 200);
+	g_weebware.g_surface->drawcoloredcircle(x / 2.f, y / 2.f, (weapon->Get_Innacuracy() * 200) + 1, col.r, col.g, col.b, col.a);
 }
 
 void c_esp::display_backtrack()
