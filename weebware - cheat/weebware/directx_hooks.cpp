@@ -863,7 +863,7 @@ void gui::imgui_main() {
 			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			if (g_weebwarecfg.glove_model > 0) {
-				static std::vector<const char*> v = glove_changer.set_glove_skin_array();
+				std::vector<const char*> v = glove_changer.set_glove_skin_array();
 				//ImGui::Combo("##gloveskins", &g_weebwarecfg.glove_skin, v.data(), v.size());
 				int loopi = 0;
 				for (auto skin_part : v)
