@@ -46,11 +46,7 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 {
 #if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_CM->getProtectionObject();
-	//auto orig = g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-#else
-	auto orig = PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
 #endif
-
 
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
@@ -62,8 +58,14 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 		}
 		return retv;
 	}
-	else
+	else {
+#if !DEBUG_HOOKS
 		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
+#else
+		return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
+#endif
+	}
+
 
 }
 
@@ -83,13 +85,10 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 
 #if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
-//	auto orig = g_hooking.o_endscene(device);
 
 	if (!g_weebwarecfg.obs_proof) {
 		return g_hooking.o_endscene(device);
 	}
-#else
-	auto orig = PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
 #endif
 
 
@@ -107,9 +106,12 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	}
 
 	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress())) {
-		return g_hooking.o_endscene(device);
+#if DEBUG_HOOKS 
+		return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
+#else
+		return hook_functions::end_scene(device);
+#endif
 	}
-
 
 	// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
 	return hook_functions::end_scene(device);
@@ -120,16 +122,18 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 {
 #if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_PRESENT->getProtectionObject();
-//	auto orig = g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
-#else
-	auto orig = PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
 #endif
 
 	if (!g_weebwarecfg.obs_proof) {
 		return hook_functions::present(device, src, dest, wnd_override, dirty_region);		
 	}
 
+#if DEBUG_HOOKS 
+    return PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
+#else
 	return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
+#endif
+
 }
 
 
@@ -186,9 +190,6 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 
 #if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
-//	auto orig = g_hooking.o_mdl(ecx, edx, FilePath);
-#else
-	auto orig = PLH::FnCast(g_hooking.mdl_tramp, g_hooking.o_mdl)(ecx, edx, FilePath);
 #endif
 
 	if (!g_weebware.models_installed)
@@ -199,28 +200,42 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	PrecacheModel("models/player/custom_player/voikanaa/mirainikki/gasaiyono.mdl");
 	PrecacheModel("models/player/custom_player/bbs_93x_net_2016/kimono_luka/update_2016_08_05/kimono_luka.mdl");
 	PrecacheModel("models/player/custom_player/monsterko/inori_yuzuriha/inori.mdl");
+
+#if DEBUG_HOOKS 
+	return PLH::FnCast(g_hooking.mdl_tramp, g_hooking.o_mdl)(ecx, edx, FilePath);
+#else
 	return g_hooking.o_mdl(ecx, edx, FilePath);
+#endif
 }
 
 float __stdcall hk_viewmodel() {
-#if DEBUG_HOOKS
-	auto orig = PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
-#else
+#if !DEBUG_HOOKS
 	auto protecc = g_hooking.VEH_VM->getProtectionObject();
-	//auto orig = g_hooking.o_vm();
 #endif
 
-	if (!g_weebwarecfg.viewmodel_changer)
+	if (!g_weebwarecfg.viewmodel_changer) {
+#if DEBUG_HOOKS
+		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
+#else
 		return g_hooking.o_vm();
-
+#endif
+	}
 	auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 
 	if (local_player && local_player->is_valid_player()) {
+#if DEBUG_HOOKS
+		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)() + g_weebwarecfg.viewmodel_offset;
+#else
 		return g_hooking.o_vm() + g_weebwarecfg.viewmodel_offset;
+#endif 
 	}
 	else {
+#if DEBUG_HOOKS
+		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
+#else
 		return g_hooking.o_vm();
+#endif
 	}
 }
 
