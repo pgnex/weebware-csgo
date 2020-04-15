@@ -606,6 +606,7 @@ c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::c
 	cur_record.m_head = entity->get_bone(8);
 	cur_record.record_tick = cmd->tick_count;
 	cur_record.index = entity->EntIndex();
+	cur_record.visible = g_legitbot.is_visible(entity, 8);
 #if 1
 	auto studiomodel = g_weebware.g_model_info->getstudiomodel(entity->getmodel());
 

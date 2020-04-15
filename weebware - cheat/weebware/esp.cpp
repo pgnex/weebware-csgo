@@ -891,6 +891,9 @@ void c_esp::display_backtrack()
 		// best
 		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
 
+			if (!g_accuracy.accuracy_records[i].visible)
+				continue;
+
 			g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], w2sParent);
 			g_maths.world_to_screen(g_accuracy.m_best_record.child[i], w2sChild);
 
@@ -905,6 +908,10 @@ void c_esp::display_backtrack()
 
 		for (auto record : g_accuracy.accuracy_records)
 		{
+
+			if (!record.visible)
+				continue;
+
 			if (g_weebwarecfg.visuals_backtrack_style == 0) { // time
 				if (record.record_tick != g_accuracy.m_best_record.record_tick)
 					continue;
@@ -913,7 +920,7 @@ void c_esp::display_backtrack()
 				if (g_accuracy.m_best_record.index != record.index) {
 					continue;
 				}
-
+			
 			// best tick to draw skeleton
 			for (int i = 0; i < record.bonecount; i++) {
 

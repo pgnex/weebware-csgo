@@ -32,6 +32,7 @@ public:
 			bool m_has_w2s = false;
 			int record_tick = -1;
 			bool m_best_record = false;
+			bool visible;
 			// legs might be fucked, we aren't restoring animation layer.
 
 			// Here atm for bone skeletons
