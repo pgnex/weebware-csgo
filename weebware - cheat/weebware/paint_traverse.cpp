@@ -5,6 +5,7 @@
 #include "hook_funcs.h"
 #include "Legit.h"
 #include "scene_end.h"
+#include "legit_aa.h"
 
 c_paint_traverse g_paint_traverse;
 
@@ -37,6 +38,12 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 		}
 	}
 	catch(...) { }
+}
+
+void c_paint_traverse::draw_legit_aa_indicator() {
+	int w, h; g_weebware.g_engine->get_screen_dimensions(w, h);
+	draw_string(g_weebware.indicator_font_XD, w * 0.45, h / 2, GetKeyState(0x41) ? c_color(255, 255, 0, 255) : c_color(255, 255, 255, 255), 0, "<");
+	draw_string(g_weebware.indicator_font_XD, w * 0.55, h / 2, GetKeyState(0x41) ? c_color(255, 255, 255, 255) : c_color(255, 255, 0, 255), 0, ">");
 }
 
 void c_paint_traverse::draw_water_mark()
