@@ -785,7 +785,6 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Smartbot");
 			ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai);
 			ImGui::Checkbox("Autoqueue", &g_weebwarecfg.auto_queue);
-			ImGui::Checkbox("Random", &g_weebwarecfg.misc_ai_random);
 			ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest);
 			ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse);
 			//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
@@ -1130,6 +1129,13 @@ void gui::imgui_main() {
 					g_weebwarecfg.skinchanger_apply_nxt = 1;
 				}
 			}
+			ImGui::SameLine();
+			if (ImGui::Button("Download##yours", ImVec2(your_config_width / 3, 20)))
+			{
+				if (g_config_list.cur_id_yours) {
+					g_config_list.download_config_from_browser(g_config_list.cur_id_yours, g_config_list.cur_config_browser_yours_name);
+				}
+			}
 			ImGui::PopStyleVar();
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
@@ -1175,6 +1181,13 @@ void gui::imgui_main() {
 
 					g_config_list.load_config_from_memory(g_config_list.cur_id_fav);
 					g_weebwarecfg.skinchanger_apply_nxt = 1;
+				}
+			}
+			ImGui::SameLine();
+			if (ImGui::Button("Download##fav", ImVec2(your_config_width / 3, 20)))
+			{
+				if (g_config_list.cur_id_fav) {
+					g_config_list.download_config_from_browser(g_config_list.cur_id_fav, g_config_list.cur_config_browser_fav_name);
 				}
 			}
 			ImGui::PopStyleVar();

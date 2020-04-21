@@ -60,13 +60,38 @@ void c_config_list::get_favorited_configs() {
 	config_browser_fav = info;
 }
 
-void c_config_list::load_config_from_memory(int index) {
+
+void sanatize_path(std::string* target) {
+	std::string::iterator it;
+	std::string illegalChars = "\\/:?\"<>|";
+	for (it = target->begin(); it < target->end(); ++it) {
+		bool found = illegalChars.find(*it) != std::string::npos;
+		if (found) {
+			*it = ' ';
+		}
+	}
+}
+
+
+void c_config_list::download_config_from_browser(int index, std::string title) {
 
 	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" +std::to_string(index));
+	json data = json::parse(content);
+	sanatize_path(&title);
+	std::ofstream o("C:\\weebware\\cfgs\\" + title + ".weebware");
+	o << std::setw(4) << data << std::endl;
+
+	update_all_configs();
+}
+
+void c_config_list::load_config_from_memory(int index) {
+
+	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" + std::to_string(index));
 	json data = json::parse(content);
 	g_weebwarecfg.load_cfg_mem(data);
 	g_weebwarecfg.skinchanger_apply_nxt = 1;
 }
+
 
 
 void c_config_list::load_browser_config() {
