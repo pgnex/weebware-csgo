@@ -117,9 +117,9 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	g_d3dxesp.on_lost_device();
 
 #if DEBUG_HOOKS
-	auto hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
+	long hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
 #else
-	auto hr = g_hooking.o_reset(device, presentation_param);
+	long hr = g_hooking.o_reset(device, presentation_param);
 #endif
 
 	if (hr >= 0) {
@@ -416,7 +416,10 @@ void gui::imgui_main() {
 		//	ImGui::BeginChild("hitboxes##trigger", ImVec2(0, ImGui::GetContentRegionAvail().y - 4), false);
 			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
-			if (ImGui::Selectable("All (overrides below)##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all; }
+			if (ImGui::Selectable("All (overrides below)##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all)) { 
+				g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_all;
+			}
+
 			if (ImGui::Selectable("Head##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_head; }
 			if (ImGui::Selectable("Chest##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_chest; }
 			if (ImGui::Selectable("Stomach##tb", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_stomach; }
@@ -697,7 +700,11 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
 			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
 			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
-			// ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled);
+			ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled);
+			ImGui::Checkbox("Flip AA", &g_weebwarecfg.misc_legit_aa_flip);
+			if (g_weebwarecfg.misc_legit_aa_flip)
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.misc_legit_aa_side_key, key_counter);
+
 
 			ImGui::Checkbox("Clantag Changer", &g_weebwarecfg.misc_clantag_changer);
 			if (g_weebwarecfg.misc_clantag_changer)
