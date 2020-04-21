@@ -178,7 +178,7 @@ imaterial* c_sceneend::create_glow() {
 imaterial* c_sceneend::borrow_mat(custom_mats type)
 {
 	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "", "", "flat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
+	const char* material_list[] = { "", "", "", "debug/debugdrawflat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
 
@@ -250,6 +250,14 @@ void c_sceneend::chams() {
 			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
 			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
 		}
+
+		//if (g_weebwarecfg.misc_legit_aa_enabled && player == local) {
+		//	player->set_angles(Vector(0, g_weebware.fake_angle.y, 0));
+		//	g_weebware.g_render_view->SetBlend(0.5f);
+		//	player->draw_model(1, 255);
+		//	g_weebware.g_render_view->SetBlend(1.f);
+		//	player->set_angles(Vector(0, g_weebware.real_angle.y, 0));
+		//}
 
 		// skip if team chams is off and entity is teammate
 		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
