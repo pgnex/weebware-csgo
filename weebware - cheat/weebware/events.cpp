@@ -185,6 +185,10 @@ void EventFuncs::round_end(i_game_event* event) {
 	g_weebware.round_end = true;
 }
 
+void EventFuncs::game_end(i_game_event* event) {
+	flHurtTime = 0;
+}
+
 void EventFuncs::round_start(i_game_event* event) {
 
 	if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
@@ -210,6 +214,7 @@ void GameEvents::init() {
 	add_event("player_death", EventFuncs::player_death);
 	add_event("round_end", EventFuncs::round_end);
 	add_event("round_start", EventFuncs::round_start);
+	add_event("cs_game_disconnected", EventFuncs::game_end);
 
 	register_events();
 }

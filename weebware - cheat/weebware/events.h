@@ -11,6 +11,7 @@ namespace EventFuncs {
 	void bullet_impact(i_game_event *event);
 	void round_end(i_game_event* event);
 	void round_start(i_game_event* event);
+	void game_end(i_game_event* event);
 }
 
 class FeatureFuncs {
