@@ -24,7 +24,8 @@ public:
 	bool send_packet = true;
 	ImFont* pFont[3];
 	QAngle real_angle;
-
+	QAngle fake_angle;
+	matrix3x4 fake_matrix[128];
 
 	HMODULE h_module;
 	c_engine_client* g_engine;
@@ -66,6 +67,7 @@ public:
 	WNDPROC old_window_proc;
 	unsigned long tahoma_font;
 	unsigned long tahoma_font_large;
+	unsigned long indicator_font_XD;
 
 	bool menu_opened = false;
 	int pressed_key;
