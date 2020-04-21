@@ -333,6 +333,8 @@ public:
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
 	bool misc_legit_aa_edge = false;
+	int misc_legit_aa_side_key = 46;
+	bool misc_legit_aa_flip;
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
