@@ -35,6 +35,7 @@ void c_esp::esp_main()
 	draw_fov_circle();
 	draw_crosshair();
 	recoil_crosshair();
+	g_paint_traverse.draw_legit_aa_indicator();
 //	set_weapon_models();
 
 	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
@@ -57,13 +58,6 @@ void c_esp::esp_main()
 			set_player_models(ent);
 	}
 
-
-	//if (g_weebware.menu_opened) {
-	//	int s, h;
-	//	g_weebware.g_engine->get_screen_dimensions(s, h);
-	//	g_weebware.g_surface->drawsetcolor(0, 0, 0, 185);
-	//	g_weebware.g_surface->drawfilledrect(0, 0, s, h);
-	//}
 
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
@@ -808,6 +802,9 @@ void c_esp::draw_crosshair() {
 		return;
 
 	if (!weapon->is_firearm())
+		return;
+
+	if (local->m_bIsScoped())
 		return;
 
 	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())

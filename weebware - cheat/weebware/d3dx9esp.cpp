@@ -27,6 +27,11 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	if (!g_weebware.g_engine->is_in_game())
 		return;
 
+	// visuals not needed in ent loop
+	draw_inaccuracy_circle();
+	draw_sniper_crosshair();
+	recoil_crosshair();
+
 	display_backtrack();
 
 	if (g_weebwarecfg.visuals_backtrack_dots) {
@@ -61,11 +66,6 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 
 	// hitmarker drawings
 	//g_events.on_paint();
-
-	// visuals not needed in ent loop
-	draw_inaccuracy_circle();
-	draw_sniper_crosshair();
-	recoil_crosshair();
 
 	spec_count = 0;
 	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
@@ -362,6 +362,9 @@ void c_d3dxesp::draw_sniper_crosshair() {
 		return;
 
 	if (!weapon->is_firearm())
+		return;
+
+	if (local->m_bIsScoped())
 		return;
 
 	if (!weapon->is_autosniper() && !weapon->is_awp() && !weapon->is_scout())
