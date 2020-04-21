@@ -572,7 +572,7 @@ public:
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
 		tmp["killsay_msg_custom"] = killsay_msg_custom;
-		tmp["custom_clantag_static"] = custom_clantag_static;
+		tmp["custom_clantag_static"] = custom_clantag_static_buf;
 		tmp["wireframe_smoke"] = wireframe_smoke;
 		tmp["no_hands"] = no_hands;
 		tmp["no_smoke"] = no_smoke;
