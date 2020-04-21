@@ -34,11 +34,10 @@ public:
 	std::vector<std::string> config_browser_yours;
 	std::vector<std::string> config_browser_fav;
 	json config_browser_buffer, your_configs_buffer, favorite_configs_buffer;
-	void update_config_browser();
 	void load_browser_config();
-	void save_browser_config();
 	void get_your_configs();
 	void load_config_from_memory(int index);
+	void download_config_from_browser(int index, std::string title);
 	void get_favorited_configs();
 	int cur_id_yours;
 	int cur_id_fav;
@@ -333,7 +332,7 @@ public:
 	bool misc_legit_aa_enabled = 0;
 	bool misc_legit_aa_jitter = 0;
 	bool misc_legit_aa_edge = false;
-	int misc_legit_aa_side_key = 46;
+	int misc_legit_aa_side_key = VK_MENU;
 	bool misc_legit_aa_flip;
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
@@ -553,6 +552,8 @@ public:
 		tmp["skinchanger_apply_nxt"] = skinchanger_apply_nxt;
 		tmp["misc_legit_aa_enabled"] = misc_legit_aa_enabled;
 		tmp["misc_legit_aa_jitter"] = misc_legit_aa_jitter;
+		tmp["misc_legit_aa_flip"] = misc_legit_aa_flip;
+		tmp["misc_legit_aa_side_key"] = misc_legit_aa_side_key;
 		tmp["misc_legit_aa_edge"] = misc_legit_aa_edge;
 		tmp["visuals_backtrack_style"] = visuals_backtrack_style;
 		tmp["anti_triggerbot"] = anti_triggerbot;
@@ -763,6 +764,8 @@ public:
 		if (check("misc_slidewalk", data)) misc_slidewalk = data["misc_slidewalk"];
 		if (check("anti_triggerbot_key", data)) anti_triggerbot_key = data["anti_triggerbot_key"];
 		if (check("misc_legit_aa_resolver", data)) misc_legit_aa_resolver = data["misc_legit_aa_resolver"];
+		if (check("misc_legit_aa_flip", data)) misc_legit_aa_flip = data["misc_legit_aa_flip"];
+		if (check("misc_legit_aa_side_key ", data)) misc_legit_aa_side_key = data["misc_legit_aa_side_key "];
 		if (check("misc_ai_rotationspeed", data)) misc_ai_rotationspeed = data["misc_ai_rotationspeed"];
 		if (check("misc_ai_aimspeed", data)) misc_ai_aimspeed = data["misc_ai_aimspeed"];
 		if (check("visuals_nightmode", data)) visuals_nightmode = data["visuals_nightmode"];
