@@ -6,7 +6,7 @@
 #include "events.h"
 #include "knife_proxy_hook.h"
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -132,11 +132,12 @@ void c_weebware::init_fonts( ) {
 		tahoma_font_large = g_weebware.g_surface->create_font();
 		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
 		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
-
+		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 46, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
 		init = true;
 	} else {
 		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
 		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
+		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 46, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
 	}
 }
 
