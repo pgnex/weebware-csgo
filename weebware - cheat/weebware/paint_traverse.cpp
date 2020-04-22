@@ -41,9 +41,14 @@ void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
 }
 
 void c_paint_traverse::draw_legit_aa_indicator() {
+
+	if (!g_weebwarecfg.legit_aa_indicator)
+		return;
+
+
 	int w, h; g_weebware.g_engine->get_screen_dimensions(w, h);
-	draw_string(g_weebware.indicator_font_XD, w * 0.45, h / 2, GetKeyState(0x41) ? c_color(255, 255, 0, 255) : c_color(255, 255, 255, 255), 0, "<");
-	draw_string(g_weebware.indicator_font_XD, w * 0.55, h / 2, GetKeyState(0x41) ? c_color(255, 255, 255, 255) : c_color(255, 255, 0, 255), 0, ">");
+	draw_string(g_weebware.tahoma_font_large, w * 0.45, h / 2, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 0, 255, 255) : c_color(255, 255, 255, 255), 0, "<");
+	draw_string(g_weebware.tahoma_font_large, w * 0.55, h / 2, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 255, 255, 255) : c_color(255, 0, 255, 255), 0, ">");
 }
 
 void c_paint_traverse::draw_water_mark()
