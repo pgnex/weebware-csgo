@@ -393,6 +393,17 @@ QAngle c_legitbot::magnet_hitbox(c_base_entity* target)
 		aim_spots.push_back(csgohitboxid::right_calf);
 	}
 
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all)
+	{
+		aim_spots.push_back(csgohitboxid::head);
+		aim_spots.push_back(csgohitboxid::chest);
+		aim_spots.push_back(csgohitboxid::stomach);
+		aim_spots.push_back(csgohitboxid::left_thigh);
+		aim_spots.push_back(csgohitboxid::right_thigh);
+		aim_spots.push_back(csgohitboxid::left_calf);
+		aim_spots.push_back(csgohitboxid::right_calf);
+	}
+
 	float marginal_fov = 180;
 
 	QAngle closest_hitbox = QAngle(0, 0, 0);
@@ -892,7 +903,7 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 
 	c_base_entity* best_entity = nullptr;
 	c_base_entity* closest_ent = nullptr;
-	//std::vector<int> hitboxes = get_triggerbot_hitboxes();
+	// std::vector<int> hitboxes = get_triggerbot_hitboxes();
 
 	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
 	{
@@ -1109,7 +1120,6 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		hitboxes.push_back(6);
 		hitboxes.push_back(7);
 	}
-
 
 	bool has_hitgroup = false;
 
