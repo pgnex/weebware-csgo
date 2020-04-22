@@ -27,7 +27,8 @@ void c_esp::esp_main()
 	if (!local)
 		return;
 
-	g_event_features.on_paint();
+	if (g_weebwarecfg.visuals_hitmarkers)
+		g_event_features.on_paint();
 
 	// call things here if no ent loop needed 
 
@@ -796,6 +797,9 @@ void c_esp::draw_crosshair() {
 	if (!g_weebwarecfg.visuals_sniper_crosshair)
 		return;
 
+	if (!local)
+		return;
+
 	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
 
 	if (!weapon || weapon == nullptr)
@@ -859,6 +863,9 @@ void c_esp::draw_fov_circle() {
 void c_esp::draw_inaccuracy_circle()
 {
 	if (!g_weebwarecfg.visuals_inacc_circle)
+		return;
+
+	if (!local)
 		return;
 
 	auto weapon = local->m_pActiveWeapon();
@@ -937,6 +944,12 @@ void c_esp::display_backtrack()
 bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)
 {
 	if (!local->is_valid_player())
+		return false;
+
+	if (!local)
+		return false;
+
+	if (!target)
 		return false;
 
 	trace_t Trace;
