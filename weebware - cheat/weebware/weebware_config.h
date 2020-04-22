@@ -301,6 +301,7 @@ public:
 	bool disable_post_processing;
 	bool draw_grenade_traj;
 	bool spec_list;
+	bool legit_aa_indicator;
 
 	bool anti_afk;
 	bool auto_jumpbug;
@@ -555,6 +556,7 @@ public:
 		tmp["misc_legit_aa_flip"] = misc_legit_aa_flip;
 		tmp["misc_legit_aa_side_key"] = misc_legit_aa_side_key;
 		tmp["misc_legit_aa_edge"] = misc_legit_aa_edge;
+		tmp["legit_aa_indicator"] = legit_aa_indicator;
 		tmp["visuals_backtrack_style"] = visuals_backtrack_style;
 		tmp["anti_triggerbot"] = anti_triggerbot;
 		tmp["misc_clantag_changer"] = misc_clantag_changer;
@@ -575,7 +577,7 @@ public:
 		tmp["thirdperson"] = thirdperson;
 		tmp["killsay"] = killsay;
 		tmp["killsay_msg_custom"] = killsay_msg_custom;
-		tmp["custom_clantag_static"] = custom_clantag_static_buf;
+		tmp["custom_clantag_static"] = custom_clantag_static;
 		tmp["wireframe_smoke"] = wireframe_smoke;
 		tmp["no_hands"] = no_hands;
 		tmp["no_smoke"] = no_smoke;
@@ -765,7 +767,8 @@ public:
 		if (check("anti_triggerbot_key", data)) anti_triggerbot_key = data["anti_triggerbot_key"];
 		if (check("misc_legit_aa_resolver", data)) misc_legit_aa_resolver = data["misc_legit_aa_resolver"];
 		if (check("misc_legit_aa_flip", data)) misc_legit_aa_flip = data["misc_legit_aa_flip"];
-		if (check("misc_legit_aa_side_key ", data)) misc_legit_aa_side_key = data["misc_legit_aa_side_key "];
+		if (check("legit_aa_indicator", data)) legit_aa_indicator = data["legit_aa_indicator"];
+		if (check("misc_legit_aa_side_key", data)) misc_legit_aa_side_key = data["misc_legit_aa_side_key"];
 		if (check("misc_ai_rotationspeed", data)) misc_ai_rotationspeed = data["misc_ai_rotationspeed"];
 		if (check("misc_ai_aimspeed", data)) misc_ai_aimspeed = data["misc_ai_aimspeed"];
 		if (check("visuals_nightmode", data)) visuals_nightmode = data["visuals_nightmode"];
