@@ -69,9 +69,7 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 	if (cmd->buttons & in_attack)
 		return;
 
-	if (g_weebwarecfg.misc_ai_random) {
-		g_Walkbot.m_CurrentMode = ai_movement::random;
-	}
+	g_Walkbot.m_CurrentMode = ai_movement::random;
 
 	m_flags = ai_flags::standby;
 
