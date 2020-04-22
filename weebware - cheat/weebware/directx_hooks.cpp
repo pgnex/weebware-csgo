@@ -514,7 +514,6 @@ void gui::imgui_main() {
 				imgui_custom::custom_color_inline(g_weebwarecfg.visuals_skeleton_col_visible, g_weebwarecfg.visuals_skeleton_col_hidden, true, "Visible Color (Enemy)##skele1", "Hidden Color (Enemy)##skele2");
 			}
 
-
 			ImGui::Checkbox("Health Bar", &g_weebwarecfg.visuals_health_bars);
 
 			ImGui::Checkbox("Name", &g_weebwarecfg.visuals_name_esp);
@@ -694,13 +693,14 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Misc");
 		//	ImGui::Checkbox("Shoutbox", &g_weebwarecfg.misc_shout_box);
 			ImGui::Checkbox("Chatspam", &g_weebwarecfg.misc_chat_spammer);
-			ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed);
+		//	ImGui::Checkbox("Preserve Killfeed", &g_weebwarecfg.preserve_killfeed);
 			ImGui::Checkbox("Rank Reveal", &g_weebwarecfg.rank_reveal);
 			ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing);
 			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
 			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
 			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
 			ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled);
+			ImGui::Checkbox("Legit AA Indicator", &g_weebwarecfg.legit_aa_indicator);
 			ImGui::Checkbox("Flip AA", &g_weebwarecfg.misc_legit_aa_flip);
 			if (g_weebwarecfg.misc_legit_aa_flip)
 				imgui_custom::custom_inline_keyinput(g_weebwarecfg.misc_legit_aa_side_key, key_counter);
