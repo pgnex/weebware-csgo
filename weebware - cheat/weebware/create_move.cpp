@@ -11,6 +11,7 @@
 c_create_move g_create_move;
 c_nightmode g_nightmode;
 c_utils g_utils;
+LegitAntiAim g_LegitAntiAim;
 
 bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
 {
@@ -22,7 +23,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 #endif
 	}
 
-
+	g_weebware.send_packet = true;
 
 	if ( !cmd || !cmd->command_number ) {
 		g_accuracy.clear_all_records( );
@@ -50,7 +51,6 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_create_move.chat_spam( );
 	g_create_move.rank_reveal( );
 	g_create_move.slidewalk( cmd );
-	g_LegitAntiAim.Run(cmd);
 	g_create_move.auto_pistol( cmd );
 	g_create_move.auto_jumpbug( cmd );
 	g_create_move.rainbow_name( );
@@ -60,6 +60,8 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_create_move.fake_lag( cmd, sendpacket );
 	g_create_move.anti_afk( cmd );
 	g_nightmode.run( );
+
+	g_LegitAntiAim.Run(cmd);
 
 
 	g_create_move.edge_jump_pre_prediction( cmd );
@@ -95,8 +97,13 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 		g_create_move.clamp_angles( cmd, original_angles, sendpacket );
 	}
 
-	g_create_move.real_angle = cmd->viewangles;
-	g_weebware.real_angle = cmd->viewangles;
+	//g_create_move.real_angle = cmd->viewangles;
+	//g_weebware.real_angle = cmd->viewangles;
+
+	if (!g_weebware.send_packet)
+		g_weebware.real_angle = cmd->viewangles;
+	else
+		g_weebware.fake_angle = cmd->viewangles;
 
 	return false;
 }
@@ -477,6 +484,9 @@ bool c_create_move::is_visible( c_base_entity* target )
 
 bool c_create_move::anti_trigger( c_usercmd* cmd, bool& send_packets )
 {
+
+	return false;
+
 	if ( !g_weebwarecfg.anti_triggerbot ) {
 		return false;
 	}
@@ -554,6 +564,9 @@ bool c_create_move::anti_trigger( c_usercmd* cmd, bool& send_packets )
 
 void c_create_move::run_fake( c_usercmd* cmd, bool& send_packet )
 {
+
+	return;
+
 	anti_trigger::run_choke( send_packet, cmd );
 
 	if ( anti_trigger( cmd, send_packet ) )
@@ -718,7 +731,6 @@ void c_create_move::auto_pistol( c_usercmd* cmd ) {
 
 void c_create_move::fake_lag( c_usercmd* cmd, bool send_packets ) {
 
-
 	if ( g_weebwarecfg.fake_lag <= 0 ) {
 		if ( g_weebwarecfg.fake_lag_factor > 0 )
 			g_weebwarecfg.fake_lag_factor = 0;
@@ -852,31 +864,6 @@ void c_create_move::block_bot( c_usercmd* cmd ) {
 		cmd->sidemove = -450.f;
 }
 
-void c_create_move::legit_aa( c_usercmd* cmd, bool send_packets )
-{
-
-	if ( !g_weebwarecfg.misc_legit_aa_enabled )
-		return;
-
-	if ( !local )
-		return;
-
-	if ( local->m_pActiveWeapon( )->is_grenade( ) )
-		return;
-
-	if ( local->get_move_type( ) == MOVETYPE_LADDER )
-		return;
-
-	if ( cmd->buttons & in_attack )
-		return;
-
-	g_weebware.send_packet = cmd->tick_count % g_weebwarecfg.tick_count_mod == 0;
-
-	if ( g_weebwarecfg.on_sendpacket ? g_weebware.send_packet : !g_weebware.send_packet ) {
-		cmd->viewangles.y = g_weebwarecfg.yaw_offset * (cmd->command_number % g_weebwarecfg.command_num_mod == 0 ? -1 : 1);
-	}
-}
-
 
 void c_create_move::chat_spam( ) {
 
@@ -940,8 +927,8 @@ void c_create_move::auto_jumpbug( c_usercmd* cmd ) {
 }
 
 void c_create_move::clamp_angles( c_usercmd* cmd, Vector original_angles, bool& sendpacket ) {
-	if ( cmd->buttons & in_attack )
-		sendpacket = true;
+	//if ( cmd->buttons & in_attack )
+	//	sendpacket = true;
 
 	QAngle cmd_view = cmd->viewangles;
 
