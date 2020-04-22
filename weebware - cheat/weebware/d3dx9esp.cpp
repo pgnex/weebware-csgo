@@ -27,6 +27,11 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	if (!g_weebware.g_engine->is_in_game())
 		return;
 
+	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	if (!local)
+		return;
+
 	// visuals not needed in ent loop
 	draw_inaccuracy_circle();
 	draw_sniper_crosshair();
@@ -51,12 +56,6 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
 
-	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	if (!local)
-		return;
-
-	//reclass_test(local);
 
 	// on key visuals.. not sure why anyone would use but :shrug:
 	if (g_weebwarecfg.enable_visuals == 2)
@@ -354,6 +353,9 @@ void c_d3dxesp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 void c_d3dxesp::draw_sniper_crosshair() {
 
 	if (!g_weebwarecfg.visuals_sniper_crosshair)
+		return;
+
+	if (!local)
 		return;
 
 	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
