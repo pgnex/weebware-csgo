@@ -19,8 +19,9 @@ void LegitAntiAim::Run(c_usercmd* cmd)
         return;
     }
 
-    if (g_weebwarecfg.fake_lag_factor <= 2) g_weebwarecfg.fake_lag_factor = 2;
-    if (g_weebwarecfg.fake_lag_factor >= 6) g_weebwarecfg.fake_lag_factor = 6;
+   //if (g_weebwarecfg.fake_lag_factor <= 1) g_weebwarecfg.fake_lag_factor = 1;
+   //if (g_weebwarecfg.fake_lag_factor >= 6) g_weebwarecfg.fake_lag_factor = 6;
+    g_weebwarecfg.fake_lag_factor = 1;
     g_weebwarecfg.fake_lag = 2;
     fakelag_reset = false;
 
@@ -40,12 +41,19 @@ void LegitAntiAim::Run(c_usercmd* cmd)
 
     float& ptr_sidemove = cmd->sidemove;
 
-    if (!(cmd->buttons & in_moveleft) && !(cmd->buttons & in_moveright) && !(cmd->buttons & in_forward) && !(cmd->buttons & in_back))
+    bool command_switch = cmd->command_number % 2;
+    static bool command_switch_s = false;
+    if (command_switch) command_switch_s = !command_switch_s;
+
+    if (command_switch_s && !(cmd->buttons & in_moveleft) && !(cmd->buttons & in_moveright) && !(cmd->buttons & in_forward) && !(cmd->buttons & in_back))
         if (cmd->buttons & in_duck)
-            (cmd->command_number % 2) ? ptr_sidemove += -4.6 : ptr_sidemove += 4.6;
+            command_switch ? ptr_sidemove += -4.6 : ptr_sidemove += 4.6;
         else
-            (cmd->command_number % 2) ? ptr_sidemove += -1.6 : ptr_sidemove += 1.6;
+            command_switch ? ptr_sidemove += -1.6 : ptr_sidemove += 1.6;
 
     if (!g_weebware.send_packet)
-        cmd->viewangles.y += local->get_max_theoretical_desync() * (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? 1 : -1);
+        if (command_switch_s)
+            cmd->viewangles.y -= 57 * (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? 1 : -1);
+        else
+            cmd->viewangles.y += 57 * (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? 1 : -1);
 }
