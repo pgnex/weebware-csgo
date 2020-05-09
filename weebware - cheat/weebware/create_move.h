@@ -6,7 +6,6 @@ class c_create_move
 public:
 	c_base_entity* local;
 	void correct_movement(Vector old_view_angles, c_usercmd* cmd);
-	void legit_aa(c_usercmd* cmd, bool send_packets);
 	void fake_lag(c_usercmd* cmd, bool send_packets);
 	void chat_spam();
 	void rank_reveal();

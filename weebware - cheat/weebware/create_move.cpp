@@ -89,13 +89,12 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 				ragebot::main(g_create_move.local, cmd);
 			}
 
-			//	g_create_move.legit_aa(cmd, sendpacket);
 			g_legitbot.create_move( cmd );
 			g_accuracy.accuracy_boost( cmd );
 			g_ai.create_move( cmd, g_create_move.local );
 		}
-		g_create_move.clamp_angles( cmd, original_angles, sendpacket );
 	}
+	g_create_move.clamp_angles(cmd, original_angles, sendpacket);
 
 	//g_create_move.real_angle = cmd->viewangles;
 	//g_weebware.real_angle = cmd->viewangles;
@@ -851,13 +850,13 @@ void c_create_move::block_bot( c_usercmd* cmd ) {
 
 	if ( !target )
 		return;
-
+	
 	QAngle angles;
 	g_maths.calc_angle( *local->m_vecOrigin( ), *target->m_vecOrigin( ), angles );
-
+	
 	angles.y -= local->m_angEyeAngles( ).y;
 	g_maths.normalize_angle( angles );
-
+	
 	if ( angles.y < 0.0f )
 		cmd->sidemove = 450.f;
 	else if ( angles.y > 0.0f )
