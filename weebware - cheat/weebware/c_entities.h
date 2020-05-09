@@ -312,7 +312,6 @@ public:
 		return get_pointer<QAngle>( offset );
 	}
 
-
 	float m_flLowerBodyYawTarget( )
 	{
 		static uintptr_t offset = retrieve_offset( "DT_CSPlayer", "m_flLowerBodyYawTarget" );
@@ -432,6 +431,43 @@ public:
 		return getvfunc<void( __thiscall* )(void*)>( this, 222 )(this);
 	}
 
+	float* m_flPoseParameters( ) {
+		static uintptr_t offset = retrieve_offset( "DT_BaseAnimating", "m_flPoseParameter" );
+		return get_pointer<float>( offset );
+	}
+
+	float get_max_theoretical_desync()
+	{
+		auto animstate = this->AnimState();
+		if (!animstate)
+			return 0;
+
+		float speedfactor = animstate->m_flFeetSpeedForwardsOrSideWays;
+
+		if (animstate->m_flFeetSpeedForwardsOrSideWays > 1.f)
+			speedfactor = 1.f;
+		else if (animstate->m_flFeetSpeedForwardsOrSideWays < 0.f)
+			speedfactor = 0.f;
+
+		float unk1 = ((animstate->m_flStopToFullRunningFraction * -.3f) - .2f) * speedfactor;
+		float unk2 = unk1 + 1.f;
+
+		if (animstate->m_fDuckAmount > 0.0f)
+		{
+			float max_velocity = animstate->m_flFeetSpeedForwardsOrSideWays;
+
+			if (animstate->m_flFeetSpeedForwardsOrSideWays > 1.f)
+				max_velocity = 1.f;
+			else if (animstate->m_flFeetSpeedForwardsOrSideWays < 0.f)
+				max_velocity = 0.f;
+
+			float duck_speed = animstate->m_fDuckAmount * max_velocity;
+			unk2 += (duck_speed * (0.5f - unk2));
+		}
+
+		return *reinterpret_cast<float*>(reinterpret_cast<uintptr_t>(animstate) + 0x334) * unk2;
+	}
+
 
 	bool setup_bones( matrix3x4_t* bone_to_world_out, int max_bones, int bonemask, float curtime )
 	{
@@ -537,6 +573,9 @@ public:
 		static uintptr_t offset = retrieve_offset( "DT_BaseEntity", "m_nModelIndex" );
 		return get_pointer<int>( offset );
 	}
+
+	// set_angles2
+	void c_base_entity::set_angles(Vector angles);
 
 	// Weapons.
 	c_basecombat_weapon* m_pActiveWeapon( );
