@@ -17,7 +17,6 @@ public:
 	void preserve_killfeed();
 	void bullet_tracers();
 	int convert_index_id(int index);
-	void third_person();
 	void no_vis_recoil(bool restore = false);
 };
 

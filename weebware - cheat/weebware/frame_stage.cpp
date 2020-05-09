@@ -26,12 +26,11 @@ void hook_functions::frame_stage_notify(int curStage)
 		if (curStage == clientframestage_t::frame_render_start && g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 		{
 		//	g_frame_stage_notify.no_vis_recoil();
-			g_frame_stage_notify.third_person();
 			g_frame_stage_notify.run_clantag();
 			g_frame_stage_notify.wireframe_smoke();
 			g_frame_stage_notify.bullet_tracers();
 			g_frame_stage_notify.no_smoke();
-			g_frame_stage_notify.preserve_killfeed();
+		//	g_frame_stage_notify.preserve_killfeed();
 		//	g_frame_stage_notify.remove_flash();
 		}
 		else if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game()) {
@@ -175,21 +174,17 @@ static T* find_hud_elem(const char* name) {
 static void(__thiscall* _clear_notices)(DWORD) = (void(__thiscall*)(DWORD))g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
 void c_frame_stage_notify::preserve_killfeed() {
 
-	if (!g_weebwarecfg.preserve_killfeed)
-		return;
-
-	if (!local)
-		return;
-
 	static DWORD* _death_notice = find_hud_elem<DWORD>("CCSGO_HudDeathNotice");
 
+	if (!_death_notice)
+		return;
+
+	if (_death_notice)
+		*(float*)((DWORD)_death_notice + 0x50) = (g_weebwarecfg.preserve_killfeed ? 120 : 10);
+
 	if (g_weebware.round_end) {
-		_death_notice = find_hud_elem<DWORD>("CCSGO_HudDeathNotice");
 		_clear_notices(((DWORD)_death_notice - 20));
 	}
-
-	if (_death_notice && g_weebwarecfg.preserve_killfeed)
-		* (float*)((DWORD)_death_notice + 0x50) = 120;
 
 }
 
@@ -300,25 +295,6 @@ void c_frame_stage_notify::no_vis_recoil(bool restore) {
 	*aim_punch = QAngle(0, 0, 0);
 	*view_punch = QAngle(0, 0, 0);
 
-}
-
-
-void c_frame_stage_notify::third_person() {
-
-	static bool done = false;
-
-	if (!g_weebwarecfg.thirdperson && !done)
-		return;
-
-	if (!g_weebwarecfg.thirdperson && done) {
-		g_weebware.g_input->m_fCameraInThirdPerson = false;
-		done = false;
-	}
-	
-	if (g_weebwarecfg.thirdperson && !done) {
-		g_weebware.g_input->m_fCameraInThirdPerson = true;
-		done = true;
-	}
 }
 
 void c_frame_stage_notify::legit_aa_resolver()
@@ -484,7 +460,12 @@ void c_frame_stage_notify::run_skinchanger() {
 		}
 
 		*weapon->get_fallbackwear() = skin_config.m_wear == 100 ? FLT_MIN : (100 - skin_config.m_wear) / 100;
-		*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
+
+		if (weapon->m_iItemDefinitionIndex() == 59 || weapon->m_iItemDefinitionIndex() == 42)
+			*weapon->m_iEntityQuality() = 0;
+		else 
+			*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
+	
 		*weapon->get_accountid() = local_inf.xuid_low;
 
 		if (weapon->is_knife() && g_weebwarecfg.knifechanger_enabled)
