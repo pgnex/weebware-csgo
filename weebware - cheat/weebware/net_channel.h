@@ -31,3 +31,15 @@ public:
 	virtual float GetTimeoutSeconds() const = 0;
 };
 
+class net_channel
+{
+public:
+	char pad[0x17];
+	bool m_bShouldDelete;
+	int m_iOutSequenceNr;
+	int m_iInSequenceNr;
+	int m_iOutSequenceNrAck;
+	int m_iOutReliableState;
+	int m_iInReliableState;
+	int m_iChokedPackets;
+};

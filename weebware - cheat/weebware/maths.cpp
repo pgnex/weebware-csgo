@@ -226,6 +226,18 @@ void c_maths::VectorAngles(const Vector& forward, Vector& up, QAngle& angles)
 	}
 }
 
+void c_maths::AngleVectors(const Vector& viewAngle, Vector& viewForward) {
+	float sp, sy, sr, cp, cy, cr;
+
+	sin_cos(DEG2RAD(viewAngle.x), sp, cp);
+	sin_cos(DEG2RAD(viewAngle.y), sy, cy);
+	sin_cos(DEG2RAD(viewAngle.z), sr, cr);
+
+	viewForward.x = cp * cy;
+	viewForward.y = cp * sy;
+	viewForward.z = -sp;
+}
+
 void c_maths::normalize_angle(QAngle& angle)
 {
 	while (angle.x > 89.0f)
@@ -326,4 +338,23 @@ bool c_maths::CRWorldToScreen(Vector& in, Vector& out)
 	}
 
 	return false;
+}
+
+float c_maths::m_flNormalizeYaw(float flAngle)
+{
+	if (flAngle > 180.f || flAngle < -180.f)
+	{
+		auto revolutions = round(abs(flAngle / 360.f));
+
+		if (flAngle < 0.f)
+		{
+			flAngle += 360.f * revolutions;
+		}
+		else
+		{
+			flAngle -= 360.f * revolutions;
+		}
+	}
+
+	return flAngle;
 }
