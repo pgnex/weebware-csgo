@@ -69,6 +69,56 @@ bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
 
 }
 
+void __stdcall hk_override_view(void* ecx, void* edx, view_setup_t* setup) {
+
+	std::cout << "11" << std::endl;
+
+	g_hooking.o_overrideview(ecx, edx, setup);
+
+	return;
+
+	//if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
+	//	return g_hooking.o_overrideview(ecx, edx, setup);
+
+	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	if (!local)
+		return g_hooking.o_overrideview(ecx, edx, setup);
+
+	if (GetKeyState('x')) {
+		std::cout << "key" << std::endl;
+		g_weebware.g_input->m_fCameraInThirdPerson = true;
+
+		Vector view_angles, view_forward;
+		g_weebware.g_engine->get_view_angles(view_angles);
+
+		setup->angles = view_angles;
+
+		view_angles.x = -view_angles.x;
+		view_angles.y = g_maths.m_flNormalizeYaw(view_angles.y + 180);
+
+		g_maths.AngleVectors(view_angles, view_forward);
+		g_maths.normalize_angle(view_forward);
+
+		Vector origin = local->get_abs_origins() + local->m_vecViewOffset();
+
+		trace_t trace_init;
+		ITraceFilter filter;
+		filter.pSkip = reinterpret_cast<decltype(filter.pSkip)>(local);
+		Ray_t ray;
+		ray.Init(origin, (origin + (view_forward * 150)));
+		g_weebware.g_engine_trace->TraceRay(ray, MASK_SOLID, &filter, &trace_init); // thirdperson_distance goes from 50 to 250 i'd say
+
+		view_forward = origin + (view_forward * (trace_init.fraction * (150 - 15)));
+
+		setup->origin = view_forward;
+	}
+	else
+		g_weebware.g_input->m_fCameraInThirdPerson = false;
+
+	return g_hooking.o_overrideview(ecx, edx, setup);
+}
+
 long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
 {
 #if !DEBUG_HOOKS
@@ -143,16 +193,19 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	auto protecc = g_hooking.VEH_DME->getProtectionObject();
 #endif
 
-	//if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-	////	hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
-	//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-	//}
-	//else
-	//	g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
-	// PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
-	//
-	// 
+
+
+
+
+
+
+	//	hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+	}
+
+	//	 PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
 void __fastcall hk_scene_end(void* thisptr, void* edx) {
@@ -192,8 +245,13 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 	auto protecc = g_hooking.VEH_MDL->getProtectionObject();
 #endif
 
-	if (!g_weebware.models_installed)
+	if (!g_weebware.models_installed) {
+#if DEBUG_HOOKS 
+		return PLH::FnCast(g_hooking.mdl_tramp, g_hooking.o_mdl)(ecx, edx, FilePath);
+#else
 		return g_hooking.o_mdl(ecx, edx, FilePath);
+#endif
+	}
 
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_red.mdl");
 	PrecacheModel("models/player/custom_player/caleon1/reinakousaka/reina_blue.mdl");
@@ -262,6 +320,10 @@ void SetLocalPlayerReady()
 	static auto SetLocalPlayerReadyFn = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
 	if (SetLocalPlayerReadyFn)
 		SetLocalPlayerReadyFn("");
+}
+
+void __fastcall hkCheckFileCRCsWithServer(void* ecx, void* edx) {
+	return;
 }
 
 void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, int iChannel, const char* pSoundEntry, unsigned int nSoundEntryHash, const char* pSample, float flVolume, float flAttenuation, int nSeed, int iFlags, int iPitch, const Vector* pOrigin, const Vector* pDirection, Vector* pUtlVecOrigins, bool bUpdatePositions, float soundtime, int speakerentity, int& params)
@@ -368,6 +430,14 @@ void c_hooking::hook_all_functions()
 		DETOUR_CM->hook();
 		o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
 
+
+		//auto ov_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[18];
+		//DETOUR_OVERRIDE = new PLH::x86Detour((char*)ov_addr, (char*)&hk_override_view, &override_tramp, dis);
+		//DETOUR_OVERRIDE->hook();
+		//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
+
+
+
 		//auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
 		//DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
 		//DETOUR_PRESENT->hook();
@@ -439,22 +509,29 @@ void c_hooking::hook_all_functions()
 	VEH_VM->hook();
 	o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
 
-	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
-	VEH_SOUNDS->hook();
-	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
+	//VEH_SOUNDS->hook();
+	//o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 
 	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
 	VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
 	VEH_ENDSCENE->hook();
 	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
 
+	//auto ov_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[18];
+	//VEH_OVERRIDE = new PLH::BreakPointHook((char*)ov_addr, (char*)&hk_override_view);
+	//VEH_OVERRIDE->hook();
+	//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
+
+	static auto check_file_crs_addr = reinterpret_cast<void*>(g_weebware.pattern_scan("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
+	if (check_file_crs_addr) {
+		VEH_CRS_CHECK = new PLH::BreakPointHook((char*)check_file_crs_addr, (char*)&hkCheckFileCRCsWithServer);
+		VEH_CRS_CHECK->hook();
+	}
+
 
 #endif
-
-
-
-
 
 	// DO NOT UNCOMMENT
 

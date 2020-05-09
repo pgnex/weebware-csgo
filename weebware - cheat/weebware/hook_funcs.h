@@ -38,6 +38,7 @@ public:
 	uint64_t mdl_tramp = NULL;
 	uint64_t sound_tramp = NULL;
 	uint64_t sceneend_tramp = NULL;
+	uint64_t override_tramp = NULL;
 
 	PLH::x86Detour* DETOUR_PAINT;
 	PLH::x86Detour* DETOUR_CM;
@@ -51,6 +52,7 @@ public:
 	PLH::x86Detour* DETOUR_MDL;
 	PLH::x86Detour* DETOUR_VM;
 	PLH::x86Detour* DETOUR_SOUNDS;
+	PLH::x86Detour* DETOUR_OVERRIDE;
 #else
 
 	PLH::BreakPointHook* VEH_PAINT;
@@ -66,6 +68,9 @@ public:
 	PLH::BreakPointHook* VEH_SOUNDS;
 	PLH::BreakPointHook* VEH_MDL;
 	PLH::BreakPointHook* VEH_VM;
+	PLH::BreakPointHook* VEH_OVERRIDE;
+	PLH::BreakPointHook* VEH_CRS_CHECK;
+
 
 	//PLH::x86Detour* DETOUR_ENDSCENE;
 	//uint64_t endscene_tramp = NULL;
@@ -98,6 +103,12 @@ private:
 public:
 	using fn_createmove = bool(__thiscall*)(void*, float, c_usercmd*);
 	fn_createmove o_createmove;
+#pragma endregion
+
+#pragma region override_view
+public:
+	using fn_overrideview = void(__stdcall*)(void*, void*, view_setup_t*);
+	fn_overrideview o_overrideview;
 #pragma endregion
 
 private:
