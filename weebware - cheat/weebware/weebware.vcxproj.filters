@@ -111,9 +111,6 @@
     <ClCompile Include="entry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vmt.cpp">
-      <Filter>Source Files\hooking</Filter>
-    </ClCompile>
     <ClCompile Include="configuration.cpp">
       <Filter>Source Files\Config</Filter>
     </ClCompile>
@@ -279,6 +276,9 @@
     <ClCompile Include="backtrack.cpp">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>
     </ClCompile>
+    <ClCompile Include="cm_utils.cpp">
+      <Filter>Source Files\hooking\CreateMove</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -286,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="shared.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmt.h">
-      <Filter>Source Files\hooking</Filter>
     </ClInclude>
     <ClInclude Include="configuration.h">
       <Filter>Source Files\Config</Filter>
@@ -544,6 +541,9 @@
     </ClInclude>
     <ClInclude Include="backtrack.h">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>
+    </ClInclude>
+    <ClInclude Include="cm_utils.h">
+      <Filter>Source Files\hooking\CreateMove</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -37,7 +37,6 @@
 #include "utils.h"
 #include "imgui\imgui.h"
 #include "imgui\dx9\imgui_dx9.h"
-#include "vmt.h"
 #include "virtual_function.h"
 #include "netvars.h"
 #include "maths.h"
