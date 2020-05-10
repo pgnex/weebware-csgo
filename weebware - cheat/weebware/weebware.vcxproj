@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ai.cpp" />
+    <ClCompile Include="backtrack.cpp" />
     <ClCompile Include="checksum_md5.cpp" />
     <ClCompile Include="configuration.cpp" />
     <ClCompile Include="create_move.cpp" />
@@ -161,6 +162,7 @@
     </ClCompile>
     <ClCompile Include="legit_aa.cpp" />
     <ClCompile Include="networking.cpp" />
+    <ClCompile Include="new_legit.cpp" />
     <ClCompile Include="Ragebot.cpp" />
     <ClCompile Include="scene_end.cpp" />
     <ClCompile Include="drawing.cpp" />
@@ -256,6 +258,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ai.h" />
+    <ClInclude Include="backtrack.h" />
     <ClInclude Include="checksum_md5.hpp" />
     <ClInclude Include="configuration.h" />
     <ClInclude Include="create_move.h" />
@@ -274,6 +277,7 @@
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="legit_aa.h" />
     <ClInclude Include="networking.h" />
+    <ClInclude Include="new_legit.h" />
     <ClInclude Include="Ragebot.h" />
     <ClInclude Include="raleway_font.h" />
     <ClInclude Include="scene_end.h" />

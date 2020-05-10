@@ -1093,13 +1093,9 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	*/
 
 	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_all) {
-		hitboxes.push_back(1);
-		hitboxes.push_back(2);
-		hitboxes.push_back(3);
-		hitboxes.push_back(4);
-		hitboxes.push_back(5);
-		hitboxes.push_back(6);
-		hitboxes.push_back(7);
+		for (int i = 1; i <= 7; i++) {
+			hitboxes.push_back(i);
+		}
 	}
 
 	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_head)
