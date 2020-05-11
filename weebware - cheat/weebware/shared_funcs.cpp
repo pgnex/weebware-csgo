@@ -1,0 +1,85 @@
+#include "Header.h"
+#include "shared_funcs.h"
+
+bool is_visible(c_base_entity* local, c_base_entity* target, int bone)
+{
+
+	if (!local)
+		local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+	trace_t Trace;
+
+	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(bone); // 8 is head. 
+
+	Ray_t ray;
+
+	ray.Init(src, dst2);
+
+	ITraceFilter traceFilter;
+
+	traceFilter.pSkip = (void*)local;
+
+	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
+
+
+	if (Trace.m_pEnt == target)
+		return true;
+
+	if (Trace.m_pEnt->is_valid_player())
+		return true;
+
+	if (Trace.fraction == 1.0f)
+		return true;
+
+	return false;
+}
+
+int get_config_index()
+{
+	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	auto weapon = local->m_pActiveWeapon();
+
+	if (!local) {
+		return 0;
+	}
+
+	if (!weapon) {
+		return 0;
+	}
+
+	if (weapon->is_pistol())
+	{
+		return 0;
+	}
+	else if (weapon->is_rifle())
+	{
+		return 1;
+	}
+	else if (weapon->is_smg())
+	{
+		return 2;
+	}
+	else if (weapon->is_shotgun())
+	{
+		return 3;
+	}
+	else if (weapon->is_heavy())
+	{
+		return 4;
+	}
+	else if (weapon->is_autosniper())
+	{
+		return 5;
+	}
+	else if (weapon->is_awp())
+	{
+		return 6;
+	}
+	else if (weapon->is_scout())
+	{
+		return 7;
+	}
+
+	// This shouldn't ever happen.
+	return 0;
+}

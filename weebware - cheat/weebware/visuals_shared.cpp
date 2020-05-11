@@ -89,31 +89,3 @@ s_boundaries calc_boundaries(c_base_entity* Entity)
 	}
 	return result;
 }
-
-bool is_visible(c_base_entity* local, c_base_entity* target)
-{
-	if (!local->is_valid_player())
-		return false;
-
-	trace_t Trace;
-
-	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8);
-
-	Ray_t ray;
-
-	ray.Init(src, dst2);
-
-	ITraceFilter traceFilter;
-
-	traceFilter.pSkip = (void*)local;
-
-	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
-
-	if (Trace.m_pEnt == target)
-		return true;
-
-	if (Trace.fraction == 1.0f)
-		return true;
-
-	return false;
-}

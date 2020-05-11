@@ -39,16 +39,16 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 
 	display_backtrack();
 
-	if (g_weebwarecfg.visuals_backtrack_dots) {
+	if (g_weebwarecfg.visuals_backtrack_skeleton) {
 
-		for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
+		for (size_t i = 0; i < g_backtrack.accuracy_records.size(); i++)
 		{
 			Vector w2s;
 
-			if (g_maths.CRWorldToScreen(g_accuracy.accuracy_records[i].m_head, w2s))
+			if (g_maths.CRWorldToScreen(g_backtrack.accuracy_records[i].m_head, w2s))
 			{
-				g_accuracy.accuracy_records[i].m_w2s_head = w2s;
-				g_accuracy.accuracy_records[i].m_has_w2s = true;
+				g_backtrack.accuracy_records[i].m_w2s_head = w2s;
+				g_backtrack.accuracy_records[i].m_has_w2s = true;
 			}
 		}
 	}
@@ -197,17 +197,17 @@ void c_d3dxesp::render_health(s_boundaries bounds, c_base_entity* ent) {
 
 void c_d3dxesp::display_backtrack() {
 
-	if (!g_weebwarecfg.visuals_backtrack_dots)
+	if (!g_weebwarecfg.visuals_backtrack_skeleton)
 		return;
 
 	Vector w2sParent, w2sChild;
 	// Loop thru entities and get record to draw.
 	if (g_weebwarecfg.visuals_backtrack_style == 1) {
 		// best
-		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
+		for (int i = 0; i < g_backtrack.m_best_record.bonecount; i++) {
 
-			g_maths.CRWorldToScreen(g_accuracy.m_best_record.parent[i], w2sParent);
-			g_maths.CRWorldToScreen(g_accuracy.m_best_record.child[i], w2sChild);
+			g_maths.CRWorldToScreen(g_backtrack.m_best_record.parent[i], w2sParent);
+			g_maths.CRWorldToScreen(g_backtrack.m_best_record.child[i], w2sChild);
 
 			c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
 
@@ -216,14 +216,14 @@ void c_d3dxesp::display_backtrack() {
 	}
 	else {
 
-		for (auto record : g_accuracy.accuracy_records)
+		for (auto record : g_backtrack.accuracy_records)
 		{
 			if (g_weebwarecfg.visuals_backtrack_style == 0) { // time
-				if (record.record_tick != g_accuracy.m_best_record.record_tick)
+				if (record.record_tick != g_backtrack.m_best_record.record_tick)
 					continue;
 			}
 			else if (g_weebwarecfg.visuals_backtrack_style == 3)  // all for single target
-				if (g_accuracy.m_best_record.index != record.index) {
+				if (g_backtrack.m_best_record.index != record.index) {
 					continue;
 				}
 

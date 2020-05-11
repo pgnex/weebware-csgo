@@ -59,6 +59,7 @@
 #include "c_surface.h"
 #include "move_helper.h"
 #include "trace.h"
+#include "backtrack.h"
 #include "hook_funcs.h"
 #include "shared.h"
 #include "authentication.h"
@@ -72,6 +73,7 @@
 #include "raleway_font.h"
 #include "icon_font.h"
 #include "visuals_shared.h"
+#include "shared_funcs.h"
 
 
 

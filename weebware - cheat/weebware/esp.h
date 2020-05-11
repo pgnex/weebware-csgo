@@ -30,7 +30,8 @@ private:
 	void render_weapon(s_boundaries bounds, c_base_entity* ent);
 	void render_ammo(s_boundaries bounds, c_base_entity* ent);
 	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
-	void display_backtrack();
+	void display_backtrack_skele();
+	void display_backtrack_dots();
 	void set_weapon_models();
 	void set_player_models(c_base_entity* ent);
 	void defusing_indicator(s_boundaries bounds, c_base_entity* ent);

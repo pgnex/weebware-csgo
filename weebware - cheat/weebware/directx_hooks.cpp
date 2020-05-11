@@ -640,10 +640,12 @@ void gui::imgui_main() {
 			ImGui::Text("Backtracking Style");
 			const char* backtrackstyle[] = { "Time", "Single", "All", "Target" };
 			imgui_custom::a_better_combo_box("##backtrackingtype", &g_weebwarecfg.visuals_backtrack_style, backtrackstyle, ARRAYSIZE(backtrackstyle));
-			ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_dots);
-			if (g_weebwarecfg.visuals_backtrack_dots) {
+			if (g_weebwarecfg.visuals_backtrack_skeleton || g_weebwarecfg.visuals_backtrack_dots) {
 				imgui_custom::custom_color_inline(g_weebwarecfg.visuals_backtrack_col, "Backtrack Color");
 			}
+			ImGui::Checkbox("Backtrack Skeleton", &g_weebwarecfg.visuals_backtrack_skeleton);
+			ImGui::Checkbox("Backtrack Dots", &g_weebwarecfg.visuals_backtrack_dots);
+			
 
 			imgui_custom::horizontal_margin("bottommarginlegit1", 4);
 			ImGui::EndChild();

@@ -4,16 +4,16 @@
 #include "Legit.h"
 #include "paint_traverse.h"
 #include "events.h"
+#include "backtrack.h"
 
 c_esp g_esp;
+c_backtrack g_backtrack;
 FeatureFuncs g_event_features;
 int specs = 0;
 
 void c_esp::esp_main()
 {
 	water_mark();
-
-	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	if (!g_weebware.g_engine->is_connected())
 		return;
@@ -23,6 +23,8 @@ void c_esp::esp_main()
 
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
 		return;
+
+	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 	if (!local)
 		return;
@@ -68,26 +70,9 @@ void c_esp::esp_main()
 			return;
 
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-
-		draw_inaccuracy_circle();
-		display_backtrack();
-
-		if (g_weebwarecfg.visuals_backtrack_dots) {
-
-			for (size_t i = 0; i < g_accuracy.accuracy_records.size(); i++)
-			{
-				Vector w2s;
-
-				if (g_maths.world_to_screen(g_accuracy.accuracy_records[i].m_head, w2s))
-				{
-					g_accuracy.accuracy_records[i].m_w2s_head = w2s;
-					g_accuracy.accuracy_records[i].m_has_w2s = true;
-				}
-			}
-		}
-
-	}
+	draw_inaccuracy_circle();
+	display_backtrack_skele();
+	display_backtrack_dots();
 
 	specs = 0;
 
@@ -291,12 +276,7 @@ void c_esp::recoil_crosshair() {
 	if (!g_weebwarecfg.visuals_recoil_crosshair)
 		return;
 
-	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	if (!local)
-		return;
-
-	if (!local->is_valid_player())
+	if (!(local->m_iHealth() > 0))
 		return;
 
 	Vector view_angles;
@@ -797,8 +777,6 @@ void c_esp::draw_crosshair() {
 	if (!g_weebwarecfg.visuals_sniper_crosshair)
 		return;
 
-	if (!local)
-		return;
 
 	c_basecombat_weapon* weapon = local->m_pActiveWeapon();
 
@@ -833,8 +811,6 @@ void c_esp::draw_fov_circle() {
 	if (!g_weebwarecfg.visuals_fov_circle)
 		return;
 
-	if (!local)
-		return;
 
 	if (local->m_iHealth() <= 0)
 		return;
@@ -842,7 +818,7 @@ void c_esp::draw_fov_circle() {
 	int x, y;
 	float fov;
 
-	fov = g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].maximum_fov;
+	fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
 
@@ -865,9 +841,6 @@ void c_esp::draw_inaccuracy_circle()
 	if (!g_weebwarecfg.visuals_inacc_circle)
 		return;
 
-	if (!local)
-		return;
-
 	auto weapon = local->m_pActiveWeapon();
 
 	if (!weapon)
@@ -884,22 +857,42 @@ void c_esp::draw_inaccuracy_circle()
 	g_weebware.g_surface->drawcoloredcircle(x / 2.f, y / 2.f, (weapon->Get_Innacuracy() * 200) + 1, col.r, col.g, col.b, col.a);
 }
 
-void c_esp::display_backtrack()
+void c_esp::display_backtrack_dots() {
+	if (g_weebwarecfg.visuals_backtrack_dots) {
+		for (auto record : g_backtrack.accuracy_records) {
+
+			if (!record.visible)
+				continue;
+
+			Vector screen_pos;
+			if (g_maths.world_to_screen(record.m_head, screen_pos)) {
+
+				c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
+				g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
+
+				g_weebware.g_surface->drawfilledrect(screen_pos.x, screen_pos.y, screen_pos.x + 2, screen_pos.y + 2);
+			}
+
+		}
+	}
+}
+
+void c_esp::display_backtrack_skele()
 {
-	if (!g_weebwarecfg.visuals_backtrack_dots)
+	if (!g_weebwarecfg.visuals_backtrack_skeleton)
 		return;
 
 	Vector w2sParent, w2sChild;
 	// Loop thru entities and get record to draw.
 	if (g_weebwarecfg.visuals_backtrack_style == 1) {
 		// best
-		for (int i = 0; i < g_accuracy.m_best_record.bonecount; i++) {
+		for (int i = 0; i < g_backtrack.m_best_record.bonecount; i++) {
 
-			if (!g_accuracy.accuracy_records[i].visible)
+			if (!g_backtrack.accuracy_records[i].visible)
 				continue;
 
-			g_maths.world_to_screen(g_accuracy.m_best_record.parent[i], w2sParent);
-			g_maths.world_to_screen(g_accuracy.m_best_record.child[i], w2sChild);
+			g_maths.world_to_screen(g_backtrack.m_best_record.parent[i], w2sParent);
+			g_maths.world_to_screen(g_backtrack.m_best_record.child[i], w2sChild);
 
 			c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
 
@@ -910,18 +903,18 @@ void c_esp::display_backtrack()
 	}
 	else {
 
-		for (auto record : g_accuracy.accuracy_records)
+		for (auto record : g_backtrack.accuracy_records)
 		{
 
 			if (!record.visible)
 				continue;
 
 			if (g_weebwarecfg.visuals_backtrack_style == 0) { // time
-				if (record.record_tick != g_accuracy.m_best_record.record_tick)
+				if (record.record_tick != g_backtrack.m_best_record.record_tick)
 					continue;
 			}
 			else if (g_weebwarecfg.visuals_backtrack_style == 3)  // all for single target
-				if (g_accuracy.m_best_record.index != record.index) {
+				if (g_backtrack.m_best_record.index != record.index) {
 					continue;
 				}
 			

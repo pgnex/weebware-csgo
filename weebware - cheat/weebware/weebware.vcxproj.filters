@@ -103,6 +103,9 @@
     <Filter Include="Source Files\hooking\CreateMove\backtrack">
       <UniqueIdentifier>{78bee5d2-7d18-4b81-82f9-45a1aa95983f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Shared">
+      <UniqueIdentifier>{7737a59e-753b-4389-975f-cb8b531630f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -276,8 +279,8 @@
     <ClCompile Include="backtrack.cpp">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>
     </ClCompile>
-    <ClCompile Include="cm_utils.cpp">
-      <Filter>Source Files\hooking\CreateMove</Filter>
+    <ClCompile Include="shared_funcs.cpp">
+      <Filter>Source Files\Shared</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -542,8 +545,8 @@
     <ClInclude Include="backtrack.h">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>
     </ClInclude>
-    <ClInclude Include="cm_utils.h">
-      <Filter>Source Files\hooking\CreateMove</Filter>
+    <ClInclude Include="shared_funcs.h">
+      <Filter>Source Files\Shared</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

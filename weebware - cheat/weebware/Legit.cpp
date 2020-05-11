@@ -4,8 +4,6 @@
 
 c_legitbot g_legitbot;
 
-c_legitbot::c_accuracy_boost g_accuracy;
-
 c_base_entity* cur_target = NULL;
 c_base_entity* cur_target_trig = NULL;
 int last_delay = 0, last_delay_trig = 0;
@@ -68,7 +66,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		return;
 	}
 
-	if (!is_visible(target))
+	if (!is_visible(m_local, target))
 		return;
 
 	if (target->trace_from_smoke(*m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
@@ -120,55 +118,6 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	}
 }
 
-int c_legitbot::get_config_index()
-{
-	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-	auto weapon = local->m_pActiveWeapon();
-
-	if (!local) {
-		return 0;
-	}
-
-	if (!weapon) {
-		return 0;
-	}
-
-	if (weapon->is_pistol())
-	{
-		return 0;
-	}
-	else if (weapon->is_rifle())
-	{
-		return 1;
-	}
-	else if (weapon->is_smg())
-	{
-		return 2;
-	}
-	else if (weapon->is_shotgun())
-	{
-		return 3;
-	}
-	else if (weapon->is_heavy())
-	{
-		return 4;
-	}
-	else if (weapon->is_autosniper())
-	{
-		return 5;
-	}
-	else if (weapon->is_awp())
-	{
-		return 6;
-	}
-	else if (weapon->is_scout())
-	{
-		return 7;
-	}
-
-	// This shouldn't ever happen.
-	return 0;
-}
 
 
 c_base_entity* c_legitbot::closest_target_available()
@@ -189,7 +138,7 @@ c_base_entity* c_legitbot::closest_target_available()
 		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum() && !g_weebwarecfg.legit_cfg[get_config_index()].target_teammates)
 			continue;
 
-		if (!is_visible(cur_entity))
+		if (!is_visible(m_local, cur_entity))
 			continue;
 
 		Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
@@ -294,35 +243,6 @@ QAngle c_legitbot::calcute_delta(QAngle src, QAngle dst, float f)
 	delta.z = 0;
 
 	return delta;
-}
-
-bool c_legitbot::is_visible(c_base_entity* target, int bone)
-{
-	trace_t Trace;
-
-	Vector src = m_local->get_vec_eyepos(), dst2 = target->get_bone(bone); // 8 is head. 
-
-	Ray_t ray;
-
-	ray.Init(src, dst2);
-
-	ITraceFilter traceFilter;
-
-	traceFilter.pSkip = (void*)m_local;
-
-	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
-
-
-	if (Trace.m_pEnt == target)
-		return true;
-
-	if (Trace.m_pEnt->is_valid_player())
-		return true;
-
-	if (Trace.fraction == 1.0f)
-		return true;
-
-	return false;
 }
 
 
@@ -569,247 +489,7 @@ long c_legitbot::get_epoch()
 	return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
 }
 
-// Althought I dont believe this works hmm
 
-void c_legitbot::c_accuracy_boost::set_abs_origins(c_base_entity* a1, const Vector& a2)
-{
-	using SetAbsOriginFn = void(__thiscall*)(c_base_entity*, const Vector&);
-	static SetAbsOriginFn SetAbsOrigin;
-
-	if (!SetAbsOrigin)
-		SetAbsOrigin = (SetAbsOriginFn)(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8 1F ? ?"));
-
-	SetAbsOrigin(a1, a2);
-}
-
-void c_legitbot::c_accuracy_boost::set_abs_angles(c_base_entity* a1, const Vector& a2)
-{
-	using SetAbsAnglesFn = void(__thiscall*)(c_base_entity*, const Vector&);
-	static SetAbsAnglesFn SetAbsAngles;
-
-	if (!SetAbsAngles)
-		SetAbsAngles = (SetAbsAnglesFn)(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 83 EC 64 53 56 57 8B F1 E8 5D"));
-
-	SetAbsAngles(a1, a2);
-}
-
-void c_legitbot::c_accuracy_boost::invalidate_bone_cache(c_base_entity* entity)
-{
-	static uintptr_t dwBoneCache = g_weebware.pattern_scan("client_panorama.dll", "80 3D ?? ?? ?? ?? ?? 74 16 A1 ?? ?? ?? ?? 48 C7 81");
-	uintptr_t iModelBoneCounter = **(uintptr_t**)(dwBoneCache + 10);
-	*(uintptr_t*)((DWORD)entity + 0x2914) = 0xFF7FFFFF;
-	*(uintptr_t*)((DWORD)entity + 0x2680) = (iModelBoneCounter - 1); 
-}
-
-
-c_legitbot::c_accuracy_boost::c_accuracy_records c_legitbot::c_accuracy_boost::create_record(c_base_entity* entity, c_usercmd* cmd)
-{
-	c_accuracy_records cur_record;
-	// I guess we can store everything, not going to hurt.
-	// cur_record.m_angles = entity->GetAbsAngles();
-	//cur_record.m_cycle = *entity->m_flCycle();
-	//cur_record.m_max = *entity->m_vecMaxs();
-	//cur_record.m_mins = *entity->m_vecMins();
-	//// cur_record.m_abs_origin = entity->get_abs_origins();
-	//cur_record.m_origin = *entity->m_Origin();
-	//cur_record.m_sequence = *entity->m_nSequence();
-	cur_record.m_simulation_time = *entity->m_flSimulationTime();
-	cur_record.m_head = entity->get_bone(8);
-	cur_record.record_tick = cmd->tick_count;
-	cur_record.index = entity->EntIndex();
-	cur_record.visible = g_legitbot.is_visible(entity, 8);
-#if 1
-	auto studiomodel = g_weebware.g_model_info->getstudiomodel(entity->getmodel());
-
-	if (studiomodel) {
-
-		cur_record.bonecount = studiomodel->numbones;
-
-		if (cur_record.bonecount) {
-
-			for (int i = 0; i < cur_record.bonecount; i++)
-			{
-				mstudiobone_t* pBone = studiomodel->GetBone(i);
-
-				if (pBone && (pBone->flags & 256) && (pBone->parent != -1))
-				{
-					cur_record.child[i] = entity->get_bone(i);
-					cur_record.parent[i] = entity->get_bone(pBone->parent);
-				}
-			}
-		}
-	}
-#endif
-	return cur_record;
-}
-
-void c_legitbot::c_accuracy_boost::set_record(c_base_entity* player, c_accuracy_boost::c_accuracy_records record)
-{
-	// set_abs_angles(player, record.m_angles);
-	// set_abs_origins(player, record.m_abs_origin);
-	/**player->m_Origin() = record.m_origin;
-	*player->m_flCycle() = record.m_cycle;
-	*player->m_vecMaxs() = record.m_max;
-	*player->m_vecMins() = record.m_mins;
-	*player->m_nSequence() = record.m_sequence;*/
-	*player->m_flSimulationTime() = record.m_simulation_time;
-}
-
-#define TIME_TO_TICKS( dt )		( (int)( 0.5f + (float)(dt) / g_weebware.g_global_vars->interval_per_tick ) )
-#define TICKS_TO_TIME( t )		( g_weebware.g_global_vars->interval_per_tick *( t ) )
-#define ROUND_TO_TICKS( t )		( g_weebware.g_global_vars->interval_per_tick * TIME_TO_TICKS( t ) )
-#define TICK_NEVER_THINK		(-1)
-
-template< class T, class Y >
-T fClamp(T const& val, Y const& minVal, Y const& maxVal)
-{
-	if (val < minVal)
-		return minVal;
-	else if (val > maxVal)
-		return maxVal;
-	else
-		return val;
-}
-
-#if 1
-bool IsTickValid(float sim)
-{
-	float correct = 0;
-
-	correct += g_weebware.g_engine->get_net_channel()->GetLatency(0);
-	correct += g_weebware.g_engine->get_net_channel()->GetLatency(1);
-
-	c_convar* cl_updaterate = g_weebware.g_convars->find_cvar("cl_updaterate");
-	float lerp = g_weebware.g_convars->find_cvar("cl_interp")->GetFloat();
-	c_convar* cl_interp_ratio = g_weebware.g_convars->find_cvar("cl_interp_ratio");
-
-	float m_flLerpTime = max(lerp, cl_interp_ratio->GetFloat() / cl_updaterate->GetFloat());
-
-	correct += m_flLerpTime;
-
-	correct = fClamp(correct, 0.f, 1.f);
-
-	float deltaTime = correct - (g_weebware.g_global_vars->curtime - sim);
-
-	if (fabsf(deltaTime) > 0.2f)
-	{
-		return false;
-	}
-
-	return true;
-}
-#endif
-#if 0
-bool IsTickValid(float sim_time)
-{
-
-	float correct{}, out, in, dt;
-	int server_tick;
-
-	in = g_entry.g_engine->get_net_channel()->GetLatency(1);
-	out = g_entry.g_engine->get_net_channel()->GetLatency(0);
-
-	correct = out;
-
-	correct = fClamp(correct, 0.f, 1.f);
-
-	server_tick = (g_entry.g_global_vars->tickcount + 1) + TIME_TO_TICKS(in + out);
-
-	dt = correct - (TICKS_TO_TIME(server_tick) - sim_time);
-
-	return std::abs(dt) <= 0.2f;
-}
-#endif
-
-bool c_legitbot::c_accuracy_boost::is_valid_record(c_accuracy_records record)
-{
-	if (!IsTickValid(record.m_simulation_time))
-	{
-		return false;
-	}
-	return true;
-}
-
-void c_legitbot::c_accuracy_boost::clear_all_records()
-{
-	accuracy_records.clear();
-}
-
-void c_legitbot::c_accuracy_boost::accuracy_boost(c_usercmd* cmd)
-{
-	if (!g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].accuracy_boost || !g_legitbot.m_local || !g_legitbot.m_local->m_pActiveWeapon() || !g_legitbot.m_local->m_pActiveWeapon()->is_firearm()) {
-		clear_all_records();
-		return;
-	}
-
-	// Create some records...
-	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
-	{
-		c_base_entity* cur_entity = g_weebware.g_entlist->getcliententity(i);
-
-		if (!cur_entity->is_valid_player())
-			continue;
-
-		if (cur_entity == g_legitbot.m_local)
-			continue;
-
-		if (cur_entity->m_iTeamNum() == g_legitbot.m_local->m_iTeamNum())
-			continue;
-
-		if (cur_entity->m_bGunGameImmunity())
-			continue;
-
-		if (cur_entity->is_stationary())
-			continue;
-
-		accuracy_records.push_back(create_record(cur_entity, cmd));
-	}
-
-	float marginal_fov = 20;
-
-	for (size_t i = 0; i < accuracy_records.size(); i++)
-	{
-		bool ExistingPlayer = true;
-		auto record_player = g_weebware.g_entlist->getcliententity(accuracy_records[i].index);
-
-		if (!record_player || !record_player->is_valid_player())
-			ExistingPlayer = false;
-
-		if (!is_valid_record(accuracy_records[i]) || !ExistingPlayer 
-			|| ((cmd->tick_count - g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].legit_maximum_ticks) >= accuracy_records[i].record_tick))
-		{
-			accuracy_records.erase(accuracy_records.begin() + i);
-			continue;
-		}
-
-
-		QAngle angle_to_hitbox;
-
-		g_maths.vector_qangles(accuracy_records[i].m_head - g_legitbot.m_local->get_vec_eyepos(), angle_to_hitbox);
-
-		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
-
-		g_weebware.g_engine->get_view_angles(view_angles);
-
-		view_angles += g_legitbot.m_local->m_aimPunchAngle() * 2.f;
-
-		float this_fov = g_maths.get_fov(view_angles, angle_to_hitbox);
-
-		if (this_fov < marginal_fov)
-		{
-			accuracy_records[i].m_best_record = true;
-			m_best_record = accuracy_records[i];
-			marginal_fov = this_fov;
-		}
-
-
-	}
-
-	if (cmd->buttons & in_attack)
-	{
-		cmd->tick_count = m_best_record.record_tick;
-	}
-}
 
 float random_float(float flMinVal, float flMaxVal)
 {
@@ -961,7 +641,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 	if (!target->is_valid_player())
 		return;
 
-	if (!is_visible(target))
+	if (!is_visible(m_local, target))
 		return;
 
 	if (cur_target_trig != target)
@@ -1023,7 +703,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 {
 	static float m_last_delay = 0.f;
 
-	switch (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_active) {
+	switch (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_active) {
 	case 0:
 		return;
 	case 1:
@@ -1092,27 +772,27 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 	HITGROUP_GEAR       10
 	*/
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_all) {
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all) {
 		for (int i = 1; i <= 7; i++) {
 			hitboxes.push_back(i);
 		}
 	}
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_head)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_head)
 		hitboxes.push_back(1);
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_chest)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_chest)
 		hitboxes.push_back(2);
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_stomach)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_stomach)
 		hitboxes.push_back(3);
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_arms) {
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_arms) {
 		hitboxes.push_back(4);
 		hitboxes.push_back(5);
 	}
 
-	if (g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_legs) {
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_legs) {
 		hitboxes.push_back(6);
 		hitboxes.push_back(7);
 	}
@@ -1130,7 +810,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	if (has_hitgroup) {
 
-		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_reaction))
+		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_reaction))
 			return;	
 
 		if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only)
@@ -1144,7 +824,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		}
 		
 
-		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[g_legitbot.get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
+		if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_hitchance, trace_entity, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
 			cmd->buttons |= in_attack;
 		}
 		else {

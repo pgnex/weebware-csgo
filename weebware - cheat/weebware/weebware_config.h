@@ -278,6 +278,7 @@ public:
 	bool visuals_sniper_crosshair;
 	bool visuals_recoil_crosshair;
 	bool visuals_backtrack_dots;
+	bool visuals_backtrack_skeleton;
 	bool visuals_visible_only;
 	bool visuals_bspotted;
 	bool visuals_bomb_timer;
@@ -510,6 +511,7 @@ public:
 		tmp["visuals_health_bars"] = visuals_health_bars;
 		tmp["visuals_inacc_circle"] = visuals_inacc_circle;
 		tmp["visuals_backtrack_dots"] = visuals_backtrack_dots;
+		tmp["visuals_backtrack_skeleton"] = visuals_backtrack_skeleton;
 		tmp["visuals_visible_only"] = visuals_visible_only;
 		tmp["visuals_bspotted"] = visuals_bspotted;
 		tmp["visuals_bomb_timer"] = visuals_bomb_timer;
@@ -696,6 +698,7 @@ public:
 		if (check("visuals_health_bars", data)) visuals_health_bars = data["visuals_health_bars"];
 		if (check("visuals_inacc_circle", data)) visuals_inacc_circle = data["visuals_inacc_circle"];
 		if (check("visuals_backtrack_dots", data)) visuals_backtrack_dots = data["visuals_backtrack_dots"];
+		if (check("visuals_backtrack_skeleton", data)) visuals_backtrack_skeleton = data["visuals_backtrack_skeleton"];
 		if (check("visuals_visible_only", data)) visuals_visible_only = data["visuals_visible_only"];
 		if (check("visuals_bspotted", data)) visuals_bspotted = data["visuals_bspotted"];
 		if (check("visuals_bomb_timer", data)) visuals_bomb_timer = data["visuals_bomb_timer"];

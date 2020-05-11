@@ -147,7 +147,6 @@
     <ClCompile Include="Ai.cpp" />
     <ClCompile Include="backtrack.cpp" />
     <ClCompile Include="checksum_md5.cpp" />
-    <ClCompile Include="cm_utils.cpp" />
     <ClCompile Include="configuration.cpp" />
     <ClCompile Include="create_move.cpp" />
     <ClCompile Include="c_entities.cpp" />
@@ -266,6 +265,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="knife_proxy_hook.cpp" />
+    <ClCompile Include="shared_funcs.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="visuals_shared.cpp" />
     <ClCompile Include="weebware_config.cpp" />
@@ -282,7 +282,6 @@
     <ClInclude Include="Ai.h" />
     <ClInclude Include="backtrack.h" />
     <ClInclude Include="checksum_md5.hpp" />
-    <ClInclude Include="cm_utils.h" />
     <ClInclude Include="configuration.h" />
     <ClInclude Include="create_move.h" />
     <ClInclude Include="c_engine_client.h" />
@@ -348,6 +347,7 @@
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp" />
     <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
     <ClInclude Include="knife_proxy_hook.h" />
+    <ClInclude Include="shared_funcs.h" />
     <ClInclude Include="skindefs.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="UtlMemory.h" />

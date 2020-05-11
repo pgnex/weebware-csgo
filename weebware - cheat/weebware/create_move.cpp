@@ -26,12 +26,12 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_weebware.send_packet = true;
 
 	if ( !cmd || !cmd->command_number ) {
-		g_accuracy.clear_all_records( );
+		g_backtrack.clear_all_records( );
 		return false;
 	}
 
 	if ( !g_weebware.g_engine->is_connected( ) || !g_weebware.g_engine->is_in_game( ) ) {
-		g_accuracy.clear_all_records( );
+		g_backtrack.clear_all_records( );
 		return false;
 	}
 
@@ -39,7 +39,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	Vector original_angles = cmd->viewangles;
 
 	if ( !g_create_move.local ) {
-		g_accuracy.clear_all_records( );
+		g_backtrack.clear_all_records( );
 		return false;
 	}
 
@@ -73,11 +73,11 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	if ( g_create_move.local->is_valid_player( ) && g_create_move.local->m_pActiveWeapon( ) ) {
 
 		if ( g_weebwarecfg.skinchanger_apply_nxt ) {
-			g_accuracy.clear_all_records( );
+			g_backtrack.clear_all_records( );
 			if ( *g_weebware.g_client_state ) {
 				knife_hook.force_update( );
 			}
-			g_accuracy.clear_all_records( );
+			g_backtrack.clear_all_records( );
 			g_weebwarecfg.skinchanger_apply_nxt = 0;
 		}
 		else {
@@ -90,7 +90,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 			}
 
 			g_legitbot.create_move( cmd );
-			g_accuracy.accuracy_boost( cmd );
+			g_backtrack.accuracy_boost( cmd );
 			g_ai.create_move( cmd, g_create_move.local );
 		}
 	}

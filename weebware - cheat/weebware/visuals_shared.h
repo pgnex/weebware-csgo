@@ -31,7 +31,6 @@ struct backtrack_skeleton
 
 Vector center_hitbox(c_base_entity* ent, int id);
 s_boundaries calc_boundaries(c_base_entity* Entity);
-bool is_visible(c_base_entity* local, c_base_entity* target);
 
 #endif
 
