@@ -30,7 +30,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		return;
 	case 1:
 		if (!(cmd->buttons & in_attack)) {
-			m_last_time = get_epoch();
+			m_last_time = get_epoch_ms();
 			last_delay = 0.f;
 			cur_target = NULL;
 			return;
@@ -38,7 +38,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		break;
 	case 2:
 		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_activation_key)) {
-			m_last_time = get_epoch();
+			m_last_time = get_epoch_ms();
 			last_delay = 0.f;
 			cur_target = NULL;
 			return;
@@ -53,16 +53,16 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 	if (cur_target != target)
 		if (cur_target != NULL)
-			if (get_epoch() <= (last_delay + g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay))
+			if (get_epoch_ms() <= (last_delay + g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay))
 				return;
 
-	last_delay = get_epoch();
+	last_delay = get_epoch_ms();
 	cur_target = target;
 
 	if (!target->is_valid_player()) {
 		last_delay = 0.f;
 		cur_target = NULL;
-		m_last_time = get_epoch();
+		m_last_time = get_epoch_ms();
 		return;
 	}
 
@@ -73,7 +73,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		return;
 
 
-	if (!(get_epoch() > (m_last_time + g_weebwarecfg.legit_cfg[get_config_index()].reaction_time))) {
+	if (!(get_epoch_ms() > (m_last_time + g_weebwarecfg.legit_cfg[get_config_index()].reaction_time))) {
 		return;
 	}
 
@@ -105,7 +105,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim)
 	{
-		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
+		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
 
 		cmd->viewangles = delta;
 
@@ -450,7 +450,7 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 
 	QAngle rcs_angle = view_angle - (punch - old_punch);
 
-	QAngle delta = calcute_delta(view_angle, rcs_angle, g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power);
+	QAngle delta = g_maths.calcute_delta(view_angle, rcs_angle, g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power);
 
 	g_maths.normalize_angle(delta);
 
@@ -466,45 +466,6 @@ void c_legitbot::standalone_rcs(c_usercmd* cmd)
 	old_punch = punch;
 }
 
-long c_legitbot::get_epoch()
-{
-	auto duration = std::chrono::system_clock::now().time_since_epoch();
-	return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-}
-
-
-
-float random_float(float flMinVal, float flMaxVal)
-{
-	typedef float(__cdecl * RandomFloatFn)(float, float);
-	static RandomFloatFn randomFloat = (RandomFloatFn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
-	return randomFloat(flMinVal, flMaxVal);
-}
-
-void random_seed(UINT Seed)
-{
-	typedef void(*RandomSeed_t)(UINT);
-	static RandomSeed_t m_RandomSeed = (RandomSeed_t)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
-	m_RandomSeed(Seed);
-}
-
-Vector get_spread(c_basecombat_weapon* weapon, int seed)
-{
-	random_seed((seed & 0xFF) + 1);
-
-	constexpr float pi = PI;
-	constexpr float pi2 = pi * 2;
-
-	float a = random_float(0, pi2);
-	float flRandomInaccuracy = random_float(0, weapon->Get_Innacuracy());
-	float c = random_float(0, pi2);
-
-	float flRandomSpread = random_float(0, weapon->GetSpread());
-
-	float x = (cos(a) * flRandomSpread) + (cos(c) * flRandomInaccuracy);
-	float y = (sin(a) * flRandomSpread) + (sin(c) * flRandomInaccuracy);
-	return Vector(x, y, 0);
-}
 
 bool c_legitbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst)
 {
@@ -629,10 +590,10 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 
 	if (cur_target_trig != target)
 		if (cur_target_trig != NULL)
-			if (get_epoch() <= (last_delay_trig + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_target_switch_delay))
+			if (get_epoch_ms() <= (last_delay_trig + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_target_switch_delay))
 				return;
 
-	last_delay_trig = get_epoch();
+	last_delay_trig = get_epoch_ms();
 	cur_target_trig = target;
 
 	if (target) {
@@ -649,7 +610,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 		g_weebware.g_engine->get_view_angles(view_angles);
 
-		QAngle delta = calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth);
+		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth);
 
 		cmd->viewangles = delta;
 
@@ -691,7 +652,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		return;
 	case 1:
 		if (!(GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_key))) {
-			m_last_delay = get_epoch();
+			m_last_delay = get_epoch_ms();
 			last_delay_trig = 0;
 			cur_target_trig = NULL;
 			return;
@@ -742,18 +703,6 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	std::vector<int>hitboxes;
 
-	/*
-	these are the hitboxes
-	HITGROUP_GENERIC    0
-	HITGROUP_HEAD       1
-	HITGROUP_CHEST      2
-	HITGROUP_STOMACH    3
-	HITGROUP_LEFTARM    4
-	HITGROUP_RIGHTARM   5
-	HITGROUP_LEFTLEG    6
-	HITGROUP_RIGHTLEG   7
-	HITGROUP_GEAR       10
-	*/
 
 	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all) {
 		for (int i = 1; i <= 7; i++) {
@@ -793,7 +742,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 
 	if (has_hitgroup) {
 
-		if (get_epoch() <= (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_reaction))
+		if (get_epoch_ms() <= (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_reaction))
 			return;	
 
 		if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only)
@@ -815,7 +764,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 		}
 	}
 	else {
-		m_last_delay = get_epoch();
+		m_last_delay = get_epoch_ms();
 
 	}
 

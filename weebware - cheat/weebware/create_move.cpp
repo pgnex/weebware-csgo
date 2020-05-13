@@ -13,6 +13,7 @@ c_create_move g_create_move;
 c_nightmode g_nightmode;
 c_utils g_utils;
 LegitAntiAim g_LegitAntiAim;
+c_newlegit g_newlegit;
 
 bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
 {
@@ -199,12 +200,6 @@ void c_create_move::disable_post_processing( ) {
 
 }
 
-
-long get_epoch( ) {
-	auto duration = std::chrono::system_clock::now( ).time_since_epoch( );
-	return std::chrono::duration_cast<std::chrono::seconds>(duration).count( );
-}
-
 void c_create_move::anti_afk( c_usercmd* cmd ) {
 
 	if ( !g_weebwarecfg.anti_afk )
@@ -213,13 +208,13 @@ void c_create_move::anti_afk( c_usercmd* cmd ) {
 	static bool updated = false;
 	static int update_time = 0;
 
-	if ( get_epoch( ) > update_time&& updated ) {
+	if ( get_epoch_s( ) > update_time&& updated ) {
 		cmd->forwardmove = 30;
 		updated = false;
 		return;
 	}
 	if ( !updated ) {
-		update_time = get_epoch( ) + 30;
+		update_time = get_epoch_s( ) + 30;
 		updated = true;
 	}
 

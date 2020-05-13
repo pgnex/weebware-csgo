@@ -28,7 +28,6 @@ private:
 	QAngle closest_hitbox(c_base_entity* target);
 	QAngle rcs_scaled(QAngle original_angle, float pitch, float yaw);
 	void standalone_rcs(c_usercmd* cmd);
-	long get_epoch();
 	double m_last_time = 0;
 	bool next_attack_queued();
 

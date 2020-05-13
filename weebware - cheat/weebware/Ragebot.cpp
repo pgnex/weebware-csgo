@@ -179,37 +179,6 @@ namespace ragebot
 		cmd->sidemove = 0;
 	}
 
-	float random_float(float flMinVal, float flMaxVal)
-	{
-		typedef float(__cdecl* RandomFloatFn)(float, float);
-		static RandomFloatFn randomFloat = (RandomFloatFn)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomFloat");
-		return randomFloat(flMinVal, flMaxVal);
-	}
-
-	void random_seed(UINT Seed)
-	{
-		typedef void(*RandomSeed_t)(UINT);
-		static RandomSeed_t m_RandomSeed = (RandomSeed_t)GetProcAddress(GetModuleHandle("vstdlib.dll"), "RandomSeed");
-		m_RandomSeed(Seed);
-	}
-
-	Vector get_spread(c_basecombat_weapon* weapon, int seed)
-	{
-		random_seed((seed & 0xFF) + 1);
-
-		constexpr float pi = PI;
-		constexpr float pi2 = pi * 2;
-
-		float a = random_float(0, pi2);
-		float flRandomInaccuracy = random_float(0, weapon->Get_Innacuracy());
-		float c = random_float(0, pi2);
-
-		float flRandomSpread = random_float(0, weapon->GetSpread());
-
-		float x = (cos(a) * flRandomSpread) + (cos(c) * flRandomInaccuracy);
-		float y = (sin(a) * flRandomSpread) + (sin(c) * flRandomInaccuracy);
-		return Vector(x, y, 0);
-	}
 
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst, c_base_entity* local)
 	{
