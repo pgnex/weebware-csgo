@@ -15,6 +15,35 @@ void c_newlegit::run(c_usercmd* cmd, c_base_entity* local) {
 	g_triggerbot.run(cmd, this);
 }
 
+void c_newlegit::reduce_recoil(c_usercmd* cmd) {
+
+	if (!m_local->m_iShotsFired() > 1)
+		return;
+
+	static QAngle old_punch = QAngle(0, 0, 0);
+
+	QAngle view_angle = cmd->viewangles;
+	QAngle punch = m_local->m_aimPunchAngle() * 2.f;
+	QAngle rcs_angle = view_angle - (punch - old_punch);
+	QAngle delta = g_maths.calcute_delta(view_angle, rcs_angle, 100);
+
+	if (cmd->buttons & in_attack) {
+		cmd->viewangles = delta;
+		g_weebware.g_engine->set_view_angles(cmd->viewangles);
+	}
+
+	old_punch = punch;
+}
+
+
+
+
+
+
+///
+///	TRIGGERBOT STUFF
+///
+
 void c_triggerbot::run(c_usercmd* cmd, c_newlegit* legit) {
 
 	m_local = legit->get_local();
@@ -76,11 +105,7 @@ c_base_entity* c_triggerbot::get_trace_ent() {
 	if (trace_entity->m_iTeamNum() == m_local->m_iTeamNum())
 		return nullptr;
 
-	std::vector<int>hitboxes;
-
-	for (int i = 1; i <= 7; i++) {
-		hitboxes.push_back(i);
-	}
+	std::vector<int>hitboxes = setup_hitboxes();
 
 	for (auto hitbox : hitboxes)
 	{
@@ -89,6 +114,38 @@ c_base_entity* c_triggerbot::get_trace_ent() {
 		}
 	}
 	return nullptr;
+}
+
+std::vector<int> c_triggerbot::setup_hitboxes() {
+
+	std::vector<int>hitboxes;
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all) {
+		for (int i = 1; i <= 7; i++) {
+			hitboxes.push_back(i);
+		}
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_head)
+		hitboxes.push_back(1);
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_chest)
+		hitboxes.push_back(2);
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_stomach)
+		hitboxes.push_back(3);
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_arms) {
+		hitboxes.push_back(4);
+		hitboxes.push_back(5);
+	}
+
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_legs) {
+		hitboxes.push_back(6);
+		hitboxes.push_back(7);
+	}
+
+	return hitboxes;
 }
 
 void c_triggerbot::shoot(c_usercmd* cmd, c_base_entity* target) {
@@ -152,28 +209,6 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 	return false;
 }
 
-void c_newlegit::reduce_recoil(c_usercmd* cmd) {
-
-		if (!m_local->m_iShotsFired() > 1)
-			return;
-	
-		static QAngle old_punch = QAngle(0, 0, 0);
-	
-		QAngle view_angle = cmd->viewangles;
-		QAngle punch = m_local->m_aimPunchAngle() * 2.f;
-		QAngle rcs_angle = view_angle - (punch - old_punch);
-		QAngle delta = g_maths.calcute_delta(view_angle, rcs_angle, 100);
-		
-		if (cmd->buttons & in_attack) {
-			cmd->viewangles = delta;
-			g_weebware.g_engine->set_view_angles(cmd->viewangles);
-		}
-
-		old_punch = punch;
-}
-
-
-// add these to the combatweapon class to make better..
 
 bool c_triggerbot::sniper_scoped() {
 

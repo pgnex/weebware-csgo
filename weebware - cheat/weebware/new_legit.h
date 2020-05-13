@@ -33,6 +33,7 @@ public:
 	c_base_entity* get_trace_ent();
 	void shoot(c_usercmd* cmd, c_base_entity* target);
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
+	std::vector<int> setup_hitboxes();
 
 	bool sniper_scoped();
 	bool next_attack_queued();
