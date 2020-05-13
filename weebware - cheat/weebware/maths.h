@@ -103,6 +103,7 @@ bool s_bMathlibInitialized = false;
 	void normalize_angle(QAngle& angle);
 	void clamp_angle(QAngle& angle);
 	void sin_cos(float value, float &sr, float &cr);
+	QAngle calcute_delta(QAngle src, QAngle dst, float f);
 
 	// some test w2s with crender
 	const matrix3x4& GetWorldToScreen();

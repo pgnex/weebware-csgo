@@ -238,7 +238,7 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	direction.x = 0;
 
 	// We dont want to instanteously snap tho
-	direction = g_legitbot.calcute_delta(cmd->viewangles, direction, 5.f);
+	direction = g_maths.calcute_delta(cmd->viewangles, direction, 5.f);
 
 	// Only yaw
 	cmd->viewangles.y = direction.y;
@@ -275,7 +275,7 @@ void c_ai::correct_range(c_usercmd* cmd) {
 	g_maths.vector_qangles(direction - m_local->get_vec_eyepos(), aim_dir);
 
 	// rotate player to visible range
-	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, g_weebwarecfg.misc_ai_rotationspeed);
+	cmd->viewangles = g_maths.calcute_delta(m_localview, aim_dir, g_weebwarecfg.misc_ai_rotationspeed);
 
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
 }
@@ -290,7 +290,7 @@ void c_ai::kill(c_usercmd* cmd) {
 
 	aim_dir -= m_local->m_aimPunchAngle() * 2.f;
 
-	cmd->viewangles = g_legitbot.calcute_delta(m_localview, aim_dir, g_weebwarecfg.misc_ai_aimspeed);
+	cmd->viewangles = g_maths.calcute_delta(m_localview, aim_dir, g_weebwarecfg.misc_ai_aimspeed);
 
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
 

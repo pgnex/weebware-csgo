@@ -238,6 +238,24 @@ void c_maths::AngleVectors(const Vector& viewAngle, Vector& viewForward) {
 	viewForward.z = -sp;
 }
 
+
+QAngle c_maths::calcute_delta(QAngle src, QAngle dst, float f)
+{
+	QAngle src2 = src;
+
+	QAngle delta = dst - src;
+
+	g_maths.normalize_angle(delta);
+
+	g_maths.clamp_angle(delta);
+
+	delta = src + delta / 100.f * f;
+
+	delta.z = 0;
+
+	return delta;
+}
+
 void c_maths::normalize_angle(QAngle& angle)
 {
 	while (angle.x > 89.0f)

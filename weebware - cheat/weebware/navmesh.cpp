@@ -902,7 +902,7 @@ void CWalkbot::WalkOnPath(c_usercmd* cmd)
 	// Only gay fags set angle and walk, real men use maths.
 
 #if 0
-	QAngle delta = g_legitbot.calcute_delta(pCmd->viewangles, vecAngle, g_weebwarecfg.misc_cfg.misc_ai_legitfactor);
+	QAngle delta = g_maths.calcute_delta(pCmd->viewangles, vecAngle, g_weebwarecfg.misc_cfg.misc_ai_legitfactor);
 
 	pCmd->viewangles.y = delta.y;
 
