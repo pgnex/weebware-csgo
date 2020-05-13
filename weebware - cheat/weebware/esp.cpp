@@ -859,15 +859,16 @@ void c_esp::draw_inaccuracy_circle()
 
 void c_esp::display_backtrack_dots() {
 	if (g_weebwarecfg.visuals_backtrack_dots) {
+
+		c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
 		for (auto record : g_backtrack.accuracy_records) {
 
-			if (!record.visible)
+			if (!record.visible && g_weebwarecfg.visuals_visible_only)
 				continue;
 
 			Vector screen_pos;
 			if (g_maths.world_to_screen(record.m_head, screen_pos)) {
 
-				c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
 				g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
 				g_weebware.g_surface->drawfilledrect(screen_pos.x, screen_pos.y, screen_pos.x + 2, screen_pos.y + 2);
@@ -883,6 +884,8 @@ void c_esp::display_backtrack_skele()
 		return;
 
 	Vector w2sParent, w2sChild;
+	c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
+
 	// Loop thru entities and get record to draw.
 	if (g_weebwarecfg.visuals_backtrack_style == 1) {
 		// best
@@ -894,10 +897,7 @@ void c_esp::display_backtrack_skele()
 			g_maths.world_to_screen(g_backtrack.m_best_record.parent[i], w2sParent);
 			g_maths.world_to_screen(g_backtrack.m_best_record.child[i], w2sChild);
 
-			c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
-
 			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-
 			g_weebware.g_surface->drawline(w2sParent.x, w2sParent.y, w2sChild.x, w2sChild.y);
 		}
 	}
@@ -906,7 +906,7 @@ void c_esp::display_backtrack_skele()
 		for (auto record : g_backtrack.accuracy_records)
 		{
 
-			if (!record.visible)
+			if (!record.visible && g_weebwarecfg.visuals_visible_only)
 				continue;
 
 			if (g_weebwarecfg.visuals_backtrack_style == 0) { // time
@@ -920,14 +920,10 @@ void c_esp::display_backtrack_skele()
 			
 			// best tick to draw skeleton
 			for (int i = 0; i < record.bonecount; i++) {
-
 				g_maths.world_to_screen(record.parent[i], w2sParent);
 				g_maths.world_to_screen(record.child[i], w2sChild);
 
-				c_color col = c_color(g_weebwarecfg.visuals_backtrack_col);
-
 				g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-
 				g_weebware.g_surface->drawline(w2sParent.x, w2sParent.y, w2sChild.x, w2sChild.y);
 			}
 		}
