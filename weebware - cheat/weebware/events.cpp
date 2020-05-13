@@ -212,9 +212,9 @@ void GameEvents::init() {
 	add_event("player_hurt", EventFuncs::player_hurt);
 	add_event("bullet_impact", EventFuncs::bullet_impact);
 	add_event("player_death", EventFuncs::player_death);
-	add_event("round_end", EventFuncs::round_end);
+//	add_event("round_end", EventFuncs::round_end);
 	add_event("round_start", EventFuncs::round_start);
-	add_event("cs_game_disconnected", EventFuncs::game_end);
+//	add_event("cs_game_disconnected", EventFuncs::game_end);
 
 	register_events();
 }
