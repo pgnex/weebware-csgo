@@ -7,7 +7,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-using SafeRequest.NET;
+using SafeRequest;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -19,7 +19,7 @@ namespace loader.Authentication {
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
         private const string VERSION_STRING = "4.0";
 
-        public static SafeRequest.NET.SafeRequest safeRequest = new SafeRequest.NET.SafeRequest(ENCRYPTION_KEY);
+        public static SafeRequest.SafeRequest safeRequest = new SafeRequest.SafeRequest(ENCRYPTION_KEY);
 
         public static Response SafeLogin(string username, string password) {
             NameValueCollection values = new NameValueCollection();
@@ -27,6 +27,7 @@ namespace loader.Authentication {
             values["password"] = password;
             values["hwid"] = HWID.getHWID();
             values["loader_version"] = VERSION_STRING;
+            values["pc_name"] = Environment.UserName;
             values["login"] = "yeet";
             return safeRequest.Request(URL, values);
         }

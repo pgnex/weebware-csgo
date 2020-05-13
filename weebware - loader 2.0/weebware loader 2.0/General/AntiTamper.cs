@@ -1,5 +1,5 @@
 ﻿using loader.Authentication;
-using SafeRequest.NET;
+using SafeRequest;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

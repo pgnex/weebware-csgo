@@ -1,7 +1,7 @@
 ﻿using loader;
 using loader.Authentication;
 using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
-using SafeRequest.NET;
+using SafeRequest;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
