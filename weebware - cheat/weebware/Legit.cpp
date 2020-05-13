@@ -228,23 +228,6 @@ Vector c_legitbot::center_hitbox(c_base_entity* ent, int id)
 	return vCenter;
 }
 
-QAngle c_legitbot::calcute_delta(QAngle src, QAngle dst, float f)
-{
-	QAngle src2 = src;
-
-	QAngle delta = dst - src;
-
-	g_maths.normalize_angle(delta);
-
-	g_maths.clamp_angle(delta);
-
-	delta = src + delta / 100.f * f;
-
-	delta.z = 0;
-
-	return delta;
-}
-
 
 bool c_legitbot::is_visible_angle(c_base_entity* target, Vector dst2)
 {

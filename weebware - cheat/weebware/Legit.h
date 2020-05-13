@@ -10,7 +10,6 @@ public:
 
 	// Expose this function so accuracy boost can use it.
 	Vector center_hitbox(c_base_entity* ent, int id);
-	QAngle calcute_delta(QAngle src, QAngle dst, float f);
 
 
 	void triggerbot_main(c_usercmd* cmd);
