@@ -117,7 +117,7 @@ void c_ai::create_move(c_usercmd* cmd, c_base_entity* local)
 			continue;
 
 		// check for closest player VISIBLE.
-		if (!is_visible(entity))
+		if (!is_visible(local, entity))
 			continue;
 
 		QAngle angle_to_head = QAngle(0.f, 0.f, 0.f);
@@ -247,30 +247,6 @@ void c_ai::adjust_to_velocity(c_usercmd* cmd)
 	g_weebware.g_engine->set_view_angles(cmd->viewangles);
 }
 
-bool c_ai::is_visible(c_base_entity* target)
-{
-	trace_t Trace;
-
-	Vector src = m_local->get_vec_eyepos(), dst2 = target->get_bone(8); // 8 is head. 
-
-	Ray_t ray;
-
-	ray.Init(src, dst2);
-
-	ITraceFilter traceFilter;
-
-	traceFilter.pSkip = reinterpret_cast<decltype(traceFilter.pSkip)>(m_local);
-
-	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
-
-	if (Trace.m_pEnt == target)
-		return true;
-
-	if (Trace.fraction == 1.0f)
-		return true;
-
-	return false;
-}
 
 // Preferable only use assault rifles - most reliable.
 void c_ai::auto_buy_weapons(c_usercmd* cmd)

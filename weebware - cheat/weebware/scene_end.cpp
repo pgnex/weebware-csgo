@@ -107,33 +107,6 @@ imaterial* c_sceneend::generate_material(bool ignore, bool lit, bool wire_frame)
 	return created_mat;
 }
 
-bool c_sceneend::is_visible(c_base_entity* target)
-{
-	trace_t Trace;
-
-	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8); // 8 is head. 
-
-	Ray_t ray;
-
-	ray.Init(src, dst2);
-
-	ITraceFilter traceFilter;
-
-	traceFilter.pSkip = reinterpret_cast<decltype(traceFilter.pSkip)>(local);
-
-	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
-
-	if (Trace.m_pEnt == target)
-		return true;
-
-	if (Trace.fraction == 1.0f)
-		return true;
-
-	return false;
-}
-
 
 imaterial* create_default() {
 	std::ofstream("csgo\\materials\\material_textured.vmt") << R"#("VertexLitGeneric"
@@ -368,7 +341,7 @@ void c_sceneend::glow() {
 		switch (class_id) {
 		case 40:
 			if (!g_weebwarecfg.visuals_glow_player) continue;
-			if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
+			if (g_weebwarecfg.visuals_glow_hidden_col) col = is_visible(local, entity) ? g_weebwarecfg.visuals_glow_player_col_visible : g_weebwarecfg.visuals_glow_player_col_hidden;
 			else col = g_weebwarecfg.visuals_glow_player_col_visible;
 			break;
 		case 128:

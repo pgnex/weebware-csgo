@@ -4,6 +4,7 @@
 #include "shared.h"
 #include "create_move.h"
 #include "Legit.h"
+#include "new_legit.h"
 #include "Ragebot.h"
 #include "hook_funcs.h"
 #include <intrin.h>
@@ -82,14 +83,14 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 		}
 		else {
 			g_create_move.local->m_pActiveWeapon( )->Update_Accuracy_Penalty( );
-			g_legitbot.m_local = g_create_move.local;
 
 			// spooky stuff
 			if (!g_weebwarecfg.safemode) {
 				ragebot::main(g_create_move.local, cmd);
 			}
 
-			g_legitbot.create_move( cmd );
+			g_newlegit.run(cmd, g_create_move.local);
+			// g_legitbot.create_move( cmd );
 			g_backtrack.accuracy_boost( cmd );
 			g_ai.create_move( cmd, g_create_move.local );
 		}
@@ -450,32 +451,6 @@ void c_create_move::auto_strafe( c_usercmd* cmd ) {
 	}
 }
 
-
-
-bool c_create_move::is_visible( c_base_entity* target )
-{
-	trace_t Trace;
-
-	Vector src = local->get_vec_eyepos( ), dst2 = target->get_bone( 8 ); // 8 is head. 
-
-	Ray_t ray;
-
-	ray.Init( src, dst2 );
-
-	ITraceFilter traceFilter;
-
-	traceFilter.pSkip = (void*)local;
-
-	g_weebware.g_engine_trace->TraceRay( ray, MASK_SHOT, &traceFilter, &Trace );
-
-	if ( Trace.m_pEnt == target )
-		return true;
-
-	if ( Trace.fraction == 1.0f )
-		return true;
-
-	return false;
-}
 
 
 // https://www.unknowncheats.me/forum/counterstrike-global-offensive/258333-antitrigger.html

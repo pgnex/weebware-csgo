@@ -38,8 +38,6 @@ private:
 
 	void adjust_to_velocity(c_usercmd* cmd);
 
-	bool is_visible(c_base_entity* target);
-
 	void jump_on_low_velocity(c_usercmd* cmd);
 
 	float m_tempt_fov = 180.f;
