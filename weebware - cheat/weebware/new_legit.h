@@ -11,30 +11,49 @@ public:
 
 	// feature funcs also not requiring own class
 
-	// getter setter for local
-	void set_local(c_base_entity* local) { this->m_local = local; }
-	c_base_entity* get_local() { return this->m_local; }
 
 private:
 	c_base_entity* m_local;
 
 }; extern c_newlegit g_newlegit;
 
+class c_aimbot : public  c_newlegit {
+private:
+	// feature vars
+	c_base_entity* m_local;
+	long m_last_delay;
+	c_base_entity* cur_target = NULL;
+	int last_delay_aim = 0;
+public:
+	// init feature..
+	void run(c_usercmd* cmd, c_base_entity* local);
+
+	// feature funcs
+	c_base_entity* closest_target_available();
+	void auto_stop(c_usercmd* cmd);
+	QAngle closest_hitbox(c_base_entity* target);
+	std::vector<int> setup_hitboxes();
+	bool next_attack_queued();
+};
+
 
 class c_triggerbot : public c_newlegit {
 private:
+	// feature vars
 	c_base_entity* m_local;
 	long m_last_delay;
 	c_base_entity* cur_target = NULL;
 	int last_delay_trig = 0;
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 public:
-	void run(c_usercmd* cmd, c_newlegit* legit);
+	// init feature..
+	void run(c_usercmd* cmd, c_base_entity* local);
+
+	// feature funcs
 	c_base_entity* get_trace_ent();
+	std::vector<int> setup_hitboxes();
 	void shoot(c_usercmd* cmd, c_base_entity* target);
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
-	std::vector<int> setup_hitboxes();
-
 	bool sniper_scoped();
 	bool next_attack_queued();
 };
