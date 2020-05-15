@@ -9,45 +9,44 @@ public:
 	// features not requiring own class
 	void reduce_recoil(c_usercmd* cmd);
 
-	// feature funcs also not requiring own class
+	// shared feature funcs not requiring own class
+	c_base_entity* closest_target_available(bool triggerbot);
 
-
-private:
 	c_base_entity* m_local;
+private:
+
 
 }; extern c_newlegit g_newlegit;
 
 class c_aimbot : public  c_newlegit {
 private:
 	// feature vars
-	c_base_entity* m_local;
 	long m_last_delay;
 	c_base_entity* cur_target = NULL;
 	int last_delay_aim = 0;
 public:
 	// init feature..
-	void run(c_usercmd* cmd, c_base_entity* local);
+	void run(c_usercmd* cmd);
 
 	// feature funcs
-	c_base_entity* closest_target_available();
 	void auto_stop(c_usercmd* cmd);
-	QAngle closest_hitbox(c_base_entity* target);
-	std::vector<int> setup_hitboxes();
+	QAngle closest_hitbox(c_base_entity* target, bool triggerbot);
+	std::vector<int> setup_hitboxes(bool triggerbot);
 	bool next_attack_queued();
+	void do_aim_stuffs(c_base_entity* target, c_usercmd* cmd, bool triggerbot);
 };
 
 
-class c_triggerbot : public c_newlegit {
+class c_triggerbot : public c_newlegit, public c_aimbot {
 private:
 	// feature vars
-	c_base_entity* m_local;
 	long m_last_delay;
 	c_base_entity* cur_target = NULL;
 	int last_delay_trig = 0;
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 public:
 	// init feature..
-	void run(c_usercmd* cmd, c_base_entity* local);
+	void run(c_usercmd* cmd);
 
 	// feature funcs
 	c_base_entity* get_trace_ent();

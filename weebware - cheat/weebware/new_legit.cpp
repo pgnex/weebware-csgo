@@ -6,12 +6,14 @@ c_aimbot g_aimbot;
 
 void c_newlegit::run(c_usercmd* cmd, c_base_entity* local) {
 
+	g_newlegit.m_local = local;
+
 	// need to add param to incorporate aimbot angles, and reduction %
 	// reduce_recoil(cmd);
 
 	// TOO MANY FUNCS I MADE IT ITS OWN CLASS
-	g_triggerbot.run(cmd, local);
-	g_aimbot.run(cmd, local);
+	g_triggerbot.run(cmd);
+	g_aimbot.run(cmd);
 }
 
 void c_newlegit::reduce_recoil(c_usercmd* cmd) {
@@ -39,8 +41,7 @@ void c_newlegit::reduce_recoil(c_usercmd* cmd) {
 ///	AIMBOT STUFF
 ///
 
-void c_aimbot::run(c_usercmd* cmd, c_base_entity* local) {
-	m_local = local;
+void c_aimbot::run(c_usercmd* cmd) {
 
 	switch (g_weebwarecfg.legit_cfg[get_config_index()].enable_legitbot) {
 	case 0:
@@ -63,10 +64,10 @@ void c_aimbot::run(c_usercmd* cmd, c_base_entity* local) {
 		break;
 	}
 
-	if (m_local->is_flashed() && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_while_blind))
+	if (g_newlegit.m_local->is_flashed() && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_while_blind))
 		return;
 
-	c_base_entity* target = closest_target_available();
+	c_base_entity* target = closest_target_available(false);
 
 	if (cur_target != target)
 		if (cur_target != NULL)
@@ -84,10 +85,10 @@ void c_aimbot::run(c_usercmd* cmd, c_base_entity* local) {
 		return;
 	}
 
-	if (!is_visible(m_local, target))
+	if (!is_visible(g_newlegit.m_local, target))
 		return;
 
-	if (target->trace_from_smoke(*m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
+	if (target->trace_from_smoke(*g_newlegit.m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
 		return;
 
 
@@ -98,7 +99,75 @@ void c_aimbot::run(c_usercmd* cmd, c_base_entity* local) {
 	if (g_weebwarecfg.legit_cfg[get_config_index()].quick_stop)
 		auto_stop(cmd);
 
-	QAngle aim_angle = closest_hitbox(target);
+	do_aim_stuffs(target, cmd, false);
+}
+
+c_base_entity* c_newlegit::closest_target_available(bool triggerbot) {
+
+	float best_fov = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov : g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
+	float closest_fov = 180.f;
+
+	c_base_entity* best_entity = nullptr;
+	c_base_entity* closest_ent = nullptr;
+
+	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
+	{
+		c_base_entity* cur_entity = g_weebware.g_entlist->getcliententity(i);
+
+		if (!cur_entity->is_valid_player())
+			continue;
+
+		if (cur_entity->m_iTeamNum() == g_newlegit.m_local->m_iTeamNum() && !g_weebwarecfg.legit_cfg[get_config_index()].target_teammates)
+			continue;
+
+		if (!is_visible(g_newlegit.m_local, cur_entity))
+			continue;
+
+		Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
+
+		QAngle angle_to_head;
+
+		g_maths.vector_qangles(center_head - g_newlegit.m_local->get_vec_eyepos(), angle_to_head);
+
+		g_maths.normalize_angle(angle_to_head);
+
+		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+
+		g_weebware.g_engine->get_view_angles(view_angles);
+
+		view_angles += g_newlegit.m_local->m_aimPunchAngle() * 2.f;
+
+		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
+		float this_fov = g_maths.get_fov(view_angles, angle_to_head, false, Vector(g_newlegit.m_local->get_vec_eyepos() - center_head).size());
+		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
+
+		if (normal_fov < closest_fov) {
+			closest_ent = cur_entity;
+			closest_fov = normal_fov;
+		}
+
+		// prevent symmetry collision
+		if (this_fov < best_fov && closest_ent == cur_entity)
+		{
+			best_entity = cur_entity;
+			best_fov = this_fov;
+		}
+
+	}
+
+	return best_entity;
+}
+
+void c_aimbot::do_aim_stuffs(c_base_entity* target, c_usercmd* cmd, bool triggerbot) {
+
+	if (triggerbot) {
+		target = closest_target_available(triggerbot);
+
+		if (!target)
+			return;
+	}
+
+	QAngle aim_angle = closest_hitbox(target, triggerbot);
 
 	if (aim_angle.x == 0 && aim_angle.y == 0)
 		return;
@@ -112,7 +181,8 @@ void c_aimbot::run(c_usercmd* cmd, c_base_entity* local) {
 
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim)
 	{
-		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
+		int sensitivity = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth : g_weebwarecfg.legit_cfg[get_config_index()].sensitivity;
+		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, sensitivity);
 
 		cmd->viewangles = delta;
 
@@ -130,11 +200,12 @@ void c_aimbot::auto_stop(c_usercmd* cmd) {
 	cmd->sidemove = 0;
 }
 
-std::vector<int> c_aimbot::setup_hitboxes() {
+std::vector<int> c_aimbot::setup_hitboxes(bool triggerbot) {
 
 	std::vector<int> aim_spots;
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_all)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_all && !triggerbot || 
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all && triggerbot)
 	{
 		for (int i = 0; i != csgohitboxid::max; i++) {
 			aim_spots.push_back(static_cast<csgohitboxid>(i));
@@ -142,7 +213,8 @@ std::vector<int> c_aimbot::setup_hitboxes() {
 		return aim_spots;
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_legs)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_legs && !triggerbot ||
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_legs && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::right_thigh);
 		aim_spots.push_back(csgohitboxid::left_thigh);
@@ -152,7 +224,8 @@ std::vector<int> c_aimbot::setup_hitboxes() {
 		aim_spots.push_back(csgohitboxid::left_foot);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_arms)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_arms && !triggerbot ||
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_arms && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::right_hand);
 		aim_spots.push_back(csgohitboxid::left_hand);
@@ -162,17 +235,20 @@ std::vector<int> c_aimbot::setup_hitboxes() {
 		aim_spots.push_back(csgohitboxid::left_forearm);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_head)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_head && !triggerbot ||
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_head && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::head);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_chest)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_chest && !triggerbot || 
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_chest && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::chest);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_stomach)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_stomach && !triggerbot ||
+		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_stomach && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::stomach);
 	}
@@ -180,11 +256,12 @@ std::vector<int> c_aimbot::setup_hitboxes() {
 	return aim_spots;
 }
 
-QAngle c_aimbot::closest_hitbox(c_base_entity* target) {
+QAngle c_aimbot::closest_hitbox(c_base_entity* target, bool triggerbot) {
+
 	if (!target->is_valid_player())
 		return QAngle(0, 0, 0);
 
-	std::vector<int> aim_spots = setup_hitboxes();
+	std::vector<int> aim_spots = setup_hitboxes(triggerbot);
 
 	float marginal_fov = 180;
 
@@ -196,7 +273,7 @@ QAngle c_aimbot::closest_hitbox(c_base_entity* target) {
 
 		QAngle angle_to_hitbox;
 
-		g_maths.vector_qangles(hitbox - m_local->get_vec_eyepos(), angle_to_hitbox);
+		g_maths.vector_qangles(hitbox - g_newlegit.m_local->get_vec_eyepos(), angle_to_hitbox);
 
 		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 
@@ -215,70 +292,13 @@ QAngle c_aimbot::closest_hitbox(c_base_entity* target) {
 	return closest_hitbox;
 }
 
-c_base_entity* c_aimbot::closest_target_available() {
-
-	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
-	float closest_fov = 180.f;
-
-	c_base_entity* best_entity = nullptr;
-	c_base_entity* closest_ent = nullptr;
-
-	for (int i = 1; i <= g_weebware.g_engine->get_max_clients(); i++)
-	{
-		c_base_entity* cur_entity = g_weebware.g_entlist->getcliententity(i);
-
-		if (!cur_entity->is_valid_player())
-			continue;
-
-		if (cur_entity->m_iTeamNum() == m_local->m_iTeamNum() && !g_weebwarecfg.legit_cfg[get_config_index()].target_teammates)
-			continue;
-
-		if (!is_visible(m_local, cur_entity))
-			continue;
-
-		Vector center_head = center_hitbox(cur_entity, (int)csgohitboxid::head);
-
-		QAngle angle_to_head;
-
-		g_maths.vector_qangles(center_head - m_local->get_vec_eyepos(), angle_to_head);
-
-		g_maths.normalize_angle(angle_to_head);
-
-		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
-
-		g_weebware.g_engine->get_view_angles(view_angles);
-
-		view_angles += m_local->m_aimPunchAngle() * 2.f;
-
-		// a bug with dstance fov is it can calculate the delta of someone behind you to be the of a lower fov.
-		float this_fov = g_maths.get_fov(view_angles, angle_to_head, false, Vector(m_local->get_vec_eyepos() - center_head).size());
-		float normal_fov = g_maths.get_fov(view_angles, angle_to_head);
-
-		if (normal_fov < closest_fov) {
-			closest_ent = cur_entity;
-			closest_fov = normal_fov;
-		}
-
-		// prevent symmetry collision
-		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov && this_fov < best_fov && closest_ent == cur_entity)
-		{
-			best_entity = cur_entity;
-			best_fov = this_fov;
-		}
-
-	}
-
-	return best_entity;
-}
 
 
 ///
 ///	TRIGGERBOT STUFF
 ///
 
-void c_triggerbot::run(c_usercmd* cmd, c_base_entity* local) {
-
-	m_local = local;
+void c_triggerbot::run(c_usercmd* cmd) {
 
 	switch (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_active) {
 	case 0:
@@ -292,6 +312,8 @@ void c_triggerbot::run(c_usercmd* cmd, c_base_entity* local) {
 		}
 		break;
 	}
+
+	do_aim_stuffs(NULL, cmd, true);
 
 	c_base_entity* target = get_trace_ent();
 
@@ -311,21 +333,21 @@ c_base_entity* c_triggerbot::get_trace_ent() {
 
 	// get our viewangles and account for aimpunch
 	g_weebware.g_engine->get_view_angles(view_angles);
-	view_angles += m_local->m_aimPunchAngle() * 2.f;
+	view_angles += g_newlegit.m_local->m_aimPunchAngle() * 2.f;
 
 	// this will be our ray
 	Vector forward = Vector(0, 0, 0);
 	g_maths.qangle_vector(view_angles, forward);
-	Vector dst = m_local->get_vec_eyepos() + (forward * m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
+	Vector dst = g_newlegit.m_local->get_vec_eyepos() + (forward * g_newlegit.m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
 	trace_t trace;
 	Ray_t ray;
-	Vector src = m_local->get_vec_eyepos();
+	Vector src = g_newlegit.m_local->get_vec_eyepos();
 
 	ray.Init(src, dst);
 
 	ITraceFilter traceFilter;
-	traceFilter.pSkip = (void*)m_local;
+	traceFilter.pSkip = (void*)g_newlegit.m_local;
 
 	g_weebware.g_engine_trace->TraceRay(ray, 0x46004003, &traceFilter, &trace);
 
@@ -334,7 +356,7 @@ c_base_entity* c_triggerbot::get_trace_ent() {
 	if (!trace_entity->is_valid_player())
 		return nullptr;
 
-	if (trace_entity->m_iTeamNum() == m_local->m_iTeamNum())
+	if (trace_entity->m_iTeamNum() == g_newlegit.m_local->m_iTeamNum())
 		return nullptr;
 
 	std::vector<int>hitboxes = setup_hitboxes();
@@ -393,11 +415,11 @@ void c_triggerbot::shoot(c_usercmd* cmd, c_base_entity* target) {
 
 
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
-		if (target->trace_from_smoke(*m_local->m_vecOrigin()))
+		if (target->trace_from_smoke(*g_newlegit.m_local->m_vecOrigin()))
 			return;
 	}
 
-	if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_hitchance, target, m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
+	if (raytrace_hc(view_angles, g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_hitchance, target, g_newlegit.m_local->m_pActiveWeapon()->get_weapon_info()->flRange) && next_attack_queued()) {
 		cmd->buttons |= in_attack;
 	}
 	else {
@@ -416,17 +438,17 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 
 	for (int seed = 0; seed < 255; seed++)
 	{
-		Vector spread = get_spread(m_local->m_pActiveWeapon(), seed);
+		Vector spread = get_spread(g_newlegit.m_local->m_pActiveWeapon(), seed);
 
 		Vector vecDir(vecDirShooting.x + spread.x * vecRight.x + spread.y * vecUp.x,
 			vecDirShooting.y + spread.x * vecRight.y + spread.y * vecUp.y,
 			vecDirShooting.z + spread.x * vecRight.z + spread.y * vecUp.z);
 
-		Vector vecEnd = m_local->get_vec_eyepos() + (vecDir * dst);
+		Vector vecEnd = g_newlegit.m_local->get_vec_eyepos() + (vecDir * dst);
 		trace_t trace;
 		Ray_t ray;
 		traceFilter.pTarget = (void*)target;
-		ray.Init(m_local->get_vec_eyepos(), vecEnd);
+		ray.Init(g_newlegit.m_local->get_vec_eyepos(), vecEnd);
 		g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &traceFilter, &trace);
 
 		if (trace.fraction == 1.0f)
@@ -445,13 +467,13 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 
 bool c_triggerbot::sniper_scoped() {
 
-	auto weapon = m_local->m_pActiveWeapon();
+	auto weapon = g_newlegit.m_local->m_pActiveWeapon();
 
 	if (!weapon)
 		return false;
 
 	if (weapon->is_scoped_weapon())
-		if (m_local->m_bIsScoped())
+		if (g_newlegit.m_local->m_bIsScoped())
 			return true;
 
 	return false;
@@ -459,7 +481,7 @@ bool c_triggerbot::sniper_scoped() {
 
 bool c_triggerbot::next_attack_queued() {
 
-	auto weapon = m_local->m_pActiveWeapon();
+	auto weapon = g_newlegit.m_local->m_pActiveWeapon();
 
 	if (!weapon)
 		return false;
@@ -472,7 +494,7 @@ bool c_triggerbot::next_attack_queued() {
 
 bool c_aimbot::next_attack_queued() {
 
-	auto weapon = m_local->m_pActiveWeapon();
+	auto weapon = g_newlegit.m_local->m_pActiveWeapon();
 
 	if (!weapon)
 		return false;
