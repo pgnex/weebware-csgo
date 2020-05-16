@@ -9,7 +9,7 @@ void c_newlegit::run(c_usercmd* cmd, c_base_entity* local) {
 	g_newlegit.m_local = local;
 
 	// need to add param to incorporate aimbot angles, and reduction %
-	// reduce_recoil(cmd);
+	reduce_recoil(cmd);
 
 	// TOO MANY FUNCS I MADE IT ITS OWN CLASS
 	g_triggerbot.run(cmd);
@@ -18,7 +18,13 @@ void c_newlegit::run(c_usercmd* cmd, c_base_entity* local) {
 
 void c_newlegit::reduce_recoil(c_usercmd* cmd) {
 
-	if (!m_local->m_iShotsFired() > 1)
+	if (!g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs)
+		return;
+
+	if (cur_target != NULL)
+		return;
+
+	if (!g_newlegit.m_local->m_iShotsFired() > 1)
 		return;
 
 	static QAngle old_punch = QAngle(0, 0, 0);
@@ -26,7 +32,7 @@ void c_newlegit::reduce_recoil(c_usercmd* cmd) {
 	QAngle view_angle = cmd->viewangles;
 	QAngle punch = m_local->m_aimPunchAngle() * 2.f;
 	QAngle rcs_angle = view_angle - (punch - old_punch);
-	QAngle delta = g_maths.calcute_delta(view_angle, rcs_angle, 100);
+	QAngle delta = g_maths.calcute_delta(view_angle, rcs_angle, g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power);
 
 	if (cmd->buttons & in_attack) {
 		cmd->viewangles = delta;
@@ -35,6 +41,23 @@ void c_newlegit::reduce_recoil(c_usercmd* cmd) {
 
 	old_punch = punch;
 }
+
+QAngle c_newlegit::rcs_scaled(QAngle original_angle, bool triggerbot) {
+	QAngle delta = original_angle;
+
+	float pitch = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_pitch_rcs : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_pitch_rcs;
+	float yaw = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_yaw_rcs : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_yaw_rcs;
+
+	if (!g_newlegit.m_local->m_iShotsFired() > 1)
+		return original_angle;
+
+	delta.x -= (g_newlegit.m_local->m_aimPunchAngle().x * (2.f / 100.f * pitch));
+
+	delta.y -= (g_newlegit.m_local->m_aimPunchAngle().y * (2.f / 100.f * yaw));
+
+	return delta;
+}
+
 
 
 ///
@@ -55,7 +78,7 @@ void c_aimbot::run(c_usercmd* cmd) {
 		}
 		break;
 	case 2:
-		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_activation_key)) {
+		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_key)) {
 			m_last_delay = get_epoch_ms();
 			last_delay_aim = 0.f;
 			cur_target = NULL;
@@ -67,44 +90,12 @@ void c_aimbot::run(c_usercmd* cmd) {
 	if (g_newlegit.m_local->is_flashed() && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_while_blind))
 		return;
 
-	c_base_entity* target = closest_target_available(false);
-
-	if (cur_target != target)
-		if (cur_target != NULL)
-			if (get_epoch_ms() <= (last_delay_aim + g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay))
-				return;
-
-	last_delay_aim = get_epoch_ms();
-	cur_target = target;
-
-
-	if (!target->is_valid_player()) {
-		last_delay_aim = 0.f;
-		cur_target = NULL;
-		m_last_delay = get_epoch_ms();
-		return;
-	}
-
-	if (!is_visible(g_newlegit.m_local, target))
-		return;
-
-	if (target->trace_from_smoke(*g_newlegit.m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
-		return;
-
-
-	if (!(get_epoch_ms() > (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].reaction_time))) {
-		return;
-	}
-
-	if (g_weebwarecfg.legit_cfg[get_config_index()].quick_stop)
-		auto_stop(cmd);
-
-	do_aim_stuffs(target, cmd, false);
+	do_aim_stuffs(cmd, false);
 }
 
 c_base_entity* c_newlegit::closest_target_available(bool triggerbot) {
 
-	float best_fov = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov : g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
+	float best_fov = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_fov : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov;
 	float closest_fov = 180.f;
 
 	c_base_entity* best_entity = nullptr;
@@ -158,19 +149,54 @@ c_base_entity* c_newlegit::closest_target_available(bool triggerbot) {
 	return best_entity;
 }
 
-void c_aimbot::do_aim_stuffs(c_base_entity* target, c_usercmd* cmd, bool triggerbot) {
+void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 
-	if (triggerbot) {
-		target = closest_target_available(triggerbot);
 
-		if (!target)
-			return;
+	c_base_entity* target = closest_target_available(triggerbot);
+	int switch_delay = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_target_switch_delay : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay;
+
+	if (cur_target != target)
+		if (cur_target != NULL)
+			if (get_epoch_ms() <= (last_delay_aim + switch_delay))
+				return;
+
+	last_delay_aim = get_epoch_ms();
+	cur_target = target;
+
+
+	if (!target->is_valid_player()) {
+		last_delay_aim = 0.f;
+		cur_target = NULL;
+		m_last_delay = get_epoch_ms();
+		return;
 	}
+
+
+	if (!is_visible(g_newlegit.m_local, target))
+		return;
+
+	bool aim_through_smoke = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_through_smoke : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_through_smoke;
+	if (target->trace_from_smoke(*g_newlegit.m_local->m_vecOrigin()) && (!aim_through_smoke))
+		return;
+
+
+	if (!(get_epoch_ms() > (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].reaction_time)) && !triggerbot) {
+		return;
+	}
+
+
+	bool autostop = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].quick_stop_magnet : g_weebwarecfg.legit_cfg[get_config_index()].quick_stop;
+	if (autostop)
+		auto_stop(cmd);
+
 
 	QAngle aim_angle = closest_hitbox(target, triggerbot);
 
 	if (aim_angle.x == 0 && aim_angle.y == 0)
 		return;
+
+	// calculate aim angle with rcs incorperated
+	aim_angle = rcs_scaled(aim_angle, triggerbot);
 
 	g_maths.normalize_angle(aim_angle);
 
@@ -179,9 +205,9 @@ void c_aimbot::do_aim_stuffs(c_base_entity* target, c_usercmd* cmd, bool trigger
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 	g_weebware.g_engine->get_view_angles(view_angles);
 
-	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim)
+	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim || triggerbot)
 	{
-		int sensitivity = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth : g_weebwarecfg.legit_cfg[get_config_index()].sensitivity;
+		int sensitivity = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_sensitivity : g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity;
 		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, sensitivity);
 
 		cmd->viewangles = delta;
@@ -204,7 +230,7 @@ std::vector<int> c_aimbot::setup_hitboxes(bool triggerbot) {
 
 	std::vector<int> aim_spots;
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_all && !triggerbot || 
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_all && !triggerbot || 
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_all && triggerbot)
 	{
 		for (int i = 0; i != csgohitboxid::max; i++) {
@@ -213,7 +239,7 @@ std::vector<int> c_aimbot::setup_hitboxes(bool triggerbot) {
 		return aim_spots;
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_legs && !triggerbot ||
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_legs && !triggerbot ||
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_legs && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::right_thigh);
@@ -224,7 +250,7 @@ std::vector<int> c_aimbot::setup_hitboxes(bool triggerbot) {
 		aim_spots.push_back(csgohitboxid::left_foot);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_arms && !triggerbot ||
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_arms && !triggerbot ||
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_arms && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::right_hand);
@@ -235,19 +261,19 @@ std::vector<int> c_aimbot::setup_hitboxes(bool triggerbot) {
 		aim_spots.push_back(csgohitboxid::left_forearm);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_head && !triggerbot ||
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_head && !triggerbot ||
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_head && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::head);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_chest && !triggerbot || 
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_chest && !triggerbot || 
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_chest && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::chest);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_stomach && !triggerbot ||
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_stomach && !triggerbot ||
 		g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_stomach && triggerbot)
 	{
 		aim_spots.push_back(csgohitboxid::stomach);
@@ -300,20 +326,18 @@ QAngle c_aimbot::closest_hitbox(c_base_entity* target, bool triggerbot) {
 
 void c_triggerbot::run(c_usercmd* cmd) {
 
-	switch (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_active) {
+	switch (g_weebwarecfg.legit_cfg[get_config_index()].enable_triggerbot) {
 	case 0:
 		return;
 	case 1:
 		if (!(GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_key))) {
 			m_last_delay = get_epoch_ms();
-			last_delay_trig = 0;
-			cur_target = NULL;
 			return;
 		}
 		break;
 	}
 
-	do_aim_stuffs(NULL, cmd, true);
+	do_aim_stuffs(cmd, true);
 
 	c_base_entity* target = get_trace_ent();
 
@@ -414,7 +438,7 @@ void c_triggerbot::shoot(c_usercmd* cmd, c_base_entity* target) {
 			return;
 
 
-	if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
+	if (!g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_through_smoke) {
 		if (target->trace_from_smoke(*g_newlegit.m_local->m_vecOrigin()))
 			return;
 	}

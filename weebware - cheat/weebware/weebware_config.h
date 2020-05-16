@@ -69,69 +69,92 @@ class c_legit_cfg
 {
 public:
 	int enable_legitbot;
-	int legitbot_activation_key = VK_XBUTTON2;
-	float maximum_fov;
-	float sensitivity;
-	int aimbot_target_switch_delay = 125;
-	float reaction_time;
-	float pitch_rcs;
-	float yaw_rcs;
-	bool quick_stop;
-	bool aim_through_smoke;
+	int enable_triggerbot;
+
+	int legitbot_key = VK_XBUTTON2;
+	int triggerbot_key = VK_XBUTTON1;
+
+	float aimbot_fov;
+	float mag_trig_fov;
+
+	bool silent_aim;
+	bool target_teammates;
 	bool aim_while_blind;
-	bool hitbox_all;
-	bool hitbox_head = true;
-	bool hitbox_chest;
-	bool hitbox_stomach;
-	bool hitbox_arms;
-	bool hitbox_legs;
+	bool use_dynamicfov;
+
+	float aim_sensitivity;
+	float mag_trig_sensitivity;
+
+	int aimbot_target_switch_delay = 125;
+	int mag_trig_target_switch_delay = 125;
+
+	bool aimbot_through_smoke;
+	bool mag_trig_through_smoke = false;
+
+	bool aimbot_all;
+	bool triggerbot_all;
+	bool aimbot_head = true;
+	bool triggerbot_head = true;
+	bool aimbot_chest;
+	bool triggerbot_chest;
+	bool aimbot_stomach;
+	bool triggerbot_stomach;
+	bool aimbot_arms;
+	bool triggerbot_arms;
+	bool aimbot_legs;
+	bool triggerbot_legs;
+
+
+
+	float reaction_time;
+
+
+	float aimbot_pitch_rcs;
+	float aimbot_yaw_rcs;
+
+	float mag_trig_yaw_rcs;
+	float mag_trig_pitch_rcs;
+
+
+	bool quick_stop;
+	bool quick_stop_magnet;
+
 	bool standalone_rcs;
 	float standalone_rcs_power = 60.f;
+
 	int accuracy_boost;
-	bool silent_aim;
-	int triggerbot_active;
-	int triggerbot_key = VK_XBUTTON1;
-	bool triggerbot_all;
-	bool triggerbot_head = true;
-	bool triggerbot_chest;
-	bool triggerbot_stomach;
-	bool triggerbot_arms;
-	bool triggerbot_legs;
-	float triggerbot_hitchance;
-	int triggerbot_target_switch_delay = 125;
 	float legit_maximum_ticks = 12;
-	bool use_dynamicfov;
-	float triggerbot_reaction;
-	bool target_teammates;
+
+
 	bool magnet_triggerbot_enabled;
-	bool quick_stop_magnet;
-	float magnet_trigger_smooth;
-	float magnet_trigger_fov;
-	bool triggerbot_aim_through_smoke = false;
+	float triggerbot_hitchance;
+	float triggerbot_reaction;
 	bool triggerbot_scoped_only = false;
 
 	json convert()
 	{
 		json tmp;
-		tmp["maximum_fov"] = maximum_fov;
+		tmp["maximum_fov"] = aimbot_fov;
 		tmp["enable_legitbot"] = enable_legitbot;
-		tmp["legitbot_activation_key"] = legitbot_activation_key;
-		tmp["sensitivity"] = sensitivity;
+		tmp["legitbot_activation_key"] = legitbot_key;
+		tmp["sensitivity"] = aim_sensitivity;
 		tmp["reaction_time"] = reaction_time;
 		tmp["aimbot_target_switch_delay"] = aimbot_target_switch_delay;
-		tmp["pitch_rcs"] = pitch_rcs;
-		tmp["yaw_rcs"] = yaw_rcs;
+		tmp["pitch_rcs"] = aimbot_pitch_rcs;
+		tmp["yaw_rcs"] = aimbot_yaw_rcs;
 		tmp["quick_stop"] = quick_stop;
-		tmp["aim_through_smoke"] = aim_through_smoke;
+		tmp["aim_through_smoke"] = aimbot_through_smoke;
 		tmp["aim_while_blind"] = aim_while_blind;
-		tmp["hitbox_head"] = hitbox_head;
-		tmp["hitbox_chest"] = hitbox_chest;
-		tmp["hitbox_stomach"] = hitbox_stomach;
+		tmp["hitbox_head"] = aimbot_head;
+		tmp["hitbox_chest"] = aimbot_chest;
+		tmp["hitbox_stomach"] = aimbot_stomach;
+		tmp["aimbot_arms"] = aimbot_arms;
+		tmp["aimbot_legs"] = aimbot_legs;
 		tmp["standalone_rcs"] = standalone_rcs;
 		tmp["standalone_rcs_power"] = standalone_rcs_power;
 		tmp["accuracy_boost"] = accuracy_boost;
 		tmp["silent_aim"] = silent_aim;
-		tmp["triggerbot_active"] = triggerbot_active;
+		tmp["triggerbot_active"] = enable_triggerbot;
 		tmp["triggerbot_key"] = triggerbot_key;
 		tmp["triggerbot_head"] = triggerbot_head;
 		tmp["triggerbot_chest"] = triggerbot_chest;
@@ -144,36 +167,38 @@ public:
 		tmp["triggerbot_reaction"] = triggerbot_reaction;
 		tmp["target_teammates"] = target_teammates;
 		tmp["magnet_triggerbot_enabled"] = magnet_triggerbot_enabled;
-		tmp["magnet_trigger_smooth"] = magnet_trigger_smooth;
-		tmp["magnet_trigger_fov"] = magnet_trigger_fov;
+		tmp["magnet_trigger_smooth"] = mag_trig_sensitivity;
+		tmp["magnet_trigger_fov"] = mag_trig_fov;
+		tmp["mag_trig_yaw_rcs"] = mag_trig_yaw_rcs;
+		tmp["mag_trig_pitch_rcs"] = mag_trig_pitch_rcs;
 		tmp["quick_stop_magnet"] = quick_stop_magnet;
-		tmp["triggerbot_target_switch_delay"] = triggerbot_target_switch_delay;
-		tmp["triggerbot_aim_through_smoke"] = triggerbot_aim_through_smoke;
+		tmp["triggerbot_target_switch_delay"] = mag_trig_target_switch_delay;
+		tmp["triggerbot_aim_through_smoke"] = mag_trig_through_smoke;
 		tmp["triggerbot_scoped_only"] = triggerbot_scoped_only;
 		return tmp;
 	}
 
 	void convert(json data)
 	{
-		if (check("maximum_fov", data)) maximum_fov = data["maximum_fov"];
+		if (check("maximum_fov", data)) aimbot_fov = data["maximum_fov"];
 		if (check("enable_legitbot", data)) enable_legitbot = data["enable_legitbot"];
-		if (check("legitbot_activation_key", data)) legitbot_activation_key = data["legitbot_activation_key"];
-		if (check("sensitivity", data)) sensitivity = data["sensitivity"];
+		if (check("legitbot_activation_key", data)) legitbot_key = data["legitbot_activation_key"];
+		if (check("sensitivity", data)) aim_sensitivity = data["sensitivity"];
 		if (check("reaction_time", data)) reaction_time = data["reaction_time"];
 		if (check("aimbot_target_switch_delay", data)) aimbot_target_switch_delay = data["aimbot_target_switch_delay"];
-		if (check("pitch_rcs", data)) pitch_rcs = data["pitch_rcs"];
-		if (check("yaw_rcs", data)) yaw_rcs = data["yaw_rcs"];
+		if (check("pitch_rcs", data)) aimbot_pitch_rcs = data["pitch_rcs"];
+		if (check("yaw_rcs", data)) aimbot_yaw_rcs = data["yaw_rcs"];
 		if (check("quick_stop", data)) quick_stop = data["quick_stop"];
-		if (check("aim_through_smoke", data)) aim_through_smoke = data["aim_through_smoke"];
+		if (check("aim_through_smoke", data)) aimbot_through_smoke = data["aim_through_smoke"];
 		if (check("aim_while_blind", data)) aim_while_blind = data["aim_while_blind"];
-		if (check("hitbox_head", data)) hitbox_head = data["hitbox_head"];
-		if (check("hitbox_chest", data)) hitbox_chest = data["hitbox_chest"];
-		if (check("hitbox_stomach", data)) hitbox_stomach = data["hitbox_stomach"];
+		if (check("hitbox_head", data)) aimbot_head = data["hitbox_head"];
+		if (check("hitbox_chest", data)) aimbot_chest = data["hitbox_chest"];
+		if (check("hitbox_stomach", data)) aimbot_stomach = data["hitbox_stomach"];
 		if (check("standalone_rcs", data)) standalone_rcs = data["standalone_rcs"];
 		if (check("standalone_rcs_power", data)) standalone_rcs_power = data["standalone_rcs_power"];
 		if (check("accuracy_boost", data)) accuracy_boost = data["accuracy_boost"];
 		if (check("silent_aim", data)) silent_aim = data["silent_aim"];
-		if (check("triggerbot_active", data)) triggerbot_active = data["triggerbot_active"];
+		if (check("triggerbot_active", data)) enable_triggerbot = data["triggerbot_active"];
 		if (check("triggerbot_key", data)) triggerbot_key = data["triggerbot_key"];
 		if (check("triggerbot_head", data)) triggerbot_head = data["triggerbot_head"];
 		if (check("triggerbot_chest", data)) triggerbot_chest = data["triggerbot_chest"];
@@ -186,12 +211,16 @@ public:
 		if (check("triggerbot_reaction", data)) triggerbot_reaction = data["triggerbot_reaction"];
 		if (check("target_teammates", data)) target_teammates = data["target_teammates"];
 		if (check("magnet_triggerbot_enabled", data)) magnet_triggerbot_enabled = data["magnet_triggerbot_enabled"];
-		if (check("magnet_trigger_smooth", data)) magnet_trigger_smooth = data["magnet_trigger_smooth"];
-		if (check("magnet_trigger_fov", data)) magnet_trigger_fov = data["magnet_trigger_fov"];
+		if (check("magnet_trigger_smooth", data)) mag_trig_sensitivity = data["magnet_trigger_smooth"];
+		if (check("magnet_trigger_fov", data)) mag_trig_fov = data["magnet_trigger_fov"];
 		if (check("quick_stop_magnet", data)) quick_stop_magnet = data["quick_stop_magnet"];
-		if (check("triggerbot_target_switch_delay", data)) triggerbot_target_switch_delay = data["triggerbot_target_switch_delay"];
-		if (check("triggerbot_aim_through_smoke", data)) triggerbot_aim_through_smoke = data["triggerbot_aim_through_smoke"];
+		if (check("triggerbot_target_switch_delay", data)) mag_trig_target_switch_delay = data["triggerbot_target_switch_delay"];
+		if (check("triggerbot_aim_through_smoke", data)) mag_trig_through_smoke = data["triggerbot_aim_through_smoke"];
 		if (check("triggerbot_scoped_only", data)) triggerbot_scoped_only = data["triggerbot_scoped_only"];
+		if (check("mag_trig_yaw_rcs", data)) mag_trig_yaw_rcs = data["mag_trig_yaw_rcs"];
+		if (check("mag_trig_pitch_rcs", data)) mag_trig_pitch_rcs = data["mag_trig_pitch_rcs"];
+		if (check("aimbot_arms", data)) aimbot_arms = data["aimbot_arms"];
+		if (check("aimbot_legs", data)) aimbot_legs = data["aimbot_legs"];
 	}
 
 };

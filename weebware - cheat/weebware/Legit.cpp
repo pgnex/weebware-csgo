@@ -37,7 +37,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 		}
 		break;
 	case 2:
-		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_activation_key)) {
+		if (!GetAsyncKeyState(g_weebwarecfg.legit_cfg[get_config_index()].legitbot_key)) {
 			m_last_time = get_epoch_ms();
 			last_delay = 0.f;
 			cur_target = NULL;
@@ -69,7 +69,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 	if (!is_visible(m_local, target))
 		return;
 
-	if (target->trace_from_smoke(*m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aim_through_smoke))
+	if (target->trace_from_smoke(*m_local->m_vecOrigin()) && (!g_weebwarecfg.legit_cfg[get_config_index()].aimbot_through_smoke))
 		return;
 
 
@@ -88,12 +88,12 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 	float rcs_power = g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs_power;
 	if (g_weebwarecfg.legit_cfg[get_config_index()].standalone_rcs) {
-		if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs) {
+		if (rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].aimbot_pitch_rcs || rcs_power > g_weebwarecfg.legit_cfg[get_config_index()].aimbot_yaw_rcs) {
 			aim_angle = rcs_scaled(aim_angle, rcs_power, rcs_power);
 		}
 	}
 	else {
-		aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].yaw_rcs);
+		aim_angle = rcs_scaled(aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].aimbot_pitch_rcs, g_weebwarecfg.legit_cfg[get_config_index()].aimbot_yaw_rcs);
 	}
 
 	g_maths.normalize_angle(aim_angle);
@@ -105,7 +105,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim)
 	{
-		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].sensitivity);
+		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity);
 
 		cmd->viewangles = delta;
 
@@ -122,7 +122,7 @@ void c_legitbot::create_move(c_usercmd* cmd)
 
 c_base_entity* c_legitbot::closest_target_available()
 {
-	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
+	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov;
 	float closest_fov = 180.f;
 
 	c_base_entity* best_entity = nullptr;
@@ -165,7 +165,7 @@ c_base_entity* c_legitbot::closest_target_available()
 		}
 		
 		// prevent symmetry collision
-		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov && this_fov < best_fov && closest_ent == cur_entity)
+		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov && this_fov < best_fov && closest_ent == cur_entity)
 		{
 			best_entity = cur_entity;
 			best_fov = this_fov;
@@ -348,14 +348,14 @@ QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 
 	std::vector<int> aim_spots;
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_all)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_all)
 	{
 		for (int i = 0; i != csgohitboxid::max; i++) {
 			aim_spots.push_back(static_cast<csgohitboxid>(i));
 		}
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_legs)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_legs)
 	{
 		aim_spots.push_back(csgohitboxid::right_thigh);
 		aim_spots.push_back(csgohitboxid::left_thigh);
@@ -365,7 +365,7 @@ QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 		aim_spots.push_back(csgohitboxid::left_foot);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_arms)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_arms)
 	{
 		aim_spots.push_back(csgohitboxid::right_hand);
 		aim_spots.push_back(csgohitboxid::left_hand);
@@ -375,17 +375,17 @@ QAngle c_legitbot::closest_hitbox(c_base_entity* target)
 		aim_spots.push_back(csgohitboxid::left_forearm);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_head)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_head)
 	{
 		aim_spots.push_back(csgohitboxid::head);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_chest)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_chest)
 	{
 		aim_spots.push_back(csgohitboxid::chest);
 	}
 
-	if (g_weebwarecfg.legit_cfg[get_config_index()].hitbox_stomach)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].aimbot_stomach)
 	{
 		aim_spots.push_back(csgohitboxid::stomach);
 	}
@@ -521,7 +521,7 @@ void c_legitbot::auto_stop(c_usercmd* cmd)
 
 c_base_entity* c_legitbot::closest_target_triggerbot()
 {
-	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov;
+	float best_fov = g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_fov;
 
 	float closest_fov = 180.f;
 
@@ -564,7 +564,7 @@ c_base_entity* c_legitbot::closest_target_triggerbot()
 		}
 
 		// prevent symmetry collision
-		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_fov && this_fov < best_fov && closest_ent == cur_entity)
+		if (this_fov < g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_fov && this_fov < best_fov && closest_ent == cur_entity)
 		{
 			best_entity = cur_entity;
 			best_fov = this_fov;
@@ -590,7 +590,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 
 	if (cur_target_trig != target)
 		if (cur_target_trig != NULL)
-			if (get_epoch_ms() <= (last_delay_trig + g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_target_switch_delay))
+			if (get_epoch_ms() <= (last_delay_trig + g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_target_switch_delay))
 				return;
 
 	last_delay_trig = get_epoch_ms();
@@ -610,7 +610,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 		QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 		g_weebware.g_engine->get_view_angles(view_angles);
 
-		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].magnet_trigger_smooth);
+		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_sensitivity);
 
 		cmd->viewangles = delta;
 
@@ -619,7 +619,7 @@ void c_legitbot::magnet_triggerbot(c_usercmd* cmd) {
 				return;
 
 
-		if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
+		if (!g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_through_smoke) {
 			if (target->trace_from_smoke(*m_local->m_vecOrigin()))
 				return;
 		}
@@ -647,7 +647,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 {
 	static float m_last_delay = 0.f;
 
-	switch (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_active) {
+	switch (g_weebwarecfg.legit_cfg[get_config_index()].enable_triggerbot) {
 	case 0:
 		return;
 	case 1:
@@ -750,7 +750,7 @@ void c_legitbot::triggerbot_main(c_usercmd* cmd)
 				return;
 
 
-		if (!g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_aim_through_smoke) {
+		if (!g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_through_smoke) {
 			if (trace_entity->trace_from_smoke(*m_local->m_vecOrigin()))
 				return;
 		}

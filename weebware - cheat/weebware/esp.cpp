@@ -818,7 +818,7 @@ void c_esp::draw_fov_circle() {
 	int x, y;
 	float fov;
 
-	fov = g_weebwarecfg.legit_cfg[get_config_index()].maximum_fov;
+	fov = g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov;
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
 

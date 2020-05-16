@@ -318,7 +318,7 @@ void gui::imgui_main() {
 
 			ImGui::Text("Activation type");
 			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_legitbot == 2)
-				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_activation_key, key_counter);
+				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legitbot_key, key_counter);
 
 			const char* activation_type_trigger[] = { "Off", "On Fire", "On Key", "Magnetic" };
 
@@ -328,10 +328,10 @@ void gui::imgui_main() {
 			// ImGui::Checkbox("Distance FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].use_dynamicfov);
 
 			ImGui::Text("Maximum FOV");
-			imgui_custom::a_better_slider_float("##Maximum FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].maximum_fov, 0, 30, "%.1f");
+			imgui_custom::a_better_slider_float("##Maximum FOV", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_fov, 0, 30, "%.1f");
 
 			ImGui::Text("Sensitivity");
-			imgui_custom::a_better_slider_float("##Sensitivity", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].sensitivity, 0, 100, "%.0f%%");
+			imgui_custom::a_better_slider_float("##Sensitivity", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_sensitivity, 0, 100, "%.0f%%");
 
 			ImGui::Text("First Shot Delay");
 			imgui_custom::a_better_slider_float("##First Shot Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
@@ -340,12 +340,12 @@ void gui::imgui_main() {
 			imgui_custom::a_better_slider_int("##Target Switch Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_target_switch_delay, 0, 2000, "%.0f");
 
 			ImGui::Text("Recoil compensation (P/Y)");
-			imgui_custom::a_better_slider_float("P##Recoil compensation P", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].pitch_rcs, 0, 100, "%.0f%%");
-			imgui_custom::a_better_slider_float("Y##Recoil compensation Y", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].yaw_rcs, 0, 100, "%.0f%%");
+			imgui_custom::a_better_slider_float("P##Recoil compensation P aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_pitch_rcs, 0, 100, "%.0f%%");
+			imgui_custom::a_better_slider_float("Y##Recoil compensation Y aim", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_yaw_rcs, 0, 100, "%.0f%%");
 
 			ImGui::Checkbox("Quickstop##legit", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop);
 
-			ImGui::Checkbox("Aim through smoke", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_through_smoke);
+			ImGui::Checkbox("Aim through smoke", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_through_smoke);
 
 			ImGui::Checkbox("Aim while blind", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_while_blind);
 
@@ -356,12 +356,12 @@ void gui::imgui_main() {
 			ImGui::BeginChild("hitboxes##aimbot", ImVec2(0, ImGui::GetContentRegionAvail().y - 4), false);
 			ImGui::PushStyleColor(ImGuiCol_Header, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
 			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ConvertFromRGBA(ImVec4(71, 57, 69, 255)));
-			if (ImGui::Selectable("All (overrides below)##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_all; }
-			if (ImGui::Selectable("Head##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_head; }
-			if (ImGui::Selectable("Chest##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_chest; }
-			if (ImGui::Selectable("Stomach##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_stomach; }
-			if (ImGui::Selectable("Arms##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_arms; }
-			if (ImGui::Selectable("Legs##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].hitbox_legs; }
+			if (ImGui::Selectable("All (overrides below)##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_all)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_all = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_all; }
+			if (ImGui::Selectable("Head##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_head)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_head = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_head; }
+			if (ImGui::Selectable("Chest##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_chest)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_chest = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_chest; }
+			if (ImGui::Selectable("Stomach##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_stomach)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_stomach = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_stomach; }
+			if (ImGui::Selectable("Arms##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_arms)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_arms = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_arms; }
+			if (ImGui::Selectable("Legs##ab", g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_legs)) { g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_legs = !g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_legs; }
 			ImGui::PopStyleColor();
 			ImGui::PopStyleColor();
 			ImGui::EndChild();
@@ -397,12 +397,12 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Triggerbot");
 			ImGui::Text("Activation type");
 
-			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active == 1)
+			if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_triggerbot == 1)
 				imgui_custom::custom_inline_keyinput(g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_key, key_counter);
 
 
 			const char* activation_type[] = { "Off", "On Key", "Active" };
-			imgui_custom::a_better_combo_box("##triggercombo", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_active, activation_type, ARRAYSIZE(activation_type));
+			imgui_custom::a_better_combo_box("##triggercombo", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].enable_triggerbot, activation_type, ARRAYSIZE(activation_type));
 			ImGui::Text("Hitchance");
 			imgui_custom::a_better_slider_float("##Hitchance", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_hitchance, 0, 100, "%.0f%%");
 			ImGui::Text("Reaction time");
@@ -432,18 +432,22 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Magnet Triggerbot");
 			ImGui::Checkbox("Enable##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_triggerbot_enabled);
 			ImGui::Checkbox("Quickstop##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].quick_stop_magnet);
-			ImGui::Checkbox("Aim Through Smoke##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_aim_through_smoke);
+			ImGui::Checkbox("Aim Through Smoke##magnet", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_through_smoke);
 
 			if (g_weebwarecfg.legit_cfg_index == 5 || g_weebwarecfg.legit_cfg_index == 6 || g_weebwarecfg.legit_cfg_index == 7) {
 				ImGui::Checkbox("Scoped Only", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only);
 			}
 
 			ImGui::Text("Maximum FOV");
-			imgui_custom::a_better_slider_float("##FOVmagnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_fov, 0, 180.f, "%.1f");
+			imgui_custom::a_better_slider_float("##FOVmagnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_fov, 0, 180.f, "%.1f");
 			ImGui::Text("Sensitivity");
-			imgui_custom::a_better_slider_float("##Smoothmagnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].magnet_trigger_smooth, 0, 100.f, "%.1f");
+			imgui_custom::a_better_slider_float("##Smoothmagnettrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_sensitivity, 0, 100.f, "%.1f");
 			ImGui::Text("Target Switch Delay");
-			imgui_custom::a_better_slider_int("##Target Switch Delaytrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_target_switch_delay, 0, 2000, "%.0f");
+			imgui_custom::a_better_slider_int("##Target Switch Delaytrigger", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_target_switch_delay, 0, 2000, "%.0f");
+
+			ImGui::Text("Recoil compensation (P/Y)");
+			imgui_custom::a_better_slider_float("P##Recoil compensation P trig", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_pitch_rcs, 0, 100, "%.0f%%");
+			imgui_custom::a_better_slider_float("Y##Recoil compensation Y trig", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].mag_trig_yaw_rcs, 0, 100, "%.0f%%");
 
 			ImGui::NewLine();
 

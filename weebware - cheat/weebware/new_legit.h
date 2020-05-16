@@ -11,9 +11,11 @@ public:
 
 	// shared feature funcs not requiring own class
 	c_base_entity* closest_target_available(bool triggerbot);
+	QAngle rcs_scaled(QAngle original_angle, bool triggerbot);
 
+	// vars!!
 	c_base_entity* m_local;
-private:
+	c_base_entity* cur_target = NULL;
 
 
 }; extern c_newlegit g_newlegit;
@@ -22,7 +24,6 @@ class c_aimbot : public  c_newlegit {
 private:
 	// feature vars
 	long m_last_delay;
-	c_base_entity* cur_target = NULL;
 	int last_delay_aim = 0;
 public:
 	// init feature..
@@ -33,16 +34,14 @@ public:
 	QAngle closest_hitbox(c_base_entity* target, bool triggerbot);
 	std::vector<int> setup_hitboxes(bool triggerbot);
 	bool next_attack_queued();
-	void do_aim_stuffs(c_base_entity* target, c_usercmd* cmd, bool triggerbot);
+	void do_aim_stuffs(c_usercmd* cmd, bool triggerbot);
 };
 
 
-class c_triggerbot : public c_newlegit, public c_aimbot {
+class c_triggerbot : public c_aimbot {
 private:
 	// feature vars
 	long m_last_delay;
-	c_base_entity* cur_target = NULL;
-	int last_delay_trig = 0;
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 public:
 	// init feature..
