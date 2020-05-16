@@ -109,43 +109,55 @@ imaterial* c_sceneend::generate_material(bool ignore, bool lit, bool wire_frame)
 
 
 imaterial* create_default() {
-	std::ofstream("csgo\\materials\\material_textured.vmt") << R"#("VertexLitGeneric"
-{
-	"$basetexture" "vgui/white_additive"
-	"$ignorez"      "0"
-	"$envmap"       ""
-	"$nofog"        "1"
-	"$model"        "1"
-	"$nocull"       "0"
-	"$selfillum"    "1"
-	"$halflambert"  "1"
-	"$znearer"      "0"
-	"$flat"         "1"
-}
-)#";
 
-	return g_weebware.g_mat_sys->find_material("material_textured", TEXTURE_GROUP_MODEL);
+	static const char material[] =
+	{
+		"\"VertexLitGeneric\"\
+		\n{\
+		\n\t\"$basetexture\" \"vgui/white_additive\"\
+		\n\t\"$envmap\" \"\"\
+		\n\t\"$model\" \"1\"\
+		\n\t\"$flat\" \"1\"\
+		\n\t\"$nocull\" \"0\"\
+		\n\t\"$selfillum\" \"1\"\
+		\n\t\"$halflambert\" \"1\"\
+		\n\t\"$nofog\" \"1\"\
+		\n\t\"$ignorez\" \"0\"\
+		\n\t\"$znearer\" \"0\"\
+        \n}\n"
+	};
+
+	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+	init_key_vals(keyValues, "VertexLitGeneric");
+	load_from_buf(keyValues, "default.vmt", material, 0, 0, 0, 0);
+	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("default.vmt", keyValues);
+	created_mat->incrementreferencecount();
+
+	return created_mat;
 }
 
 
 imaterial* c_sceneend::create_glow() {
 
 	std::stringstream s;
+
+	s << "\"VertexLitGeneric\" {\n\n\t";
+	s << "\"$additive\" \"0\"\n\t";
+	s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
 	s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
+	s << "\"$envmapfresnel\" \"1\"\n\t";
+	s << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
+	s << "\"$alpha\" \"0.8\"\n";
+	s << "}";
 
-	std::ofstream glow_cham_texture("csgo/materials/mat_glow_cham.vmt");
-	glow_cham_texture.precision(3);
-	glow_cham_texture << "\"VertexLitGeneric\" {\n\n\t";
-	glow_cham_texture << "\"$additive\" \"0\"\n\t";
-	glow_cham_texture << "\"$envmap\" \"models/effects/cube_white\"\n\t";
-	glow_cham_texture << s.str();
-	glow_cham_texture << "\"$envmapfresnel\" \"1\"\n\t";
-	glow_cham_texture << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
-	glow_cham_texture << "\"$alpha\" \"0.8\"\n";
-	glow_cham_texture << "}";
-	glow_cham_texture.close();
 
-	return g_weebware.g_mat_sys->find_material("mat_glow_cham", TEXTURE_GROUP_MODEL);
+	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+	init_key_vals(keyValues, "VertexLitGeneric");
+	load_from_buf(keyValues, "glow.vmt", s.str().c_str(), 0, 0, 0, 0);
+	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("glow.vmt", keyValues);
+	created_mat->incrementreferencecount();
+
+	return created_mat;
 }
 
 imaterial* c_sceneend::borrow_mat(custom_mats type)
