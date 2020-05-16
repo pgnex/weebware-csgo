@@ -273,9 +273,6 @@
     <ClCompile Include="Header.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="new_legit.cpp">
-      <Filter>Source Files\hooking\CreateMove\Legitbot</Filter>
-    </ClCompile>
     <ClCompile Include="backtrack.cpp">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>
     </ClCompile>
@@ -538,9 +535,6 @@
     </ClInclude>
     <ClInclude Include="legit_aa.h">
       <Filter>Source Files\hooking\CreateMove\legit aa</Filter>
-    </ClInclude>
-    <ClInclude Include="new_legit.h">
-      <Filter>Source Files\hooking\CreateMove\Legitbot</Filter>
     </ClInclude>
     <ClInclude Include="backtrack.h">
       <Filter>Source Files\hooking\CreateMove\backtrack</Filter>

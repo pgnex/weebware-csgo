@@ -1,36 +1,70 @@
- #pragma once
+#pragma once
 #include "Header.h"
 
-class c_legitbot
-{
+class c_legit {
 public:
-	c_base_entity * m_local;
-	c_basecombat_weapon * g_weapon;
-	void create_move(c_usercmd* cmd);
+	// initittttttt this is our base class for features
+	void run(c_usercmd* cmd, c_base_entity* local);
 
-	// Expose this function so accuracy boost can use it.
-	Vector center_hitbox(c_base_entity* ent, int id);
+	// features not requiring own class
+	void reduce_recoil(c_usercmd* cmd);
 
+	// shared feature funcs not requiring own class
+	c_base_entity* closest_target_available(bool triggerbot);
+	QAngle rcs_scaled(QAngle original_angle, bool triggerbot);
 
-	void triggerbot_main(c_usercmd* cmd);
-	bool sniper_scoped();
-	void magnet_triggerbot(c_usercmd* cmd);
-	QAngle magnet_hitbox(c_base_entity* target);
-	void auto_stop(c_usercmd* cmd);
-	c_base_entity* closest_target_triggerbot();
-	bool is_visible_angle(c_base_entity* target, Vector dst2);
-	std::vector<int> get_triggerbot_hitboxes();
+	// vars!!
+	c_base_entity* m_local;
+	c_base_entity* cur_target = NULL;
 
 
+}; extern c_legit g_legitbot;
+
+class c_aimbot : public  c_legit {
 private:
-	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
-	c_base_entity * closest_target_available();
-	QAngle closest_hitbox(c_base_entity* target);
-	QAngle rcs_scaled(QAngle original_angle, float pitch, float yaw);
-	void standalone_rcs(c_usercmd* cmd);
-	double m_last_time = 0;
-	bool next_attack_queued();
+	// feature vars
+	long m_last_delay;
+	int last_delay_aim = 0;
+public:
+	// init feature..
+	void run(c_usercmd* cmd);
 
+	// feature funcs
+	void auto_stop(c_usercmd* cmd);
+	QAngle closest_hitbox(c_base_entity* target, bool triggerbot);
+	std::vector<int> setup_hitboxes(bool triggerbot);
+	bool next_attack_queued();
+	void do_aim_stuffs(c_usercmd* cmd, bool triggerbot);
 };
 
-extern c_legitbot g_legitbot;
+
+class c_triggerbot : public c_aimbot {
+private:
+	// feature vars
+	long m_last_delay;
+	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
+public:
+	// init feature..
+	void run(c_usercmd* cmd);
+
+	// feature funcs
+	c_base_entity* get_trace_ent();
+	std::vector<int> setup_hitboxes();
+	void shoot(c_usercmd* cmd, c_base_entity* target);
+	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
+	bool sniper_scoped();
+	bool next_attack_queued();
+};
+
+/*
+these are the hitboxes for triggerbot
+HITGROUP_GENERIC    0
+HITGROUP_HEAD       1
+HITGROUP_CHEST      2
+HITGROUP_STOMACH    3
+HITGROUP_LEFTARM    4
+HITGROUP_RIGHTARM   5
+HITGROUP_LEFTLEG    6
+HITGROUP_RIGHTLEG   7
+HITGROUP_GEAR       10
+*/

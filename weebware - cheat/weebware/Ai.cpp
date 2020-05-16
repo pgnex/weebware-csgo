@@ -269,7 +269,7 @@ void c_ai::auto_buy_weapons(c_usercmd* cmd)
 
 void c_ai::correct_range(c_usercmd* cmd) {
 
-	Vector direction = g_legitbot.center_hitbox(m_target_ent, csgohitboxid::chest);
+	Vector direction = center_hitbox(m_target_ent, csgohitboxid::chest);
 
 	QAngle aim_dir;
 	g_maths.vector_qangles(direction - m_local->get_vec_eyepos(), aim_dir);
@@ -282,7 +282,7 @@ void c_ai::correct_range(c_usercmd* cmd) {
 
 void c_ai::kill(c_usercmd* cmd) {
 
-	Vector direction = g_legitbot.center_hitbox(m_target_ent, csgohitboxid::head);
+	Vector direction = center_hitbox(m_target_ent, csgohitboxid::head);
 
 	QAngle aim_dir;
 
@@ -296,7 +296,8 @@ void c_ai::kill(c_usercmd* cmd) {
 
 	if (m_local->m_pActiveWeapon()->Clip1() != 0)
 	{
-		g_legitbot.auto_stop(cmd);
+		cmd->forwardmove = 0;
+		cmd->sidemove = 0;
 
 		if (m_local->m_pActiveWeapon()->m_flNextPrimaryAttack() <= (float)g_weebware.g_global_vars->curtime) {
 			cmd->buttons |= in_attack;

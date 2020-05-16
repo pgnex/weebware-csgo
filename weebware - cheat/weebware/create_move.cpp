@@ -4,7 +4,6 @@
 #include "shared.h"
 #include "create_move.h"
 #include "Legit.h"
-#include "new_legit.h"
 #include "Ragebot.h"
 #include "hook_funcs.h"
 #include <intrin.h>
@@ -13,7 +12,7 @@ c_create_move g_create_move;
 c_nightmode g_nightmode;
 c_utils g_utils;
 LegitAntiAim g_LegitAntiAim;
-c_newlegit g_newlegit;
+c_legit g_legitbot;
 
 bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
 {
@@ -90,8 +89,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 				ragebot::main(g_create_move.local, cmd);
 			}
 
-			g_newlegit.run(cmd, g_create_move.local);
-			// g_legitbot.create_move( cmd );
+			g_legitbot.run(cmd, g_create_move.local);
 			g_backtrack.accuracy_boost( cmd );
 			g_ai.create_move( cmd, g_create_move.local );
 		}
