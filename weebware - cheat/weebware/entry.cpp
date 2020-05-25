@@ -152,10 +152,17 @@ void c_weebware::setup_thread( ) {
 		g_hooking.hook_all_functions( );
 	}
 
+	while (true) {
+		if (g_vars.g_unload.get() != 0.0f)
+			break;
 
-	while ( g_vars.g_unload.get( ) == 0.0f )
-		Sleep( 250 );
+		if (g_vars.g_initfont.get() == 0.0f)
+			continue;
 
+		init_fonts();
+
+		Sleep(250);
+	}
 
 	g_hooking.unhook_all_functions( );
 	printf( "\nUnloading\n" );

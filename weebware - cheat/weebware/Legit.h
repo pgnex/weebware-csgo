@@ -12,6 +12,7 @@ public:
 	// shared feature funcs not requiring own class
 	c_base_entity* closest_target_available(bool triggerbot);
 	QAngle rcs_scaled(QAngle original_angle, bool triggerbot);
+	bool sniper_scoped();
 
 	// vars!!
 	c_base_entity* m_local;
@@ -35,6 +36,7 @@ public:
 	std::vector<int> setup_hitboxes(bool triggerbot);
 	bool next_attack_queued();
 	void do_aim_stuffs(c_usercmd* cmd, bool triggerbot);
+	bool in_crosshair(c_base_entity* target);
 };
 
 
@@ -52,7 +54,6 @@ public:
 	std::vector<int> setup_hitboxes();
 	void shoot(c_usercmd* cmd, c_base_entity* target);
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);
-	bool sniper_scoped();
 	bool next_attack_queued();
 };
 

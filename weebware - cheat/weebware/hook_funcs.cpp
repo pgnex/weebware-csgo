@@ -139,8 +139,11 @@ long __stdcall hk_endscene(IDirect3DDevice9* device)
 	if (!g_weebwarecfg.obs_proof) {
 		return g_hooking.o_endscene(device);
 	}
+#else
+	if (!g_weebwarecfg.obs_proof) {
+		return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
+	}
 #endif
-
 
 	static uintptr_t gameoverlay_return_address = 0;
 
@@ -343,75 +346,7 @@ void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int iEntIndex, i
 #endif
 }
 
-void c_hooking::hook_all_functions()
-{
-#define detours 0
-#if detours
-	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
-	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
-	DETOUR_PAINT = new PLH::x86Detour((char*)paint_addr, (char*)&hk_paint_traverse, &paint_tramp, dis);
-	DETOUR_PAINT->hook();
-	o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
-
-	auto cm_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_client_mode))[24];
-	DETOUR_CM = new PLH::x86Detour((char*)cm_addr, (char*)& hk_clientmode_cm, &cm_tramp, dis);
-	DETOUR_CM->hook();
-	o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
-
-
-	auto reset_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16];
-	DETOUR_RESET = new PLH::x86Detour((char*)reset_addr, (char*)&hk_reset, &reset_tramp, dis);
-	DETOUR_RESET->hook();
-	o_reset = reinterpret_cast<decltype(o_reset)>(reset_addr);
-
-	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
-	DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
-	DETOUR_PRESENT->hook();
-	o_present = reinterpret_cast<decltype(o_present)>(present_addr);
-
-	// present
-
-	auto dme_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_model_render))[21];
-	DETOUR_DME = new PLH::x86Detour((char*)dme_addr, (char*)& hk_draw_model_execute, &dme_tramp, dis);
-	DETOUR_DME->hook();
-	o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
-
-	// scene end
-
-	auto fsn_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_client))[37];
-	DETOUR_FSN = new PLH::x86Detour((char*)fsn_addr, (char*)& hk_frame_stage_notify, &fsn_tramp, dis);
-	DETOUR_FSN->hook();
-	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
-
-	// mdl
-
-	// viewmodel
-
-	// sound
-
-	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
-
-	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-	DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
-	DETOUR_ENDSCENE->hook();
-	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
-
-
-	auto scene_end_addr = (*reinterpret_cast<uintptr_t * *>(g_weebware.g_render_view))[9];
-	DETOUR_SCENEEND = new PLH::x86Detour((char*)scene_end_addr, (char*)& hk_scene_end, &sceneend_tramp, dis);
-	DETOUR_SCENEEND->hook();
-	o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
-
-	PLH::CapstoneDisassembler dis(PLH::Mode::x86);
-
-	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-	DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
-	DETOUR_ENDSCENE->hook();
-	o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
-
-#else
-
-	
+void c_hooking::hook_all_functions() {
 #if DEBUG_HOOKS
 		PLH::CapstoneDisassembler dis(PLH::Mode::x86);
 
@@ -437,7 +372,6 @@ void c_hooking::hook_all_functions()
 		//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
 
 
-
 		//auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
 		//DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
 		//DETOUR_PRESENT->hook();
@@ -453,10 +387,10 @@ void c_hooking::hook_all_functions()
 		DETOUR_FSN->hook();
 		o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
 
-		auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
-		DETOUR_MDL = new PLH::x86Detour((char*)mdl_addr, (char*)&hk_findmdl, &mdl_tramp, dis);
-		DETOUR_MDL->hook();
-		o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
+		//auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
+		//DETOUR_MDL = new PLH::x86Detour((char*)mdl_addr, (char*)&hk_findmdl, &mdl_tramp, dis);
+		//DETOUR_MDL->hook();
+		//o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
 
 		auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
 		DETOUR_VM = new PLH::x86Detour((char*)vm_addr, (char*)&hk_viewmodel, &vm_tramp, dis);
@@ -499,20 +433,20 @@ void c_hooking::hook_all_functions()
 	VEH_FSN->hook();
 	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
 
-	auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
-	VEH_MDL = new PLH::BreakPointHook((char*)mdl_addr, (char*)&hk_findmdl);
-	VEH_MDL->hook();
-	o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
+	//auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
+	//VEH_MDL = new PLH::BreakPointHook((char*)mdl_addr, (char*)&hk_findmdl);
+	//VEH_MDL->hook();
+	//o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
 
 	auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
 	VEH_VM = new PLH::BreakPointHook((char*)vm_addr, (char*)&hk_viewmodel);
 	VEH_VM->hook();
 	o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
 
-	//auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-	//VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
-	//VEH_SOUNDS->hook();
-	//o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
+	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
+	VEH_SOUNDS->hook();
+	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
 
 	auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
 	VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
@@ -524,11 +458,11 @@ void c_hooking::hook_all_functions()
 	//VEH_OVERRIDE->hook();
 	//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
 
-	static auto check_file_crs_addr = reinterpret_cast<void*>(g_weebware.pattern_scan("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
-	if (check_file_crs_addr) {
-		VEH_CRS_CHECK = new PLH::BreakPointHook((char*)check_file_crs_addr, (char*)&hkCheckFileCRCsWithServer);
-		VEH_CRS_CHECK->hook();
-	}
+	//auto check_file_crs_addr = reinterpret_cast<void*>(g_weebware.pattern_scan("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
+	//if (check_file_crs_addr) {
+	//	VEH_CRS_CHECK = new PLH::BreakPointHook((char*)check_file_crs_addr, (char*)&hkCheckFileCRCsWithServer);
+	//	VEH_CRS_CHECK->hook();
+	//}
 
 
 #endif
@@ -539,31 +473,6 @@ void c_hooking::hook_all_functions()
 	//VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);
 	//VEH_DME->hook();
 	//o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
-
-
-#endif
-
-#define StreamProof 0
-#if StreamProof
-
-	//vmt_render_view = vmt_manager(reinterpret_cast<uintptr_t*>(g_weebware.g_render_view));
-	// vmt_render_view.hook_m((*(unsigned long**)this)[function_by_count::scene_end], 9);
-
-	// https://www.unknowncheats.me/forum/direct3d/66594-d3d9-vtables.html
-	// vmt_direct_x.hook_m((*(unsigned long**)this)[function_by_count::end_scene], 42);
-	// vmt_direct_x.hook_m((*(unsigned long**)this)[function_by_count::present], 17);
-	// DWORD* vtable = (DWORD*)g_entry.pattern_scan("gameoverlayrenderer.dll", "8B 00 8B 30 FF 76 08") + 2; // Adress to   v12.lpVtbl = (IDirect3DDevice9Vtbl *)**a1;
-	// sub_1006C670+112    02C                 mov     eax, [eax]
-	// sub_1006C670+114    02C                 mov     esi, [eax]
-
-
-	original_present = **reinterpret_cast<decltype(&original_present)*>(g_weebware.g_present_address);
-	**reinterpret_cast<void***>(g_weebware.g_present_address) = reinterpret_cast<void*>(&hook_functions::hk_present); // (*(uintptr_t**)this)[0]
-
-	original_reset = **reinterpret_cast<decltype(&original_reset)*>(g_weebware.g_reset_address);
-	**reinterpret_cast<void***>(g_weebware.g_reset_address) = reinterpret_cast<void*>(&hk_reset);
-
-#endif
 
 	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
 
@@ -578,27 +487,26 @@ void c_hooking::unhook_all_functions()
 	// wait for shit to register
 	Sleep(100);
 #if DEBUG_HOOKS
-	DETOUR_PAINT->unHook();
-	DETOUR_CM->unHook();
-	DETOUR_RESET->unHook();
-	DETOUR_ENDSCENE->unHook();
-	DETOUR_DME->unHook();
+	DETOUR_SOUNDS->unHook();
+	DETOUR_VM->unHook();
 	DETOUR_FSN->unHook();
-	DETOUR_CURSORLOCK->unHook();
+	DETOUR_SCENEEND->unHook();
+	DETOUR_CM->unHook();
+	DETOUR_PAINT->unHook();
+	DETOUR_ENDSCENE->unHook();
 #else
+	VEH_ENDSCENE->unHook();
+	VEH_VM->unHook();
+	VEH_FSN->unHook();
+	VEH_SOUNDS->unHook();
+	VEH_SCENEEND->unHook();
+	VEH_PRESENT->unHook();
+	VEH_RESET->unHook();
 	VEH_PAINT->unHook();
 	VEH_CM->unHook();
-	VEH_RESET->unHook();
-	VEH_FSN->unHook();
-	VEH_PRESENT->unHook();
-	VEH_SCENEEND->unHook();
-	VEH_SOUNDS->unHook();
-	VEH_MDL->unHook();
-	VEH_VM->unHook();
-	VEH_ENDSCENE->unHook();
 #endif
 	networking::curl_cleanup();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
-//	knife_changer::remove_proxyhooks();
+	//	knife_changer::remove_proxyhooks();
 	g_vars.g_unload.set(1.0f);
 }

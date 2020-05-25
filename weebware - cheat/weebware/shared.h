@@ -107,6 +107,7 @@ extern c_weebware g_weebware;
 class c_vars {
 public:
 	variable_t g_unload = variable_t("unload", 0.0f);
+	variable_t g_initfont = variable_t("initfont", 0.0f);
 
 };
 extern c_vars g_vars;

@@ -54,7 +54,7 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_create_move.slidewalk( cmd );
 	g_create_move.auto_pistol( cmd );
 	g_create_move.auto_jumpbug( cmd );
-	g_create_move.rainbow_name( );
+//	g_create_move.rainbow_name( );
 	g_create_move.block_bot( cmd );
 	g_create_move.auto_defuse( cmd );
 	g_create_move.no_crouch_cooldown( cmd );

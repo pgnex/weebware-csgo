@@ -41,27 +41,6 @@ void c_esp::esp_main()
 	g_paint_traverse.draw_legit_aa_indicator();
 //	set_weapon_models();
 
-	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
-	{
-		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
-
-		if (!ent || ent == nullptr)
-			continue;
-
-		// check if bomb timer is enabled, if it is check for entity
-		if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
-			bomb_timer(ent);
-
-
-		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) {
-			continue;
-		}
-
-		if (g_weebwarecfg.anime_model > 0)
-			set_player_models(ent);
-	}
-
-
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
 
@@ -83,10 +62,17 @@ void c_esp::esp_main()
 		if (!ent || ent == nullptr)
 			continue;
 
+		// check if bomb timer is enabled, if it is check for entity
+		if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
+			bomb_timer(ent);
+
 		spectator_list(ent);
 
 		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) 
 			continue;
+
+		//if (g_weebwarecfg.anime_model > 0)
+		//	set_player_models(ent);
 		
 		if (!g_weebwarecfg.visuals_dormant_esp) {
 			if (ent->is_dormant())

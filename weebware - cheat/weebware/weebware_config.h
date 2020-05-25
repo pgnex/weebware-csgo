@@ -459,7 +459,7 @@ public:
 	ImVec4 visuals_bounding_team_col = ImVec4(255, 255, 0, 255);
 	ImVec4 visuals_innacc_circle_col = ImVec4(0, 0, 255, 50);
 	ImVec4 visuals_fov_circle_col = ImVec4(255, 0, 255, 255);
-	ImVec4 visuals_backtrack_col = ImVec4(0, 0, 255, 50);
+	ImVec4 visuals_backtrack_col = ImVec4(0, 0, 255, 150);
 	ImVec4 visuals_dormant_col = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_dormant_col_team = ImVec4(0, 0, 0, 100);
 	ImVec4 visuals_bullet_tracer_col = ImVec4(138, 43, 226, 255);

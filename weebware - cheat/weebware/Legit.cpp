@@ -6,10 +6,15 @@ c_aimbot g_aimbot;
 
 void c_legit::run(c_usercmd* cmd, c_base_entity* local) {
 
+	// weapon check bc fk it
+	if (!local->m_pActiveWeapon())
+		return;
+
 	g_legitbot.m_local = local;
 
 	// need to add param to incorporate aimbot angles, and reduction %
 	reduce_recoil(cmd);
+
 
 	// TOO MANY FUNCS I MADE IT ITS OWN CLASS
 	g_triggerbot.run(cmd);
@@ -151,8 +156,11 @@ c_base_entity* c_legit::closest_target_available(bool triggerbot) {
 
 void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 
+	if (g_legitbot.m_local->m_pActiveWeapon()->is_knife())
+		return;
 
 	c_base_entity* target = closest_target_available(triggerbot);
+
 	int switch_delay = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_target_switch_delay : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay;
 
 	if (cur_target != target)
@@ -169,6 +177,15 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 		cur_target = NULL;
 		m_last_delay = get_epoch_ms();
 		return;
+	}
+
+
+	if (g_legitbot.m_local->m_pActiveWeapon()->is_scoped_weapon()) {
+		if (g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity >= 100) {
+			if (!in_crosshair(target) && g_legitbot.m_local->m_iShotsFired() == 0) {
+				cmd->buttons &= ~in_attack;
+			}
+		}
 	}
 
 
@@ -189,6 +206,10 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 	if (autostop)
 		auto_stop(cmd);
 
+	if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only && triggerbot)
+		if (!sniper_scoped())
+			return;
+
 
 	QAngle aim_angle = closest_hitbox(target, triggerbot);
 
@@ -205,13 +226,13 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 	g_weebware.g_engine->get_view_angles(view_angles);
 
+
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim || triggerbot)
 	{
 		int sensitivity = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_sensitivity : g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity;
 		QAngle delta = g_maths.calcute_delta(view_angles, aim_angle, sensitivity);
 
 		cmd->viewangles = delta;
-
 		g_weebware.g_engine->set_view_angles(cmd->viewangles);
 	}
 	else {
@@ -219,6 +240,37 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 		if ((cmd->buttons & in_attack) && (next_attack_queued()))
 			cmd->viewangles = aim_angle;
 	}
+}
+
+bool c_aimbot::in_crosshair(c_base_entity* target) {
+
+	Ray_t ray;
+	trace_t trace;
+	Vector view_angles;
+
+	g_weebware.g_engine->get_view_angles(view_angles);
+	view_angles += g_legitbot.m_local->m_aimPunchAngle() * 2.f;
+
+	// this will be our ray
+	Vector forward = Vector(0, 0, 0);
+	g_maths.qangle_vector(view_angles, forward);
+	Vector dst = g_legitbot.m_local->get_vec_eyepos() + (forward * g_legitbot.m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
+
+	ray.Init(g_legitbot.m_local->get_vec_eyepos(), dst);
+	ITraceFilter trace_filter;
+	trace_filter.pSkip = g_legitbot.m_local;
+	g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &trace_filter, &trace);
+
+	if (trace.allsolid || trace.startsolid)
+		return false;
+
+	if (!trace.m_pEnt)
+		return false;
+
+	if (trace.m_pEnt == target)
+		return true;
+
+	return false;
 }
 
 void c_aimbot::auto_stop(c_usercmd* cmd) {
@@ -337,7 +389,8 @@ void c_triggerbot::run(c_usercmd* cmd) {
 		break;
 	}
 
-	do_aim_stuffs(cmd, true);
+	if (g_weebwarecfg.legit_cfg[get_config_index()].magnet_triggerbot_enabled)
+		do_aim_stuffs(cmd, true);;
 
 	c_base_entity* target = get_trace_ent();
 
@@ -489,7 +542,7 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 }
 
 
-bool c_triggerbot::sniper_scoped() {
+bool c_legit::sniper_scoped() {
 
 	auto weapon = g_legitbot.m_local->m_pActiveWeapon();
 

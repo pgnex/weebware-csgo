@@ -92,10 +92,8 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
 
-	// if they DONT have screenshot proof on and user is taking a screenshot, render esp
-	if (!(g_weebwarecfg.screenshot_proof && g_weebware.g_engine->is_taking_screenshot())) {
-		g_d3dxesp.d9esp_main(device);
-	}
+	// render esp
+//	g_d3dxesp.d9esp_main(device);
 	
 
 	device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
@@ -125,7 +123,7 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 	if (hr >= 0) {
 		ImGui_ImplDX9_CreateDeviceObjects();
 		g_d3dxesp.get_device(device);
-		g_weebware.init_fonts();
+		g_vars.g_initfont.set(1.0f);
 	}
 	return hr;
 }
@@ -277,6 +275,16 @@ void gui::imgui_main() {
 		imgui_custom::create_button_tab(tab_selection, gui::tabs::skins, "D", ImGui::GetContentRegionAvailWidth(), 103);
 		imgui_custom::create_button_tab(tab_selection, gui::tabs::settings, "E", ImGui::GetContentRegionAvailWidth(), 103);
 		ImGui::PopFont();
+
+		ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(144, 29, 29, 255)));
+		ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 255)));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 155)));
+		if (ImGui::Button("Unload", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y))) {
+			g_hooking.unhook_all_functions();
+		}
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
+		ImGui::PopStyleColor();
 
 		ImGui::EndChild();
 		ImGui::PopStyleColor();
@@ -704,7 +712,7 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Disable Post Processing", &g_weebwarecfg.disable_post_processing);
 			ImGui::Checkbox("Anti AFK", &g_weebwarecfg.anti_afk);
 			ImGui::Checkbox("Auto Accept", &g_weebwarecfg.misc_autoAccept);
-			ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
+		//	ImGui::Checkbox("Rainbow Name", &g_weebwarecfg.rainbow_name);
 			ImGui::Checkbox("Legit AA", &g_weebwarecfg.misc_legit_aa_enabled);
 			ImGui::Checkbox("Legit AA Indicator", &g_weebwarecfg.legit_aa_indicator);
 			ImGui::Checkbox("Flip AA", &g_weebwarecfg.misc_legit_aa_flip);
@@ -902,31 +910,32 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("skinstxtmargintop3", 2);
 			imgui_custom::custom_label_header("Model Options");
 
+			ImGui::Text("Temporarily Disabled");
 
-			if (g_weebware.models_installed) {
-				ImGui::Text("Player Models");
-				const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai", "Kimono Luka", "Inori" };
-				imgui_custom::a_better_combo_box("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
-				// https://gamebanana.com/skins/148058
+			//if (g_weebware.models_installed) {
+			//	ImGui::Text("Player Models");
+			//	const char* models[] = { "Off", "Reina Kousaka", "Yuno Gasai", "Kimono Luka", "Inori" };
+			//	imgui_custom::a_better_combo_box("##model_type", &g_weebwarecfg.anime_model, models, ARRAYSIZE(models));
+			//	// https://gamebanana.com/skins/148058
 
-				ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
+			//	ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(40, 40, 40, 155)));
+			//	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(50, 50, 50, 155)));
+			//	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2.f);
 
-				if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25))) {
-					g_weebwarecfg.skinchanger_apply_nxt = 1;
-				}
-				ImGui::PopStyleVar();
-				ImGui::PopStyleColor();
-				ImGui::PopStyleColor();
-			}
-			else {
-				ImGui::Text("Please properly install models");
-				if (ImGui::Button("Download"))
-					ShellExecute(0, 0, "https://auth.weebware.net/dependencies/models.exe", 0, 0, SW_SHOW);
-				if (ImGui::Button("Refresh"))
-					g_weebware.models_installed = g_weebware.check_models_installed();
-			}
+			//	if (ImGui::Button("Apply", ImVec2(ImGui::GetContentRegionAvailWidth() / 1.5, 25))) {
+			//		g_weebwarecfg.skinchanger_apply_nxt = 1;
+			//	}
+			//	ImGui::PopStyleVar();
+			//	ImGui::PopStyleColor();
+			//	ImGui::PopStyleColor();
+			//}
+			//else {
+			//	ImGui::Text("Please properly install models");
+			//	if (ImGui::Button("Download"))
+			//		ShellExecute(0, 0, "https://auth.weebware.net/dependencies/models.exe", 0, 0, SW_SHOW);
+			//	if (ImGui::Button("Refresh"))
+			//		g_weebware.models_installed = g_weebware.check_models_installed();
+			//}
 
 
 			ImGui::EndChild();
