@@ -163,14 +163,12 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 
 	int switch_delay = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].mag_trig_target_switch_delay : g_weebwarecfg.legit_cfg[get_config_index()].aimbot_target_switch_delay;
 
-	if (cur_target != target)
-		if (cur_target != NULL)
+	if (cur_target != target && cur_target != NULL)
 			if (get_epoch_ms() <= (last_delay_aim + switch_delay))
 				return;
 
 	last_delay_aim = get_epoch_ms();
 	cur_target = target;
-
 
 	if (!target->is_valid_player()) {
 		last_delay_aim = 0.f;
@@ -179,15 +177,12 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 		return;
 	}
 
-
-	if (g_legitbot.m_local->m_pActiveWeapon()->is_scoped_weapon()) {
-		if (g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity >= 100) {
-			if (!in_crosshair(target) && g_legitbot.m_local->m_iShotsFired() == 0) {
-				cmd->buttons &= ~in_attack;
-			}
-		}
-	}
-
+	// maybe an improve accuracy func someday
+	//if (g_weebwarecfg.legit_cfg[get_config_index()].aim_sensitivity > 85) {
+	//	if (!in_crosshair(target) && g_legitbot.m_local->m_iShotsFired() == 0) {
+	//		cmd->buttons &= ~in_attack;
+	//	}
+	//}
 
 	if (!is_visible(g_legitbot.m_local, target))
 		return;
@@ -197,35 +192,27 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 		return;
 
 
-	if (!(get_epoch_ms() > (m_last_delay + g_weebwarecfg.legit_cfg[get_config_index()].reaction_time)) && !triggerbot) {
-		return;
-	}
-
-
 	bool autostop = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].quick_stop_magnet : g_weebwarecfg.legit_cfg[get_config_index()].quick_stop;
 	if (autostop)
 		auto_stop(cmd);
 
-	if (g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].triggerbot_scoped_only && triggerbot)
+	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_scoped_only && triggerbot)
 		if (!sniper_scoped())
 			return;
-
 
 	QAngle aim_angle = closest_hitbox(target, triggerbot);
 
 	if (aim_angle.x == 0 && aim_angle.y == 0)
 		return;
 
+
 	// calculate aim angle with rcs incorperated
 	aim_angle = rcs_scaled(aim_angle, triggerbot);
-
 	g_maths.normalize_angle(aim_angle);
-
 	g_maths.clamp_angle(aim_angle);
 
 	QAngle view_angles = QAngle(0.f, 0.f, 0.f);
 	g_weebware.g_engine->get_view_angles(view_angles);
-
 
 	if (!g_weebwarecfg.legit_cfg[get_config_index()].silent_aim || triggerbot)
 	{
@@ -236,13 +223,14 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 		g_weebware.g_engine->set_view_angles(cmd->viewangles);
 	}
 	else {
-
-		if ((cmd->buttons & in_attack) && (next_attack_queued()))
 			cmd->viewangles = aim_angle;
 	}
 }
 
 bool c_aimbot::in_crosshair(c_base_entity* target) {
+
+	if (!g_legitbot.m_local->m_pActiveWeapon()->is_scoped_weapon())
+		return true;
 
 	Ray_t ray;
 	trace_t trace;
