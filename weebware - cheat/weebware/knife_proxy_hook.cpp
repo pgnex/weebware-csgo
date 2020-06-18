@@ -87,7 +87,7 @@ static T* find_hud_element(const char* name) {
 
 
 void c_knifehook::force_update() {
-	static auto fn = reinterpret_cast<std::int32_t(__thiscall*)(void*, std::int32_t)>(g_weebware.pattern_scan("client_panorama.dll", ("55 8B EC 51 53 56 8B 75 08 8B D9 57 6B FE 2C")));
+	static auto fn = reinterpret_cast<std::int32_t(__thiscall*)(void*, std::int32_t)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 51 53 56 8B 75 08 8B D9 57 6B FE 2C")));
 
 	auto element = find_hud_element<std::uintptr_t*>(("CCSGO_HudWeaponSelection"));
 
