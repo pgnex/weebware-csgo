@@ -913,9 +913,9 @@ public:
 		return weapon_id == weapon_type_id::weapon_awp
 			|| weapon_id == weapon_type_id::weapon_ssg08
 			|| weapon_id == weapon_type_id::weapon_g3sg1
-			|| weapon_id == weapon_type_id::weapon_scar20
-			|| weapon_id == weapon_type_id::weapon_aug
-			|| weapon_id == weapon_type_id::weapon_sg553;
+			|| weapon_id == weapon_type_id::weapon_scar20;
+			//|| weapon_id == weapon_type_id::weapon_aug
+			//|| weapon_id == weapon_type_id::weapon_sg553;
 	}
 
 	bool is_smg( )
