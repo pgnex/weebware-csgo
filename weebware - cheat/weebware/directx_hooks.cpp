@@ -341,9 +341,6 @@ void gui::imgui_main() {
 			ImGui::Text("Sensitivity");
 			imgui_custom::a_better_slider_float("##Sensitivity", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aim_sensitivity, 0, 100, "%.0f%%");
 
-			ImGui::Text("First Shot Delay");
-			imgui_custom::a_better_slider_float("##First Shot Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].reaction_time, 0, 200, "%.0fms");
-
 			ImGui::Text("Target Switch Delay");
 			imgui_custom::a_better_slider_int("##Target Switch Delay", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].aimbot_target_switch_delay, 0, 2000, "%.0f");
 
@@ -625,7 +622,7 @@ void gui::imgui_main() {
 			ImGui::Checkbox("Night Sky", &g_weebwarecfg.night_sky);
 			ImGui::Checkbox("Nightmode", &g_weebwarecfg.visuals_nightmode);
 			ImGui::Checkbox("Screenshot Proof", &g_weebwarecfg.screenshot_proof);
-			ImGui::Checkbox("OBS Proof", &g_weebwarecfg.obs_proof);
+		//	ImGui::Checkbox("OBS Proof", &g_weebwarecfg.obs_proof);
 			ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke);
 			ImGui::Checkbox("Spectator List", &g_weebwarecfg.spec_list);
 			ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj);
@@ -831,7 +828,7 @@ void gui::imgui_main() {
 			const char* fakelag_type[] = { "Off", "On Key", "Always On" };
 			imgui_custom::a_better_combo_box("##fakelagtype", &g_weebwarecfg.fake_lag, fakelag_type, ARRAYSIZE(fakelag_type));
 			if (g_weebwarecfg.fake_lag > 0) {
-				imgui_custom::a_better_slider_int("Fakelag Factor", &g_weebwarecfg.fake_lag_factor, 0, 6);
+				imgui_custom::a_better_slider_int("Fakelag Factor", &g_weebwarecfg.fake_lag_fact, 0, 6);
 			}
 
 			ImGui::EndChild();
