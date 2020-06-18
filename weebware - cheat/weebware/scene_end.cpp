@@ -31,7 +31,7 @@ void init_key_vals(KeyValues* keyValues, char* name)
 {
 	static DWORD keyval_addr = 0;
 
-	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client_panorama.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
+	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
 
 	static DWORD dwFunction = 0;
 
@@ -52,7 +52,7 @@ void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *p
 {
 	static  DWORD dwFunction = 0;
 
-	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
+	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
 
 	if (!dwFunction) {
 		return;

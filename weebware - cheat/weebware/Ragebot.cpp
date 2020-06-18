@@ -11,7 +11,7 @@ namespace ragebot
 
 	bool auto_wall::asm_trace_to_exit( Vector& end, trace_t& tr, Vector start, Vector vEnd, trace_t* trace )
 	{
-		static DWORD trace_exit_address = g_weebware.pattern_scan( "client_panorama.dll", "55 8B EC 83 EC 30 F3 0F 10 75" );
+		static DWORD trace_exit_address = g_weebware.pattern_scan( "client.dll", "55 8B EC 83 EC 30 F3 0F 10 75" );
 
 		if ( !trace_exit_address )
 			return false;

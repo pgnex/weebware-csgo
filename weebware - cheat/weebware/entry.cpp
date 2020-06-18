@@ -31,7 +31,7 @@ bool c_weebware::init_interfaces( )
 
 
 	engine_fact = retrieve_interface( "engine.dll" );
-	client_fact = retrieve_interface( "client_panorama.dll" );
+	client_fact = retrieve_interface( "client.dll" );
 	surface_fact = retrieve_interface( "vguimatsurface.dll" );
 	vgui2_fact = retrieve_interface( "vgui2.dll" );
 	mat_system_fact = retrieve_interface( "materialsystem.dll" );
@@ -53,13 +53,13 @@ bool c_weebware::init_interfaces( )
 	g_client = reinterpret_cast<i_base_client*>(client_fact( "VClient018", NULL ));
 #endif
 
-	g_client_mode = **(unsigned long***)(pattern_scan( "client_panorama.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA" ) + 0x2);
+	g_client_mode = **(unsigned long***)(pattern_scan( "client.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA" ) + 0x2);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact( "VClientEntityList003", NULL ));
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact( "VGUI_Panel009", NULL ));
 	g_matchframework = reinterpret_cast<c_match_framework*>(match_fact("MATCHFRAMEWORK_001", NULL));
 	g_surface = reinterpret_cast<c_surface*>(surface_fact( "VGUI_Surface031", NULL ));
 	g_direct_x = **reinterpret_cast<IDirect3DDevice9***>(pattern_scan( "shaderapidx9.dll", "A1 ? ? ? ? 50 8B 08 FF 51 0C" ) + 0x1);
-	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan( "client_panorama.dll", "0F 11 05 ? ? ? ? 83 C8 01" ) + 3);
+	g_glow_obj_manager = *reinterpret_cast<CGlowObjectManager**>(pattern_scan( "client.dll", "0F 11 05 ? ? ? ? 83 C8 01" ) + 3);
 	g_input_system = reinterpret_cast<c_input_system*>(input_fact( "InputSystemVersion001", NULL ));
 	g_model_info = reinterpret_cast<iv_model_info*>(engine_fact( "VModelInfoClient004", NULL ));
 	g_engine_trace = reinterpret_cast<i_engine_trace*>(engine_fact( "EngineTraceClient004", NULL ));
@@ -72,22 +72,22 @@ bool c_weebware::init_interfaces( )
 	g_model_render = reinterpret_cast<c_model_render*>(engine_fact( "VEngineModel016", NULL ));
 	g_mdlcache = reinterpret_cast<IMDLCache*>(cache_fact( "MDLCache004", NULL ));
 	g_NetworkContainer = reinterpret_cast<CNetworkStringTableContainer*>(engine_fact( "VEngineClientStringTable001", NULL ));
-	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan( "client_panorama.dll", "8D 04 24 50 A1 ? ? ? ? B9" ) + 5);
-	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan( "client_panorama.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9" ) + 0x2);
+	g_beams = *reinterpret_cast<IViewRenderBeams**>(pattern_scan( "client.dll", "8D 04 24 50 A1 ? ? ? ? B9" ) + 5);
+	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan( "client.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9" ) + 0x2);
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
 	g_reset_address = pattern_scan( "gameoverlayrenderer.dll", "C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8" ) + 9;
 	// wtf is the past address kite >? new ? (C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8)
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact( "GameMovement001", NULL ));
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact( "VClientPrediction001", NULL ));
-	g_move_helper = **(c_move_helper***)(pattern_scan( "client_panorama.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01" ) + 0x2);
+	g_move_helper = **(c_move_helper***)(pattern_scan( "client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01" ) + 0x2);
 	g_convars = reinterpret_cast<c_iconvar*>(vstd_lib_fact( "VEngineCvar007", NULL ));
 	g_effects = reinterpret_cast<i_effects*>(client_fact( "IEffects001", NULL ));
 	g_game_events = reinterpret_cast<i_game_event_manager*>(engine_fact( "GAMEEVENTSMANAGER002", NULL ));
 	g_enginesound = reinterpret_cast<uintptr_t*>(engine_fact( "IEngineSoundClient003", NULL ));
-	g_input = *(c_input**)(pattern_scan( "client_panorama.dll", "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10" ) + 0x1);
+	g_input = *(c_input**)(pattern_scan( "client.dll", "B9 ? ? ? ? F3 0F 11 04 24 FF 50 10" ) + 0x1);
 	g_surface_props = reinterpret_cast<c_phys_surface_props*>(phys_fact( "VPhysicsSurfaceProps001", NULL ));
 	g_render = *reinterpret_cast<CRender**>(pattern_scan("engine.dll", "56 57 0F 57 C0 C7 05 ? ? ? ? ? ? ? ? 51") + 0x7);
-	g_weapon_system = *(IWeaponSystem**)(pattern_scan("client_panorama.dll", "8B 35 ? ? ? ? FF 10 0F B7 C0") + 0x2);
+	g_weapon_system = *(IWeaponSystem**)(pattern_scan("client.dll", "8B 35 ? ? ? ? FF 10 0F B7 C0") + 0x2);
 	
 	// lets make sure models are installed to display on menu
 	models_installed = check_models_installed( );
@@ -312,7 +312,7 @@ bool c_base_entity::trace_from_smoke( Vector src ) {
 	typedef bool(*td_LineGoesThroughSmoke)(float, float, float, float, float, float, short);
 
 	Vector dst = *this->m_vecOrigin( );
-	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan( "client_panorama.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0" ));
+	static td_LineGoesThroughSmoke line_through_smoke = reinterpret_cast<td_LineGoesThroughSmoke>(g_weebware.pattern_scan( "client.dll", "55 8B EC 83 EC 08 8B 15 ? ? ? ? 0F 57 C0" ));
 
 	if ( !line_through_smoke )
 		return false;

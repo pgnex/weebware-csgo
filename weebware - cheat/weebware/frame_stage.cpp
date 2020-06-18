@@ -165,13 +165,13 @@ void c_frame_stage_notify::pvs_fix()
 
 template<class T>
 static T* find_hud_elem(const char* name) {
-	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client_panorama.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
+	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
 
-	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client_panorama.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
+	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
 	return (T*)find_hud_element(fn, name);
 }
 
-static void(__thiscall* _clear_notices)(DWORD) = (void(__thiscall*)(DWORD))g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
+static void(__thiscall* _clear_notices)(DWORD) = (void(__thiscall*)(DWORD))g_weebware.pattern_scan("client.dll", "55 8B EC 83 EC 0C 53 56 8B 71 58");
 void c_frame_stage_notify::preserve_killfeed() {
 
 	static DWORD* _death_notice = find_hud_elem<DWORD>("CCSGO_HudDeathNotice");

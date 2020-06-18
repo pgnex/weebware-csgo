@@ -79,9 +79,9 @@ struct hud_weapons_t {
 
 template<class T>
 static T* find_hud_element(const char* name) {
-	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client_panorama.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
+	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
 
-	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client_panorama.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
+	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
 	return (T*)find_hud_element(fn, name);
 }
 
@@ -137,7 +137,6 @@ std::map<int, int> init_knife_indexes() {
 
 	return m;
 }
-
 
 bool is_knife_index(std::map<int, int> map, int knife_index) {
 	for (auto& i : map) {

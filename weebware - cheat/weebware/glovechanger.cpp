@@ -23,7 +23,7 @@ static auto make_glove(int entry, int serial) -> c_basecombat_weapon* {
 
 	const auto glove = static_cast<c_basecombat_weapon*>(g_weebware.g_entlist->getcliententity(entry));
 	assert(glove); {
-		static auto set_abs_origin_addr = g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8");
+		static auto set_abs_origin_addr = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 51 53 56 57 8B F1 E8");
 		const auto set_abs_origin_fn = reinterpret_cast<void(__thiscall*)(void*, const std::array<float, 3>&)>(set_abs_origin_addr);
 		static constexpr std::array<float, 3> new_pos = { 10000.f, 10000.f, 10000.f };
 		set_abs_origin_fn(glove, new_pos);

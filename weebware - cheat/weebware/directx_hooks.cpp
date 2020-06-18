@@ -131,7 +131,7 @@ long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* pres
 
 KeyValues* KeyValues::FindKey(const char* keyName, bool bCreate)
 {
-	static auto key_values_find_key = reinterpret_cast<KeyValues * (__thiscall*)(void*, const char*, bool)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 EC 1C 53 8B D9 85 DB"));
+	static auto key_values_find_key = reinterpret_cast<KeyValues * (__thiscall*)(void*, const char*, bool)>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 EC 1C 53 8B D9 85 DB"));
 	return key_values_find_key(this, keyName, bCreate);
 }
 
@@ -140,7 +140,7 @@ void KeyValues::set_string(const char* keyName, const char* value)
 	auto key = FindKey(keyName, true);
 	if (key)
 	{
-		static auto key_values_set_string = reinterpret_cast<void(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC A1 ? ? ? ? 53 56 57 8B F9 8B 08 8B 01"));
+		static auto key_values_set_string = reinterpret_cast<void(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client.dll", "55 8B EC A1 ? ? ? ? 53 56 57 8B F9 8B 08 8B 01"));
 		key_values_set_string(key, value);
 	}
 }

@@ -320,7 +320,7 @@ void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
 
 void SetLocalPlayerReady()
 {
-	static auto SetLocalPlayerReadyFn = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
+	static auto SetLocalPlayerReadyFn = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
 	if (SetLocalPlayerReadyFn)
 		SetLocalPlayerReadyFn("");
 }

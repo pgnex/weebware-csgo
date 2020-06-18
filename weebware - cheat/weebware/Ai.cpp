@@ -14,9 +14,9 @@ void c_ai::auto_queue() {
 	using create_session_fn = void* (__stdcall*)(void);
 	using handle_match_start_fn = bool(__thiscall*)(void*, const char*, char*, char*, char*);
 
-	static auto singleton = *(uint8_t**)(g_weebware.pattern_scan("client_panorama.dll", "A1 ? ? ? ? 85 C0 75 2F A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 13 8B C8 E8 ? ? ? ? A3 ? ? ? ? 8B C8 E9 ? ? ? ? 33 C0 A3 ? ? ? ? 8B C8 E9 ? ? ? ? CC 55 8B EC 8B 4D 08") + 1);
-	static auto handle_match_start = (handle_match_start_fn)g_weebware.pattern_scan("client_panorama.dll", "55 8B EC 51 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01");
-	static auto create_session = (create_session_fn)g_weebware.pattern_scan_from_call("client_panorama.dll", "E8 ? ? ? ? 83 EC 14 E8");
+	static auto singleton = *(uint8_t**)(g_weebware.pattern_scan("client.dll", "A1 ? ? ? ? 85 C0 75 2F A1 ? ? ? ? 68 ? ? ? ? 8B 08 8B 01 FF 50 04 85 C0 74 13 8B C8 E8 ? ? ? ? A3 ? ? ? ? 8B C8 E9 ? ? ? ? 33 C0 A3 ? ? ? ? 8B C8 E9 ? ? ? ? CC 55 8B EC 8B 4D 08") + 1);
+	static auto handle_match_start = (handle_match_start_fn)g_weebware.pattern_scan("client.dll", "55 8B EC 51 53 56 8B F1 8B 0D ? ? ? ? 57 8B 01");
+	static auto create_session = (create_session_fn)g_weebware.pattern_scan_from_call("client.dll", "E8 ? ? ? ? 83 EC 14 E8");
 
 	if (!needs_queue)
 		return;
