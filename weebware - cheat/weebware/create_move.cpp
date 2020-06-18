@@ -58,10 +58,10 @@ bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, boo
 	g_create_move.block_bot( cmd );
 	g_create_move.auto_defuse( cmd );
 	g_create_move.no_crouch_cooldown( cmd );
-	g_create_move.fake_lag( cmd, sendpacket );
 	g_create_move.anti_afk( cmd );
 	g_nightmode.run( );
 
+	g_create_move.fake_lag(cmd, sendpacket);
 	g_LegitAntiAim.Run(cmd);
 
 
@@ -699,8 +699,8 @@ void c_create_move::auto_pistol( c_usercmd* cmd ) {
 void c_create_move::fake_lag( c_usercmd* cmd, bool send_packets ) {
 
 	if ( g_weebwarecfg.fake_lag <= 0 ) {
-		if ( g_weebwarecfg.fake_lag_factor > 0 )
-			g_weebwarecfg.fake_lag_factor = 0;
+		if ( g_weebwarecfg.fake_lag_fact > 0 )
+			g_weebwarecfg.fake_lag_fact = 0;
 		g_weebware.send_packet = true;
 		return;
 	}
@@ -727,12 +727,12 @@ void c_create_move::fake_lag( c_usercmd* cmd, bool send_packets ) {
 
 	static int chokes = 0;
 
-	if ( g_weebwarecfg.fake_lag_factor > 0 )
+	if ( g_weebwarecfg.fake_lag_fact > 0 )
 		g_weebware.send_packet = (chokes == 0) ? true : false;
 
 	chokes++;
 
-	if ( chokes > g_weebwarecfg.fake_lag_factor )
+	if ( chokes > g_weebwarecfg.fake_lag_fact )
 		chokes = 0;
 }
 
