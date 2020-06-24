@@ -365,6 +365,7 @@ public:
 	bool misc_legit_aa_edge = false;
 	int misc_legit_aa_side_key = VK_MENU;
 	bool misc_legit_aa_flip;
+	bool misc_legit_aa_left;
 	// 0, menu index , 1 config index
 	int selected_knife_index[2] = { 0 };
 	int selected_gun_index = 0;
@@ -393,6 +394,7 @@ public:
 	bool wireframe_hands = 0;
 	bool hand_chams_xqz = 0;
 	int hitmarker_sound = 0;
+	bool killsound = false;
 	bool rank_reveal = false;
 	bool rainbow_name = false;
 	bool misc_autoAccept = false;
@@ -409,7 +411,7 @@ public:
 	bool viewmodel_changer;
 	int viewmodel_offset = 0;
 	int fake_lag = 0;
-	int fake_lag_factor = 0;
+	int fake_lag_fact = 0;
 	int fake_lag_key = VK_XBUTTON1;
 	int glove_model;
 	bool glovechanger_enabled;
@@ -571,7 +573,7 @@ public:
 		// misc
 		tmp["enable_misc"] = enable_misc;
 		tmp["auto_jump"] = auto_jump;
-		tmp["autu_jump_hitchance"] = auto_jump_hitchance;
+		tmp["auto_jump_hitchance"] = auto_jump_hitchance;
 		tmp["misc_ai"] = misc_ai;
 		tmp["auto_queue"] = auto_queue;
 		tmp["misc_ai_legitfactor"] = misc_ai_legitfactor;
@@ -601,6 +603,7 @@ public:
 		tmp["visuals_chams_xqz"] = visuals_chams_xqz;
 		tmp["visuals_hitmarkers"] = visuals_hitmarkers;
 		tmp["hitmarker_sound"] = hitmarker_sound;
+		tmp["killsound"] = killsound;
 		tmp["rank_reveal"] = rank_reveal;
 		tmp["misc_autoAccept"] = misc_autoAccept;
 		tmp["minecraft_pickaxe"] = minecraft_pickaxe;
@@ -625,7 +628,7 @@ public:
 		tmp["auto_pistol_key"] = auto_pistol_key;
 		tmp["preserve_killfeed"] = preserve_killfeed;
 		tmp["rainbow_name"] = rainbow_name;
-		tmp["fake_lag_factor"] = fake_lag_factor;
+		tmp["fake_lag_fact"] = fake_lag_fact;
 		tmp["fake_lag"] = fake_lag;
 		tmp["fake_lag_key"] = fake_lag_key;
 		tmp["block_bot"] = block_bot;
@@ -807,6 +810,7 @@ public:
 		if (check("visuals_chams_xqz", data)) visuals_chams_xqz = data["visuals_chams_xqz"];
 		if (check("visuals_hitmarkers", data)) visuals_hitmarkers = data["visuals_hitmarkers"];
 		if (check("hitmarker_sound", data)) hitmarker_sound = data["hitmarker_sound"];
+		if (check("killsound", data)) killsound = data["killsound"];
 		if (check("rank_reveal", data)) rank_reveal = data["rank_reveal"];
 		if (check("misc_autoAccept", data)) misc_autoAccept = data["misc_autoAccept"];
 		if (check("minecraft_pickaxe", data)) minecraft_pickaxe = data["minecraft_pickaxe"];
@@ -832,7 +836,7 @@ public:
 
 		if (check("glove_skin", data)) glove_skin = data["glove_skin"];
 		if (check("rainbow_name", data)) rainbow_name = data["rainbow_name"];
-		if (check("fake_lag_factor", data)) fake_lag_factor = data["fake_lag_factor"];
+		if (check("fake_lag_fact", data)) fake_lag_fact = data["fake_lag_fact"];
 		if (check("fake_lag", data)) fake_lag = data["fake_lag"];
 		if (check("fake_lag_key", data)) fake_lag_key = data["fake_lag_key"];
 		if (check("block_bot", data)) block_bot = data["block_bot"];
