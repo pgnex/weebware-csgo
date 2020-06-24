@@ -45,10 +45,31 @@ void c_paint_traverse::draw_legit_aa_indicator() {
 	if (!g_weebwarecfg.legit_aa_indicator)
 		return;
 
-
 	int w, h; g_weebware.g_engine->get_screen_dimensions(w, h);
-	draw_string(g_weebware.tahoma_font_large, w * 0.45, h / 2, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 0, 255, 255) : c_color(255, 255, 255, 255), 0, "<");
-	draw_string(g_weebware.tahoma_font_large, w * 0.55, h / 2, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 255, 255, 255) : c_color(255, 0, 255, 255), 0, ">");
+
+	wchar_t buf[128];
+	int tw, th;
+
+	if (MultiByteToWideChar(CP_UTF8, 0, "<", -1, buf, 128) > 0) {
+		g_weebware.g_surface->gettextsize(g_weebware.indicator_font_XD, buf, tw, th);
+		draw_string(g_weebware.indicator_font_XD, ((w / 2) - (tw / 2)) - 48, h / 2, (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 0, 255, 255) : c_color(255, 255, 255, 255)), 0, "<");
+	}
+
+	if (MultiByteToWideChar(CP_UTF8, 0, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? "Real" : "Fake", -1, buf, 128) > 0) {
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font_large, buf, tw, th);
+		draw_string(g_weebware.tahoma_font_large, ((w / 2) - (tw / 2)) - 48, (h / 2) + 24, (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 0, 255, 255) : c_color(255, 255, 255, 255)), 0, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? "Real" : "Fake");
+	}
+
+	if (MultiByteToWideChar(CP_UTF8, 0, ">", -1, buf, 128) > 0) {
+		g_weebware.g_surface->gettextsize(g_weebware.indicator_font_XD, buf, tw, th);
+		draw_string(g_weebware.indicator_font_XD, ((w / 2) - (tw / 2)) + 48, h / 2, (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 255, 255, 255) : c_color(255, 0, 255, 255)), 0, ">");
+	}
+
+	if (MultiByteToWideChar(CP_UTF8, 0, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? "Fake" : "Real", -1, buf, 128) > 0) {
+		g_weebware.g_surface->gettextsize(g_weebware.tahoma_font_large, buf, tw, th);
+		draw_string(g_weebware.tahoma_font_large, ((w / 2) - (tw / 2)) + 48, (h / 2) + 24, (GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? c_color(255, 255, 255, 255) : c_color(255, 0, 255, 255)), 0, GetKeyState(g_weebwarecfg.misc_legit_aa_side_key) ? "Fake" : "Real");
+	}
+	
 }
 
 void c_paint_traverse::draw_water_mark()
