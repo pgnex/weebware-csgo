@@ -19,11 +19,6 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 c_d3dxesp g_d3dxesp;
 
-IDirect3DStateBlock9* pixelState = NULL;
-IDirect3DVertexDeclaration9* vertexDeclaration;
-IDirect3DVertexShader9* vertexShader;
-
-
 LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	if (uMsg == WM_KEYDOWN) {
@@ -43,28 +38,19 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 
 long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
-
-	if (device->CreateStateBlock(D3DSBT_ALL, &pixelState) < 0) {
-#if DEBUG_HOOKS
-		return PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
-#else
-		return g_hooking.o_present(device, src, dest, wnd_override, dirty_region);
-#endif
-	}
-
-
-	pixelState->Capture();
-	device->GetVertexDeclaration(&vertexDeclaration);
-	device->GetVertexShader(&vertexShader);
+	IDirect3DStateBlock9* pixel_state = NULL; IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
+	device->CreateStateBlock(D3DSBT_PIXELSTATE, &pixel_state);
+	device->GetVertexDeclaration(&vertDec);
+	device->GetVertexShader(&vertShader);
 
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
 
 
-	pixelState->Apply();
-	pixelState->Release();
-	device->SetVertexShader(vertexShader);
-	device->SetVertexDeclaration(vertexDeclaration);
+	pixel_state->Apply();
+	pixel_state->Release();
+	device->SetVertexDeclaration(vertDec);
+	device->SetVertexShader(vertShader);
 
 #if DEBUG_HOOKS
 	return PLH::FnCast(g_hooking.present_tramp, g_hooking.o_present)(device, src, dest, wnd_override, dirty_region);
@@ -464,12 +450,12 @@ void gui::imgui_main() {
 			imgui_custom::fix_gay_padding_shit("legitgb3");
 			imgui_custom::horizontal_margin("legittxtmargintop3", 2);
 			imgui_custom::custom_label_header("Other");
-			ImGui::Checkbox("Standalone RCS", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs);
-			ImGui::Text("RCS Factor");
-			imgui_custom::a_better_slider_float("##RCS Factor", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs_power, 0, 100, "%.0f%%");
 			ImGui::Checkbox("Backtracking", (bool*)&g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].accuracy_boost);
 			ImGui::Text("Maximum Ticks");
 			imgui_custom::a_better_slider_float("##Maximum Ticks", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legit_maximum_ticks, 0, 30, "%.f%");
+			ImGui::Checkbox("Standalone RCS", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs);
+			ImGui::Text("RCS Factor");
+			imgui_custom::a_better_slider_float("##RCS Factor", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs_power, 0, 100, "%.0f%%");
 			ImGui::EndChild();
 
 			ImGui::PopStyleColor();
@@ -626,6 +612,7 @@ void gui::imgui_main() {
 			ImGui::Checkbox("No Smoke", &g_weebwarecfg.no_smoke);
 			ImGui::Checkbox("Spectator List", &g_weebwarecfg.spec_list);
 			ImGui::Checkbox("Grenade Trajectory", &g_weebwarecfg.draw_grenade_traj);
+			ImGui::Checkbox("Killsound", &g_weebwarecfg.killsound);
 			ImGui::Checkbox("Hitmarkers", &g_weebwarecfg.visuals_hitmarkers);
 			if (g_weebwarecfg.visuals_hitmarkers)
 				imgui_custom::custom_color_inline(g_weebwarecfg.visuals_hitmarker_col, "Hitmarker Color");
@@ -765,15 +752,15 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Movement");
 			ImGui::Checkbox("Infinite Duck", &g_weebwarecfg.no_duck_cooldown);
 			ImGui::Checkbox("Slidewalk", &g_weebwarecfg.misc_slidewalk);
-			ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump);
-			if (g_weebwarecfg.auto_jump) {
-				imgui_custom::a_better_slider_int("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
-			}
 			ImGui::Checkbox("Edge Jump", &g_weebwarecfg.edge_jump);
 			if (g_weebwarecfg.edge_jump)
 				imgui_custom::custom_inline_keyinput(g_weebwarecfg.edge_jump_key, key_counter);
 			if (g_weebwarecfg.edge_jump) {
 				ImGui::Checkbox("Duck In Air", &g_weebwarecfg.duck_in_air);
+			}
+			ImGui::Checkbox("Bunnyhop", &g_weebwarecfg.auto_jump);
+			if (g_weebwarecfg.auto_jump) {
+				imgui_custom::a_better_slider_int("Hitchance##bhop", &g_weebwarecfg.auto_jump_hitchance, 0, 100, "%.0f%%");
 			}
 			ImGui::Text("Auto Strafe");
 			const char* strafe_type[] = { "Off", "Legit", "Fast" };
