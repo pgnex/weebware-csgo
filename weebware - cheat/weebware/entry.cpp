@@ -130,14 +130,15 @@ void c_weebware::init_fonts( ) {
 	if (!init) {
 		tahoma_font = g_weebware.g_surface->create_font();
 		tahoma_font_large = g_weebware.g_surface->create_font();
+		indicator_font_XD = g_weebware.g_surface->create_font();
 		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
 		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
-		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 46, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
+		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 48, 400, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
 		init = true;
 	} else {
 		g_weebware.g_surface->setfontglyphset(tahoma_font, "Tahoma", 11, 300, 0, 0, fontflag_antialias | fontflag_dropshadow);
 		g_weebware.g_surface->setfontglyphset(tahoma_font_large, "Tahoma", 16, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
-		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 46, 400, 0, 0, fontflag_antialias | fontflag_dropshadow);
+		g_weebware.g_surface->setfontglyphset(indicator_font_XD, "Tahoma", 48, 400, 0, 0, fontflag_antialias | fontflag_dropshadow | fontflag_outline);
 	}
 }
 
