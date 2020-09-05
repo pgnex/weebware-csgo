@@ -10,6 +10,11 @@ void c_legit::run(c_usercmd* cmd, c_base_entity* local) {
 	if (!local->m_pActiveWeapon())
 		return;
 
+	c_basecombat_weapon* wep = local->m_pActiveWeapon();
+	if (wep->is_grenade())
+		return;
+
+
 	g_legitbot.m_local = local;
 
 	// need to add param to incorporate aimbot angles, and reduction %
