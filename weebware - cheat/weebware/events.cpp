@@ -2,6 +2,7 @@
 #include "events.h"
 #include "frame_stage.h"
 #include "create_move.h"
+#include "shared_funcs.h"
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
@@ -163,15 +164,17 @@ void FeatureFuncs::killsay(i_game_event* event) {
 
 void FeatureFuncs::buy_bot() {
 
-	if (g_weebwarecfg.buy_bot_primary > 0)
-		g_weebware.g_engine->execute_client_cmd(prim_buy_bot_map[g_weebwarecfg.buy_bot_primary].c_str());
-
-	if (g_weebwarecfg.buy_bot_secondary > 0)
-		g_weebware.g_engine->execute_client_cmd(sec_buy_bot_map[g_weebwarecfg.buy_bot_secondary].c_str());
-
-	if (g_weebwarecfg.buy_bot_armor)
+	if (g_weebwarecfg.buy_bot_armor) {
 		g_weebware.g_engine->execute_client_cmd("buy vest");
+	}
 
+	if (g_weebwarecfg.buy_bot_primary > 0) {
+		g_weebware.g_engine->execute_client_cmd(prim_buy_bot_map[g_weebwarecfg.buy_bot_primary].c_str());
+	}
+
+	if (g_weebwarecfg.buy_bot_secondary > 0) {
+		g_weebware.g_engine->execute_client_cmd(sec_buy_bot_map[g_weebwarecfg.buy_bot_secondary].c_str());
+	}
 }
 
 
@@ -179,6 +182,14 @@ void EventFuncs::player_death(i_game_event* event) {
 
 	if (g_weebwarecfg.killsay)
 		g_events_features.killsay(event);
+
+	// check if you hit a player
+	c_base_entity* attacker_ent = (c_base_entity*)g_weebware.g_entlist->getcliententity(g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker")));
+	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	if (attacker_ent == local) {
+		if (g_weebwarecfg.killsound)
+			PlaySoundA("C:\\weebware\\sounds\\killsound_1.wav", NULL, SND_ASYNC);
+	}
 }
 
 void EventFuncs::round_end(i_game_event* event) {
@@ -199,12 +210,19 @@ void EventFuncs::round_start(i_game_event* event) {
 	if (g_weebwarecfg.draw_grenade_traj) g_create_move.grenade_traj_disabled = false;
 	if (g_weebwarecfg.night_sky) g_create_move.is_sky_set = false;
 	if (g_weebwarecfg.misc_clantag_changer) g_frame_stage_notify.clantag_done = false;
-	flHurtTime = 0;
 
-	if (g_weebwarecfg.buy_bot_enabled) {
+	if (g_weebwarecfg.buy_bot_enabled)
 		g_events_features.buy_bot();
-	}
+
+	flHurtTime = 0;
 }
+
+void EventFuncs::player_spawned(i_game_event* event) {
+	if (g_weebwarecfg.buy_bot_enabled)
+		if (g_weebware.g_engine->GetPlayerForUserID(event->GetInt("userid")) == g_weebware.g_engine->get_local())
+			g_events_features.buy_bot();
+}
+
 
 // initialize our events
 void GameEvents::init() {
@@ -212,9 +230,9 @@ void GameEvents::init() {
 	add_event("player_hurt", EventFuncs::player_hurt);
 	add_event("bullet_impact", EventFuncs::bullet_impact);
 	add_event("player_death", EventFuncs::player_death);
-//	add_event("round_end", EventFuncs::round_end);
 	add_event("round_start", EventFuncs::round_start);
-//	add_event("cs_game_disconnected", EventFuncs::game_end);
+	add_event("player_spawned", EventFuncs::player_spawned);
+//	add_event("round_end", EventFuncs::round_end);
 
 	register_events();
 }

@@ -14,7 +14,12 @@ __int64 auth::GetEpochS() {
 
 std::string auth::GetServerVariable(std::string key) {
 	int timestamp = GetEpochS();
-	std::string content = networking::post_request("https://api.weebware.net/", "authenticate=true&key=" + key + "&steam_id=" + getenv("STEAMID"));
+
+	std::string steam_id = "UNKNOWN";
+	if (getenv("STEAMID"))
+		steam_id = getenv("STEAMID");
+
+	std::string content = networking::post_request("https://dapi.weebware.net/", "authenticate=true&key=" + key + "&steam_id=" + steam_id);
 
 	if (content == "REQUESTFAILED") {
 		std::string exceptionError = "==gUPJlUFBySS90VUVkT";

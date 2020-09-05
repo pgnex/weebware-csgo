@@ -70,6 +70,7 @@ public:
 	PLH::BreakPointHook* VEH_VM;
 	PLH::BreakPointHook* VEH_OVERRIDE;
 	PLH::BreakPointHook* VEH_CRS_CHECK;
+	PLH::BreakPointHook* VEH_FILE_SYSTEM;
 
 
 	//PLH::x86Detour* DETOUR_ENDSCENE;
@@ -151,7 +152,7 @@ public:
 #pragma endregion
 
 #pragma region Sounds
-	typedef void(__fastcall* fn_sound)(void*, void*, void*, int, int, const char *, unsigned int, const char *, float, float, int nSeed, int, int, const Vector *, const Vector *, Vector *, bool, float, int, int&);
+	typedef void(__fastcall* fn_sound)(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters);
 	fn_sound o_sounds;
 #pragma endregion
 

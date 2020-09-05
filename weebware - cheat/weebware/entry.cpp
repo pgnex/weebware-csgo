@@ -5,6 +5,9 @@
 #include "hook_funcs.h"
 #include "events.h"
 #include "knife_proxy_hook.h"
+#include <windows.h>
+#include <iostream>
+#include <string>
 
 #define WEEBWARE_RELEASE 0
 
@@ -12,8 +15,51 @@ GameEvents g_events;
 c_weebware g_weebware;
 create_interface retrieve_interface( LPCSTR module_name );
 
+
+HANDLE fileHandle;
+
+void ReadString(char* output) {
+	ULONG read = 0;
+	int index = 0;
+	do {
+		ReadFile(fileHandle, output + index++, 1, &read, NULL);
+	} while (read > 0 && *(output + index - 1) != 0);
+}
+
+bool AuthenticateClient()
+{
+	// create file
+	fileHandle = CreateFileW(L"\\\\.\\pipe\\ww-pipe", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+
+	// send data to server
+	const char* msg = "warwr\r\n";
+	WriteFile(fileHandle, msg, strlen(msg), nullptr, NULL);
+
+
+	// read from pipe server
+	char* buffer = new char[100];
+	memset(buffer, 0, 100);
+	ReadString(buffer);
+
+	std::string buf_to_str = buffer;
+
+	if (!strlen(buffer) > 0)
+		return false;
+
+	if (buf_to_str.compare("FAILED") == 0) {
+		MessageBox(NULL, "FAILED TO AUTHENTICATE", ("Error"), MB_ICONWARNING);
+		exit(EXIT_SUCCESS);
+	}
+
+	// set username smile
+	g_weebware.g_user_name = buffer;
+
+	return true;
+}
+
 unsigned __stdcall entry_thread( void* v_arg )
 {
+
 	// run our thread
 	g_weebware.setup_thread( );
 
@@ -45,9 +91,11 @@ bool c_weebware::init_interfaces( )
 	networking::curl_init();
 
 #if WEEBWARE_RELEASE
-	g_user_name = auth::GetServerVariable( auth::base64_decode( "ZG9n" ).c_str( ) );
-	g_engine = reinterpret_cast<c_engine_client*>(engine_fact( auth::GetServerVariable( auth::base64_decode( "cmF0" ) ).c_str( ), NULL ));
-	g_client = reinterpret_cast<i_base_client*>(client_fact( auth::GetServerVariable( auth::base64_decode( "Y2F0" ) ).c_str( ), NULL ));
+	//g_user_name = auth::GetServerVariable( auth::base64_decode( "ZG9n" ).c_str( ) );
+	//g_engine = reinterpret_cast<c_engine_client*>(engine_fact( auth::GetServerVariable( auth::base64_decode( "cmF0" ) ).c_str( ), NULL ));
+	//g_client = reinterpret_cast<i_base_client*>(client_fact( auth::GetServerVariable( auth::base64_decode( "Y2F0" ) ).c_str( ), NULL ));
+	g_engine = reinterpret_cast<c_engine_client*>(engine_fact("VEngineClient014", NULL));
+	g_client = reinterpret_cast<i_base_client*>(client_fact("VClient018", NULL));
 #else
 	g_engine = reinterpret_cast<c_engine_client*>(engine_fact( "VEngineClient014", NULL ));
 	g_client = reinterpret_cast<i_base_client*>(client_fact( "VClient018", NULL ));
@@ -64,7 +112,7 @@ bool c_weebware::init_interfaces( )
 	g_model_info = reinterpret_cast<iv_model_info*>(engine_fact( "VModelInfoClient004", NULL ));
 	g_engine_trace = reinterpret_cast<i_engine_trace*>(engine_fact( "EngineTraceClient004", NULL ));
 	g_debug_overlay = reinterpret_cast<c_debug_overlay*>(engine_fact( "VDebugOverlay004", NULL ));
-	g_global_vars = *reinterpret_cast<c_global_vars**>(((*(PDWORD*)g_client)[0]) + 0x1B);
+	g_global_vars = *reinterpret_cast<c_global_vars**>(((*(PDWORD*)g_client)[0]) + 0x1F);
 	g_global_vars = reinterpret_cast<c_global_vars*>(*(PDWORD)g_global_vars);
 	g_render_view = reinterpret_cast<c_render_view*>(engine_fact( "VEngineRenderView014", NULL ));
 	g_mat_sys = reinterpret_cast<c_mat_system*>(mat_system_fact( "VMaterialSystem080", NULL ));
@@ -101,8 +149,8 @@ bool c_weebware::init_interfaces( )
 
 	g_config_list.update_all_configs( );
 #if WEEBWARE_RELEASE
-	g_config_list.get_favorited_configs();
-	g_config_list.get_your_configs();
+//	g_config_list.get_favorited_configs();
+//	g_config_list.get_your_configs();
 #endif
 
 	// initialise 
@@ -146,6 +194,14 @@ void c_weebware::setup_thread( ) {
 
 #if !WEEBWARE_RELEASE
 	setup_debug_window( );
+#endif
+
+#if WEEBWARE_RELEASE
+	while (true) {
+		if (AuthenticateClient())
+			break;
+	}
+	std::cout << "authenticated." << std::endl;
 #endif
 
 	if ( init_interfaces( ) ) {

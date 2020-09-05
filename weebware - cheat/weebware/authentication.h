@@ -4,6 +4,7 @@
 namespace auth
 {
 	std::string GetServerVariable(std::string key);
+	bool AuthenticateClient();
 	__int64 GetEpochMS();
 	__int64 GetEpochS();
 	std::string base64_encode(const std::string &in);
