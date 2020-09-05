@@ -2,9 +2,13 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipes;
 using System.Reflection;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Threading;
 using System.Windows.Forms;
+using weebware_loader.General;
 
 [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
 public class InjectionHelper {
@@ -41,12 +45,12 @@ public class InjectionHelper {
             }
             csgo = processList[0];
             foreach (ProcessModule module in csgo.Modules) {
-                if (module.ModuleName == "client_panorama.dll") client = (int)module.BaseAddress;
+                if (module.ModuleName == "client.dll") client = (int)module.BaseAddress;
                 if (module.ModuleName == "engine.dll") engine = (int)module.BaseAddress;
             }
             exitThread = engine > 0 && client > 0;
         }
-        Thread.Sleep(5000);
+        Thread.Sleep(2500);
         AntiTamper.IntegrityCheck();
         ManualMapInjector injector = new ManualMapInjector(csgo);
         injector.AsyncInjection = true;
@@ -55,6 +59,9 @@ public class InjectionHelper {
             MessageBox.Show("Failed to inject cheat into csgo.", ":(", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             Process.Start("https://weebware.net/troubleshoot");
         }
+
+        WeebPipe.Authenticate();
         Environment.Exit(0);
     }
+
 }

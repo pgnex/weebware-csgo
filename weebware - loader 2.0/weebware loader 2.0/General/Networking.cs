@@ -17,7 +17,7 @@ namespace loader.Authentication {
 
         private const string URL = "https://api.weebware.net";
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
-        private const string VERSION_STRING = "4.0";
+        private const string VERSION_STRING = "4.2";
 
         public static SafeRequest.SafeRequest safeRequest = new SafeRequest.SafeRequest(ENCRYPTION_KEY);
 
@@ -28,7 +28,7 @@ namespace loader.Authentication {
             values["hwid"] = HWID.getHWID();
             values["loader_version"] = VERSION_STRING;
             values["pc_name"] = Environment.UserName;
-            values["login"] = "yeet";
+            values["login"] = "uwu";
             return safeRequest.Request(URL, values);
         }
 
@@ -36,6 +36,12 @@ namespace loader.Authentication {
             NameValueCollection values = new NameValueCollection();
             values["reason"] = ExitReason;
             values["alert"] = "weeeeeeee";
+            return safeRequest.Request(URL, values);
+        }
+
+        public static Response SafeAuth() {
+            NameValueCollection values = new NameValueCollection();
+            values["dllauth"] = "owo";
             return safeRequest.Request(URL, values);
         }
 

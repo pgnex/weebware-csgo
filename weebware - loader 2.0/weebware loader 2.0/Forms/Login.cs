@@ -186,11 +186,13 @@ namespace weebware_loader {
         }
 
         private void Login_Load(object sender, EventArgs e) {
-
             load_bg_image();
             formstuff.play_welcome(cbDisableSound);
 
         }
 
+        private void Login_FormClosed(object sender, FormClosedEventArgs e) {
+            Environment.Exit(1337);
+        }
     }
 }

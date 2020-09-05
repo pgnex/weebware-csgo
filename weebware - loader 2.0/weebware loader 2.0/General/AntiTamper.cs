@@ -25,7 +25,6 @@ class AntiTamper {
 
     [Obfuscation(Feature = "inline", Exclude = false)]
     public static void IntegrityCheck() {
-
         if (instance == null || !instance.IsAlive) {
             Networking.SafeAlert("\nUnable to verify integrity of security thread.");
             MessageBox.Show("unable to verify");

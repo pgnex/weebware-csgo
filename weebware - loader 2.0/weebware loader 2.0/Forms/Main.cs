@@ -1,4 +1,5 @@
 ﻿using loader;
+using loader.Authentication;
 using Newtonsoft.Json.Linq;
 using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
 using System;
@@ -91,7 +92,6 @@ namespace weebware_loader.Forms {
             cheatFile = Path.GetTempFileName();
             web.DownloadFile(cheat_downloads[cheat_selection_index], cheatFile);
             InjectionHelper.InjectPreset(cheatFile, Utils.DecryptString(cheat_keys[cheat_selection_index], "zgJoEYlViXJXpsFN"));
-
         }
 
         private void btnInject_Click(object sender, EventArgs e) {

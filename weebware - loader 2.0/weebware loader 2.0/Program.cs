@@ -1,4 +1,5 @@
 ﻿using loader;
+using loader.Authentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace weebware_loader {
             Application.SetCompatibleTextRenderingDefault(false);
             AntiTamper.Start();
             Utils.CreateFiles();
+
             Application.Run(new Login());
         }
     }
