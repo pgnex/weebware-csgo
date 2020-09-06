@@ -206,11 +206,18 @@ void c_create_move::anti_afk( c_usercmd* cmd ) {
 	static bool updated = false;
 	static int update_time = 0;
 
-	if ( get_epoch_s( ) > update_time&& updated ) {
+	if (!local->is_valid_player()) {
+		updated = true;
+		return;
+	}
+
+
+	if ( get_epoch_s( ) > update_time && updated ) {
 		cmd->forwardmove = 30;
 		updated = false;
 		return;
 	}
+
 	if ( !updated ) {
 		update_time = get_epoch_s( ) + 30;
 		updated = true;
