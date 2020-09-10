@@ -266,6 +266,7 @@
     <ClCompile Include="knife_proxy_hook.cpp" />
     <ClCompile Include="shared_funcs.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="vfunc_hook.cpp" />
     <ClCompile Include="visuals_shared.cpp" />
     <ClCompile Include="weebware_config.cpp" />
     <ClCompile Include="Legit.cpp" />
@@ -350,6 +351,7 @@
     <ClInclude Include="utils.h" />
     <ClInclude Include="UtlMemory.h" />
     <ClInclude Include="UtlVector.hpp" />
+    <ClInclude Include="vfunc_hook.h" />
     <ClInclude Include="visuals_shared.h" />
     <ClInclude Include="weebware_config.h" />
     <ClInclude Include="Legit.h" />

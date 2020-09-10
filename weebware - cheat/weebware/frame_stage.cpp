@@ -39,12 +39,6 @@ void hook_functions::frame_stage_notify(int curStage)
 	}
 	catch (...) {}
 
-#if DEBUG_HOOKS
-	PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
-#else
-	g_hooking.o_fsn(curStage);
-#endif
-
 	//if (g_weebwarecfg.no_recoil)
 	//	g_frame_stage_notify.no_vis_recoil(true);
 	// PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);

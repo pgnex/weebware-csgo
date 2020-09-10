@@ -87,31 +87,19 @@ long hook_functions::end_scene(IDirect3DDevice9* device)
 	device->SetVertexDeclaration(vertDec);
 	device->SetVertexShader(vertShader);
 
-#if !DEBUG_HOOKS
-	return g_hooking.o_endscene(device);
-#else
-	return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);;
-#endif
+	return 0;
 }
 
 
-long hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param) 
-{
+void hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid) {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 	g_d3dxesp.on_lost_device();
 
-#if DEBUG_HOOKS
-	long hr = PLH::FnCast(g_hooking.reset_tramp, g_hooking.o_reset)(device, presentation_param);
-#else
-	long hr = g_hooking.o_reset(device, presentation_param);
-#endif
-
-	if (hr >= 0) {
+	if (valid) {
 		ImGui_ImplDX9_CreateDeviceObjects();
 		g_d3dxesp.get_device(device);
 		g_vars.g_initfont.set(1.0f);
 	}
-	return hr;
 }
 
 
@@ -262,15 +250,15 @@ void gui::imgui_main() {
 		imgui_custom::create_button_tab(tab_selection, gui::tabs::settings, "E", ImGui::GetContentRegionAvailWidth(), 103);
 		ImGui::PopFont();
 
-		ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(144, 29, 29, 255)));
-		ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 255)));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 155)));
-		if (ImGui::Button("Unload", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y))) {
-			g_hooking.unhook_all_functions();
-		}
-		ImGui::PopStyleColor();
-		ImGui::PopStyleColor();
-		ImGui::PopStyleColor();
+		//ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(144, 29, 29, 255)));
+		//ImGui::PushStyleColor(ImGuiCol_Button, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 255)));
+		//ImGui::PushStyleColor(ImGuiCol_ButtonHovered, imgui_custom::ConvertFromRGBA(ImVec4(70, 27, 79, 155)));
+		//if (ImGui::Button("Unload", ImVec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y))) {
+		//	g_hooking.unhook_all_functions();
+		//}
+		//ImGui::PopStyleColor();
+		//ImGui::PopStyleColor();
+		//ImGui::PopStyleColor();
 
 		ImGui::EndChild();
 		ImGui::PopStyleColor();

@@ -7,14 +7,14 @@
 #include "PolyHook2/PolyHook_2_0/headers/CapstoneDisassembler.hpp"
 #include "shared.h"
 
-#ifndef HOOKFUNCS
 #define HOOKFUNCS
-namespace hook_functions
-{
+
+
+namespace hook_functions {
 	bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket);
 	void paint_traverse(unsigned int v, bool f, bool a);
 	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	long reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
+	void reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid);
 	void frame_stage_notify(int curStage);
 	long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 	long end_scene(IDirect3DDevice9* device);
@@ -22,10 +22,42 @@ namespace hook_functions
 	void scene_end(void* thisptr, void* edx);
 }
 
+namespace hooks {
+	void init_hooks();
+	void unhook();
+
+	extern vfunc_hook vfunc_paint;
+	extern vfunc_hook vfunc_cm;
+	extern vfunc_hook vfunc_es;
+	extern vfunc_hook vfunc_rs;
+	extern vfunc_hook vfunc_emit;
+	extern vfunc_hook vfunc_se;
+	extern vfunc_hook vfunc_vm;
+
+	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
+	using createmove = void(__thiscall*)(unsigned long*, float, c_usercmd*);
+	using endscene = long(__stdcall*)(IDirect3DDevice9*);
+	using reset = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
+	using emitsound = void(__fastcall*)(void*, void*, void*, int, int, const char*, uint32_t, const char*, float, float, int, int, int, const Vector*, const Vector*, void*, bool, float, int, void*);
+	using sceneend = void(__fastcall*)(void*, void*);
+	using framestagenotify = void(__thiscall*)(i_base_client*, clientframestage_t);
+	using viewmodel = float(__fastcall*)();
+
+	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
+	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
+	long __stdcall hk_endscene(IDirect3DDevice9* device);
+	long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
+	void __fastcall hk_emitsound(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters);
+	void __fastcall hk_scene_end(void* thisptr, void* edx);
+	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
+	float __stdcall hk_viewmodel();
+}
+
+
 class c_hooking
 {
 public:
-#if DEBUG_HOOKS
+
 	uint64_t paint_tramp = NULL;
 	uint64_t lock_tramp = NULL;
 	uint64_t cm_tramp = NULL;
@@ -53,7 +85,6 @@ public:
 	PLH::x86Detour* DETOUR_VM;
 	PLH::x86Detour* DETOUR_SOUNDS;
 	PLH::x86Detour* DETOUR_OVERRIDE;
-#else
 
 	PLH::BreakPointHook* VEH_PAINT;
 	PLH::BreakPointHook* VEH_CM;
@@ -71,14 +102,6 @@ public:
 	PLH::BreakPointHook* VEH_OVERRIDE;
 	PLH::BreakPointHook* VEH_CRS_CHECK;
 	PLH::BreakPointHook* VEH_FILE_SYSTEM;
-
-
-	//PLH::x86Detour* DETOUR_ENDSCENE;
-	//uint64_t endscene_tramp = NULL;
-	PLH::x86Detour* DETOUR_PRESENT;
-	uint64_t present_tramp = NULL;
-
-#endif
 
 private:
 
@@ -179,5 +202,4 @@ public:
 };
 
 extern c_hooking g_hooking;
-#endif
 

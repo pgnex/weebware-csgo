@@ -24,59 +24,193 @@ bool PrecacheModel(const char* szModelName)
 	return true;
 }
 
+namespace hooks {
 
-void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a)
-{
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_PAINT->getProtectionObject();
-#endif
+	vfunc_hook vfunc_paint;
+	vfunc_hook vfunc_cm;
+	vfunc_hook vfunc_es;
+	vfunc_hook vfunc_rs;
+	vfunc_hook vfunc_emit;
+	vfunc_hook vfunc_se;
+	vfunc_hook vfunc_fsn;
+	vfunc_hook vfunc_vm;
 
-	if (g_weebwarecfg.auto_queue) {
-		if (!g_weebware.g_engine->is_connected() && !g_weebware.g_engine->is_in_game()) {
-			g_ai.auto_queue();
+	namespace hook_index {
+		int pt = 41;
+		int cm = 24;
+		int es = 42;
+		int re = 16;
+		int em = 5;
+		int se = 9;
+		int fsn = 37;
+		int vm = 35;
+	}
+
+	void init_hooks() {
+		vfunc_paint.setup(g_weebware.g_panel, "vgui2.dll");
+		vfunc_paint.hook_index(hook_index::pt, hk_paint_traverse);
+
+		vfunc_cm.setup(g_weebware.g_client_mode, "client.dll");
+		vfunc_cm.hook_index(hook_index::cm, hk_clientmode_cm);
+
+		vfunc_es.setup(g_weebware.g_direct_x, "shaderapidx9.dll");
+		vfunc_es.hook_index(hook_index::es, hk_endscene);
+
+		vfunc_rs.setup(g_weebware.g_direct_x, "shaderapidx9.dll");
+		vfunc_rs.hook_index(hook_index::re, hk_reset);
+
+		vfunc_emit.setup(g_weebware.g_enginesound, "engine.dll");
+		vfunc_emit.hook_index(hook_index::em, hk_emitsound);
+
+		vfunc_se.setup(g_weebware.g_render_view, "engine.dll");
+		vfunc_se.hook_index(hook_index::se, hk_scene_end);
+
+		vfunc_fsn.setup(g_weebware.g_client, "client.dll");
+		vfunc_fsn.hook_index(hook_index::fsn, hk_frame_stage_notify);
+
+		vfunc_vm.setup(g_weebware.g_client_mode, "client.dll");
+		vfunc_vm.hook_index(hook_index::vm, hk_viewmodel);
+	}
+
+	void unhook() {
+
+		// unhooking 
+		// DETOUR_SOUNDS->unHook();
+		// VEH_PAINT->unHook();
+
+		vfunc_paint.unhook_all();
+		vfunc_cm.unhook_all();
+		vfunc_es.unhook_all();
+		vfunc_rs.unhook_all();
+		vfunc_emit.unhook_all();
+		vfunc_se.unhook_all();
+		vfunc_fsn.unhook_all();
+		vfunc_vm.unhook_all();
+	}
+
+	// paint traverse
+	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a) {
+		static auto o_pt = vfunc_paint.get_original<painttraverse>(hook_index::pt);
+		o_pt(g_weebware.g_panel, v, f, a);
+
+		if (g_weebwarecfg.auto_queue) {
+			if (!g_weebware.g_engine->is_connected() && !g_weebware.g_engine->is_in_game()) {
+				g_ai.auto_queue();
+			}
+			else {
+				g_ai.needs_queue = true;
+			}
+		}
+
+		hook_functions::paint_traverse(v, f, a);
+
+	}
+
+
+	// createmove
+	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd) {
+		static auto o_cm = vfunc_cm.get_original<createmove>(hook_index::cm);
+		o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
+
+
+		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+			auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
+			if (cmd && cmd->command_number)
+			{
+				uintptr_t* fp;
+				__asm mov fp, ebp;
+				*(bool*)(*fp - 0x1C) = g_weebware.send_packet;
+			}
+			return retv;
 		}
 		else {
-			g_ai.needs_queue = true;
+			return false;
 		}
 	}
 
-	//	if (!g_weebwarecfg.obs_proof) {
-	hook_functions::paint_traverse(v, f, a);
-	//}
-	//else {
-	//	if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel"))
-	//		g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
+	// endscene
+	bool font_setup = false;
+	long __stdcall hk_endscene(IDirect3DDevice9* device) {
+		auto o_es = vfunc_es.get_original<endscene>(hook_index::es);
 
-#if DEBUG_HOOKS
-	PLH::FnCast(g_hooking.paint_tramp, g_hooking.o_painttraverse)(g_weebware.g_panel, v, f, a);
-#else
-	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
-#endif
-	//	}
-}
+		static uintptr_t gameoverlay_return_address = 0;
 
-bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd)
-{
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_CM->getProtectionObject();
-#endif
+		if (!gameoverlay_return_address) {
+			MEMORY_BASIC_INFORMATION info;
+			VirtualQuery(_ReturnAddress(), &info, sizeof(MEMORY_BASIC_INFORMATION));
 
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-		auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
-		if (cmd && cmd->command_number)
-		{
-			uintptr_t* fp;
-			__asm mov fp, ebp;
-			*(bool*)(*fp - 0x1C) = g_weebware.send_packet;
+			char mod[MAX_PATH];
+			GetModuleFileNameA((HMODULE)info.AllocationBase, mod, MAX_PATH);
+
+			if (strstr(mod, "gameoverlay"))
+				gameoverlay_return_address = (uintptr_t)(_ReturnAddress());
 		}
-		return retv;
+
+		if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress())) {
+			return o_es(device);
+		}
+
+		// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
+		hook_functions::end_scene(device);
+		return o_es(device);
+
 	}
-	else {
-#if !DEBUG_HOOKS
-		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-#else
-		return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
-#endif
+
+	// reset
+	long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param) {
+		auto o_rs = vfunc_rs.get_original<reset>(hook_index::re);
+		hook_functions::reset(device, presentation_param, (o_rs(device, presentation_param) >= 0));
+
+		return o_rs(device, presentation_param);
+	}
+
+	// emitsound
+	void __fastcall hk_emitsound(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters) {
+		auto o_em = vfunc_emit.get_original<emitsound>(hook_index::em);
+
+		if (!strcmp(sound_entry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept) {
+			static auto set_ready = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
+			if (set_ready)
+				set_ready("");
+		}
+
+		return o_em(ecx, edx, filter, entity_index, channel, sound_entry, sound_entry_hash, sample, volume, attenuation, seed, flags, pitch, origin, direction, utl_origins, update_positions, sound_time, speaker_entity, parameters);
+	}
+
+	// sceneend
+	void __fastcall hk_scene_end(void* thisptr, void* edx) {
+		auto o_se = vfunc_se.get_original<sceneend>(hook_index::se);
+
+		o_se(thisptr, edx);
+		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+			hook_functions::scene_end(thisptr, edx);
+		}
+	}
+
+	// framestagenotify
+	void __stdcall hk_frame_stage_notify(clientframestage_t curStage) {
+		auto o_fsn = vfunc_fsn.get_original<framestagenotify>(hook_index::fsn);
+		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
+			hook_functions::frame_stage_notify(curStage);
+
+		o_fsn(g_weebware.g_client, curStage);
+	}
+
+	// viewmodel
+	float __stdcall hk_viewmodel() {
+		auto o_vm = vfunc_vm.get_original<viewmodel>(hook_index::vm);
+
+		if (!g_weebwarecfg.viewmodel_changer) {
+			return o_vm();
+		}
+		auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+
+
+		if (local_player && local_player->is_valid_player()) {
+			return o_vm() + g_weebwarecfg.viewmodel_offset;
+		}
+
+		return o_vm();
 	}
 
 
@@ -132,63 +266,12 @@ void __stdcall hk_override_view(void* ecx, void* edx, view_setup_t* setup) {
 	return g_hooking.o_overrideview(ecx, edx, setup);
 }
 
-long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param)
-{
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_RESET->getProtectionObject();
-#endif
-
-	return hook_functions::reset(device, presentation_param);
-}
 
 bool __fastcall hkCheckFileCRCsWithServer(void* ecx, void* edx) {
 	std::cout << "bytpass" << std::endl;
 	return true;
 }
 
-
-bool font_setup = false;
-long __stdcall hk_endscene(IDirect3DDevice9* device)
-{
-
-//#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_ENDSCENE->getProtectionObject();
-
-	return g_hooking.o_endscene(device);
-
-//	if (!g_weebwarecfg.obs_proof) {
-//		return g_hooking.o_endscene(device);
-//	}
-//#else
-//	if (!g_weebwarecfg.obs_proof) {
-//		return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
-//	}
-//#endif
-//
-//	static uintptr_t gameoverlay_return_address = 0;
-//
-//	if (!gameoverlay_return_address) {
-//		MEMORY_BASIC_INFORMATION info;
-//		VirtualQuery(_ReturnAddress(), &info, sizeof(MEMORY_BASIC_INFORMATION));
-//
-//		char mod[MAX_PATH];
-//		GetModuleFileNameA((HMODULE)info.AllocationBase, mod, MAX_PATH);
-//
-//		if (strstr(mod, "gameoverlay"))
-//			gameoverlay_return_address = (uintptr_t)(_ReturnAddress());
-//	}
-//
-//	if (gameoverlay_return_address != (uintptr_t)(_ReturnAddress())) {
-//#if DEBUG_HOOKS 
-//		return PLH::FnCast(g_hooking.endscene_tramp, g_hooking.o_endscene)(device);
-//#else
-//		return hook_functions::end_scene(device);
-//#endif
-//	}
-//
-//	// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
-//	return hook_functions::end_scene(device);
-}
 
 
 long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
@@ -226,20 +309,7 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	//	 PLH::FnCast(g_hooking.dme_tramp, g_hooking.o_dme)(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 }
 
-void __fastcall hk_scene_end(void* thisptr, void* edx) {
 
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_SCENEEND->getProtectionObject();
-	g_hooking.o_sceneend(thisptr, edx);
-#else
-	PLH::FnCast(g_hooking.sceneend_tramp, g_hooking.o_sceneend)(thisptr, edx);
-#endif
-
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-		hook_functions::scene_end(thisptr, edx);
-	}
-
-}
 
 
 MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
@@ -269,213 +339,19 @@ MDLHandle_t  __fastcall hk_findmdl(void* ecx, void* edx, char* FilePath)
 #endif
 }
 
-float __stdcall hk_viewmodel() {
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_VM->getProtectionObject();
-#endif
 
-	if (!g_weebwarecfg.viewmodel_changer) {
-#if DEBUG_HOOKS
-		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
-#else
-		return g_hooking.o_vm();
-#endif
-	}
-	auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-
-	if (local_player && local_player->is_valid_player()) {
-#if DEBUG_HOOKS
-		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)() + g_weebwarecfg.viewmodel_offset;
-#else
-		return g_hooking.o_vm() + g_weebwarecfg.viewmodel_offset;
-#endif 
-	}
-	else {
-#if DEBUG_HOOKS
-		return PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
-#else
-		return g_hooking.o_vm();
-#endif
-	}
-}
-
-void __stdcall hk_frame_stage_notify(clientframestage_t curStage)
-{
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_FSN->getProtectionObject();
-#endif
-
-	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
-		hook_functions::frame_stage_notify(curStage);
-	else {
-#if DEBUG_HOOKS
-		PLH::FnCast(g_hooking.fsn_tramp, g_hooking.o_fsn)(curStage);
-#else
-		g_hooking.o_fsn(curStage);
-#endif
-	}
-}
-// 80 B9 ? ? ? ? ? 74 14 F3 0F 10 81 ? ? ? ? 
-
-void SetLocalPlayerReady()
-{
-	static auto SetLocalPlayerReadyFn = reinterpret_cast<bool(__stdcall*)(const char*)>(g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 8B 4D 08 BA ? ? ? ? E8 ? ? ? ? 85 C0 75 12"));
-	if (SetLocalPlayerReadyFn)
-		SetLocalPlayerReadyFn("");
-}
-
-
-
-void __fastcall hkEmitSound(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters)
-{
-#if !DEBUG_HOOKS
-	auto protecc = g_hooking.VEH_SOUNDS->getProtectionObject();
-#endif
-
-	if (!strcmp(sound_entry, "UIPanorama.popup_accept_match_beep") && g_weebwarecfg.misc_autoAccept)
-		SetLocalPlayerReady();
-
-
-#if DEBUG_HOOKS
-	return PLH::FnCast(g_hooking.sound_tramp, g_hooking.o_sounds)(ecx, edx, filter, iEntIndex, iChannel, pSoundEntry, nSoundEntryHash, pSample, flVolume, flAttenuation, nSeed, iFlags, iPitch, pOrigin, pDirection, pUtlVecOrigins, bUpdatePositions, soundtime, speakerentity, params);
-#else
-
-	if (!g_weebware.g_engine->is_in_game() || !g_weebware.g_engine->is_connected())
-		return;
-
-	return g_hooking.o_sounds(ecx, edx, filter, entity_index, channel, sound_entry, sound_entry_hash, sample, volume, attenuation, seed, flags, pitch, origin, direction, utl_origins, update_positions, sound_time, speaker_entity, parameters);
-#endif
-}
 
 void c_hooking::hook_all_functions() {
-#if DEBUG_HOOKS
-		PLH::CapstoneDisassembler dis(PLH::Mode::x86);
 
-		auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-		DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
-		DETOUR_ENDSCENE->hook();
-		o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
+	hooks::init_hooks();
 
-		auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
-		DETOUR_PAINT = new PLH::x86Detour((char*)paint_addr, (char*)&hk_paint_traverse, &paint_tramp, dis);
-		DETOUR_PAINT->hook();
-		o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
-
-		auto cm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24];
-		DETOUR_CM = new PLH::x86Detour((char*)cm_addr, (char*)&hk_clientmode_cm, &cm_tramp, dis);
-		DETOUR_CM->hook();
-		o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
-
-
-		//auto ov_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[18];
-		//DETOUR_OVERRIDE = new PLH::x86Detour((char*)ov_addr, (char*)&hk_override_view, &override_tramp, dis);
-		//DETOUR_OVERRIDE->hook();
-		//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
-
-
-		//auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
-		//DETOUR_PRESENT = new PLH::x86Detour((char*)present_addr, (char*)&hk_present, &present_tramp, dis);
-		//DETOUR_PRESENT->hook();
-		//o_present = reinterpret_cast<decltype(o_present)>(present_addr);
-
-		auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
-		DETOUR_SCENEEND = new PLH::x86Detour((char*)scene_end_addr, (char*)&hk_scene_end, &sceneend_tramp, dis);
-		DETOUR_SCENEEND->hook();
-		o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
-
-		auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[37];
-		DETOUR_FSN = new PLH::x86Detour((char*)fsn_addr, (char*)&hk_frame_stage_notify, &fsn_tramp, dis);
-		DETOUR_FSN->hook();
-		o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
-
-		//auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
-		//DETOUR_MDL = new PLH::x86Detour((char*)mdl_addr, (char*)&hk_findmdl, &mdl_tramp, dis);
-		//DETOUR_MDL->hook();
-		//o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
-
-		auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
-		DETOUR_VM = new PLH::x86Detour((char*)vm_addr, (char*)&hk_viewmodel, &vm_tramp, dis);
-		DETOUR_VM->hook();
-		o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
-
-		auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-		DETOUR_SOUNDS = new PLH::x86Detour((char*)sound_addr, (char*)&hkEmitSound, &sound_tramp, dis);
-		DETOUR_SOUNDS->hook();
-		o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
-#else
-
-	auto paint_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_panel))[41];
-	VEH_PAINT = new PLH::BreakPointHook((char*)paint_addr, (char*)&hk_paint_traverse);
-	VEH_PAINT->hook();
-	o_painttraverse = reinterpret_cast<decltype(o_painttraverse)>(paint_addr);
-
-	auto cm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[24];
-	VEH_CM = new PLH::BreakPointHook((char*)cm_addr, (char*)&hk_clientmode_cm);
-	VEH_CM->hook();
-	o_createmove = reinterpret_cast<decltype(o_createmove)>(cm_addr);
-
-	auto reset_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[16];
-	VEH_RESET = new PLH::BreakPointHook((char*)reset_addr, (char*)&hk_reset);
-	VEH_RESET->hook();
-	o_reset = reinterpret_cast<decltype(o_reset)>(reset_addr);
-
-	auto present_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[17];
-	VEH_PRESENT = new PLH::BreakPointHook((char*)present_addr, (char*)&hk_present);
-	VEH_PRESENT->hook();
-	o_present = reinterpret_cast<decltype(o_present)>(present_addr);
-
-	auto scene_end_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_render_view))[9];
-	VEH_SCENEEND = new PLH::BreakPointHook((char*)scene_end_addr, (char*)&hk_scene_end);
-	VEH_SCENEEND->hook();
-	o_sceneend = reinterpret_cast<decltype(o_sceneend)>(scene_end_addr);
-
-	auto fsn_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client))[37];
-	VEH_FSN = new PLH::BreakPointHook((char*)fsn_addr, (char*)&hk_frame_stage_notify);
-	VEH_FSN->hook();
-	o_fsn = reinterpret_cast<decltype(o_fsn)>(fsn_addr);
-
-	auto vm_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[35];
-	VEH_VM = new PLH::BreakPointHook((char*)vm_addr, (char*)&hk_viewmodel);
-	VEH_VM->hook();
-	o_vm = reinterpret_cast<decltype(o_vm)>(vm_addr);
-
-	auto sound_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_enginesound))[5];
-	VEH_SOUNDS = new PLH::BreakPointHook((char*)sound_addr, (char*)&hkEmitSound);
-	VEH_SOUNDS->hook();
-	o_sounds = reinterpret_cast<decltype(o_sounds)>(sound_addr);
+	// old examples..
+	//PLH::CapstoneDisassembler dis(PLH::Mode::x86);
 
 	//auto end_scene_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_direct_x))[42];
-	//VEH_ENDSCENE = new PLH::BreakPointHook((char*)end_scene_addr, (char*)&hk_endscene);
-	//VEH_ENDSCENE->hook();
+	//DETOUR_ENDSCENE = new PLH::x86Detour((char*)end_scene_addr, (char*)&hk_endscene, &endscene_tramp, dis);
+	//DETOUR_ENDSCENE->hook();
 	//o_endscene = reinterpret_cast<decltype(o_endscene)>(end_scene_addr);
-
-	//auto mdl_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_mdlcache))[10];
-	//VEH_MDL = new PLH::BreakPointHook((char*)mdl_addr, (char*)&hk_findmdl);
-	//VEH_MDL->hook();
-	//o_mdl = reinterpret_cast<decltype(o_mdl)>(mdl_addr);
-
-	//auto ov_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_client_mode))[18];
-	//VEH_OVERRIDE = new PLH::BreakPointHook((char*)ov_addr, (char*)&hk_override_view);
-	//VEH_OVERRIDE->hook();
-	//o_overrideview = reinterpret_cast<decltype(o_overrideview)>(ov_addr);
-
-	//auto check_file_crs_addr = reinterpret_cast<void*>(g_weebware.pattern_scan_from_call("engine.dll", "55 8B EC 81 EC ? ? ? ? 53 8B D9 89 5D F8 80"));
-	//if (check_file_crs_addr) {
-	//	VEH_CRS_CHECK = new PLH::BreakPointHook((char*)check_file_crs_addr, (char*)&hkCheckFileCRCsWithServer);
-	//	VEH_CRS_CHECK->hook();
-	//}
-
-	//auto g_pFileSystem = **reinterpret_cast<void***>(g_weebware.pattern_scan("engine.dll", "8B 0D ? ? ? ? 8D 95 ? ? ? ? 6A 00 C6") + 0x2);
-	//if (g_pFileSystem) {
-	//	auto filesystem_addr = (*reinterpret_cast<uintptr_t**>(g_pFileSystem))[128];
-	//	VEH_FILE_SYSTEM = new PLH::BreakPointHook((char*)filesystem_addr, (char*)&hkCheckFileCRCsWithServer);
-	//	VEH_FILE_SYSTEM->hook();
-	//}
-
-#endif
-
-	// DO NOT UNCOMMENT
 
 	//auto dme_addr = (*reinterpret_cast<uintptr_t**>(g_weebware.g_model_render))[21];
 	//VEH_DME = new PLH::BreakPointHook((char*)dme_addr, (char*)&hk_draw_model_execute);
@@ -483,7 +359,7 @@ void c_hooking::hook_all_functions() {
 	//o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
 
 	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
-
+	
 	// knife_changer::apply_proxyhooks();
 }
 
@@ -494,25 +370,9 @@ void c_hooking::unhook_all_functions()
 
 	// wait for shit to register
 	Sleep(100);
-#if DEBUG_HOOKS
-	DETOUR_SOUNDS->unHook();
-	DETOUR_VM->unHook();
-	DETOUR_FSN->unHook();
-	DETOUR_SCENEEND->unHook();
-	DETOUR_CM->unHook();
-	DETOUR_PAINT->unHook();
-	DETOUR_ENDSCENE->unHook();
-#else
-	VEH_PAINT->unHook();
-	VEH_CM->unHook();
-	VEH_RESET->unHook();
-	VEH_PRESENT->unHook();
-	VEH_SCENEEND->unHook();
-	VEH_FSN->unHook();
-	VEH_VM->unHook();
-	VEH_SOUNDS->unHook();
 
-#endif
+	hooks::unhook();
+
 	networking::curl_cleanup();
 	SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)g_weebware.old_window_proc);
 	//	knife_changer::remove_proxyhooks();

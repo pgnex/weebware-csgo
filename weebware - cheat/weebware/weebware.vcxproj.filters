@@ -279,6 +279,9 @@
     <ClCompile Include="shared_funcs.cpp">
       <Filter>Source Files\Shared</Filter>
     </ClCompile>
+    <ClCompile Include="vfunc_hook.cpp">
+      <Filter>Source Files\hooking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -541,6 +544,9 @@
     </ClInclude>
     <ClInclude Include="shared_funcs.h">
       <Filter>Source Files\Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="vfunc_hook.h">
+      <Filter>Source Files\hooking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

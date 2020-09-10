@@ -17,11 +17,7 @@ c_legit g_legitbot;
 bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
 {
 	if (cmd->command_number == 0 && sendpacket) {
-#if !DEBUG_HOOKS
-		return g_hooking.o_createmove(g_weebware.g_client_mode, input_sample_time, cmd);
-#else
-		return PLH::FnCast(g_hooking.cm_tramp, g_hooking.o_createmove)(g_weebware.g_client_mode, input_sample_time, cmd);
-#endif
+		return false;
 	}
 
 	g_weebware.send_packet = true;

@@ -9,14 +9,7 @@
 
 c_paint_traverse g_paint_traverse;
 
-void hook_functions::paint_traverse(unsigned int v, bool f, bool a)
-{
-#if DEBUG_HOOKS
-	 PLH::FnCast(g_hooking.paint_tramp, g_hooking.o_painttraverse)(g_weebware.g_panel, v, f, a);
-#else
-	g_hooking.o_painttraverse(g_weebware.g_panel, v, f, a);
-#endif
-
+void hook_functions::paint_traverse(unsigned int v, bool f, bool a) {
 
 	auto ilocal = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
 
