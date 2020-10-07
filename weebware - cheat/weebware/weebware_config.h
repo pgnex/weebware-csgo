@@ -555,7 +555,6 @@ public:
 		tmp["visuals_glow_hidden_col"] = visuals_glow_hidden_col;
 		tmp["visuals_corner_box"] = visuals_corner_box;
 		tmp["visuals_glow_weapon"] = visuals_glow_weapon;
-		tmp["visuals_fov_circle"] = visuals_fov_circle;
 		tmp["screenshot_proof"] = screenshot_proof;
 		tmp["disable_post_processing"] = disable_post_processing;
 		tmp["visuals_weapon_esp"] = visuals_weapon_esp;
@@ -691,7 +690,6 @@ public:
 		save_color(visuals_corner_col_hidden, tmp, "visuals_corner_col_hidden");
 		save_color(visuals_corner_col_visible, tmp, "visuals_corner_col_visible");
 		save_color(visuals_glow_weapon_col, tmp, "visuals_glow_weapon_col");
-		save_color(visuals_fov_circle_col, tmp, "visuals_fov_circle_col");
 		save_color(visuals_glow_team_col, tmp, "visuals_glow_team_col");
 		save_color(visuals_ammo_esp_col, tmp, "visuals_ammo_esp_col");
 		save_color(visuals_weapon_esp_col, tmp, "visuals_weapon_esp_col");
@@ -750,7 +748,6 @@ public:
 		if (check("visuals_glow_weapon", data)) visuals_glow_weapon = data["visuals_glow_weapon"];
 		if (check("disable_post_processing", data)) disable_post_processing = data["disable_post_processing"];
 		if (check("screenshot_proof", data)) screenshot_proof = data["screenshot_proof"];
-		if (check("visuals_fov_circle", data)) visuals_fov_circle = data["visuals_fov_circle"];
 		if (check("visuals_weapon_esp", data)) visuals_weapon_esp = data["visuals_weapon_esp"];
 		if (check("enable_bullet_tracers", data)) enable_bullet_tracers = data["enable_bullet_tracers"];
 		if (check("bullet_tracer_expire", data)) bullet_tracer_expire = data["bullet_tracer_expire"];
@@ -903,7 +900,6 @@ public:
 		if (check_color("visuals_corner_col_hidden", data)) read_color(visuals_corner_col_hidden, data, "visuals_corner_col_hidden");
 		if (check_color("visuals_corner_col_visible", data)) read_color(visuals_corner_col_visible, data, "visuals_corner_col_visible");
 		if (check_color("visuals_glow_weapon_col", data)) read_color(visuals_glow_weapon_col, data, "visuals_glow_weapon_col");
-		if (check_color("visuals_fov_circle_col", data)) read_color(visuals_fov_circle_col, data, "visuals_fov_circle_col");
 		if (check_color("visuals_glow_team_col", data)) read_color(visuals_glow_team_col, data, "visuals_glow_team_col");
 		if (check_color("visuals_ammo_esp_color", data)) read_color(visuals_ammo_esp_col, data, "visuals_ammo_esp_color");
 		if (check_color("visuals_weapon_esp_col", data)) read_color(visuals_weapon_esp_col, data, "visuals_weapon_esp_col");

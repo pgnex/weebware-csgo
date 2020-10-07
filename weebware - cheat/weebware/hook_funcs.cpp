@@ -102,7 +102,7 @@ namespace hooks {
 			}
 		}
 
-		hook_functions::paint_traverse(v, f, a);
+		hooks::hook_functions::paint_traverse(v, f, a);
 
 	}
 
@@ -110,11 +110,9 @@ namespace hooks {
 	// createmove
 	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd) {
 		static auto o_cm = vfunc_cm.get_original<createmove>(hook_index::cm);
-		o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
-
 
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-			auto retv = hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet);
+			auto retv = hooks::hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet, o_cm);
 			if (cmd && cmd->command_number)
 			{
 				uintptr_t* fp;
@@ -124,7 +122,7 @@ namespace hooks {
 			return retv;
 		}
 		else {
-			return false;
+			return o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
 		}
 	}
 
@@ -151,7 +149,7 @@ namespace hooks {
 		}
 
 		// uwuwuwuw streamproof ? and where all our stuff is setup and drawn
-		hook_functions::end_scene(device);
+		hooks::hook_functions::end_scene(device);
 		return o_es(device);
 
 	}
@@ -159,7 +157,7 @@ namespace hooks {
 	// reset
 	long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param) {
 		auto o_rs = vfunc_rs.get_original<reset>(hook_index::re);
-		hook_functions::reset(device, presentation_param, (o_rs(device, presentation_param) >= 0));
+		hooks::hook_functions::reset(device, presentation_param, (o_rs(device, presentation_param) >= 0));
 
 		return o_rs(device, presentation_param);
 	}
@@ -183,7 +181,7 @@ namespace hooks {
 
 		o_se(thisptr, edx);
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-			hook_functions::scene_end(thisptr, edx);
+			hooks::hook_functions::scene_end(thisptr, edx);
 		}
 	}
 
@@ -191,7 +189,7 @@ namespace hooks {
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage) {
 		auto o_fsn = vfunc_fsn.get_original<framestagenotify>(hook_index::fsn);
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
-			hook_functions::frame_stage_notify(curStage);
+			hooks::hook_functions::frame_stage_notify(curStage);
 
 		o_fsn(g_weebware.g_client, curStage);
 	}
@@ -200,11 +198,13 @@ namespace hooks {
 	float __stdcall hk_viewmodel() {
 		auto o_vm = vfunc_vm.get_original<viewmodel>(hook_index::vm);
 
+
 		if (!g_weebwarecfg.viewmodel_changer) {
+			g_weebware.o_viewmodel = o_vm();
 			return o_vm();
 		}
-		auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
+		auto local_player = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 
 		if (local_player && local_player->is_valid_player()) {
 			return o_vm() + g_weebwarecfg.viewmodel_offset;
@@ -281,7 +281,7 @@ long __stdcall hk_present(IDirect3DDevice9* device, const RECT* src, const RECT*
 #endif
 
 //	if (!g_weebwarecfg.obs_proof) {
-	return hook_functions::present(device, src, dest, wnd_override, dirty_region);		
+	return hooks::hook_functions::present(device, src, dest, wnd_override, dirty_region);		
 //	}
 
 #if DEBUG_HOOKS 
@@ -302,7 +302,7 @@ void __fastcall hk_draw_model_execute(void* thisptr, int edx, c_unknownmat_class
 	if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 
 
-	//	hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
+	//	hooks::hook_functions::draw_model_execute(thisptr, edx, ctx, state, pInfo, pCustomBoneToWorld);
 		g_hooking.o_dme(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 	}
 
@@ -358,7 +358,7 @@ void c_hooking::hook_all_functions() {
 	//VEH_DME->hook();
 	//o_dme = reinterpret_cast<decltype(o_dme)>(dme_addr);
 
-	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hook_functions::hk_window_proc);
+	g_weebware.old_window_proc = (WNDPROC)SetWindowLongPtr(g_weebware.h_window, GWL_WNDPROC, (LONG_PTR)hooks::hook_functions::hk_window_proc);
 	
 	// knife_changer::apply_proxyhooks();
 }

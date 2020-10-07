@@ -10,17 +10,6 @@
 #define HOOKFUNCS
 
 
-namespace hook_functions {
-	bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket);
-	void paint_traverse(unsigned int v, bool f, bool a);
-	LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	void reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid);
-	void frame_stage_notify(int curStage);
-	long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
-	long end_scene(IDirect3DDevice9* device);
-	void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
-	void scene_end(void* thisptr, void* edx);
-}
 
 namespace hooks {
 	void init_hooks();
@@ -35,7 +24,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_vm;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
-	using createmove = void(__thiscall*)(unsigned long*, float, c_usercmd*);
+	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
 	using endscene = long(__stdcall*)(IDirect3DDevice9*);
 	using reset = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 	using emitsound = void(__fastcall*)(void*, void*, void*, int, int, const char*, uint32_t, const char*, float, float, int, int, int, const Vector*, const Vector*, void*, bool, float, int, void*);
@@ -51,6 +40,18 @@ namespace hooks {
 	void __fastcall hk_scene_end(void* thisptr, void* edx);
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
 	float __stdcall hk_viewmodel();
+
+	namespace hook_functions {
+		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm);
+		void paint_traverse(unsigned int v, bool f, bool a);
+		LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		void reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid);
+		void frame_stage_notify(int curStage);
+		long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
+		long end_scene(IDirect3DDevice9* device);
+		void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
+		void scene_end(void* thisptr, void* edx);
+	}
 }
 
 

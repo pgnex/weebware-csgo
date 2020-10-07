@@ -9,7 +9,7 @@ c_frame_stage_notify g_frame_stage_notify;
 int convert_index_id(int index);
 
 #if 1
-void hook_functions::frame_stage_notify(int curStage)
+void hooks::hook_functions::frame_stage_notify(int curStage)
 {
 	QAngle aim_punch;
 	QAngle o_aim_punch;

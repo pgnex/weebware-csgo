@@ -10,6 +10,7 @@
 #include "hook_funcs.h"
 #include "frame_stage.h"
 #include <intrin.h>
+#include "knife_proxy_hook.h"
 
 using namespace imgui_custom;
 
@@ -19,7 +20,7 @@ extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam
 
 c_d3dxesp g_d3dxesp;
 
-LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT __stdcall hooks::hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 	if (uMsg == WM_KEYDOWN) {
 		if (wParam == VK_INSERT) {
@@ -36,7 +37,7 @@ LRESULT __stdcall hook_functions::hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wP
 }
 
 
-long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
+long hooks::hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region)
 {
 	IDirect3DStateBlock9* pixel_state = NULL; IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
 	device->CreateStateBlock(D3DSBT_PIXELSTATE, &pixel_state);
@@ -59,39 +60,33 @@ long hook_functions::present(IDirect3DDevice9* device, const RECT* src, const RE
 #endif
 }
 
-long hook_functions::end_scene(IDirect3DDevice9* device)
+
+long hooks::hook_functions::end_scene(IDirect3DDevice9* device)
 {
 
 	DWORD colorwrite, srgbwrite;
 	device->GetRenderState(D3DRS_COLORWRITEENABLE, &colorwrite);
 	device->GetRenderState(D3DRS_SRGBWRITEENABLE, &srgbwrite);
 
-	//fix drawing without calling engine functons/cl_showpos
 	device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
-	//removes the source engine color correction
 	device->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
 
-	IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
-	device->GetVertexDeclaration(&vertDec);
-	device->GetVertexShader(&vertShader);
 
 	// we do any drawing / rendering here..
 	g_gui.render_menu(device);
 
 	// render esp
 //	g_d3dxesp.d9esp_main(device);
-	
 
 	device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
 	device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
-	device->SetVertexDeclaration(vertDec);
-	device->SetVertexShader(vertShader);
+
 
 	return 0;
 }
 
 
-void hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid) {
+void hooks::hook_functions::reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid) {
 	ImGui_ImplDX9_InvalidateDeviceObjects();
 	g_d3dxesp.on_lost_device();
 
@@ -1055,7 +1050,7 @@ void gui::imgui_main() {
 			if (ImGui::Button("Load", ImVec2((config_width / 3) - 2, 20)))
 			{
 				g_config_list.load_weebware_config(g_config_list.cur_load_name);
-				g_weebwarecfg.skinchanger_apply_nxt = 1;
+				knife_hook.force_update();
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Delete", ImVec2((config_width / 3) - 2, 20)))

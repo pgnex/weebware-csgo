@@ -14,10 +14,10 @@ c_utils g_utils;
 LegitAntiAim g_LegitAntiAim;
 c_legit g_legitbot;
 
-bool hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket )
+bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm)
 {
 	if (cmd->command_number == 0 && sendpacket) {
-		return false;
+		return o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
 	}
 
 	g_weebware.send_packet = true;

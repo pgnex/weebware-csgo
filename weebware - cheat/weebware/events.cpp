@@ -6,7 +6,7 @@
 #include <iostream>
 #pragma comment(lib, "Winmm.lib")
 
-int flHurtTime;
+int flHurtTime = 0;
 
 FeatureFuncs g_events_features;
 

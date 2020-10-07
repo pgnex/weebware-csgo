@@ -6,7 +6,7 @@
 
 c_sceneend g_sceneend;
 
-void hook_functions::scene_end(void* thisptr, void* edx) {
+void hooks::hook_functions::scene_end(void* thisptr, void* edx) {
 
 	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof) {
 		return;
@@ -142,6 +142,7 @@ imaterial* c_sceneend::create_glow() {
 	std::stringstream s;
 
 	s << "\"VertexLitGeneric\" {\n\n\t";
+	s << "\"basetexture\" \"vgui/white\"\n\t";
 	s << "\"$additive\" \"0\"\n\t";
 	s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
 	s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
