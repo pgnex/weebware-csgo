@@ -285,7 +285,7 @@ public:
 
 	bool is_valid_player( )
 	{
-		return !(!this || this == nullptr  || this == NULL || this->m_iHealth( ) <= 0 || this->is_dormant( ) || this->get_client_class( )->m_ClassID != class_ids::ccsplayer);
+		return !(!this|| this->m_iHealth( ) <= 0 || this->is_dormant( ) || this->get_client_class( )->m_ClassID != class_ids::ccsplayer);
 	}
 
 	Vector* m_vecOrigin( )

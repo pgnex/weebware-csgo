@@ -32,14 +32,6 @@ void c_esp::esp_main()
 	if (g_weebwarecfg.visuals_hitmarkers)
 		g_event_features.on_paint();
 
-	// call things here if no ent loop needed 
-
-	draw_inaccuracy_circle();
-	draw_fov_circle();
-	draw_crosshair();
-	recoil_crosshair();
-	g_paint_traverse.draw_legit_aa_indicator();
-//	set_weapon_models();
 
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
@@ -48,7 +40,12 @@ void c_esp::esp_main()
 		if (!GetAsyncKeyState(g_weebwarecfg.enable_visuals_key))
 			return;
 
+	// call things here if no ent loop needed 
 
+	draw_fov_circle();
+	draw_crosshair();
+	recoil_crosshair();
+	g_paint_traverse.draw_legit_aa_indicator();
 	draw_inaccuracy_circle();
 	display_backtrack_skele();
 	display_backtrack_dots();
@@ -469,14 +466,14 @@ void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_
 	float line_t = 1;
 
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 255);
-	g_weebware.g_surface->drawline(x - line_t, y - line_t, x + line_w, y - line_t); //top left
-	g_weebware.g_surface->drawline(x - line_t, y - line_t, x - line_t, y + line_h);
-	g_weebware.g_surface->drawline(x - line_t, y + h - line_h, x - line_t, y + h + line_t); //bot left
-	g_weebware.g_surface->drawline(x - line_t, y + h + line_t, x + line_w, y + h + line_t);
-	g_weebware.g_surface->drawline(x + w - line_w, y - line_t, x + w + line_t, y - line_t); // top right
-	g_weebware.g_surface->drawline(x + w + line_t, y - line_t, x + w + line_t, y + line_h);
-	g_weebware.g_surface->drawline(x + w + line_t, y + h - line_h, x + w + line_t, y + h + line_t); // bot right
-	g_weebware.g_surface->drawline(x + w - line_w, y + h + line_t, x + w + line_t, y + h + line_t);
+	//g_weebware.g_surface->drawline(x - line_t, y - line_t, x + line_w, y - line_t); //top left
+	//g_weebware.g_surface->drawline(x - line_t, y - line_t, x - line_t, y + line_h);
+	//g_weebware.g_surface->drawline(x - line_t, y + h - line_h, x - line_t, y + h + line_t); //bot left
+	//g_weebware.g_surface->drawline(x - line_t, y + h + line_t, x + line_w, y + h + line_t);
+	//g_weebware.g_surface->drawline(x + w - line_w, y - line_t, x + w + line_t, y - line_t); // top right
+	//g_weebware.g_surface->drawline(x + w + line_t, y - line_t, x + w + line_t, y + line_h);
+	//g_weebware.g_surface->drawline(x + w + line_t, y + h - line_h, x + w + line_t, y + h + line_t); // bot right
+	//g_weebware.g_surface->drawline(x + w - line_w, y + h + line_t, x + w + line_t, y + h + line_t);
 
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 	g_weebware.g_surface->drawline(x, y, x, y + line_h);//top left
@@ -794,8 +791,7 @@ void c_esp::draw_crosshair() {
 
 void c_esp::draw_fov_circle() {
 
-	if (!g_weebwarecfg.visuals_fov_circle)
-		return;
+	return;
 
 
 	if (local->m_iHealth() <= 0)
@@ -808,15 +804,9 @@ void c_esp::draw_fov_circle() {
 	g_weebware.g_engine->get_screen_dimensions(x, y);
 	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
 
-	float vm = 0;
+	float vm = g_weebware.o_viewmodel;
 
-#if DEBUG_HOOKS
-	vm = PLH::FnCast(g_hooking.vm_tramp, g_hooking.o_vm)();
-#else
-	vm = g_hooking.o_vm();
-#endif
-
-	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(g_hooking.o_vm()) / 2) * x;
+	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(vm) / 2) * x;
 
 	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);
 }
