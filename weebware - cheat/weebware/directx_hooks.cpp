@@ -64,12 +64,15 @@ long hooks::hook_functions::present(IDirect3DDevice9* device, const RECT* src, c
 long hooks::hook_functions::end_scene(IDirect3DDevice9* device)
 {
 
-	DWORD colorwrite, srgbwrite;
+	DWORD colorwrite, srgbwrite; IDirect3DVertexDeclaration9* vertDec; IDirect3DVertexShader9* vertShader;
 	device->GetRenderState(D3DRS_COLORWRITEENABLE, &colorwrite);
 	device->GetRenderState(D3DRS_SRGBWRITEENABLE, &srgbwrite);
 
 	device->SetRenderState(D3DRS_COLORWRITEENABLE, 0xffffffff);
 	device->SetRenderState(D3DRS_SRGBWRITEENABLE, false);
+
+	device->GetVertexDeclaration(&vertDec);
+	device->GetVertexShader(&vertShader);
 
 
 	// we do any drawing / rendering here..
@@ -81,6 +84,8 @@ long hooks::hook_functions::end_scene(IDirect3DDevice9* device)
 	device->SetRenderState(D3DRS_COLORWRITEENABLE, colorwrite);
 	device->SetRenderState(D3DRS_SRGBWRITEENABLE, srgbwrite);
 
+	device->SetVertexDeclaration(vertDec);
+	device->SetVertexShader(vertShader);
 
 	return 0;
 }
