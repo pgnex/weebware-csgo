@@ -52,7 +52,7 @@ namespace hooks {
 		void frame_stage_notify(int curStage);
 		long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 		long end_scene(IDirect3DDevice9* device);
-		void draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
+		void draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 		void scene_end(void* thisptr, void* edx);
 	}
 }

@@ -195,7 +195,7 @@ namespace hooks {
 		auto o_dme = vfunc_dme.get_original<drawmodelexecute>(hook_index::dme);
 		
 		if (pInfo.pModel) {
-
+			hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
 		}
 
 		o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
