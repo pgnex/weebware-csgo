@@ -794,21 +794,21 @@ void c_esp::draw_fov_circle() {
 	return;
 
 
-	if (local->m_iHealth() <= 0)
-		return;
-
-	int x, y;
-	float fov;
-
-	fov = g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov;
-	g_weebware.g_engine->get_screen_dimensions(x, y);
-	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
-
-	float vm = g_weebware.o_viewmodel;
-
-	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(vm) / 2) * x;
-
-	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);
+//	if (local->m_iHealth() <= 0)
+//		return;
+//
+//	int x, y;
+//	float fov;
+//
+//	fov = g_weebwarecfg.legit_cfg[get_config_index()].aimbot_fov;
+//	g_weebware.g_engine->get_screen_dimensions(x, y);
+//	c_color col = c_color(g_weebwarecfg.visuals_fov_circle_col);
+//
+////	float vm = g_weebware.o_viewmodel;
+//
+//	float radius = tanf(DEG2RAD(fov) / 2) / tanf(DEG2RAD(vm) / 2) * x;
+//
+//	g_weebware.g_surface->drawcoloredcircle(x / 2, y / 2, radius / 2, col.r, col.g, col.b, col.a);
 }
 
 
