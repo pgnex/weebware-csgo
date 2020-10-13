@@ -22,6 +22,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_emit;
 	extern vfunc_hook vfunc_se;
 	extern vfunc_hook vfunc_vm;
+	extern vfunc_hook vfunc_dme;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
 	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
@@ -31,6 +32,7 @@ namespace hooks {
 	using sceneend = void(__fastcall*)(void*, void*);
 	using framestagenotify = void(__thiscall*)(i_base_client*, clientframestage_t);
 	using viewmodel = float(__fastcall*)();
+	using drawmodelexecute = void(__thiscall*)(c_model_render*, void*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4_t*);
 
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
 	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
@@ -39,6 +41,7 @@ namespace hooks {
 	void __fastcall hk_emitsound(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters);
 	void __fastcall hk_scene_end(void* thisptr, void* edx);
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
+	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 	float __stdcall hk_viewmodel();
 
 	namespace hook_functions {
@@ -49,7 +52,7 @@ namespace hooks {
 		void frame_stage_notify(int curStage);
 		long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 		long end_scene(IDirect3DDevice9* device);
-		void draw_model_execute(void* thisptr, int edx, c_unknownmat_class* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4* pCustomBoneToWorld);
+		void draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 		void scene_end(void* thisptr, void* edx);
 	}
 }

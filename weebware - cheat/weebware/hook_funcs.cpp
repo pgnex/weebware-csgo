@@ -34,6 +34,7 @@ namespace hooks {
 	vfunc_hook vfunc_se;
 	vfunc_hook vfunc_fsn;
 	vfunc_hook vfunc_vm;
+	vfunc_hook vfunc_dme;
 
 	namespace hook_index {
 		int pt = 41;
@@ -44,6 +45,7 @@ namespace hooks {
 		int se = 9;
 		int fsn = 37;
 		int vm = 35;
+		int dme = 21;
 	}
 
 	void init_hooks() {
@@ -70,6 +72,9 @@ namespace hooks {
 
 		vfunc_vm.setup(g_weebware.g_client_mode, "client.dll");
 		vfunc_vm.hook_index(hook_index::vm, hk_viewmodel);
+
+		vfunc_dme.setup(g_weebware.g_model_render, "engine.dll");
+		vfunc_dme.hook_index(hook_index::dme, hk_draw_model_execute);
 	}
 
 	void unhook() {
@@ -185,6 +190,17 @@ namespace hooks {
 		}
 	}
 
+	// dme
+	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) {
+		auto o_dme = vfunc_dme.get_original<drawmodelexecute>(hook_index::dme);
+		
+		if (pInfo.pModel) {
+
+		}
+
+		o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+	}
+
 	// framestagenotify
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage) {
 		auto o_fsn = vfunc_fsn.get_original<framestagenotify>(hook_index::fsn);
@@ -194,13 +210,13 @@ namespace hooks {
 		o_fsn(g_weebware.g_client, curStage);
 	}
 
+
 	// viewmodel
 	float __stdcall hk_viewmodel() {
 		auto o_vm = vfunc_vm.get_original<viewmodel>(hook_index::vm);
 
 
 		if (!g_weebwarecfg.viewmodel_changer) {
-			g_weebware.o_viewmodel = o_vm();
 			return o_vm();
 		}
 
