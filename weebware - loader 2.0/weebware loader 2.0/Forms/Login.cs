@@ -166,7 +166,8 @@ namespace weebware_loader {
                 }
 
                 Hide();
-                Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2, response.GetData<JArray>("cheatInfo"));
+                LoginResponse loginResponse = JsonConvert.DeserializeObject<LoginResponse>(response.raw);
+                Form main = new Main(DesktopBounds.Left + (Width - Width) / 2, DesktopBounds.Top + (Height - Height) / 2, loginResponse);
                 main.Show();
             }
 

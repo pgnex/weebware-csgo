@@ -17,7 +17,7 @@ namespace loader.Authentication {
 
         private const string URL = "https://api.weebware.net";
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
-        private const string VERSION_STRING = "4.2";
+        private const string VERSION_STRING = "4.3";
 
         public static SafeRequest.SafeRequest safeRequest = new SafeRequest.SafeRequest(ENCRYPTION_KEY);
 

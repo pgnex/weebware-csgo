@@ -94,6 +94,7 @@
     </Compile>
     <Compile Include="General\AntiTamper.cs" />
     <Compile Include="General\formstuff.cs" />
+    <Compile Include="General\fuckmylife.cs" />
     <Compile Include="General\HWID.cs" />
     <Compile Include="General\WeebPipe.cs" />
     <Compile Include="Injection\Helpers.cs" />

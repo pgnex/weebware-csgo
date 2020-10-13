@@ -19,7 +19,7 @@ namespace weebware_loader.Forms {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     public partial class Main : Form {
 
-        public Main(int px, int py, JArray cheatData) {
+        public Main(int px, int py, LoginResponse cheatData) {
 
             InitializeComponent();
 
@@ -54,17 +54,17 @@ namespace weebware_loader.Forms {
             pbLogo.InterpolationMode = InterpolationMode.HighQualityBilinear;
             pbLogo.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-            foreach (JObject cheat in cheatData) {
-                cheat_names.Add(cheat.GetValue("name").ToString());
-                cheat_status.Add(cheat.GetValue("status").ToString());
-                cheat_downloads.Add(cheat.GetValue("download").ToString());
-                cheat_keys.Add(cheat.GetValue("key").ToString());
-                cheat_version.Add(cheat.GetValue("version").ToString());
-                cheat_enabled.Add(cheat.GetValue("enabled").ToObject<bool>());
+            foreach (CheatInfo cheat in cheatData.cheatInfo) {
+                cheat_names.Add(cheat.name);
+                cheat_status.Add(cheat.status);
+                cheat_downloads.Add(cheat.download);
+                cheat_keys.Add(cheat.key);
+                cheat_version.Add(cheat.version);
+                cheat_enabled.Add(cheat.enabled);
             }
             cheat_name_labels.Add(lblCheatSelected);
             cheat_name_labels.Add(lblCheatStatus);
-            InitSelections(pnlSelContainer, cheatData.Count);
+            InitSelections(pnlSelContainer, cheatData.cheatInfo.Count);
 
             lblCheatSelected.Text = string.Format("Currently Selected: {0}", cheat_names[cheat_selection_index]);
         }
