@@ -16,11 +16,10 @@ void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c
 	if (!(strstr(model_name, "models/player")) && !(strstr(model_name, "arms")))
 		return;
 
-	g_dme.player_chams(pInfo);
+	draw_model_execute::player_chams(pInfo);
 
 }
-void init_key_vals(KeyValues* keyValues, char* name)
-{
+void draw_model_execute::utils::init_key_vals(KeyValues* keyValues, char* name)  {
 	static DWORD keyval_addr = 0;
 
 	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
@@ -40,8 +39,7 @@ void init_key_vals(KeyValues* keyValues, char* name)
 	}
 }
 
-void load_from_buf(KeyValues* keyValues, char const* resourceName, const char* pBuffer, class IBaseFileSystem* pFileSystem, const char* pPathID, void* pUnknown, void* uu)
-{
+void draw_model_execute::utils::load_from_buf(KeyValues* keyValues, char const* resourceName, const char* pBuffer, class IBaseFileSystem* pFileSystem, const char* pPathID, void* pUnknown, void* uu) {
 	static  DWORD dwFunction = 0;
 
 	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
@@ -63,7 +61,26 @@ void load_from_buf(KeyValues* keyValues, char const* resourceName, const char* p
 	}
 }
 
-imaterial* create_default() {
+imaterial* draw_model_execute::utils::borrow_mat(custom_mats type)
+{
+	// Thanks Shigure for these mats u sent me like last year 
+	const char* material_list[] = { "", "", "", "debug/debugdrawflat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
+
+	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
+
+	imaterial* mat = g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
+	if (!mat)
+		return create_default();
+
+	if (mat->iserrormaterial())
+		return create_default();
+
+	mat->incrementreferencecount();
+
+	return mat;
+}
+
+imaterial* draw_model_execute::utils::create_default() {
 
 	static const char material[] =
 	{
@@ -90,7 +107,7 @@ imaterial* create_default() {
 	return created_mat;
 }
 
-imaterial* create_glow() {
+imaterial* draw_model_execute::utils::create_glow()  {
 
 	std::stringstream s;
 
@@ -113,7 +130,7 @@ imaterial* create_glow() {
 	return created_mat;
 }
 
-void c_draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
+void draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
 
 	// if model isnt a player no point
 	const char* model_name = g_weebware.g_model_info->getmodelname(pInfo.pModel);
@@ -133,7 +150,7 @@ void c_draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
 	static bool init = false;
 	static imaterial* mat_list[custom_mats::max];
 	if (!init) {
-		mat_list[custom_mats::plain] = create_glow();
+		mat_list[custom_mats::plain] = utils::create_glow();
 		init = true;
 	}
 
@@ -146,6 +163,6 @@ void c_draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
 }
 
 
-void c_draw_model_execute::hand_chams(const modelrenderinfo_t& pInfo) {
+void draw_model_execute::hand_chams(const modelrenderinfo_t& pInfo) {
 
 }
