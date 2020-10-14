@@ -262,6 +262,9 @@ void c_esp::recoil_crosshair() {
 	if (!(local->m_iHealth() > 0))
 		return;
 
+	if (!local->m_iShotsFired() > 1)
+		return;
+
 	Vector view_angles;
 	g_weebware.g_engine->get_view_angles(view_angles);
 
