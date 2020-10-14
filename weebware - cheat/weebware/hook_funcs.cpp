@@ -193,12 +193,14 @@ namespace hooks {
 	// dme
 	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) {
 		auto o_dme = vfunc_dme.get_original<drawmodelexecute>(hook_index::dme);
-		
-		if (pInfo.pModel) {
-			hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld);
+		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
+			if (pInfo.pModel) {
+				hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
+			}
 		}
 
 		o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 	}
 
 	// framestagenotify

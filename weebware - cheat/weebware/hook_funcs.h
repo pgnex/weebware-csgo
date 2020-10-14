@@ -32,7 +32,7 @@ namespace hooks {
 	using sceneend = void(__fastcall*)(void*, void*);
 	using framestagenotify = void(__thiscall*)(i_base_client*, clientframestage_t);
 	using viewmodel = float(__fastcall*)();
-	using drawmodelexecute = void(__thiscall*)(c_model_render*, void*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4_t*);
+	using drawmodelexecute = void(__thiscall*)(void*, void*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4_t*);
 
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
 	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
@@ -52,7 +52,7 @@ namespace hooks {
 		void frame_stage_notify(int curStage);
 		long present(IDirect3DDevice9* device, const RECT* src, const RECT* dest, HWND wnd_override, const RGNDATA* dirty_region);
 		long end_scene(IDirect3DDevice9* device);
-		void draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
+		void draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme);
 		void scene_end(void* thisptr, void* edx);
 	}
 }

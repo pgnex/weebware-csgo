@@ -4,9 +4,7 @@
 #include "hook_funcs.h"
 #include <iostream>
 
-c_draw_model_execute g_dme;
-
-void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) {
+void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme) {
 
 	if (!ctx)
 		return;
@@ -16,7 +14,7 @@ void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c
 	if (!(strstr(model_name, "models/player")) && !(strstr(model_name, "arms")))
 		return;
 
-	draw_model_execute::player_chams(pInfo);
+	draw_model_execute::player_chams(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
 
 }
 void draw_model_execute::utils::init_key_vals(KeyValues* keyValues, char* name)  {
@@ -61,48 +59,68 @@ void draw_model_execute::utils::load_from_buf(KeyValues* keyValues, char const* 
 	}
 }
 
-imaterial* draw_model_execute::utils::borrow_mat(custom_mats type)
-{
-	// Thanks Shigure for these mats u sent me like last year 
+imaterial* draw_model_execute::utils::borrow_mat(custom_mats type) {
 	const char* material_list[] = { "", "", "", "debug/debugdrawflat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
 
 	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
-
 	imaterial* mat = g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
-	if (!mat)
-		return create_default();
-
-	if (mat->iserrormaterial())
-		return create_default();
+	if (!mat || mat->iserrormaterial())
+		return g_weebware.g_mat_sys->find_material("models/inventory_items/trophy_majors/gold", TEXTURE_GROUP_MODEL);
 
 	mat->incrementreferencecount();
-
 	return mat;
 }
 
 imaterial* draw_model_execute::utils::create_default() {
 
-	static const char material[] =
-	{
-		"\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"\"\
-		\n\t\"$model\" \"1\"\
-		\n\t\"$flat\" \"1\"\
-		\n\t\"$nocull\" \"0\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$halflambert\" \"1\"\
-		\n\t\"$nofog\" \"1\"\
-		\n\t\"$ignorez\" \"0\"\
-		\n\t\"$znearer\" \"0\"\
-        \n}\n"
-	};
+
+	std::stringstream s;
+
+	s << "\"VertexLitGeneric\" {\n\n\t";
+	s << "\"basetexture\" \"vgui/white_additive\"\n\t";
+	s << "\"$additive\" \"0\"\n\t";
+	//s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
+	//s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
+	s << "\"$ignorez\" \"0\"\n\t";
+	//s << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
+	s << "\"$alpha\" \"1\"\n";
+	s << "}";
+
 
 	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
 	init_key_vals(keyValues, "VertexLitGeneric");
-	load_from_buf(keyValues, "default.vmt", material, 0, 0, 0, 0);
+	load_from_buf(keyValues, "default.vmt", s.str().c_str(), 0, 0, 0, 0);
 	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("default.vmt", keyValues);
+
+	if (!created_mat || created_mat->iserrormaterial())
+		return NULL;
+
+	return created_mat;
+}
+
+imaterial* draw_model_execute::utils::create_ignorez() {
+
+
+	std::stringstream s;
+
+	s << "\"VertexLitGeneric\" {\n\n\t";
+	s << "\"basetexture\" \"vgui/white_additive\"\n\t";
+	s << "\"$additive\" \"0\"\n\t";
+	//s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
+	//s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
+	s << "\"$ignorez\" \"1\"\n\t";
+	//s << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
+	s << "\"$alpha\" \"1\"\n";
+	s << "}";
+
+
+	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+	init_key_vals(keyValues, "VertexLitGeneric");
+	load_from_buf(keyValues, "ignorez.vmt", s.str().c_str(), 0, 0, 0, 0);
+	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("ignorez.vmt", keyValues);
+
+	if (!created_mat || created_mat->iserrormaterial())
+		return NULL;
 
 	return created_mat;
 }
@@ -130,7 +148,10 @@ imaterial* draw_model_execute::utils::create_glow()  {
 	return created_mat;
 }
 
-void draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
+void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme) {
+
+	if (!g_weebwarecfg.visuals_chams > 0)
+		return;
 
 	// if model isnt a player no point
 	const char* model_name = g_weebware.g_model_info->getmodelname(pInfo.pModel);
@@ -150,16 +171,79 @@ void draw_model_execute::player_chams(const modelrenderinfo_t& pInfo) {
 	static bool init = false;
 	static imaterial* mat_list[custom_mats::max];
 	if (!init) {
-		mat_list[custom_mats::plain] = utils::create_glow();
+		// grab pre-generated materials
+		for (auto i = 1; i < custom_mats::max; i++) {
+			mat_list[i] = utils::borrow_mat(static_cast<custom_mats>(i));
+		}
+		mat_list[custom_mats::plain] = utils::create_default();
+		mat_list[custom_mats::glow_cham] = utils::create_glow();
 		init = true;
 	}
 
+	// last null check,,
+	if (!mat_list[g_weebwarecfg.visuals_chams] || mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
+		return;
 
-	float col_blend[4] = {200.f, 0.f, 255.f, 0.8f };
-	g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
-	g_weebware.g_render_view->SetBlend(1.f);
-	g_weebware.g_render_view->SetColorModulation(col_blend);
-	mat_list[custom_mats::plain]->setmaterialvarflag(material_var_ignorez, true);
+	// setup colors
+	c_color col, xqz_col;
+	col = c_color(model_ent->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
+	xqz_col = c_color(model_ent->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+
+	float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+	float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
+
+	// do chams
+	switch (g_weebwarecfg.visuals_chams) {
+	case custom_mats::plain: {
+		if (g_weebwarecfg.visuals_chams_xqz) {
+			static imaterial* plain_ignorez = utils::create_ignorez();
+			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+			g_weebware.g_model_render->forcedmaterialoverride(plain_ignorez);
+			// orig..
+			o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		}
+		g_weebware.g_render_view->SetBlend(col.a / 255.f);
+		g_weebware.g_render_view->SetColorModulation(col_blend);
+		g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
+		return;
+	}
+	case custom_mats::glow_cham: {
+		g_weebware.g_render_view->SetBlend(col.a / 255.f);
+		g_weebware.g_render_view->SetColorModulation(col_blend);
+
+		c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
+		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+		g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
+
+		bool found = false;
+		imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar("$envmaptint", &found);
+		if (found)
+			(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f);
+
+		g_weebware.g_render_view->SetBlend(col.a / 255.f);
+		g_weebware.g_render_view->SetColorModulation(col_blend);
+		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+		g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+		return;
+	}
+	default: {
+
+		if (g_weebwarecfg.visuals_chams_xqz) {
+			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+			g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+			// orig..
+			o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		}
+		g_weebware.g_render_view->SetBlend(col.a / 255.f);
+		g_weebware.g_render_view->SetColorModulation(col_blend);
+		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+		g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+		return;
+	}
+	}
 }
 
 
