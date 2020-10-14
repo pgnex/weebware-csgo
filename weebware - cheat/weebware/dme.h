@@ -7,6 +7,18 @@ public:
 	void player_chams(const modelrenderinfo_t& pInfo);
 	void hand_chams(const modelrenderinfo_t& pInfo);
 
+	enum custom_mats : int {
+		disabled,
+		plain,
+		glow_cham = 2,
+		flat,
+		glass,
+		crystal,
+		gold,
+		crystal_blue,
+		max
+	};
+
 	std::vector<const char*> vistasmoke_mats =
 	{
 		"particle/vistasmokev1/vistasmokev1_fire",
