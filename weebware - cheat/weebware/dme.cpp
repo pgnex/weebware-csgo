@@ -14,7 +14,9 @@ void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c
 	if (!(strstr(model_name, "models/player")) && !(strstr(model_name, "arms")))
 		return;
 
-	draw_model_execute::player_chams(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
+	if (strstr(model_name, "models/player"))
+		draw_model_execute::player_chams(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
+	
 
 }
 void draw_model_execute::utils::init_key_vals(KeyValues* keyValues, char* name)  {
@@ -153,11 +155,6 @@ void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownm
 	if (!g_weebwarecfg.visuals_chams > 0)
 		return;
 
-	// if model isnt a player no point
-	const char* model_name = g_weebware.g_model_info->getmodelname(pInfo.pModel);
-	if (!(strstr(model_name, "models/player")))
-		return;
-
 	// get local
 	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
 	if (!local)
@@ -228,7 +225,6 @@ void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownm
 		return;
 	}
 	default: {
-
 		if (g_weebwarecfg.visuals_chams_xqz) {
 			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
 			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);

@@ -459,7 +459,7 @@ void gui::imgui_main() {
 		if (tab_selection == gui::tabs::vis) {
 			// begin tab
 
-	// margin top column 1
+			// margin top column 1
 			imgui_custom::horizontal_margin("vis1");
 
 			ImGui::SetColumnWidth(2, 328);
