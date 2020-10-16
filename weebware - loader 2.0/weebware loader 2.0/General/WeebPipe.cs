@@ -41,7 +41,7 @@ namespace weebware_loader.General {
 
         private static NamedPipeServerStream CreatePipe() {
             PipeSecurity pipeSecurity = CreateSystemIOPipeSecurity();
-            return new NamedPipeServerStream("ww-pipe", PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0x4000, 0x400, pipeSecurity, HandleInheritability.Inheritable);
+            return new NamedPipeServerStream("weeb-pipe", PipeDirection.InOut, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous, 0x4000, 0x400, pipeSecurity, HandleInheritability.Inheritable);
         }
 
 
@@ -49,8 +49,9 @@ namespace weebware_loader.General {
             NamedPipeServerStream authPipe = CreatePipe();
             authPipe.WaitForConnection();
 
-            if (PipeRead(authPipe) == "warwr") {
-                Response response = Networking.SafeAuth();
+            string raw = PipeRead(authPipe);
+            if (raw.Length > 0) {
+                Response response = Networking.SafeAuth(raw);
                 PipeWrite(response.message, authPipe);
             }
             authPipe.Dispose();

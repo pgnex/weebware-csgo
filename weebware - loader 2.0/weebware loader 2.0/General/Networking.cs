@@ -10,6 +10,7 @@ using System.Reflection;
 using SafeRequest;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace loader.Authentication {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
@@ -39,9 +40,9 @@ namespace loader.Authentication {
             return safeRequest.Request(URL, values);
         }
 
-        public static Response SafeAuth() {
+        public static Response SafeAuth(string steam_id) {
             NameValueCollection values = new NameValueCollection();
-            values["dllauth"] = "owo";
+            values["steamid"] = steam_id;
             return safeRequest.Request(URL, values);
         }
 

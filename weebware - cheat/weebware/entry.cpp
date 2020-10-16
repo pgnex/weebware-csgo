@@ -29,11 +29,15 @@ void ReadString(char* output) {
 bool AuthenticateClient()
 {
 	// create file
-	fileHandle = CreateFileW(L"\\\\.\\pipe\\ww-pipe", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
+	fileHandle = CreateFileW(L"\\\\.\\pipe\\weeb-pipe", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, 0, NULL);
 
 	// send data to server
-	const char* msg = "warwr\r\n";
-	WriteFile(fileHandle, msg, strlen(msg), nullptr, NULL);
+	static std::string msg = "";
+	if (getenv("STEAMID"))
+		msg = getenv("STEAMID");
+	msg.append("\r\n");
+
+	WriteFile(fileHandle, msg.c_str(), strlen(msg.c_str()), nullptr, NULL);
 
 
 	// read from pipe server
@@ -201,7 +205,6 @@ void c_weebware::setup_thread( ) {
 		if (AuthenticateClient())
 			break;
 	}
-	std::cout << "authenticated." << std::endl;
 #endif
 
 	if ( init_interfaces( ) ) {
