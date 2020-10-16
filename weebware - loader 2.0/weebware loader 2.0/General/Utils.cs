@@ -16,6 +16,63 @@ namespace loader {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
     public static class Utils {
 
+        public static long GetTime() {
+
+            long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            return currentTime;
+        }
+
+        public static string Reverse(string s) {
+            AntiTamper.IntegrityCheck();
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            AntiTamper.IntegrityCheck();
+            return new string(charArray);
+        }
+
+        public static void RandomizeTitle(this System.Windows.Forms.Form f) {
+            Random rnd = new Random();
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            f.Text = new string(Enumerable.Repeat(chars, rnd.Next(10, 20))
+              .Select(s => s[rnd.Next(s.Length)]).ToArray());
+        }
+
+        private static Random random = new Random();
+        public static string RandomString(int length) {
+            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+
+        public static void ConnectionError() {
+            MessageBox.Show("A connection error has occurred.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public static void CreateFiles() {
+            if (!Directory.Exists(@"c:\weebware")) Directory.CreateDirectory(@"c:\weebware");
+            if (!Directory.Exists(@"c:\weebware\cfgs")) Directory.CreateDirectory(@"c:\weebware\cfgs");
+
+            WebClient web = new WebClient();
+            if (!Directory.Exists(@"c:\weebware\sounds")) {
+                Directory.CreateDirectory(@"c:\weebware\sounds\");
+                web.DownloadFile("https://api.weebware.net/dependencies/sounds.zip", "c:\\weebware\\sounds\\sounds.zip");
+                System.IO.Compression.ZipFile.ExtractToDirectory("c:\\weebware\\sounds\\sounds.zip", "c:\\weebware\\sounds");
+                File.Delete("c:\\weebware\\sounds\\sounds.zip");
+            }
+
+            if (!Directory.Exists(@"c:\weebware\dependencies")) {
+                Directory.CreateDirectory(@"c:\weebware\dependencies");
+            }
+            web.DownloadFile("https://api.weebware.net/dependencies/skins.txt", "c:\\weebware\\dependencies\\skins.txt");
+            web.DownloadFile("https://api.weebware.net/dependencies/guns.txt", "c:\\weebware\\dependencies\\guns.txt");
+            if (!File.Exists(@"c:\weebware\dependencies\notify")) File.Create(@"c:\weebware\dependencies\notify");
+        }
+    }
+
+
+    // crypto stuff
+    public static class Encryption {
         private const string initVector = "rtUAIkm859Vxvmrg";
         private const int keysize = 256;
 
@@ -91,59 +148,6 @@ namespace loader {
                 MessageBox.Show("Unable to decrypt.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return null;
-        }
-
-        public static long GetTime() {
-
-            long currentTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-            return currentTime;
-        }
-
-        public static string Reverse(string s) {
-            AntiTamper.IntegrityCheck();
-            char[] charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            AntiTamper.IntegrityCheck();
-            return new string(charArray);
-        }
-
-        public static void RandomizeTitle(this System.Windows.Forms.Form f) {
-            Random rnd = new Random();
-            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            f.Text = new string(Enumerable.Repeat(chars, rnd.Next(10, 20))
-              .Select(s => s[rnd.Next(s.Length)]).ToArray());
-        }
-
-        private static Random random = new Random();
-        public static string RandomString(int length) {
-            const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-
-
-        public static void ConnectionError() {
-            MessageBox.Show("A connection error has occurred.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        public static void CreateFiles() {
-            if (!Directory.Exists(@"c:\weebware")) Directory.CreateDirectory(@"c:\weebware");
-            if (!Directory.Exists(@"c:\weebware\cfgs")) Directory.CreateDirectory(@"c:\weebware\cfgs");
-
-            WebClient web = new WebClient();
-            if (!Directory.Exists(@"c:\weebware\sounds")) {
-                Directory.CreateDirectory(@"c:\weebware\sounds\");
-                web.DownloadFile("https://api.weebware.net/dependencies/sounds.zip", "c:\\weebware\\sounds\\sounds.zip");
-                System.IO.Compression.ZipFile.ExtractToDirectory("c:\\weebware\\sounds\\sounds.zip", "c:\\weebware\\sounds");
-                File.Delete("c:\\weebware\\sounds\\sounds.zip");
-            }
-
-            if (!Directory.Exists(@"c:\weebware\dependencies")) {
-                Directory.CreateDirectory(@"c:\weebware\dependencies");
-            }
-            web.DownloadFile("https://api.weebware.net/dependencies/skins.txt", "c:\\weebware\\dependencies\\skins.txt");
-            web.DownloadFile("https://api.weebware.net/dependencies/guns.txt", "c:\\weebware\\dependencies\\guns.txt");
-            if (!File.Exists(@"c:\weebware\dependencies\notify")) File.Create(@"c:\weebware\dependencies\notify");
         }
     }
 }

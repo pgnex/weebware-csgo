@@ -91,7 +91,7 @@ namespace weebware_loader.Forms {
             web.Headers.Add("user-agent", "weebware");
             cheatFile = Path.GetTempFileName();
             web.DownloadFile(cheat_downloads[cheat_selection_index], cheatFile);
-            InjectionHelper.InjectPreset(cheatFile, Utils.DecryptString(cheat_keys[cheat_selection_index], "zgJoEYlViXJXpsFN"));
+            InjectionHelper.InjectPreset(cheatFile, Encryption.DecryptString(cheat_keys[cheat_selection_index], "zgJoEYlViXJXpsFN"));
         }
 
         private void btnInject_Click(object sender, EventArgs e) {

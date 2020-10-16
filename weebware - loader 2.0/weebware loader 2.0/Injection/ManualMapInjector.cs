@@ -843,7 +843,7 @@ namespace Injection {
             if (needsDecryption) {
                 string path = Path.GetTempFileName();
                 File.WriteAllBytes(path, data);
-                buffer = Utils.decryptToBytes(path, strKey).ToArray();
+                buffer = Encryption.decryptToBytes(path, strKey).ToArray();
                 File.Delete(path);
             } else {
                 buffer = data.ToArray();

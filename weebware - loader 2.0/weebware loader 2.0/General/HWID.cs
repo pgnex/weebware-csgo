@@ -50,7 +50,7 @@ namespace loader {
                 original = Environment.MachineName;
             }
             AntiTamper.IntegrityCheck();
-            return Utils.EncryptString("QqxG1lLzeIliTzrB7hxPXpQ3HbhwHcMH", "QqxG1lLzeIliTzrBCbJ3C5fG6rwJOubM", original);
+            return Encryption.EncryptString("QqxG1lLzeIliTzrB7hxPXpQ3HbhwHcMH", "QqxG1lLzeIliTzrBCbJ3C5fG6rwJOubM", original);
         }
     }
 }
