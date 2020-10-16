@@ -12,316 +12,313 @@ void hooks::hook_functions::scene_end(void* thisptr, void* edx) {
 		return;
 	}
 
-	try {
-		if (g_weebwarecfg.visuals_glow_enabled) {
-			g_sceneend.glow();
-		}
-
-		if (g_weebwarecfg.visuals_chams > 0) {
-			g_sceneend.chams();
-		}
+	if (g_weebwarecfg.visuals_glow_enabled) {
+		g_sceneend.glow();
 	}
-	catch (...) {
 
-	}
+	//if (g_weebwarecfg.visuals_chams > 0) {
+	//	g_sceneend.chams();
+	//}
 }
 
 
-void init_key_vals(KeyValues* keyValues, char* name)
-{
-	static DWORD keyval_addr = 0;
-
-	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
-
-	static DWORD dwFunction = 0;
-
-	if (!dwFunction) dwFunction = keyval_addr + *reinterpret_cast<PDWORD_PTR>(keyval_addr + 1) + 5;
-
-	if (!dwFunction) {
-		return;
-	}
-	__asm
-	{
-		push name
-		mov ecx, keyValues
-		call dwFunction
-	}
-}
-
-void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *pBuffer, class IBaseFileSystem* pFileSystem, const char *pPathID, void* pUnknown, void* uu)
-{
-	static  DWORD dwFunction = 0;
-
-	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
-
-	if (!dwFunction) {
-		return;
-	}
-
-	__asm
-	{
-		push uu
-		push pUnknown
-		push pPathID
-		push pFileSystem
-		push pBuffer
-		push resourceName
-		mov ecx, keyValues
-		call dwFunction
-	}
-}
-
-// Ayyware
-imaterial* c_sceneend::generate_material(bool ignore, bool lit, bool wire_frame)
-{
-	static int created = 0;
-	static const char tmp[] =
-	{
-		"\"%s\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"\"\
-		\n\t\"$model\" \"1\"\
-		\n\t\"$flat\" \"1\"\
-		\n\t\"$nocull\" \"0\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$halflambert\" \"1\"\
-		\n\t\"$nofog\" \"0\"\
-		\n\t\"$ignorez\" \"%i\"\
-		\n\t\"$znearer\" \"0\"\
-		\n\t\"$wireframe\" \"%i\"\
-        \n}\n"
-	};
-
-	char* baseType = (lit == true ? "VertexLitGeneric" : "UnlitGeneric");
-	char material[512];
-	char name[512];
-	sprintf_s(material, sizeof(material), tmp, baseType, (ignore) ? 1 : 0, (wire_frame) ? 1 : 0);
-	sprintf_s(name, sizeof(name), "#chams%i.vmt", created);
-	++created;
-	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
-	init_key_vals(keyValues, baseType);
-	load_from_buf(keyValues, name, material, 0, 0, 0, 0);
-	imaterial* created_mat = g_weebware.g_mat_sys->create_mat(name, keyValues);
-	created_mat->incrementreferencecount();
-	return created_mat;
-}
-
-
-imaterial* create_default() {
-
-	static const char material[] =
-	{
-		"\"VertexLitGeneric\"\
-		\n{\
-		\n\t\"$basetexture\" \"vgui/white_additive\"\
-		\n\t\"$envmap\" \"\"\
-		\n\t\"$model\" \"1\"\
-		\n\t\"$flat\" \"1\"\
-		\n\t\"$nocull\" \"0\"\
-		\n\t\"$selfillum\" \"1\"\
-		\n\t\"$halflambert\" \"1\"\
-		\n\t\"$nofog\" \"1\"\
-		\n\t\"$ignorez\" \"0\"\
-		\n\t\"$znearer\" \"0\"\
-        \n}\n"
-	};
-
-	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
-	init_key_vals(keyValues, "VertexLitGeneric");
-	load_from_buf(keyValues, "default.vmt", material, 0, 0, 0, 0);
-	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("default.vmt", keyValues);
-	created_mat->incrementreferencecount();
-
-	return created_mat;
-}
-
-
-imaterial* c_sceneend::create_glow() {
-
-	std::stringstream s;
-
-	s << "\"VertexLitGeneric\" {\n\n\t";
-	s << "\"basetexture\" \"vgui/white\"\n\t";
-	s << "\"$additive\" \"0\"\n\t";
-	s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
-	s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
-	s << "\"$envmapfresnel\" \"1\"\n\t";
-	s << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
-	s << "\"$alpha\" \"0.8\"\n";
-	s << "}";
-
-
-	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
-	init_key_vals(keyValues, "VertexLitGeneric");
-	load_from_buf(keyValues, "glow.vmt", s.str().c_str(), 0, 0, 0, 0);
-	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("glow.vmt", keyValues);
-	created_mat->incrementreferencecount();
-
-	return created_mat;
-}
-
-imaterial* c_sceneend::borrow_mat(custom_mats type)
-{
-	// Thanks Shigure for these mats u sent me like last year 
-	const char* material_list[] = { "", "", "", "debug/debugdrawflat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
-
-	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
-
-	imaterial* mat = g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
-	if (!mat)
-		return create_default();
-
-	if (mat->iserrormaterial())
-		return create_default();
-
-	return g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
-}
-
-
-void c_sceneend::chams() {
-
-	if (g_weebwarecfg.visuals_chams > custom_mats::max)
-		g_weebwarecfg.visuals_chams = 1;
-
-	static bool init = false;
-
-	static imaterial* mat_list[custom_mats::max];
-
-	// Setting up mats
-	if (!init) {
-		// Grab pre-generated materials
-		for (auto i = 1; i < custom_mats::max; i++) {
-			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
-		}
-		// Make our own materials
-		mat_list[custom_mats::plain] = create_default();
-		mat_list[custom_mats::glow_cham] = create_glow();
-		init = true;
-	}
-
-	// get localplayer
-	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	for (int i = 1; i <= g_weebware.g_global_vars->maxclients; i++) {
-		auto player = g_weebware.g_entlist->getcliententity(i);
-
-		// make sure ent is a valid player
-		if (!player->is_valid_player())
-			continue;
-
-		// nullptr check localplayer
-		if (!local)
-			continue;
-
-		// if player is behind smoke and we dont have xqz on, go next
-		if (player->trace_from_smoke(*local->m_vecOrigin()) && !g_weebwarecfg.visuals_chams_xqz) 
-			continue;
-
-		// setup our colors here..
-		c_color col;
-
-		if (player->trace_from_smoke(*local->m_vecOrigin()) && g_weebwarecfg.visuals_chams_xqz) {
-			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
-		}
-		else {
-			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
-		}
-
-		float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
-
-		if (g_weebwarecfg.visuals_chams_xqz) {
-			c_color xqz_col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
-			float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
-			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
-			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
-		}
-
-		//if (g_weebwarecfg.misc_legit_aa_enabled && player == local) {
-		//	player->set_angles(Vector(0, g_weebware.fake_angle.y, 0));
-		//	g_weebware.g_render_view->SetBlend(0.5f);
-		//	player->draw_model(1, 255);
-		//	g_weebware.g_render_view->SetBlend(1.f);
-		//	player->set_angles(Vector(0, g_weebware.real_angle.y, 0));
-		//}
-
-		// skip if team chams is off and entity is teammate
-		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
-			continue;
-
-		//if (!mat_list[g_weebwarecfg.visuals_chams])
-		//	continue;
-
-		//if (mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
-		//	continue;
-
-		if (local->m_iTeamNum() == player->m_iTeamNum()) {
-			if (g_weebwarecfg.visuals_chams_render_team) {
-				if (g_weebwarecfg.visuals_chams_xqz) {
-					mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
-					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-					player->draw_model(1, 255);
-					g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-				}
-
-				// Set material info.
-				g_weebware.g_render_view->SetBlend(col.a / 255.f);
-				g_weebware.g_render_view->SetColorModulation(col_blend);
-
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-				player->draw_model(1, 255);
-				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-			}
-		}
-		else {
-			if (g_weebwarecfg.visuals_chams_xqz) {
-				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-				player->draw_model(1, 255);
-
-				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-			}
-
-			if (g_weebwarecfg.visuals_chams == custom_mats::glow_cham) {
-
-				g_weebware.g_render_view->SetBlend(col.a / 255.f);
-				g_weebware.g_render_view->SetColorModulation(col_blend);
-
-				c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
-
-				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
-				player->draw_model(1, 255);
-
-				bool found = false;
-				imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar("$envmaptint", &found);
-				if (found)
-					(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f);
-
-				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-				player->draw_model(1, 255);
-				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-			}
-			else {
-				// Set material info.
-				g_weebware.g_render_view->SetBlend(col.a / 255.f);
-				g_weebware.g_render_view->SetColorModulation(col_blend);
-
-
-				mat_list[g_weebwarecfg.visuals_chams]->incrementreferencecount();
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
-				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
-				player->draw_model(1, 255);
-				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
-			}
-		}
-	}
-}
+//void init_key_vals(KeyValues* keyValues, char* name)
+//{
+//	static DWORD keyval_addr = 0;
+//
+//	if (!keyval_addr)keyval_addr = g_weebware.pattern_scan("client.dll", "68 ?? ?? ?? ?? 8B C8 E8 ?? ?? ?? ?? 89 45 FC EB 07 C7 45 ?? ?? ?? ?? ?? 8B 03 56*") + 7;
+//
+//	static DWORD dwFunction = 0;
+//
+//	if (!dwFunction) dwFunction = keyval_addr + *reinterpret_cast<PDWORD_PTR>(keyval_addr + 1) + 5;
+//
+//	if (!dwFunction) {
+//		return;
+//	}
+//	__asm
+//	{
+//		push name
+//		mov ecx, keyValues
+//		call dwFunction
+//	}
+//}
+//
+//void load_from_buf(KeyValues* keyValues, char const *resourceName, const char *pBuffer, class IBaseFileSystem* pFileSystem, const char *pPathID, void* pUnknown, void* uu)
+//{
+//	static  DWORD dwFunction = 0;
+//
+//	if (!dwFunction) dwFunction = g_weebware.pattern_scan("client.dll", "55 8B EC 83 E4 F8 83 EC 34 53 8B 5D 0C 89");
+//
+//	if (!dwFunction) {
+//		return;
+//	}
+//
+//	__asm
+//	{
+//		push uu
+//		push pUnknown
+//		push pPathID
+//		push pFileSystem
+//		push pBuffer
+//		push resourceName
+//		mov ecx, keyValues
+//		call dwFunction
+//	}
+//}
+//
+//// Ayyware
+//imaterial* c_sceneend::generate_material(bool ignore, bool lit, bool wire_frame)
+//{
+//	static int created = 0;
+//	static const char tmp[] =
+//	{
+//		"\"%s\"\
+//		\n{\
+//		\n\t\"$basetexture\" \"vgui/white_additive\"\
+//		\n\t\"$envmap\" \"\"\
+//		\n\t\"$model\" \"1\"\
+//		\n\t\"$flat\" \"1\"\
+//		\n\t\"$nocull\" \"0\"\
+//		\n\t\"$selfillum\" \"1\"\
+//		\n\t\"$halflambert\" \"1\"\
+//		\n\t\"$nofog\" \"0\"\
+//		\n\t\"$ignorez\" \"%i\"\
+//		\n\t\"$znearer\" \"0\"\
+//		\n\t\"$wireframe\" \"%i\"\
+//        \n}\n"
+//	};
+//
+//	char* baseType = (lit == true ? "VertexLitGeneric" : "UnlitGeneric");
+//	char material[512];
+//	char name[512];
+//	sprintf_s(material, sizeof(material), tmp, baseType, (ignore) ? 1 : 0, (wire_frame) ? 1 : 0);
+//	sprintf_s(name, sizeof(name), "#chams%i.vmt", created);
+//	++created;
+//	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+//	init_key_vals(keyValues, baseType);
+//	load_from_buf(keyValues, name, material, 0, 0, 0, 0);
+//	imaterial* created_mat = g_weebware.g_mat_sys->create_mat(name, keyValues);
+//	created_mat->incrementreferencecount();
+//	return created_mat;
+//}
+//
+//
+//imaterial* create_default() {
+//
+//	static const char material[] =
+//	{
+//		"\"VertexLitGeneric\"\
+//		\n{\
+//		\n\t\"$basetexture\" \"vgui/white_additive\"\
+//		\n\t\"$envmap\" \"\"\
+//		\n\t\"$model\" \"1\"\
+//		\n\t\"$flat\" \"1\"\
+//		\n\t\"$nocull\" \"0\"\
+//		\n\t\"$selfillum\" \"1\"\
+//		\n\t\"$halflambert\" \"1\"\
+//		\n\t\"$nofog\" \"1\"\
+//		\n\t\"$ignorez\" \"0\"\
+//		\n\t\"$znearer\" \"0\"\
+//        \n}\n"
+//	};
+//
+//	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+//	init_key_vals(keyValues, "VertexLitGeneric");
+//	load_from_buf(keyValues, "default.vmt", material, 0, 0, 0, 0);
+//	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("default.vmt", keyValues);
+//
+//	return created_mat;
+//}
+//
+//
+//imaterial* c_sceneend::create_glow() {
+//
+//	std::stringstream s;
+//
+//	s << "\"VertexLitGeneric\" {\n\n\t";
+//	s << "\"basetexture\" \"vgui/white\"\n\t";
+//	s << "\"$additive\" \"0\"\n\t";
+//	s << "\"$envmap\" \"models/effects/cube_white\"\n\t";
+//	s << "\"$envmaptint\"" << " \"[" << 1 << " " << 1 << " " << 1 << "]\"\n\t";
+//	s << "\"$envmapfresnel\" \"1\"\n\t";
+//	s << "\"$envmapfresnelminmaxexp\" \"[0 1 2]\"\n\t";
+//	s << "\"$alpha\" \"0.8\"\n";
+//	s << "}";
+//
+//
+//	KeyValues* keyValues = (KeyValues*)malloc(sizeof(KeyValues));
+//	init_key_vals(keyValues, "VertexLitGeneric");
+//	load_from_buf(keyValues, "glow.vmt", s.str().c_str(), 0, 0, 0, 0);
+//	imaterial* created_mat = g_weebware.g_mat_sys->create_mat("glow.vmt", keyValues);
+//
+//	return created_mat;
+//}
+//
+//imaterial* c_sceneend::borrow_mat(custom_mats type)
+//{
+//	// Thanks Shigure for these mats u sent me like last year 
+//	const char* material_list[] = { "", "", "", "debug/debugdrawflat", "models/inventory_items/cologne_prediction/cologne_prediction_glass", "models/inventory_items/trophy_majors/crystal_clear", "models/inventory_items/trophy_majors/gold", "models/inventory_items/trophy_majors/crystal_blue" };
+//
+//	// TEXTURE_GROUP_MODEL : TEXTURE_GROUP_OTHER
+//
+//	imaterial* mat = g_weebware.g_mat_sys->find_material(material_list[type], TEXTURE_GROUP_MODEL);
+//	if (!mat)
+//		return create_default();
+//
+//	if (mat->iserrormaterial())
+//		return create_default();
+//
+//	mat->incrementreferencecount();
+//
+//	return mat;
+//}
+//
+//
+//void c_sceneend::chams() {
+//
+//	if (g_weebwarecfg.visuals_chams > custom_mats::max)
+//		g_weebwarecfg.visuals_chams = 1;
+//
+//	static bool init = false;
+//
+//	static imaterial* mat_list[custom_mats::max];
+//
+//	// Setting up mats
+//	if (!init) {
+//		// Grab pre-generated materials
+//		for (auto i = 2; i < custom_mats::max; i++) {
+//			mat_list[i] = borrow_mat(static_cast<custom_mats>(i));
+//			
+//		}
+//		// Make our own materials
+//		mat_list[custom_mats::plain] = create_default();
+//		mat_list[custom_mats::glow_cham] = create_glow();
+//		init = true;
+//	}
+//
+//	// get localplayer
+//	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+//
+//	if (!local)
+//		return;
+//
+//	if (!mat_list[g_weebwarecfg.visuals_chams])
+//		return;
+//
+//	if (mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
+//		return;
+//
+//	for (int i = 1; i <= g_weebware.g_global_vars->maxclients; i++) {
+//		auto player = g_weebware.g_entlist->getcliententity(i);
+//
+//		// nullptr check localplayer
+//		if (!player)
+//			continue;
+//
+//		// make sure ent is a valid player
+//		if (!player->is_valid_player())
+//			continue;
+//
+//		// if player is behind smoke and we dont have xqz on, go next
+//		if (player->trace_from_smoke(*local->m_vecOrigin()) && !g_weebwarecfg.visuals_chams_xqz) 
+//			continue;
+//
+//		// setup our colors here..
+//		c_color col;
+//
+//		if (player->trace_from_smoke(*local->m_vecOrigin()) && g_weebwarecfg.visuals_chams_xqz) {
+//			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+//		}
+//		else {
+//			col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col);
+//		}
+//
+//		float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+//
+//		if (g_weebwarecfg.visuals_chams_xqz) {
+//			c_color xqz_col = c_color(player->m_iTeamNum() == local->m_iTeamNum() ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz);
+//			float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
+//			g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+//			g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+//		}
+//
+//		//if (g_weebwarecfg.misc_legit_aa_enabled && player == local) {
+//		//	player->set_angles(Vector(0, g_weebware.fake_angle.y, 0));
+//		//	g_weebware.g_render_view->SetBlend(0.5f);
+//		//	player->draw_model(1, 255);
+//		//	g_weebware.g_render_view->SetBlend(1.f);
+//		//	player->set_angles(Vector(0, g_weebware.real_angle.y, 0));
+//		//}
+//
+//		// skip if team chams is off and entity is teammate
+//		if ((player->m_iTeamNum() == local->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
+//			continue;
+//
+//
+//		if (mat_list[g_weebwarecfg.visuals_chams] && !mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial())
+//			continue;
+//
+//		if (local->m_iTeamNum() == player->m_iTeamNum()) {
+//			if (g_weebwarecfg.visuals_chams_render_team) {
+//				if (g_weebwarecfg.visuals_chams_xqz) {
+//					mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+//					g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+//					player->draw_model(1, 255);
+//					g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+//				}
+//
+//				// Set material info.
+//				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+//				g_weebware.g_render_view->SetColorModulation(col_blend);
+//
+//				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+//				player->draw_model(1, 255);
+//				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+//			}
+//		}
+//		else {
+//			if (g_weebwarecfg.visuals_chams_xqz) {
+//				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+//				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+//				player->draw_model(1, 255);
+//
+//				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+//			}
+//
+//			if (g_weebwarecfg.visuals_chams == custom_mats::glow_cham) {
+//
+//				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+//				g_weebware.g_render_view->SetColorModulation(col_blend);
+//
+//				c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
+//
+//				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+//				g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
+//				player->draw_model(1, 255);
+//
+//				bool found = false;
+//				imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar("$envmaptint", &found);
+//				if (found)
+//					(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f);
+//
+//				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+//				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+//				player->draw_model(1, 255);
+//				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+//			}
+//			else {
+//				// Set material info.
+//				g_weebware.g_render_view->SetBlend(col.a / 255.f);
+//				g_weebware.g_render_view->SetColorModulation(col_blend);
+//
+//				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+//				g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
+//				player->draw_model(1, 255);
+//				g_weebware.g_model_render->forcedmaterialoverride(nullptr);
+//			}
+//		}
+//	}
+//}
 
 void c_sceneend::glow() {
 
