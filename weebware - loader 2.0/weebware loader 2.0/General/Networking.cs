@@ -46,5 +46,17 @@ namespace loader.Authentication {
             return safeRequest.Request(URL, values);
         }
 
+        public static bool VerifyConnection() {
+            WebClient web = new WebClient();
+            NameValueCollection values = new NameValueCollection();
+            values["verify"] = "";
+
+            try {
+                return Encoding.UTF8.GetString(web.UploadValues(URL, values)) == "ok";
+            } catch (WebException ex) {
+                return false;
+            }
+        }
     }
+
 }
