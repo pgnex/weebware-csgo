@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using loader.Authentication;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -48,26 +50,30 @@ namespace loader {
         public static void ConnectionError() {
             MessageBox.Show("A connection error has occurred.", "weebware", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
 
-        public static void CreateFiles() {
-            if (!Directory.Exists(@"c:\weebware")) Directory.CreateDirectory(@"c:\weebware");
-            if (!Directory.Exists(@"c:\weebware\cfgs")) Directory.CreateDirectory(@"c:\weebware\cfgs");
+    // class for startup..
+    public static class Setup {
 
-            WebClient web = new WebClient();
-            if (!Directory.Exists(@"c:\weebware\sounds")) {
-                Directory.CreateDirectory(@"c:\weebware\sounds\");
-                web.DownloadFile("https://api.weebware.net/dependencies/sounds.zip", "c:\\weebware\\sounds\\sounds.zip");
-                System.IO.Compression.ZipFile.ExtractToDirectory("c:\\weebware\\sounds\\sounds.zip", "c:\\weebware\\sounds");
-                File.Delete("c:\\weebware\\sounds\\sounds.zip");
-            }
+        private static string appdata_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
 
-            if (!Directory.Exists(@"c:\weebware\dependencies")) {
-                Directory.CreateDirectory(@"c:\weebware\dependencies");
-            }
-            web.DownloadFile("https://api.weebware.net/dependencies/skins.txt", "c:\\weebware\\dependencies\\skins.txt");
-            web.DownloadFile("https://api.weebware.net/dependencies/guns.txt", "c:\\weebware\\dependencies\\guns.txt");
-            if (!File.Exists(@"c:\weebware\dependencies\notify")) File.Create(@"c:\weebware\dependencies\notify");
+        public static void Init() {
+            Console.WriteLine(Networking.VerifyConnection());
         }
+
+        public static bool VerifyExists() {
+
+            return false;
+        }
+
+        public static void Install() {
+
+        }
+
+        public static void Repair() {
+
+        }
+
     }
 
 
