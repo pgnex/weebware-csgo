@@ -1,17 +1,11 @@
 ﻿using loader.Authentication;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace loader {
@@ -55,23 +49,42 @@ namespace loader {
     // class for startup..
     public static class Setup {
 
+        private class Path {
+            public static string directory_path;
+            public static List<string> req_files = new List<string>();
+        }
+
+
         private static string appdata_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        private static List<Path> paths = new List<Path>();
 
         public static void Init() {
-            Console.WriteLine(Networking.VerifyConnection());
+            // verify we have connection to api
+            if (!Networking.VerifyConnection()) {
+                MessageBox.Show("Problem connecting to API. Contact support.");
+                return;
+            }
+
+            if (!DependanciesExist())
+                Install();
+
         }
 
-        public static bool VerifyExists() {
-
-            return false;
-        }
 
         public static void Install() {
 
         }
 
-        public static void Repair() {
+        public static bool MoveConfigs() {
 
+            return false;
+        }
+
+        public static bool DependanciesExist() {
+            if (!Directory.Exists(appdata_path + "/weebware"))
+                return false;
+
+            return true;
         }
 
     }
