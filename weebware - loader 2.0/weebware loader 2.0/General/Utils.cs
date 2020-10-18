@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -72,7 +73,8 @@ namespace loader {
 
 
         public static void Install() {
-
+            WebClient web = new WebClient();
+            string raw = web.DownloadString("https://api.weebware.net/dependencies/dependencies.txt");
         }
 
         public static bool MoveConfigs() {

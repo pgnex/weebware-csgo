@@ -177,7 +177,7 @@ namespace weebware_loader {
 
         private void load_bg_image() {
             WebClient web = new WebClient();
-            string raw = web.DownloadString("https://pastebin.com/raw/nFHkktDV");
+            string raw = web.DownloadString("https://api.weebware.net/dependencies/dependencies.txt");
 
             List<string> urls = raw.Split(',').ToList();
             Random rand = new Random();
