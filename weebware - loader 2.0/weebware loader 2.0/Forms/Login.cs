@@ -175,19 +175,14 @@ namespace weebware_loader {
         }
 
 
-        private void load_bg_image() {
-            WebClient web = new WebClient();
-            string raw = web.DownloadString("https://api.weebware.net/dependencies/dependencies.txt");
-
-            List<string> urls = raw.Split(',').ToList();
-            Random rand = new Random();
-            int index = rand.Next(0, urls.Count());
-
-            pbBackground.LoadAsync(urls[index]);
+        private void set_background_image() {
+            string[] images = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware/images");
+            int index = new Random().Next(0, images.Count());
+            pbBackground.LoadAsync(images[index]);
         }
 
         private void Login_Load(object sender, EventArgs e) {
-            load_bg_image();
+            set_background_image();
             formstuff.play_welcome(cbDisableSound);
 
         }
