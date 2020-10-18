@@ -55,39 +55,40 @@ namespace loader {
             public static List<string> req_files = new List<string>();
         }
 
-
-        private static string appdata_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        private static List<Path> paths = new List<Path>();
+        private static string api_path = "https://api.weebware.net/dependencies/";
+        private static string appdata_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware";
+        private static WebClient web = new WebClient();
 
         public static void Init() {
             // verify we have connection to api
             if (!Networking.VerifyConnection()) {
-                MessageBox.Show("Problem connecting to API. Contact support.");
+                MessageBox.Show("Problem connecting to API. Please try again later, or contact support.");
+                Environment.Exit(1337);
                 return;
             }
 
             if (!DependanciesExist())
                 Install();
-
         }
 
-
-        public static void Install() {
-            WebClient web = new WebClient();
-            string raw = web.DownloadString("https://api.weebware.net/dependencies/dependencies.txt");
+        private static void Install() {
+            // create missing directories in appdata..
+            string directories = web.DownloadString(api_path + "directories.txt");
+            foreach (string path in directories.Split(','))
+                if (!Directory.Exists(appdata_path + path))
+                    Directory.CreateDirectory(appdata_path + path);
+            
+            // create missing files in appdata..
+            string files = web.DownloadString(api_path + "files.txt");
+            foreach (string file in files.Split(','))
+                if (!File.Exists(appdata_path + file))
+                    web.DownloadFile(api_path + file, appdata_path + file);
         }
 
-        public static bool MoveConfigs() {
-
-            return false;
+        private static bool DependanciesExist() {
+            return Directory.Exists(appdata_path);
         }
 
-        public static bool DependanciesExist() {
-            if (!Directory.Exists(appdata_path + "/weebware"))
-                return false;
-
-            return true;
-        }
 
     }
 

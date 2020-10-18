@@ -50,13 +50,14 @@ namespace loader.Authentication {
             WebClient web = new WebClient();
             NameValueCollection values = new NameValueCollection();
             values["verify"] = "";
-
             try {
                 return Encoding.UTF8.GetString(web.UploadValues(URL, values)) == "ok";
-            } catch (WebException ex) {
+            } catch (WebException) {
                 return false;
             }
         }
+
+
     }
 
 }
