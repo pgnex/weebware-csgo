@@ -50,11 +50,6 @@ namespace loader {
     // class for startup..
     public static class Setup {
 
-        private class Path {
-            public static string directory_path;
-            public static List<string> req_files = new List<string>();
-        }
-
         private static string api_path = "https://api.weebware.net/dependencies/";
         private static string appdata_path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware";
         private static WebClient web = new WebClient();
@@ -72,9 +67,9 @@ namespace loader {
         }
 
         private static void Install() {
-            // create missing directories in appdata..
-            string directories = web.DownloadString(api_path + "directories.txt");
-            foreach (string path in directories.Split(','))
+            // create missing paths in appdata..
+            string paths = web.DownloadString(api_path + "paths.txt");
+            foreach (string path in paths.Split(','))
                 if (!Directory.Exists(appdata_path + path))
                     Directory.CreateDirectory(appdata_path + path);
             
@@ -85,10 +80,14 @@ namespace loader {
                     web.DownloadFile(api_path + file, appdata_path + file);
         }
 
+        private static string[] req_paths = { "/cfgs/", "/sounds/", "/etc/", "/images/" };
         private static bool DependanciesExist() {
-            return Directory.Exists(appdata_path);
-        }
+            foreach (string path in req_paths)
+                if (!Directory.Exists(appdata_path + path))
+                    return false;
 
+            return true;
+        }
 
     }
 
