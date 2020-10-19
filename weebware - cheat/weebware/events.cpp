@@ -101,16 +101,16 @@ void EventFuncs::player_hurt(i_game_event *event) {
 				switch (g_weebwarecfg.hitmarker_sound)
 				{
 				case 1:
-					PlaySoundA("C:\\weebware\\sounds\\Hitmarker.wav", NULL, SND_ASYNC);
+					PlaySoundA((g_weebware.g_appdata_path + "\\sounds\\Hitmarker.wav").c_str(), NULL, SND_ASYNC);
 					break;
 				case 2:
-					PlaySoundA("C:\\weebware\\sounds\\anime.wav", NULL, SND_ASYNC);
+					PlaySoundA((g_weebware.g_appdata_path + "\\sounds\\anime.wav").c_str(), NULL, SND_ASYNC);
 					break;
 				case 3:
-					PlaySoundA("C:\\weebware\\sounds\\bubble.wav", NULL, SND_ASYNC);
+					PlaySoundA((g_weebware.g_appdata_path + "\\sounds\\bubble.wav").c_str(), NULL, SND_ASYNC);
 					break;
 				case 4:
-					PlaySoundA("C:\\weebware\\sounds\\custom.wav", NULL, SND_ASYNC);
+					PlaySoundA((g_weebware.g_appdata_path + "\\sounds\\custom.wav").c_str(), NULL, SND_ASYNC);
 					break;
 				}
 			}

@@ -8,8 +8,9 @@
 #include <windows.h>
 #include <iostream>
 #include <string>
+#include <ShlObj.h>
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 GameEvents g_events;
 c_weebware g_weebware;
@@ -196,20 +197,25 @@ void c_weebware::init_fonts( ) {
 
 void c_weebware::setup_thread( ) {
 
-#if !WEEBWARE_RELEASE
-	setup_debug_window( );
-#endif
-
 #if WEEBWARE_RELEASE
 	while (true) {
 		if (AuthenticateClient())
 			break;
 	}
+#else
+	setup_debug_window();
 #endif
 
-	if ( init_interfaces( ) ) {
+	TCHAR szPath[MAX_PATH];
+	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, szPath))) {
+		std::string appdata_path = szPath;
+		g_weebware.g_appdata_path = appdata_path += "\\weebware";
+		std::cout << g_weebware.g_appdata_path << std::endl;
+	}
+
+	if (init_interfaces()) {
 		//netvar_manager::_instance()->dump("latest.txt");
-		g_hooking.hook_all_functions( );
+		g_hooking.hook_all_functions();
 	}
 
 	while (true) {
@@ -240,7 +246,7 @@ void c_weebware::setup_debug_window( ) {
 }
 
 std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list( ) {
-	std::ifstream skin_file( "C://weebware//dependencies//guns.txt" );
+	std::ifstream skin_file(g_weebware.g_appdata_path + "\\etc\\guns.txt");
 	std::string cur_line = "";
 	std::vector<c_skinchanger::gun_type> gun_list;
 	while ( std::getline( skin_file, cur_line ) )
@@ -257,7 +263,7 @@ std::vector<c_skinchanger::gun_type> c_weebware::create_gun_list( ) {
 }
 
 std::vector<c_skinchanger::skin_type> c_weebware::create_skin_list( ) {
-	std::ifstream skin_file( "C://weebware//dependencies//skins.txt" );
+	std::ifstream skin_file(g_weebware.g_appdata_path + "\\etc\\skins.txt");
 	std::string cur_line = "";
 	std::vector<c_skinchanger::skin_type> skin_list;
 	while ( std::getline( skin_file, cur_line ) )

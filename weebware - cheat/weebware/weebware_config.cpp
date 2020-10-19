@@ -6,10 +6,8 @@
 #pragma comment (lib, "curl/libcurl_a.lib")
 
 c_config_list g_config_list;
-
 c_weebwarecfg g_weebwarecfg;
 
-#define weebware_dir "C:\\weebware\\cfgs"
 
 // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
 std::vector<std::string> get_all_files_names_within_folder(std::string folder)
@@ -102,7 +100,7 @@ void c_config_list::load_browser_config() {
 
 	networking::download_file("https://dapi.weebware.net/configs/" + g_config_list.cur_secret + ".weebware", "c:/weebware/cfgs/" + g_config_list.cur_config_browser_name + (std::string)".weebware");
 	load_weebware_config(g_config_list.cur_config_browser_name + ".weebware");
-	std::string full_config = weebware_dir;
+	std::string full_config = g_weebware.g_appdata_path + "\\cfgs";
 	full_config.append("\\");
 	full_config.append(g_config_list.cur_config_browser_name);
 	full_config.append(".weebware");
@@ -113,15 +111,15 @@ void c_config_list::load_browser_config() {
 }
 
 void c_config_list::update_all_configs() {
-	config_names = get_all_files_names_within_folder(weebware_dir);
+	config_names = get_all_files_names_within_folder(g_weebware.g_appdata_path + "\\cfgs");
 }
 
 void c_config_list::save_weebware_config() {
 	// Make sure we have a config for the first time.
-	CreateDirectory(weebware_dir, NULL);
+	CreateDirectory((g_weebware.g_appdata_path + "\\cfgs").c_str(), NULL);
 
 	// Build the file.
-	std::string full_config = weebware_dir;
+	std::string full_config = g_weebware.g_appdata_path + "\\cfgs";
 	full_config.append("\\");
 	full_config.append(g_config_list.cur_save_name);
 	full_config.append(".weebware");
@@ -138,7 +136,7 @@ void c_config_list::save_weebware_config() {
 
 void c_config_list::save_existing_weebware() {
 	// Build the file.
-	std::string full_config = weebware_dir;
+	std::string full_config = g_weebware.g_appdata_path + "\\cfgs";
 	full_config.append("\\");
 	full_config.append(g_config_list.cur_load_name);
 
@@ -163,7 +161,7 @@ void c_config_list::load_weebware_config(std::string load_name) {
 		return;
 
 	// Build the file.
-	std::string full_config = weebware_dir;
+	std::string full_config = g_weebware.g_appdata_path + "\\cfgs";
 	full_config.append("\\");
 	full_config.append(load_name);
 	std::stringstream configfile;
@@ -176,7 +174,7 @@ void c_config_list::load_weebware_config(std::string load_name) {
 
 void c_config_list::delete_weebware_config() {
 	// Build the file.
-	std::string full_config = weebware_dir;
+	std::string full_config = g_weebware.g_appdata_path + "\\cfgs";
 	full_config.append("\\");
 	full_config.append(g_config_list.cur_load_name);
 	remove(full_config.c_str());

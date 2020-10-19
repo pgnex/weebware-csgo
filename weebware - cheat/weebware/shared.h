@@ -13,6 +13,7 @@ class c_weebware
 {
 public:
 	std::string g_user_name = "";
+	std::string g_appdata_path = "";
 	void setup_thread();
 	uintptr_t pattern_scan(const char* szModule, const char* szSignature);
 	static DWORD pattern_scan_from_call(const char* module, const char* signature, DWORD offset = 0);
