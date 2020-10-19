@@ -129,7 +129,6 @@ bool c_weebware::init_interfaces( )
 	g_animoffset = *(uintptr_t*)((uintptr_t)pattern_scan( "client.dll", "8B 8E ? ? ? ? F3 0F 10 48 04 E8 ? ? ? ? E9" ) + 0x2);
 	g_present_address = pattern_scan("gameoverlayrenderer.dll", "FF 15 ? ? ? ? 8B F8 85 DB") + 0x2;
 	g_reset_address = pattern_scan( "gameoverlayrenderer.dll", "C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8" ) + 9;
-	// wtf is the past address kite >? new ? (C7 45 ? ? ? ? ? FF 15 ? ? ? ? 8B F8)
 	g_game_movement = reinterpret_cast<c_gamemovement*>(client_fact( "GameMovement001", NULL ));
 	g_prediction = reinterpret_cast<c_prediction*>(client_fact( "VClientPrediction001", NULL ));
 	g_move_helper = **(c_move_helper***)(pattern_scan( "client.dll", "8B 0D ? ? ? ? 8B 45 ? 51 8B D4 89 02 8B 01" ) + 0x2);
@@ -210,7 +209,6 @@ void c_weebware::setup_thread( ) {
 	if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_APPDATA, NULL, 0, szPath))) {
 		std::string appdata_path = szPath;
 		g_weebware.g_appdata_path = appdata_path += "\\weebware";
-		std::cout << g_weebware.g_appdata_path << std::endl;
 	}
 
 	if (init_interfaces()) {
