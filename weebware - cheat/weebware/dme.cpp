@@ -164,6 +164,9 @@ void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownm
 	if (!model_ent || !model_ent->is_valid_player())
 		return;
 
+	if ((local->m_iTeamNum() == model_ent->m_iTeamNum()) && !g_weebwarecfg.visuals_chams_render_team)
+		return;
+
 	// setting up mats
 	static bool init = false;
 	static imaterial* mat_list[custom_mats::max];
