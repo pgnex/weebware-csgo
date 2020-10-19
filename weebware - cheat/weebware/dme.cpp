@@ -17,8 +17,11 @@ void hooks::hook_functions::draw_model_execute(void* thisptr, void* ctx, const c
 	if (strstr(model_name, "models/player"))
 		draw_model_execute::player_chams(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
 	
+	if (strstr(model_name, "arms"))
+		draw_model_execute::hand_chams(pInfo);
 
 }
+
 void draw_model_execute::utils::init_key_vals(KeyValues* keyValues, char* name)  {
 	static DWORD keyval_addr = 0;
 
@@ -209,11 +212,11 @@ void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownm
 		return;
 	}
 	case custom_mats::glow_cham: {
+		c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
+
 		g_weebware.g_render_view->SetBlend(col.a / 255.f);
 		g_weebware.g_render_view->SetColorModulation(col_blend);
-
-		c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
-		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
+		mat_list[custom_mats::plain]->setmaterialvarflag(material_var_ignorez, false);
 		g_weebware.g_model_render->forcedmaterialoverride(mat_list[custom_mats::plain]);
 
 		bool found = false;
@@ -221,9 +224,9 @@ void draw_model_execute::player_chams(void* thisptr, void* ctx, const c_unknownm
 		if (found)
 			(*(void(__thiscall**)(int, float, float, float))(*(DWORD*)pVar + 44))((uintptr_t)pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f);
 
-		g_weebware.g_render_view->SetBlend(col.a / 255.f);
-		g_weebware.g_render_view->SetColorModulation(col_blend);
-		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, true);
+		g_weebware.g_render_view->SetBlend(xqz_col.a / 255.f);
+		g_weebware.g_render_view->SetColorModulation(xqz_col_blend);
+		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag(material_var_ignorez, false);
 		g_weebware.g_model_render->forcedmaterialoverride(mat_list[g_weebwarecfg.visuals_chams]);
 		return;
 	}
