@@ -7,6 +7,7 @@ using System.Net;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace loader {
@@ -57,22 +58,29 @@ namespace loader {
         public static void Init() {
             // verify we have connection to api
             if (!Networking.VerifyConnection()) {
-                MessageBox.Show("Problem connecting to API. Please try again later, or contact support.");
+                MessageBox.Show("Problem contacting API. Please try again later, or contact support.");
                 Environment.Exit(1337);
                 return;
             }
 
-            if (!DependanciesExist())
-                Install();
+
+            if (!DependanciesExist()) {
+                DialogResult dialogResult = MessageBox.Show("First time setup required..", "weebware", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes) {
+                    CreatePaths();
+                    new Thread(CreateFiles).Start();
+                } else {
+                    Environment.Exit(1337);
+                    return;
+                }
+                return;
+            }
+
+            CreatePaths();
+            new Thread(CreateFiles).Start();
         }
 
-        private static void Install() {
-            // create missing paths in appdata..
-            string paths = web.DownloadString(api_path + "paths.txt");
-            foreach (string path in paths.Split(','))
-                if (!Directory.Exists(appdata_path + path))
-                    Directory.CreateDirectory(appdata_path + path);
-            
+        private static void CreateFiles() {
             // create missing files in appdata..
             string files = web.DownloadString(api_path + "files.txt");
             foreach (string file in files.Split(','))
@@ -80,12 +88,17 @@ namespace loader {
                     web.DownloadFile(api_path + file, appdata_path + file);
         }
 
-        private static string[] req_paths = { "/cfgs/", "/sounds/", "/etc/", "/images/" };
-        private static bool DependanciesExist() {
-            foreach (string path in req_paths)
+        private static void CreatePaths() {
+            // create missing paths in appdata..
+            string paths = web.DownloadString(api_path + "paths.txt");
+            foreach (string path in paths.Split(','))
                 if (!Directory.Exists(appdata_path + path))
-                    return false;
+                    Directory.CreateDirectory(appdata_path + path);
+        }
 
+        private static bool DependanciesExist() {
+            if (!Directory.Exists(appdata_path))
+                return false;
             return true;
         }
 

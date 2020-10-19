@@ -177,6 +177,10 @@ namespace weebware_loader {
 
         private void set_background_image() {
             string[] images = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware/images");
+            
+            if (!(images.Count() > 0))
+                return;
+
             int index = new Random().Next(0, images.Count());
             pbBackground.LoadAsync(images[index]);
         }
