@@ -1,10 +1,6 @@
 ﻿using loader;
-using loader.Authentication;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 [assembly: Obfuscation(Feature = "code control flow obfuscation", Exclude = false)]
@@ -18,7 +14,7 @@ namespace weebware_loader {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AntiTamper.Start();
-            Utils.CreateFiles();
+            Setup.Init();
 
             Application.Run(new Login());
         }
