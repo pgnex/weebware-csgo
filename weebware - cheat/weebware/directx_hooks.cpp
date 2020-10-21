@@ -439,8 +439,8 @@ void gui::imgui_main() {
 			imgui_custom::horizontal_margin("legittxtmargintop3", 2);
 			imgui_custom::custom_label_header("Other");
 			ImGui::Checkbox("Backtracking", (bool*)&g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].accuracy_boost);
-			ImGui::Text("Maximum Ticks");
-			imgui_custom::a_better_slider_float("##Maximum Ticks", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legit_maximum_ticks, 0, 30, "%.f%");
+			ImGui::Text("Backtrack Ticks");
+			imgui_custom::a_better_slider_float("##Maximum Ticks", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].legit_maximum_ticks, 0, 24, "%.f%");
 			ImGui::Checkbox("Standalone RCS", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs);
 			ImGui::Text("RCS Factor");
 			imgui_custom::a_better_slider_float("##RCS Factor", &g_weebwarecfg.legit_cfg[g_weebwarecfg.legit_cfg_index].standalone_rcs_power, 0, 100, "%.0f%%");
