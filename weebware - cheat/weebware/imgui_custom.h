@@ -17,7 +17,7 @@ namespace imgui_custom
 	void fix_gay_padding_shit(std::string tag);
 	void a_better_slider_float(const char* label, float* v, float v_min, float v_max, const char* format);
 	void a_better_slider_int(const char* label, int* v, int v_min, int v_max, const char* format = "%d");
-	void a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items = -1);
+	bool a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items = -1);
 	enum tab_pos
 	{
 		first,

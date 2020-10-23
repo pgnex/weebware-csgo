@@ -378,10 +378,14 @@ void imgui_custom::a_better_slider_int(const char* label, int* v, int v_min, int
 	ImGui::PopStyleColor();
 }
 
-void imgui_custom::a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items) {
+bool imgui_custom::a_better_combo_box(const char* label, int* current_item, const char* const items[], int items_count, int popup_max_height_in_items) {
+	bool to_return = false;
 	ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
-	ImGui::Combo(label, current_item, items, items_count);
+	if (ImGui::Combo(label, current_item, items, items_count))
+		to_return = true;
 	ImGui::PopStyleColor();
+
+	return to_return;
 }
 
 void imgui_custom::fix_gay_padding_shit(std::string tag) {
