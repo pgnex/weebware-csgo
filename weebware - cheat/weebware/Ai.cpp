@@ -9,6 +9,9 @@ CSGO Automated by Kite.
 
 c_ai g_ai;
 
+const char* game_type[] = { "gungame", "classic" };
+const char* game_mode[] = { "deathmatch", "casual" };
+
 void c_ai::auto_queue() {
 
 	using create_session_fn = void* (__stdcall*)(void);
@@ -35,8 +38,8 @@ void c_ai::auto_queue() {
 	if (match_session) {
 		if (!search_started() || needs_queue) {
 			auto session_settings = match_session->get_session_settings();
-			session_settings->set_string("game/type", "gungame");
-			session_settings->set_string("game/mode", "deathmatch");
+			session_settings->set_string("game/type", game_type[g_weebwarecfg.autoqueue_gamemode]);
+			session_settings->set_string("game/mode", game_mode[g_weebwarecfg.autoqueue_gamemode]);
 			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
 			match_session->update_session_settings(session_settings);
 			handle_match_start(*(uint8_t**)singleton, "", "", "", "");

@@ -389,7 +389,11 @@ public:
 	bool visuals_chams_xqz = 0;
 	bool visuals_hitmarkers = 0;
 	bool obs_proof = 0;
+
+	// autoqueue
 	bool auto_queue = 0;
+	int autoqueue_gamemode = 0;
+
 	bool hand_chams = 0;
 	bool wireframe_hands = 0;
 	bool hand_chams_xqz = 0;
@@ -575,6 +579,7 @@ public:
 		tmp["auto_jump_hitchance"] = auto_jump_hitchance;
 		tmp["misc_ai"] = misc_ai;
 		tmp["auto_queue"] = auto_queue;
+		tmp["autoqueue_gamemode"] = autoqueue_gamemode;
 		tmp["misc_ai_legitfactor"] = misc_ai_legitfactor;
 		tmp["misc_ai_random"] = misc_ai_random;
 		tmp["misc_ai_nearest"] = misc_ai_nearest;
@@ -768,6 +773,7 @@ public:
 		if (check("auto_jump_hitchance", data)) auto_jump_hitchance = data["auto_jump_hitchance"];
 		if (check("misc_ai", data)) misc_ai = data["misc_ai"];
 		if (check("auto_queue", data)) auto_queue = data["auto_queue"];
+		if (check("autoqueue_gamemode", data)) autoqueue_gamemode = data["autoqueue_gamemode"];
 		if (check("misc_ai_legitfactor", data)) misc_ai_legitfactor = data["misc_ai_legitfactor"];
 		if (check("misc_ai_random", data)) misc_ai_random = data["misc_ai_random"];
 		if (check("misc_ai_nearest", data)) misc_ai_nearest = data["misc_ai_nearest"];

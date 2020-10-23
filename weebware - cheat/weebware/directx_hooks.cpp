@@ -771,6 +771,10 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Smartbot");
 			ImGui::Checkbox("Enabled", &g_weebwarecfg.misc_ai);
 			ImGui::Checkbox("Autoqueue", &g_weebwarecfg.auto_queue);
+			const char* game_mode[] = { "deathmatch", "casual" };
+			ImGui::Text("Game Mode");
+			if (imgui_custom::a_better_combo_box("##gamemode", &g_weebwarecfg.autoqueue_gamemode, game_mode, ARRAYSIZE(game_mode)))
+				g_ai.needs_queue = true;
 			ImGui::Checkbox("Engage nearest enemy", &g_weebwarecfg.misc_ai_nearest);
 			ImGui::Checkbox("Defuse bombs", &g_weebwarecfg.misc_ai_defuse);
 			//	ImGui::Checkbox("Defend closest sites", &g_weebwarecfg.misc_ai_defend, false);
