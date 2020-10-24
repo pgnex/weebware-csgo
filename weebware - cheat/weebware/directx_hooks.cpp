@@ -186,6 +186,9 @@ void gui::weapon_override() {
 	imgui_custom::custom_label_header("Weapon Override");
 	ImGui::Separator();
 
+	ImGui::PushStyleColor(ImGuiCol_Text, imgui_custom::ConvertFromRGBA(ImVec4(188, 188, 188, 200)));
+	ImGui::InputText("##Search Guns", g_config_list.skinchanger_gunsearch, ARRAYSIZE(g_config_list.skinchanger_gunsearch));
+	ImGui::PopStyleColor();
 	ImGui::BeginChild("Existing Guns", ImVec2(0, ImGui::GetContentRegionAvail().y), false);
 	for (auto gun_part : gun_list)
 	{
