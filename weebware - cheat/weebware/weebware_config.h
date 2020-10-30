@@ -406,7 +406,7 @@ public:
 	int anime_model = false;
 	bool thirdperson;
 	int thirdperson_key;
-	int thirdperson_distance = 0;
+	float thirdperson_distance = 150.f;
 	bool killsay;
 	char killsay_msg_custom_buf[256];
 	std::string killsay_msg_custom = "";

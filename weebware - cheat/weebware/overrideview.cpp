@@ -10,4 +10,44 @@ void overrideview::thirdperson(void* thisptr, int, view_setup_t* vsView) {
 	if (!local)
 		return;
 
+
+	if (local->m_iHealth() > 0) {
+		float range = g_weebwarecfg.thirdperson_distance;
+
+		// we're already in thirdperson. nothing to do
+		if (g_weebware.g_input->m_fCameraInThirdPerson)
+			return;
+
+		Vector view_angles;
+		g_weebware.g_engine->get_view_angles(view_angles);
+		Vector forward = Vector(0, 0, 0);
+		g_maths.qangle_vector(view_angles, forward);
+		view_angles.z = 0.f;
+		Vector eye_pos = local->get_vec_eyepos();
+
+		
+		trace_t trace;
+		Ray_t ray;
+		ITraceFilter filter;
+		filter.pSkip = local;
+		ray.Init(eye_pos, eye_pos - forward * range);
+		g_weebware.g_engine_trace->TraceRay(ray, MASK_SOLID, &filter, &trace);
+
+
+		std::cout << trace.fraction << std::endl;
+
+		if (trace.fraction < 1.f)
+			range *= trace.fraction;
+
+
+		view_angles.z = range;
+		g_weebware.g_input->m_fCameraInThirdPerson = true;
+		g_weebware.g_input->m_vecCameraOffset = view_angles;
+	//	cl_updatevisibility_->call(); // call callback from concommand "cl_updatevisibility" to ensure our weapon is still being drawn and so we don't blink.
+	}
+	else
+	{
+		g_weebware.g_input->m_fCameraInThirdPerson = false;
+		g_weebware.g_input->m_vecCameraOffset.z = 0;
+	}
 }
