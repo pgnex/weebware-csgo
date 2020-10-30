@@ -66,6 +66,7 @@
 #include "authentication.h"
 #include "navmesh.h"
 #include "Ai.h"
+#include "overrideview.h"
 #include "nightmode.h"
 #include "knife_proxy_hook.h"
 #include "glovechanger.h"

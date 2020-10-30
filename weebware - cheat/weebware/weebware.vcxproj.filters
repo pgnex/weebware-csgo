@@ -106,6 +106,9 @@
     <Filter Include="Source Files\Shared">
       <UniqueIdentifier>{7737a59e-753b-4389-975f-cb8b531630f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\hooking\overrideview">
+      <UniqueIdentifier>{e27257a7-caf2-4611-ab40-d0aaebc53113}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -281,6 +284,9 @@
     </ClCompile>
     <ClCompile Include="vfunc_hook.cpp">
       <Filter>Source Files\hooking</Filter>
+    </ClCompile>
+    <ClCompile Include="overrideview.cpp">
+      <Filter>Source Files\hooking\overrideview</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -547,6 +553,9 @@
     </ClInclude>
     <ClInclude Include="vfunc_hook.h">
       <Filter>Source Files\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="overrideview.h">
+      <Filter>Source Files\hooking\overrideview</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

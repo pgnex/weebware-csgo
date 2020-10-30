@@ -35,6 +35,7 @@ namespace hooks {
 	vfunc_hook vfunc_fsn;
 	vfunc_hook vfunc_vm;
 	vfunc_hook vfunc_dme;
+	vfunc_hook vfunc_ov;
 
 	namespace hook_index {
 		int pt = 41;
@@ -46,6 +47,7 @@ namespace hooks {
 		int fsn = 37;
 		int vm = 35;
 		int dme = 21;
+		int ov = 18;
 	}
 
 	void init_hooks() {
@@ -75,6 +77,9 @@ namespace hooks {
 
 		vfunc_dme.setup(g_weebware.g_model_render, "engine.dll");
 		vfunc_dme.hook_index(hook_index::dme, hk_draw_model_execute);
+
+		vfunc_ov.setup(g_weebware.g_client_mode, "client.dll");
+		vfunc_ov.hook_index(hook_index::ov, hk_overrideview);
 	}
 
 	void unhook() {
@@ -194,8 +199,10 @@ namespace hooks {
 	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) {
 		auto o_dme = vfunc_dme.get_original<drawmodelexecute>(hook_index::dme);
 
-		if (!g_weebwarecfg.visuals_chams > 0)
-			return o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		if (!g_weebwarecfg.visuals_chams > 0) {
+			o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+			return;
+		}
 
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 			if (pInfo.pModel) {
@@ -204,7 +211,6 @@ namespace hooks {
 		}
 
 		o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
-		g_weebware.g_model_render->forcedmaterialoverride(nullptr);
 	}
 
 	// framestagenotify
@@ -214,6 +220,15 @@ namespace hooks {
 			hooks::hook_functions::frame_stage_notify(curStage);
 
 		o_fsn(g_weebware.g_client, curStage);
+	}
+
+	void __fastcall hk_overrideview(void* thisptr, int edx, view_setup_t* vsView) {
+		auto o_ov = vfunc_ov.get_original<overrideview>(hook_index::ov);
+
+		if (g_weebwarecfg.thirdperson)
+			overrideview::thirdperson(thisptr, edx, vsView);
+
+		o_ov(thisptr, edx, vsView);
 	}
 
 
@@ -236,56 +251,6 @@ namespace hooks {
 	}
 
 
-}
-
-void __stdcall hk_override_view(void* ecx, void* edx, view_setup_t* setup) {
-
-	std::cout << "11" << std::endl;
-
-	g_hooking.o_overrideview(ecx, edx, setup);
-
-	return;
-
-	//if (!g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game())
-	//	return g_hooking.o_overrideview(ecx, edx, setup);
-
-	auto local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	if (!local)
-		return g_hooking.o_overrideview(ecx, edx, setup);
-
-	if (GetKeyState('x')) {
-		std::cout << "key" << std::endl;
-		g_weebware.g_input->m_fCameraInThirdPerson = true;
-
-		Vector view_angles, view_forward;
-		g_weebware.g_engine->get_view_angles(view_angles);
-
-		setup->angles = view_angles;
-
-		view_angles.x = -view_angles.x;
-		view_angles.y = g_maths.m_flNormalizeYaw(view_angles.y + 180);
-
-		g_maths.AngleVectors(view_angles, view_forward);
-		g_maths.normalize_angle(view_forward);
-
-		Vector origin = local->get_abs_origins() + local->m_vecViewOffset();
-
-		trace_t trace_init;
-		ITraceFilter filter;
-		filter.pSkip = reinterpret_cast<decltype(filter.pSkip)>(local);
-		Ray_t ray;
-		ray.Init(origin, (origin + (view_forward * 150)));
-		g_weebware.g_engine_trace->TraceRay(ray, MASK_SOLID, &filter, &trace_init); // thirdperson_distance goes from 50 to 250 i'd say
-
-		view_forward = origin + (view_forward * (trace_init.fraction * (150 - 15)));
-
-		setup->origin = view_forward;
-	}
-	else
-		g_weebware.g_input->m_fCameraInThirdPerson = false;
-
-	return g_hooking.o_overrideview(ecx, edx, setup);
 }
 
 

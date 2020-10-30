@@ -23,6 +23,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_se;
 	extern vfunc_hook vfunc_vm;
 	extern vfunc_hook vfunc_dme;
+	extern vfunc_hook vfunc_ov;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
 	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
@@ -33,6 +34,7 @@ namespace hooks {
 	using framestagenotify = void(__thiscall*)(i_base_client*, clientframestage_t);
 	using viewmodel = float(__fastcall*)();
 	using drawmodelexecute = void(__thiscall*)(void*, void*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4_t*);
+	using overrideview = void(__fastcall*)(void*, int, view_setup_t*);
 
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
 	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
@@ -43,6 +45,7 @@ namespace hooks {
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage);
 	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 	float __stdcall hk_viewmodel();
+	void __fastcall hk_overrideview(void* thisptr, int, view_setup_t* vsView);
 
 	namespace hook_functions {
 		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm);
@@ -54,6 +57,7 @@ namespace hooks {
 		long end_scene(IDirect3DDevice9* device);
 		void draw_model_execute(void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme);
 		void scene_end(void* thisptr, void* edx);
+		void override_view(void* thisptr, int, view_setup_t* vsView);
 	}
 }
 

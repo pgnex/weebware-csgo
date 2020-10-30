@@ -168,6 +168,7 @@
     </ClCompile>
     <ClCompile Include="legit_aa.cpp" />
     <ClCompile Include="networking.cpp" />
+    <ClCompile Include="overrideview.cpp" />
     <ClCompile Include="Ragebot.cpp" />
     <ClCompile Include="scene_end.cpp" />
     <ClCompile Include="drawing.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="legit_aa.h" />
     <ClInclude Include="networking.h" />
+    <ClInclude Include="overrideview.h" />
     <ClInclude Include="Ragebot.h" />
     <ClInclude Include="raleway_font.h" />
     <ClInclude Include="scene_end.h" />
