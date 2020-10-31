@@ -36,6 +36,7 @@ namespace hooks {
 	vfunc_hook vfunc_vm;
 	vfunc_hook vfunc_dme;
 	vfunc_hook vfunc_ov;
+	vfunc_hook vfunc_svc;
 
 	namespace hook_index {
 		int pt = 41;
@@ -48,6 +49,7 @@ namespace hooks {
 		int vm = 35;
 		int dme = 21;
 		int ov = 18;
+		int svc = 13;
 	}
 
 	void init_hooks() {
@@ -80,6 +82,10 @@ namespace hooks {
 
 		vfunc_ov.setup(g_weebware.g_client_mode, "client.dll");
 		vfunc_ov.hook_index(hook_index::ov, hk_overrideview);
+
+		c_convar* sv_cheats_con = g_weebware.g_convars->find_cvar("sv_cheats");
+		vfunc_svc.setup(sv_cheats_con, "client.dll");
+		vfunc_svc.hook_index(hook_index::svc, hk_svcheats);
 	}
 
 	void unhook() {
@@ -97,6 +103,7 @@ namespace hooks {
 		vfunc_fsn.unhook_all();
 		vfunc_vm.unhook_all();
 	}
+
 
 	// paint traverse
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a) {
@@ -222,11 +229,28 @@ namespace hooks {
 		o_fsn(g_weebware.g_client, curStage);
 	}
 
+	// hook svcheats for thirdperson fix..
+	bool __fastcall hk_svcheats(PVOID pConVar, void* edx) {
+		static auto ofunc = vfunc_svc.get_original<bool(__thiscall*)(PVOID)>(hook_index::svc);
+		if (!ofunc)
+			return false;
+
+		if (!g_weebwarecfg.thirdperson)
+			return ofunc(pConVar);
+
+		static auto dwCAM_Think = g_weebware.pattern_scan("client.dll", "85 C0 75 30 38 86");
+		if (reinterpret_cast<uintptr_t>(_ReturnAddress()) == dwCAM_Think)
+			return true;
+
+		return ofunc(pConVar);
+	}
+
+	// 
 	void __fastcall hk_overrideview(void* thisptr, int edx, view_setup_t* vsView) {
 		auto o_ov = vfunc_ov.get_original<overrideview>(hook_index::ov);
 
-		if (g_weebwarecfg.thirdperson)
-			overrideview::thirdperson(thisptr, edx, vsView);
+		if (g_weebwarecfg.thirdperson && vsView)
+			overrideview::thirdperson();
 
 		o_ov(thisptr, edx, vsView);
 	}

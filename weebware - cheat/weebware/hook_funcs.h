@@ -24,6 +24,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_vm;
 	extern vfunc_hook vfunc_dme;
 	extern vfunc_hook vfunc_ov;
+	extern vfunc_hook vfunc_svc;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
 	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
@@ -46,6 +47,7 @@ namespace hooks {
 	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld);
 	float __stdcall hk_viewmodel();
 	void __fastcall hk_overrideview(void* thisptr, int, view_setup_t* vsView);
+	bool __fastcall hk_svcheats(PVOID pConVar, void* edx);
 
 	namespace hook_functions {
 		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm);
