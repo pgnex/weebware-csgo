@@ -613,6 +613,8 @@ public:
 		tmp["minecraft_pickaxe"] = minecraft_pickaxe;
 		tmp["auto_strafe"] = auto_strafe;
 		tmp["thirdperson"] = thirdperson;
+		tmp["thirdperson_key"] = thirdperson_key;
+		tmp["thirdperson_distance"] = thirdperson_distance;
 		tmp["killsay"] = killsay;
 		tmp["killsay_msg_custom"] = killsay_msg_custom;
 		tmp["custom_clantag_static"] = custom_clantag_static;
@@ -820,6 +822,8 @@ public:
 		if (check("reina_model", data)) anime_model = data["reina_model"];
 		if (check("auto_strafe", data)) auto_strafe = data["auto_strafe"];
 		if (check("thirdperson", data)) thirdperson = data["thirdperson"];
+		if (check("thirdperson_key", data)) thirdperson_key = data["thirdperson_key"];
+		if (check("thirdperson_distance", data)) thirdperson_distance = data["thirdperson_distance"];
 		if (check("killsay", data)) killsay = data["killsay"];
 		if (check("wireframe_smoke", data)) wireframe_smoke = data["wireframe_smoke"];
 		if (check("no_hands", data)) no_hands = data["no_hands"];
