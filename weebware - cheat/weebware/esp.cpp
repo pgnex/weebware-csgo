@@ -33,6 +33,9 @@ void c_esp::esp_main()
 		g_event_features.on_paint();
 
 
+	// run this before checks, since in misc menu
+	g_paint_traverse.draw_legit_aa_indicator();
+
 	if (g_weebwarecfg.enable_visuals == 0)
 		return;
 
@@ -45,7 +48,6 @@ void c_esp::esp_main()
 	draw_fov_circle();
 	draw_crosshair();
 	recoil_crosshair();
-	g_paint_traverse.draw_legit_aa_indicator();
 	draw_inaccuracy_circle();
 	display_backtrack_skele();
 	display_backtrack_dots();
