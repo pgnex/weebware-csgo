@@ -185,7 +185,13 @@ void EventFuncs::player_death(i_game_event* event) {
 
 	// check if you hit a player
 	c_base_entity* attacker_ent = (c_base_entity*)g_weebware.g_entlist->getcliententity(g_weebware.g_engine->GetPlayerForUserID(event->GetInt("attacker")));
+	if (!attacker_ent)
+		return;
+
 	c_base_entity* local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
+	if (!local)
+		return;
+
 	if (attacker_ent == local) {
 		if (g_weebwarecfg.killsound)
 			PlaySoundA("C:\\weebware\\sounds\\killsound_1.wav", NULL, SND_ASYNC);
