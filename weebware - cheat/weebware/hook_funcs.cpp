@@ -213,7 +213,8 @@ namespace hooks {
 
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 			if (pInfo.pModel) {
-				hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
+			//	hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
+				chams::dme::player_chams( thisptr, ctx, state, pInfo, pCustomBoneToWorld , o_dme);
 			}
 		}
 
