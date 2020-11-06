@@ -76,6 +76,7 @@
 #include "icon_font.h"
 #include "visuals_shared.h"
 #include "shared_funcs.h"
+#include "chams.h"
 
 
 

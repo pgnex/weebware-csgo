@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Ai.cpp" />
     <ClCompile Include="backtrack.cpp" />
+    <ClCompile Include="chams.cpp" />
     <ClCompile Include="checksum_md5.cpp" />
     <ClCompile Include="configuration.cpp" />
     <ClCompile Include="create_move.cpp" />
@@ -283,6 +284,7 @@
   <ItemGroup>
     <ClInclude Include="Ai.h" />
     <ClInclude Include="backtrack.h" />
+    <ClInclude Include="chams.h" />
     <ClInclude Include="checksum_md5.hpp" />
     <ClInclude Include="configuration.h" />
     <ClInclude Include="create_move.h" />
