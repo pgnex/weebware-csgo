@@ -23,6 +23,7 @@ public:
 	bool check_models_installed();
 	bool round_end = false;
 	bool send_packet = true;
+	bool chams_player_visible;
 	ImFont* pFont[3];
 	QAngle real_angle;
 	QAngle fake_angle;
