@@ -91,9 +91,6 @@
     <Filter Include="Source Files\hooking\Frame Stage Notify\glovechanger">
       <UniqueIdentifier>{e4f0d773-b52d-443f-963c-af10f23f8c50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\hooking\Draw Model Execute">
-      <UniqueIdentifier>{65b153f7-ef21-4480-b7dc-ce2cdfd78619}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\hooking\CreateMove\Ragebot">
       <UniqueIdentifier>{aeb9a660-8368-4408-b7a2-72e9dc50fe96}</UniqueIdentifier>
     </Filter>
@@ -111,6 +108,9 @@
     </Filter>
     <Filter Include="Source Files\Chams">
       <UniqueIdentifier>{3ee67669-74ab-40cc-9a3e-e6bee3ac12db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hooking\dme">
+      <UniqueIdentifier>{164ea31e-113d-44c2-a3d5-f1a5168c674c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,9 +255,6 @@
     <ClCompile Include="glovechanger.cpp">
       <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
     </ClCompile>
-    <ClCompile Include="dme.cpp">
-      <Filter>Source Files\hooking\Draw Model Execute</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClCompile>
@@ -293,6 +290,9 @@
     </ClCompile>
     <ClCompile Include="chams.cpp">
       <Filter>Source Files\Chams</Filter>
+    </ClCompile>
+    <ClCompile Include="dme.cpp">
+      <Filter>Source Files\hooking\dme</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -509,9 +509,6 @@
     <ClInclude Include="glovechanger.h">
       <Filter>Source Files\hooking\Frame Stage Notify\glovechanger</Filter>
     </ClInclude>
-    <ClInclude Include="dme.h">
-      <Filter>Source Files\hooking\Draw Model Execute</Filter>
-    </ClInclude>
     <ClInclude Include="utils.h">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
@@ -565,6 +562,9 @@
     </ClInclude>
     <ClInclude Include="chams.h">
       <Filter>Source Files\Chams</Filter>
+    </ClInclude>
+    <ClInclude Include="dme.h">
+      <Filter>Source Files\hooking\dme</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

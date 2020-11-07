@@ -199,26 +199,33 @@ namespace hooks {
 		o_se(thisptr, edx);
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
 			hooks::hook_functions::scene_end(thisptr, edx);
+
+			if ( g_weebwarecfg.visuals_chams > 0 ) {
+				if ( !g_weebwarecfg.visuals_chams_xqz || g_weebwarecfg.visuals_glow_enabled )
+					chams::se::player_chams( );
+			}
 		}
 	}
 
 	// dme
-	void __fastcall hk_draw_model_execute(void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld) {
-		auto o_dme = vfunc_dme.get_original<drawmodelexecute>(hook_index::dme);
+	void __fastcall hk_draw_model_execute( void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld ) {
+		auto o_dme = vfunc_dme.get_original<drawmodelexecute>( hook_index::dme );
 
-		if (!g_weebwarecfg.visuals_chams > 0) {
-			o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		if ( !g_weebwarecfg.visuals_chams > 0 ) {
+			o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
 			return;
 		}
 
-		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-			if (pInfo.pModel) {
-			//	hooks::hook_functions::draw_model_execute(thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme);
-				chams::dme::player_chams( thisptr, ctx, state, pInfo, pCustomBoneToWorld , o_dme);
+		if ( g_weebware.g_engine->is_connected( ) && g_weebware.g_engine->is_in_game( ) ) {
+			if ( pInfo.pModel ) {
+				// calls chams with filter instead..
+				if ( g_weebwarecfg.visuals_chams_xqz )
+					if ( !g_weebwarecfg.visuals_glow_enabled )
+						hooks::hook_functions::draw_model_execute( thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme );
+						// chams::dme::player_chams( thisptr, ctx, state, pInfo, pCustomBoneToWorld , o_dme);
 			}
 		}
-
-		o_dme(g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld);
+		o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
 	}
 
 	// framestagenotify
