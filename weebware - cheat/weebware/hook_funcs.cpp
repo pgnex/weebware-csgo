@@ -193,18 +193,12 @@ namespace hooks {
 	}
 
 	// sceneend
-	void __fastcall hk_scene_end(void* thisptr, void* edx) {
-		auto o_se = vfunc_se.get_original<sceneend>(hook_index::se);
+	void __fastcall hk_scene_end( void* thisptr, void* edx ) {
+		auto o_se = vfunc_se.get_original<sceneend>( hook_index::se );
 
-		o_se(thisptr, edx);
-		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game()) {
-			hooks::hook_functions::scene_end(thisptr, edx);
-
-			if ( g_weebwarecfg.visuals_chams > 0 ) {
-				if ( !g_weebwarecfg.visuals_chams_xqz || g_weebwarecfg.visuals_glow_enabled )
-					chams::se::player_chams( );
-			}
-		}
+		o_se( thisptr, edx );
+		if ( g_weebware.g_engine->is_connected( ) && g_weebware.g_engine->is_in_game( ) )
+			hooks::hook_functions::scene_end( thisptr, edx );
 	}
 
 	// dme
@@ -218,11 +212,10 @@ namespace hooks {
 
 		if ( g_weebware.g_engine->is_connected( ) && g_weebware.g_engine->is_in_game( ) ) {
 			if ( pInfo.pModel ) {
-				// calls chams with filter instead..
+				// MOVE THIS CHECK IF I EVER ADD ANYTHING ELSE TO DME HOOK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				if ( g_weebwarecfg.visuals_chams_xqz )
 					if ( !g_weebwarecfg.visuals_glow_enabled )
 						hooks::hook_functions::draw_model_execute( thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme );
-						// chams::dme::player_chams( thisptr, ctx, state, pInfo, pCustomBoneToWorld , o_dme);
 			}
 		}
 		o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );

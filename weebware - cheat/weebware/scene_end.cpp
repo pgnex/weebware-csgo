@@ -11,6 +11,11 @@ void hooks::hook_functions::scene_end( void* thisptr, void* edx ) {
 	if ( g_weebware.g_engine->is_taking_screenshot( ) && g_weebwarecfg.screenshot_proof )
 		return;
 
+	if ( g_weebwarecfg.visuals_chams > 0 ) {
+		if ( !g_weebwarecfg.visuals_chams_xqz || g_weebwarecfg.visuals_glow_enabled )
+			chams::se::player_chams( );
+	}
+
 	if ( g_weebwarecfg.visuals_glow_enabled )
 		g_sceneend.glow( );
 }
