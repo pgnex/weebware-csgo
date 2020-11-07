@@ -105,13 +105,14 @@ void c_esp::esp_main()
 				continue;
 		}
 
-		render_box(w2s_player[i].boundary, ent, is_visible(local, ent));
-		render_box_corners(w2s_player[i].boundary, ent, is_visible(local, ent));
+		bool visible = is_visible( local, ent );
+		render_box(w2s_player[i].boundary, ent, visible );
+		render_box_corners(w2s_player[i].boundary, ent, visible );
 		render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
-		render_name(w2s_player[i].boundary, ent, is_visible(local, ent));
+		render_name(w2s_player[i].boundary, ent, visible );
 		render_weapon(w2s_player[i].boundary, ent);
 		render_ammo(w2s_player[i].boundary, ent);
-		render_skeleton(ent, is_visible(local, ent));
+		render_skeleton(ent, visible );
 		defusing_indicator(w2s_player[i].boundary, ent);
 
 	}
