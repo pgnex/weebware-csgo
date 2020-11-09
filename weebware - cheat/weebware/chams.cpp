@@ -178,114 +178,86 @@ void chams::se::player_chams( ) {
 		if ( !player->is_valid_player( ) )
 			continue;
 
+		// player is local and we dont have localplayer chams on, diff from desync option
+		if ( player == local && !g_weebwarecfg.visuals_chams_local )
+			continue;
+
 		bool smoke_visible = player->trace_from_smoke( *local->m_vecOrigin( ) );
 
 
 		// if player is behind smoke and we dont have xqz on, go next
-		if ( smoke_visible && !g_weebwarecfg.visuals_chams_xqz ) {
+		if ( smoke_visible && !g_weebwarecfg.visuals_chams_xqz )
 			continue;
-		}
 
-		// setup our colors here..
-		c_color col;
-
-		if ( smoke_visible && g_weebwarecfg.visuals_chams_xqz ) {
-			col = c_color( player->m_iTeamNum( ) == local->m_iTeamNum( ) ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz );
-		}
-		else {
+		// setup colors, if the raytrace shows behind smoke just change to xqz color, will fix later,,
+		c_color col = c_color( player->m_iTeamNum( ) == local->m_iTeamNum( ) ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col );
+		c_color xqz_col = c_color( player->m_iTeamNum( ) == local->m_iTeamNum( ) ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz );
+		if ( smoke_visible && g_weebwarecfg.visuals_chams_xqz )
 			col = c_color( player->m_iTeamNum( ) == local->m_iTeamNum( ) ? g_weebwarecfg.visuals_chams_team_col : g_weebwarecfg.visuals_chams_col );
-		}
 
-		float col_blend[4] = { col.r / 255.f, col.g / 255.f, col.b / 255.f, 1.f };
+		float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, 1.f };
+		float xqz_col_blend[4] = { xqz_col.r / 255, xqz_col.g / 255, xqz_col.b / 255, 1.f };
 
-		if ( g_weebwarecfg.visuals_chams_xqz ) {
-			c_color xqz_col = c_color( player->m_iTeamNum( ) == local->m_iTeamNum( ) ? g_weebwarecfg.visuals_chams_team_col_xqz : g_weebwarecfg.visuals_chams_col_xqz );
-			float xqz_col_blend[4] = { xqz_col.r / 255.f, xqz_col.g / 255.f, xqz_col.b / 255.f, 1.f };
-			g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
-			g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
-		}
-
-		//if (g_weebwarecfg.misc_legit_aa_enabled && player == local) {
-		//	player->set_angles(Vector(0, g_weebware.fake_angle.y, 0));
-		//	g_weebware.g_render_view->SetBlend(0.5f);
-		//	player->draw_model(1, 255);
-		//	g_weebware.g_render_view->SetBlend(1.f);
-		//	player->set_angles(Vector(0, g_weebware.real_angle.y, 0));
-		//}
-
-		// skip if team chams is off and entity is teammate
-		if ( ( player->m_iTeamNum( ) == local->m_iTeamNum( ) ) && !g_weebwarecfg.visuals_chams_render_team )
-			continue;
-
-
-		if ( !mat_list[g_weebwarecfg.visuals_chams] )
-			continue;
-
-
-		if ( mat_list[g_weebwarecfg.visuals_chams]->iserrormaterial( ) )
-			continue;
-
-		static imaterial* plain_ignorez = utils::create_ignorez( );
-
-		if ( local->m_iTeamNum( ) == player->m_iTeamNum( ) ) {
-			if ( g_weebwarecfg.visuals_chams_render_team ) {
-				if ( g_weebwarecfg.visuals_chams_xqz ) {
-					g_weebware.g_model_render->forcedmaterialoverride( plain_ignorez );
-					player->draw_model( 1, 255 );
-					g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-				}
-
-				// Set material info.
-				g_weebware.g_render_view->SetBlend( col.a / 255.f );
-				g_weebware.g_render_view->SetColorModulation( col_blend );
-				g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
-				player->draw_model( 1, 255 );
-				g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-			}
-		}
-		else {
+		// we create a seperate material for plain xqz because setmaterialvarflag crashed 
+		switch ( g_weebwarecfg.visuals_chams ) {
+		case chams::plain:
 			if ( g_weebwarecfg.visuals_chams_xqz ) {
+				static imaterial* plain_ignorez = utils::create_ignorez( );
+				g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
+				g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
 				g_weebware.g_model_render->forcedmaterialoverride( plain_ignorez );
 				player->draw_model( 1, 255 );
 				g_weebware.g_model_render->forcedmaterialoverride( nullptr );
 			}
+			g_weebware.g_render_view->SetBlend( col.a / 255.f );
+			g_weebware.g_render_view->SetColorModulation( col_blend );
+			g_weebware.g_model_render->forcedmaterialoverride( mat_list[chams::plain] );
+			player->draw_model( 1, 255 );
+			g_weebware.g_model_render->forcedmaterialoverride( nullptr );
+			break;
+		case chams::glow_cham: {
+			g_weebware.g_render_view->SetBlend( col.a / 255.f );
+			g_weebware.g_render_view->SetColorModulation( col_blend );
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
+			g_weebware.g_model_render->forcedmaterialoverride( mat_list[custom_mats::plain] );
+			player->draw_model( 1, 255 );
 
-			if ( g_weebwarecfg.visuals_chams == custom_mats::glow_cham ) {
+			c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
+			static bool found = false;
+			static imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar( "$envmaptint", &found );
+			if ( found )
+				( *( void( __thiscall** )( int, float, float, float ) )( *( DWORD* )pVar + 44 ) )( ( uintptr_t )pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f );
 
-				g_weebware.g_render_view->SetBlend( col.a / 255.f );
-				g_weebware.g_render_view->SetColorModulation( col_blend );
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, g_weebwarecfg.visuals_chams_xqz );
+			g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
+			player->draw_model( 1, 255 );
+			g_weebware.g_model_render->forcedmaterialoverride( nullptr );
 
-				c_color glow_clr = g_weebwarecfg.visuals_chams_glow_col;
-
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
-				g_weebware.g_model_render->forcedmaterialoverride( mat_list[custom_mats::plain] );
-				player->draw_model( 1, 255 );
-
-				bool found = false;
-				imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar( "$envmaptint", &found );
-				if ( found )
-					( *( void( __thiscall** )( int, float, float, float ) )( *( DWORD* )pVar + 44 ) )( ( uintptr_t )pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f );
-
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
+			break;
+		}
+		default:
+			if ( g_weebwarecfg.visuals_chams_xqz ) {
+				g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
+				g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
 				g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
+				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, true );
 				player->draw_model( 1, 255 );
 				g_weebware.g_model_render->forcedmaterialoverride( nullptr );
 			}
-			else {
-				// Set material info.
-				g_weebware.g_render_view->SetBlend( col.a / 255.f );
-				g_weebware.g_render_view->SetColorModulation( col_blend );
-
-				mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
-				g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
-				player->draw_model( 1, 255 );
-				g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-			}
+			g_weebware.g_render_view->SetBlend( col.a / 255.f );
+			g_weebware.g_render_view->SetColorModulation( col_blend );
+			g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
+			player->draw_model( 1, 255 );
+			g_weebware.g_model_render->forcedmaterialoverride( nullptr );
+			break;
 		}
 	}
 }
 
 void chams::dme::player_chams( void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme ) {
+
+	std::cout << "dme" << std::endl;
 
 	if ( !g_weebwarecfg.visuals_chams > 0 )
 		return;
@@ -354,15 +326,17 @@ void chams::dme::player_chams( void* thisptr, void* ctx, const c_unknownmat_clas
 		mat_list[custom_mats::plain]->setmaterialvarflag( material_var_ignorez, false );
 		g_weebware.g_model_render->forcedmaterialoverride( mat_list[custom_mats::plain] );
 
-		bool found = false;
-		imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar( "$envmaptint", &found );
+		static bool found = false;
+		static imaterialvar* pVar = mat_list[g_weebwarecfg.visuals_chams]->FindVar( "$envmaptint", &found );
 		if ( found )
 			( *( void( __thiscall** )( int, float, float, float ) )( *( DWORD* )pVar + 44 ) )( ( uintptr_t )pVar, glow_clr.r / 255.f, glow_clr.g / 255.f, glow_clr.b / 255.f );
 
-		g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
-		g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
-		mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
-		g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
+		if ( g_weebwarecfg.visuals_chams_xqz ) {
+			g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
+			g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
+			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, true );
+			g_weebware.g_model_render->forcedmaterialoverride( mat_list[g_weebwarecfg.visuals_chams] );
+		}
 		return;
 	}
 	default: {

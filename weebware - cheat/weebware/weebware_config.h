@@ -349,6 +349,7 @@ public:
 	bool misc_ai_defuse;
 	bool misc_ai_defend;
 	bool visuals_chams_render_team = false;
+	bool visuals_chams_local = false;
 	bool skinchanger_enabled = false;
 	bool knifechanger_enabled = false;
 	bool skinchanger_weapon_override = false;
