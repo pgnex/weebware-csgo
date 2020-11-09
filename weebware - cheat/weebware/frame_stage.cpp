@@ -446,19 +446,19 @@ void c_frame_stage_notify::run_skinchanger() {
 		if (skin_config.m_paint_kit != 0)
 			* weapon->get_paint_kit() = skin_config.m_paint_kit;
 
-		if (skin_config.m_seed != 0)
-			* weapon->get_fallbackseed() = skin_config.m_seed;
+		if ( skin_config.m_seed != 0 )
+			*weapon->m_nFallbackSeed( ) = skin_config.m_seed;
 
 		if (skin_config.stattrak_enabled) {
-			*weapon->fallback_stattrak() = skin_config.stattrak_kill_count;
+			*weapon->m_nFallbackStatTrak() = skin_config.stattrak_kill_count;
 		}
 
-		*weapon->get_fallbackwear() = skin_config.m_wear == 100 ? FLT_MIN : (100 - skin_config.m_wear) / 100;
+		*weapon->m_flFallbackWear() = skin_config.m_wear == 100 ? FLT_MIN : (100 - skin_config.m_wear) / 100;
 
 		if (weapon->m_iItemDefinitionIndex() == 59 || weapon->m_iItemDefinitionIndex() == 42)
 			*weapon->m_iEntityQuality() = 0;
-		else 
-			*weapon->m_iEntityQuality() = weapon->is_knife() ? 3 : 0;
+		else
+			*weapon->m_iEntityQuality( ) = weapon->is_knife( ) ? 3 : ( weapon->is_knife( ) ? 3 : skin_config.stattrak_enabled ? 9 : 0 );
 	
 		*weapon->get_accountid() = local_inf.xuid_low;
 

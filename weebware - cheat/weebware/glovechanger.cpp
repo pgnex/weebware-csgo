@@ -78,7 +78,7 @@ bool c_glovechanger::apply_glove_skin(c_basecombat_weapon* glove, int item_defin
 	*glove->get_paint_kit() = paint_kit;
 	glove->set_model_index(model_index);
 	*glove->m_iEntityQuality() = entity_quality;
-	*glove->get_fallbackwear() = (100 - fallback_wear) / 100;
+	*glove->m_flFallbackWear() = (100 - fallback_wear) / 100;
 
 	return true;
 }
@@ -221,8 +221,8 @@ void c_glovechanger::run() noexcept {
 		apply_glove_skin(glove, get_glove_model(), get_skin(), g_weebware.g_model_info->getmodelindex(glove_map[get_glove_model()]), 3, g_weebwarecfg.glove_wearz);
 
 		*glove->get_item_id_high() = -1;
-		*glove->get_fallbackseed() = 0;
-		*glove->fallback_stattrak() = -1;
+		*glove->m_nFallbackSeed() = 0;
+		*glove->m_nFallbackStatTrak() = -1;
 
 		glove->PreDataUpdate(0);
 

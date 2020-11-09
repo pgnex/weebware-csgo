@@ -1224,19 +1224,19 @@ public:
 		return get_pointer<int>( offset );
 	}
 
-	int* get_fallbackseed( )
+	int* m_nFallbackSeed( )
 	{
 		static uintptr_t offset = retrieve_offset( "DT_BaseAttributableItem", "m_nFallbackSeed" );
 		return get_pointer<int>( offset );
 	}
 
-	int* fallback_stattrak( )
+	int* m_nFallbackStatTrak( )
 	{
 		static uintptr_t offset = retrieve_offset( "DT_BaseAttributableItem", "m_nFallbackStatTrak" );
 		return get_pointer<int>( offset );
 	}
 
-	float* get_fallbackwear( )
+	float* m_flFallbackWear( )
 	{
 		static uintptr_t offset = retrieve_offset( "DT_BaseAttributableItem", "m_flFallbackWear" );
 		return get_pointer<float>( offset );
