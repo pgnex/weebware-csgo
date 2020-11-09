@@ -45,7 +45,7 @@ void c_esp::esp_main()
 
 	// call things here if no ent loop needed 
 
-	draw_fov_circle();
+	//draw_fov_circle();
 	draw_crosshair();
 	recoil_crosshair();
 	draw_inaccuracy_circle();
@@ -87,7 +87,9 @@ void c_esp::esp_main()
 		if (g_weebwarecfg.visuals_bspotted)
 			*ent->b_spotted() = true;
 		
-		if (g_weebwarecfg.visuals_visible_only && !is_visible(local, ent))
+
+		bool visible = is_visible( local, ent );
+		if (g_weebwarecfg.visuals_visible_only && !visible )
 			continue;
 		
 		w2s_player[i].boundary = calc_boundaries(ent);
@@ -105,7 +107,6 @@ void c_esp::esp_main()
 				continue;
 		}
 
-		bool visible = is_visible( local, ent );
 		render_box(w2s_player[i].boundary, ent, visible );
 		render_box_corners(w2s_player[i].boundary, ent, visible );
 		render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
