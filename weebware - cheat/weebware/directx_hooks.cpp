@@ -649,7 +649,7 @@ void gui::imgui_main() {
 			if (g_weebwarecfg.visuals_chams > 0)
 				imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col, g_weebwarecfg.visuals_chams == 2 ? g_weebwarecfg.visuals_chams_glow_col : g_weebwarecfg.visuals_chams_team_col, 1, "Enemy Color##chams1", g_weebwarecfg.visuals_chams == 2 ? "Glow Cham Color##chams2" : "Team Color##chams2");
 			ImGui::Checkbox("Render Team", &g_weebwarecfg.visuals_chams_render_team);
-
+			ImGui::Checkbox( "Render Local", &g_weebwarecfg.visuals_chams_local );
 			ImGui::Checkbox("XQZ (Through Materials)", &g_weebwarecfg.visuals_chams_xqz);
 			if (g_weebwarecfg.visuals_chams_xqz)
 				imgui_custom::custom_color_inline(g_weebwarecfg.visuals_chams_col_xqz, g_weebwarecfg.visuals_chams_team_col_xqz, 1, "Enemy XQZ Color##chams1", "Team XQZ Color##chams2");
