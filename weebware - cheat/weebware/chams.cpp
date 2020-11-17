@@ -145,6 +145,9 @@ void chams::se::desync_chams( ) {
 	if ( !local )
 		return;
 
+	if ( !local->is_valid_player( ) )
+		return;
+
 	c_color col = c_color( g_weebwarecfg.visuals_desync_cham_col );
 	float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, col.a / 255 };
 
@@ -167,6 +170,9 @@ void chams::se::local_chams( ) {
 	auto local = g_weebware.g_entlist->getcliententity( g_weebware.g_engine->get_local( ) );
 
 	if ( !local )
+		return;
+
+	if ( !local->is_valid_player( ) )
 		return;
 
 	c_color col = c_color( g_weebwarecfg.visuals_local_chams_col );
