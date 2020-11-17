@@ -349,7 +349,7 @@ public:
 	bool misc_ai_defuse;
 	bool misc_ai_defend;
 	bool visuals_chams_render_team = false;
-	bool visuals_chams_local = false;
+	bool visuals_desync_chams = false;
 	bool skinchanger_enabled = false;
 	bool knifechanger_enabled = false;
 	bool skinchanger_weapon_override = false;
@@ -475,6 +475,7 @@ public:
 
 	ImVec4 visuals_chams_col = ImVec4(255, 0, 0, 255);
 	ImVec4 visuals_chams_team_col = ImVec4(0, 255, 255, 255);
+	ImVec4 visuals_desync_cham_col = ImVec4( 255, 0, 255, 140 );
 
 	ImVec4 visuals_chams_glow_col = ImVec4(50, 250, 50, 255);
 
@@ -593,6 +594,7 @@ public:
 		tmp["misc_legit_aa_jitter"] = misc_legit_aa_jitter;
 		tmp["misc_legit_aa_flip"] = misc_legit_aa_flip;
 		tmp["misc_legit_aa_side_key"] = misc_legit_aa_side_key;
+		tmp["visuals_desync_chams"] = visuals_desync_chams;
 		tmp["misc_legit_aa_edge"] = misc_legit_aa_edge;
 		tmp["legit_aa_indicator"] = legit_aa_indicator;
 		tmp["visuals_backtrack_style"] = visuals_backtrack_style;
@@ -705,6 +707,7 @@ public:
 		save_color(hand_cham_col_xqz, tmp, "hand_cham_col_xqz");
 		save_color(defusing_indicator_col, tmp, "defusing_indicator_col");
 		save_color(visuals_chams_glow_col, tmp, "visuals_chams_glow_col");
+		save_color( visuals_desync_cham_col, tmp, "visuals_desync_cham_col" );
 
 
 		json skin_tmp;
@@ -792,6 +795,7 @@ public:
 		if (check("misc_legit_aa_enabled", data)) misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
 		if (check("misc_legit_aa_jitter", data)) misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
 		if (check("misc_legit_aa_edge", data)) misc_legit_aa_edge = data["misc_legit_aa_edge"];
+		if ( check( "visuals_desync_chams", data ) ) visuals_desync_chams = data["visuals_desync_chams"];
 		if (check("selected_knife_index0", data)) {
 			selected_knife_index[0] = data["selected_knife_index0"];
 			if (selected_knife_index > 0)
@@ -918,6 +922,7 @@ public:
 		if (check_color("hand_cham_col_xqz", data)) read_color(hand_cham_col_xqz, data, "hand_cham_col_xqz");
 		if (check_color("defusing_indicator_col", data)) read_color(defusing_indicator_col, data, "defusing_indicator_col");
 		if (check_color("visuals_chams_glow_col", data)) read_color(visuals_chams_glow_col, data, "visuals_chams_glow_col");
+		if ( check_color( "visuals_desync_cham_col", data ) ) read_color( visuals_desync_cham_col, data, "visuals_desync_cham_col" );
 
 		
 		json skin_tmp = data["skins"];

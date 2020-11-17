@@ -136,9 +136,33 @@ imaterial* chams::utils::create_glow( ) {
 	return created_mat;
 }
 
-void chams::se::player_chams( ) {
+void chams::se::desync_chams( ) {
+	static imaterial* mat = utils::create_default( );
 
-	std::cout << "se" << std::endl;
+	// get localplayer
+	auto local = g_weebware.g_entlist->getcliententity( g_weebware.g_engine->get_local( ) );
+
+	if ( !local )
+		return;
+
+	if ( g_weebwarecfg.visuals_desync_chams && g_weebwarecfg.misc_legit_aa_enabled ) {
+		c_color col = c_color( g_weebwarecfg.visuals_desync_cham_col );
+		float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, col.a / 255 };
+
+		Vector orig_angle = local->m_angEyeAngles( );
+		local->set_angles( Vector( 0, g_weebware.fake_angle.y, 0 ) );
+
+		g_weebware.g_render_view->SetColorModulation( col_blend );
+		g_weebware.g_render_view->SetBlend( col.a / 255.f );
+		g_weebware.g_model_render->forcedmaterialoverride( mat );
+		local->draw_model( 1, 255 );
+
+		local->set_angles( Vector( 0, orig_angle.y, 0 ) );
+		g_weebware.g_model_render->forcedmaterialoverride( nullptr );
+	}
+}
+
+void chams::se::player_chams( ) {
 
 	if ( g_weebwarecfg.visuals_chams > custom_mats::max )
 		g_weebwarecfg.visuals_chams = 1;
@@ -169,10 +193,11 @@ void chams::se::player_chams( ) {
 	if ( !local )
 		return;
 
+
 	for ( int i = 1; i <= g_weebware.g_global_vars->maxclients; i++ ) {
 		auto player = g_weebware.g_entlist->getcliententity( i );
 
-		// nullptr check localplayer
+		// nullptr check player
 		if ( !player )
 			continue;
 
@@ -180,12 +205,11 @@ void chams::se::player_chams( ) {
 		if ( !player->is_valid_player( ) )
 			continue;
 
-		// player is local and we dont have localplayer chams on, diff from desync option
-		if ( player == local && !g_weebwarecfg.visuals_chams_local )
+		// skip local do outside loop
+		if ( player == local )
 			continue;
 
 		bool smoke_visible = player->trace_from_smoke( *local->m_vecOrigin( ) );
-
 
 		// if player is behind smoke and we dont have xqz on, go next
 		if ( smoke_visible && !g_weebwarecfg.visuals_chams_xqz )
@@ -199,6 +223,7 @@ void chams::se::player_chams( ) {
 
 		float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, 1.f };
 		float xqz_col_blend[4] = { xqz_col.r / 255, xqz_col.g / 255, xqz_col.b / 255, 1.f };
+
 
 		// we create a seperate material for plain xqz because setmaterialvarflag crashed 
 		switch ( g_weebwarecfg.visuals_chams ) {
@@ -262,8 +287,6 @@ void chams::se::player_chams( ) {
 }
 
 void chams::dme::player_chams( void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme ) {
-
-	std::cout << "dme" << std::endl;
 
 	if ( !g_weebwarecfg.visuals_chams > 0 )
 		return;

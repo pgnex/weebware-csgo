@@ -34,5 +34,6 @@ namespace chams {
 
 	namespace se {
 		void player_chams( );
+		void desync_chams( );
 	}
 }
