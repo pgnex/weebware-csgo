@@ -14,8 +14,11 @@ void hooks::hook_functions::scene_end( void* thisptr, void* edx ) {
 	if ( g_weebwarecfg.visuals_chams > 0)
 		chams::se::player_chams( );
 
-	if ( g_weebwarecfg.visuals_desync_chams )
+	if ( g_weebwarecfg.visuals_desync_chams && g_weebwarecfg.misc_legit_aa_enabled )
 		chams::se::desync_chams( );
+
+	if ( g_weebwarecfg.visual_local_chams )
+		chams::se::local_chams( );
 
 	if ( g_weebwarecfg.visuals_glow_enabled )
 		g_sceneend.glow( );

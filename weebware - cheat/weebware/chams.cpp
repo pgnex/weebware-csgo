@@ -145,21 +145,38 @@ void chams::se::desync_chams( ) {
 	if ( !local )
 		return;
 
-	if ( g_weebwarecfg.visuals_desync_chams && g_weebwarecfg.misc_legit_aa_enabled ) {
-		c_color col = c_color( g_weebwarecfg.visuals_desync_cham_col );
-		float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, col.a / 255 };
+	c_color col = c_color( g_weebwarecfg.visuals_desync_cham_col );
+	float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, col.a / 255 };
 
-		Vector orig_angle = local->m_angEyeAngles( );
-		local->set_angles( Vector( 0, g_weebware.fake_angle.y, 0 ) );
+	Vector orig_angle = local->m_angEyeAngles( );
+	local->set_angles( Vector( 0, g_weebware.fake_angle.y, 0 ) );
 
-		g_weebware.g_render_view->SetColorModulation( col_blend );
-		g_weebware.g_render_view->SetBlend( col.a / 255.f );
-		g_weebware.g_model_render->forcedmaterialoverride( mat );
-		local->draw_model( 1, 255 );
+	g_weebware.g_render_view->SetColorModulation( col_blend );
+	g_weebware.g_render_view->SetBlend( col.a / 255.f );
+	g_weebware.g_model_render->forcedmaterialoverride( mat );
+	local->draw_model( 1, 255 );
 
-		local->set_angles( Vector( 0, orig_angle.y, 0 ) );
-		g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-	}
+	local->set_angles( Vector( 0, orig_angle.y, 0 ) );
+	g_weebware.g_model_render->forcedmaterialoverride( nullptr );
+}
+
+void chams::se::local_chams( ) {
+	static imaterial* mat = utils::create_default( );
+
+	// get localplayer
+	auto local = g_weebware.g_entlist->getcliententity( g_weebware.g_engine->get_local( ) );
+
+	if ( !local )
+		return;
+
+	c_color col = c_color( g_weebwarecfg.visuals_local_chams_col );
+	float col_blend[4] = { col.r / 255, col.g / 255, col.b / 255, col.a / 255 };
+
+	g_weebware.g_render_view->SetColorModulation( col_blend );
+	g_weebware.g_render_view->SetBlend( col.a / 255.f );
+	g_weebware.g_model_render->forcedmaterialoverride( mat );
+	local->draw_model( 1, 255 );
+	g_weebware.g_model_render->forcedmaterialoverride( nullptr );
 }
 
 void chams::se::player_chams( ) {
