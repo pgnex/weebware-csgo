@@ -76,7 +76,7 @@ void c_config_list::download_config_from_browser(int index, std::string title) {
 	std::string content = networking::get_request("https://weebware.net/api/cheat/config/?config=" +std::to_string(index));
 	json data = json::parse(content);
 	sanatize_path(&title);
-	std::ofstream o("C:\\weebware\\cfgs\\" + title + ".weebware");
+	std::ofstream o( g_weebware.g_appdata_path + "\\cfgs\\" + title + ".weebware");
 	o << std::setw(4) << data << std::endl;
 
 	update_all_configs();
