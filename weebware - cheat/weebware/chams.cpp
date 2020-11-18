@@ -159,6 +159,7 @@ void chams::se::desync_chams( ) {
 	g_weebware.g_model_render->forcedmaterialoverride( mat );
 	local->draw_model( 1, 255 );
 
+<<<<<<< HEAD
 	local->set_angles( Vector( 0, orig_angle.y, 0 ) );
 	g_weebware.g_model_render->forcedmaterialoverride( nullptr );
 }
@@ -187,6 +188,8 @@ void chams::se::local_chams( ) {
 
 void chams::se::player_chams( ) {
 
+=======
+>>>>>>> parent of 2f12b3e... more refactor & clean sceneend chams + rdy for local chams
 	if ( g_weebwarecfg.visuals_chams > custom_mats::max )
 		g_weebwarecfg.visuals_chams = 1;
 
@@ -250,7 +253,7 @@ void chams::se::player_chams( ) {
 
 		// we create a seperate material for plain xqz because setmaterialvarflag crashed 
 		switch ( g_weebwarecfg.visuals_chams ) {
-		case chams::plain: {
+		case chams::plain:
 			if ( g_weebwarecfg.visuals_chams_xqz ) {
 				static imaterial* plain_ignorez = utils::create_ignorez( );
 				g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
@@ -264,9 +267,7 @@ void chams::se::player_chams( ) {
 			g_weebware.g_model_render->forcedmaterialoverride( mat_list[chams::plain] );
 			player->draw_model( 1, 255 );
 			g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-
 			break;
-		}
 		case chams::glow_cham: {
 			g_weebware.g_render_view->SetBlend( col.a / 255.f );
 			g_weebware.g_render_view->SetColorModulation( col_blend );
@@ -287,7 +288,7 @@ void chams::se::player_chams( ) {
 
 			break;
 		}
-		default: {
+		default:
 			if ( g_weebwarecfg.visuals_chams_xqz ) {
 				g_weebware.g_render_view->SetBlend( xqz_col.a / 255.f );
 				g_weebware.g_render_view->SetColorModulation( xqz_col_blend );
@@ -302,9 +303,7 @@ void chams::se::player_chams( ) {
 			mat_list[g_weebwarecfg.visuals_chams]->setmaterialvarflag( material_var_ignorez, false );
 			player->draw_model( 1, 255 );
 			g_weebware.g_model_render->forcedmaterialoverride( nullptr );
-
 			break;
-		}
 		}
 	}
 }
