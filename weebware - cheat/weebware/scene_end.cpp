@@ -11,21 +11,15 @@ void hooks::hook_functions::scene_end( void* thisptr, void* edx ) {
 	if ( g_weebware.g_engine->is_taking_screenshot( ) && g_weebwarecfg.screenshot_proof )
 		return;
 
-<<<<<<< HEAD
+
 	if ( g_weebwarecfg.visuals_chams > 0)
 		chams::se::player_chams( );
-=======
-	if ( g_weebwarecfg.visuals_chams > 0 ) {
-		if ( !g_weebwarecfg.visuals_chams_xqz || g_weebwarecfg.visuals_glow_enabled )
-			chams::se::player_chams( );
-	}
->>>>>>> parent of 2f12b3e... more refactor & clean sceneend chams + rdy for local chams
 
 	if ( g_weebwarecfg.visuals_desync_chams && g_weebwarecfg.misc_legit_aa_enabled )
 		chams::se::desync_chams( );
 
-	if ( g_weebwarecfg.visual_local_chams )
-		chams::se::local_chams( );
+	//if ( g_weebwarecfg.visual_local_chams )
+	//	chams::se::local_chams( );
 
 	if ( g_weebwarecfg.visuals_glow_enabled )
 		g_sceneend.glow( );

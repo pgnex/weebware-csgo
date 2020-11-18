@@ -205,19 +205,19 @@ namespace hooks {
 	void __fastcall hk_draw_model_execute( void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld ) {
 		auto o_dme = vfunc_dme.get_original<drawmodelexecute>( hook_index::dme );
 
-		if ( !g_weebwarecfg.visuals_chams > 0 ) {
-			o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
-			return;
-		}
+		//if ( !g_weebwarecfg.visuals_chams > 0 ) {
+		//	o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
+		//	return;
+		//}
 
-		if ( g_weebware.g_engine->is_connected( ) && g_weebware.g_engine->is_in_game( ) ) {
-			if ( pInfo.pModel ) {
-				// MOVE THIS CHECK IF I EVER ADD ANYTHING ELSE TO DME HOOK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				if ( g_weebwarecfg.visuals_chams_xqz )
-					if ( !g_weebwarecfg.visuals_glow_enabled )
-						hooks::hook_functions::draw_model_execute( thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme );
-			}
-		}
+		//if ( g_weebware.g_engine->is_connected( ) && g_weebware.g_engine->is_in_game( ) ) {
+		//	if ( pInfo.pModel ) {
+		//		// MOVE THIS CHECK IF I EVER ADD ANYTHING ELSE TO DME HOOK!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		//		if ( g_weebwarecfg.visuals_chams_xqz )
+		//			if ( !g_weebwarecfg.visuals_glow_enabled )
+		//				hooks::hook_functions::draw_model_execute( thisptr, ctx, state, pInfo, pCustomBoneToWorld, o_dme );
+		//	}
+		//}
 		o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
 	}
 
