@@ -196,14 +196,14 @@ void c_aimbot::do_aim_stuffs(c_usercmd* cmd, bool triggerbot) {
 	if (target->trace_from_smoke(*g_legitbot.m_local->m_vecOrigin()) && (!aim_through_smoke))
 		return;
 
+	bool autostop = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index( )].quick_stop_magnet : g_weebwarecfg.legit_cfg[get_config_index( )].quick_stop;
 
-	bool autostop = triggerbot ? g_weebwarecfg.legit_cfg[get_config_index()].quick_stop_magnet : g_weebwarecfg.legit_cfg[get_config_index()].quick_stop;
-	if (autostop)
-		auto_stop(cmd);
-
-	if (g_weebwarecfg.legit_cfg[get_config_index()].triggerbot_scoped_only && triggerbot)
-		if (!sniper_scoped())
+	if ( autostop && triggerbot ) {
+		if ( g_weebwarecfg.legit_cfg[get_config_index( )].triggerbot_scoped_only && !sniper_scoped( ) )
 			return;
+		auto_stop( cmd );
+	}
+
 
 	QAngle aim_angle = closest_hitbox(target, triggerbot);
 
