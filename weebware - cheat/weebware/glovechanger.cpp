@@ -32,36 +32,14 @@ static auto make_glove(int entry, int serial) -> c_basecombat_weapon* {
 }
 
 std::vector<const char*> c_glovechanger::set_glove_skin_array() {
+	std::vector<const char*> v_glove_names;
+	auto glove_type = glove_changer.v_gloves[g_weebwarecfg.glove_model];
 
-	std::vector<const char*> default = { " " };
-	std::vector<const char*> sport = { "Vice", "Bronze Morph", "Amphibious", "Omega", "Pandora's Box",  "Superconductor",  "Hedge Maze",  "Arid" };
-	std::vector<const char*> hand_wraps = { "Cobalt Skulls", "Arboreal", "Overprint", "Duct Tape", "Slaughter", "Spruce DDPAT", "Badlands",  "Leather" };
-	std::vector<const char*> specialist = { "Fade", "Crimson Web", "Mogul", "Buckshot", "Crimson Kimono", "Emerald Web", "Foundation", "Forest DDPAT" };
-	std::vector<const char*> driver = { "King Snake", "Imperial Plaid", "Overtake", "Racing Green", "Crimson Weave", "Lunar Weave", "Diamondback", "Convoy" };
-	std::vector<const char*> moto = { "Polygon", "POW!", "Turtle", "Transport", "Spearmint", "Eclipse", "Boom!", "Cool Mint" };
-	std::vector<const char*> hydra = { "Case Hardened", "Emerald", "Rattler", "Mangrove", };
-	std::vector<const char*> bloodhound = { "Charred", "Snakebite", "Bronzed", "Guerrilla" };
-
-	switch (g_weebwarecfg.glove_model) {
-	case 0:
-		return default;
-	case 1:
-		return sport;
-	case 2:
-		return hand_wraps;
-	case 3:
-		return specialist;
-	case 4:
-		return driver;
-	case 5:
-		return moto;
-	case 6:
-		return hydra;
-	case 7:
-		return bloodhound;
+	for ( int i = 0; i < glove_type.size( ); i++ ) {
+		v_glove_names.push_back( std::get<1>( glove_type[i] ) );
 	}
 
-	return default;
+	return v_glove_names;
 }
 
 bool c_glovechanger::apply_glove_model(c_basecombat_weapon* glove) noexcept {
@@ -94,6 +72,7 @@ std::map<int, const char*> init_glove_indexes() {
 	m.insert(std::make_pair(glove_motorcycle, "models/weapons/v_models/arms/glove_motorcycle/v_glove_motorcycle.mdl"));
 	m.insert(std::make_pair(glove_specialist, "models/weapons/v_models/arms/glove_specialist/v_glove_specialist.mdl"));
 	m.insert(std::make_pair(glove_hydra, "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_hydra.mdl"));
+	m.insert( std::make_pair( glove_hydra, "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_brokenfang.mdl" ) );
 
 	return m;
 }
@@ -116,33 +95,16 @@ int get_glove_model() {
 		return glove_hydra;
 	case 7:
 		return glove_studded_bloodhound;
+	case 8:
+		return glove_brokenfang;
 	}
 
 	return glove_ct_side;
 }
 
 int get_skin() {
-
-	switch (g_weebwarecfg.glove_model) {
-	case 0:
-		break;
-	case 1:
-		return glove_changer.sport_glove_skins[g_weebwarecfg.glove_skin];
-	case 2:
-		return glove_changer.handwrap_glove_skins[g_weebwarecfg.glove_skin];
-	case 3:
-		return glove_changer.specialist_glove_skins[g_weebwarecfg.glove_skin];
-	case 4:
-		return glove_changer.driver_glove_skins[g_weebwarecfg.glove_skin];
-	case 5:
-		return glove_changer.moto_glove_skins[g_weebwarecfg.glove_skin];
-	case 6:
-		return glove_changer.hydra_glove_skins[g_weebwarecfg.glove_skin];
-	case 7:
-		return glove_changer.bloodhound_glove_skins[g_weebwarecfg.glove_skin];
-	}
-
-	return 0;
+	auto glove_type = glove_changer.v_gloves[g_weebwarecfg.glove_model];
+	return std::get<0>( glove_type[g_weebwarecfg.glove_skin] );
 }
 
 bool disabled = true;
@@ -215,8 +177,6 @@ void c_glovechanger::run() noexcept {
 
 	if (glove) {
 		apply_glove_model(glove);
-
-		// set_glove_skin_array();
 
 		apply_glove_skin(glove, get_glove_model(), get_skin(), g_weebware.g_model_info->getmodelindex(glove_map[get_glove_model()]), 3, g_weebwarecfg.glove_wearz);
 

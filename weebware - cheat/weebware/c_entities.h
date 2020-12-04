@@ -729,7 +729,8 @@ enum weapon_type_id
 	glove_leather_wrap = 5032,
 	glove_motorcycle = 5033,
 	glove_specialist = 5034,
-	glove_hydra = 5035
+	glove_hydra = 5035,
+	glove_brokenfang = 4725,
 };
 
 //class c_weapon_info
