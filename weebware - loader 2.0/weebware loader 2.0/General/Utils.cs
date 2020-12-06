@@ -9,6 +9,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using weebware_loader.General;
 
 namespace loader {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
@@ -63,43 +65,37 @@ namespace loader {
                 return;
             }
 
-
-            if (!DependanciesExist()) {
+            if (!Directory.Exists(appdata_path)) {
                 DialogResult dialogResult = MessageBox.Show("First time setup required..", "weebware", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.Yes) {
-                    CreatePaths();
-                    new Thread(CreateFiles).Start();
-                } else {
+                if (!(dialogResult == DialogResult.Yes)) {
                     Environment.Exit(1337);
                     return;
                 }
-                return;
+                Directory.CreateDirectory(appdata_path);
             }
-
-            CreatePaths();
-            new Thread(CreateFiles).Start();
+            run();
         }
 
-        private static void CreateFiles() {
-            // create missing files in appdata..
-            string files = web.DownloadString(api_path + "files.txt");
-            foreach (string file in files.Split(','))
-                if (!File.Exists(appdata_path + file))
-                    web.DownloadFile(api_path + file, appdata_path + file);
+        private static void run() {
+            string raw = web.DownloadString(api_path + "setup.json");
+            SetupFileRoot setupfiles = JsonConvert.DeserializeObject<SetupFileRoot>(raw);
+            PathSetup(setupfiles);
+            FileSetup(setupfiles);
         }
 
-        private static void CreatePaths() {
-            // create missing paths in appdata..
-            string paths = web.DownloadString(api_path + "paths.txt");
-            foreach (string path in paths.Split(','))
+        private static void PathSetup(SetupFileRoot setup) {
+            foreach (string path in setup.staticsetup.paths)
                 if (!Directory.Exists(appdata_path + path))
                     Directory.CreateDirectory(appdata_path + path);
         }
 
-        private static bool DependanciesExist() {
-            if (!Directory.Exists(appdata_path))
-                return false;
-            return true;
+        private static void FileSetup(SetupFileRoot setup) {
+            foreach (string file in setup.staticsetup.files)
+                if (!File.Exists(appdata_path + file))
+                    web.DownloadFile(api_path + file, appdata_path + file);
+
+            foreach (string file in setup.dynamicsetup.files)
+                web.DownloadFile(api_path + file, appdata_path + file);
         }
 
     }
