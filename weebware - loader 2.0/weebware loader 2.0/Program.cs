@@ -15,7 +15,7 @@ namespace weebware_loader {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             AntiTamper.Start();
-            new Thread(Setup.Init).Start();
+            Setup.Init();
             Application.Run(new Login());
         }
     }

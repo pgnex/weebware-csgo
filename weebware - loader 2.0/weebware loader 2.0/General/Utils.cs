@@ -73,7 +73,7 @@ namespace loader {
                 }
                 Directory.CreateDirectory(appdata_path);
             }
-            run();
+            new Thread(run).Start();
         }
 
         private static void run() {
