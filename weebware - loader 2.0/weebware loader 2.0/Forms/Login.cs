@@ -3,19 +3,15 @@ using loader.Authentication;
 using nVJsXzXbiI69x8tvbPrd.QCRItun73F.Win32;
 using SafeRequest;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Windows.Forms;
 using weebware_loader.Forms;
 using weebware_loader.General;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using weebware_loader.Custom_Components;
 using System.Reflection;
 
 namespace weebware_loader {
@@ -176,8 +172,11 @@ namespace weebware_loader {
 
 
         private void set_background_image() {
-            string[] images = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware/images");
-            
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/weebware/images";
+            if (!Directory.Exists(path))
+                return;
+
+            string[] images = Directory.GetFiles(path);
             if (!(images.Count() > 0))
                 return;
 
