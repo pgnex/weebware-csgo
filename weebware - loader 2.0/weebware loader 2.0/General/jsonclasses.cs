@@ -22,4 +22,19 @@ namespace weebware_loader.General {
         public IList<CheatInfo> cheatInfo { get; set; }
         public string authentication_key { get; set; }
     }
+
+    public class StaticSetup {
+        public List<string> paths { get; set; }
+        public List<string> files { get; set; }
+    }
+
+    public class DynamicSetup {
+        public List<string> files { get; set; }
+    }
+
+    public class SetupFileRoot {
+        public StaticSetup staticsetup { get; set; }
+        public DynamicSetup dynamicsetup { get; set; }
+    }
+
 }
