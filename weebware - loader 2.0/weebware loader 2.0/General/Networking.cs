@@ -1,16 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.Specialized;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
 using SafeRequest;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Diagnostics;
 
 namespace loader.Authentication {
     [Obfuscation(Feature = "Apply to member * when method or constructor: virtualization", Exclude = false)]
@@ -18,7 +11,7 @@ namespace loader.Authentication {
 
         private const string URL = "https://api.weebware.net";
         private const string ENCRYPTION_KEY = "kBjQEvQqf3zFBTD2";
-        private const string VERSION_STRING = "4.4";
+        private const string VERSION_STRING = "4.5";
 
         public static SafeRequest.SafeRequest safeRequest = new SafeRequest.SafeRequest(ENCRYPTION_KEY);
 
