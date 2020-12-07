@@ -9,28 +9,26 @@
 
 c_paint_traverse g_paint_traverse;
 
-void hooks::hook_functions::paint_traverse(unsigned int v, bool f, bool a) {
+void hooks::hook_functions::paint_traverse( unsigned int v, bool f, bool a ) {
 
-	auto ilocal = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local()); // getting localplayer
-
-	if (!ilocal || ilocal->m_bGunGameImmunity() || !ilocal->is_valid_player() || !g_weebware.g_engine->is_connected() || !g_weebware.g_engine->is_in_game() || ilocal->m_fFlags() & fl_frozen) {
-		g_Walkbot.m_target_area = nullptr;
-		g_Walkbot.m_TargetEntity = nullptr;
-	}
-
-	try {
-
-		if (strstr(g_weebware.g_panel->getname(v), "FocusOverlayPanel")) {
-
-			g_weebware.g_panel->set_mouseinput_enabled(v, g_weebware.menu_opened);
-
-			// if they DONT have screenshot proof on and user is taking a screenshot, render esp
-			if (!(g_weebwarecfg.screenshot_proof && g_weebware.g_engine->is_taking_screenshot())) {
-				g_esp.esp_main();
-			}
+	if ( g_weebwarecfg.misc_ai ) {
+		auto ilocal = g_weebware.g_entlist->getcliententity( g_weebware.g_engine->get_local( ) ); // getting localplayer
+		if ( !ilocal || ilocal->m_bGunGameImmunity( ) || !ilocal->is_valid_player( ) || !g_weebware.g_engine->is_connected( ) || !g_weebware.g_engine->is_in_game( ) || ilocal->m_fFlags( ) & fl_frozen ) {
+			g_Walkbot.m_target_area = nullptr;
+			g_Walkbot.m_TargetEntity = nullptr;
 		}
 	}
-	catch(...) { }
+
+
+	if ( strstr( g_weebware.g_panel->getname( v ), "FocusOverlayPanel" ) ) {
+
+		g_weebware.g_panel->set_mouseinput_enabled( v, g_weebware.menu_opened );
+
+		// if they DONT have screenshot proof on and user is taking a screenshot, render esp
+		if ( !( g_weebwarecfg.screenshot_proof && g_weebware.g_engine->is_taking_screenshot( ) ) ) {
+			g_esp.esp_main( );
+		}
+	}
 }
 
 void c_paint_traverse::draw_legit_aa_indicator() {

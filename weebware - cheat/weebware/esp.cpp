@@ -11,110 +11,109 @@ c_backtrack g_backtrack;
 FeatureFuncs g_event_features;
 int specs = 0;
 
-void c_esp::esp_main()
+void c_esp::esp_main( )
 {
-	water_mark();
+	water_mark( );
 
-	if (!g_weebware.g_engine->is_connected())
+	if ( !g_weebware.g_engine->is_connected( ) )
 		return;
 
-	if (!g_weebware.g_engine->is_in_game())
+	if ( !g_weebware.g_engine->is_in_game( ) )
 		return;
 
-	if (g_weebware.g_engine->is_taking_screenshot() && g_weebwarecfg.screenshot_proof)
+	local = g_weebware.g_entlist->getcliententity( g_weebware.g_engine->get_local( ) );
+
+	if ( !local )
 		return;
 
-	local = g_weebware.g_entlist->getcliententity(g_weebware.g_engine->get_local());
-
-	if (!local)
-		return;
-
-	if (g_weebwarecfg.visuals_hitmarkers)
-		g_event_features.on_paint();
+	if ( g_weebwarecfg.visuals_hitmarkers )
+		g_event_features.on_paint( );
 
 
 	// run this before checks, since in misc menu
-	g_paint_traverse.draw_legit_aa_indicator();
+	g_paint_traverse.draw_legit_aa_indicator( );
 
-	if (g_weebwarecfg.enable_visuals == 0)
+	if ( g_weebwarecfg.enable_visuals == 0 )
 		return;
 
-	if (g_weebwarecfg.enable_visuals == 2)
-		if (!GetAsyncKeyState(g_weebwarecfg.enable_visuals_key))
+	if ( g_weebwarecfg.enable_visuals == 2 )
+		if ( !GetAsyncKeyState( g_weebwarecfg.enable_visuals_key ) )
 			return;
 
 	// call things here if no ent loop needed 
 
 	//draw_fov_circle();
-	draw_crosshair();
-	recoil_crosshair();
-	draw_inaccuracy_circle();
-	display_backtrack_skele();
-	display_backtrack_dots();
+	draw_crosshair( );
+	recoil_crosshair( );
+	draw_inaccuracy_circle( );
+	display_backtrack_skele( );
+	display_backtrack_dots( );
 
 	specs = 0;
 
-	for (int i = 1; i <= g_weebware.g_entlist->getmaxentities(); i++)
+	for ( int i = 1; i <= g_weebware.g_entlist->getmaxentities( ); i++ )
 	{
-		c_base_entity* ent = g_weebware.g_entlist->getcliententity(i);
+		c_base_entity* ent = g_weebware.g_entlist->getcliententity( i );
 
-		if (!ent || ent == nullptr)
+		if ( !ent || ent == nullptr )
 			continue;
 
 		// check if bomb timer is enabled, if it is check for entity
-		if (g_weebwarecfg.visuals_bomb_timer && strstr(ent->get_client_class()->m_networkedname, "CPlantedC4"))
-			bomb_timer(ent);
+		if ( g_weebwarecfg.visuals_bomb_timer && strstr( ent->get_client_class( )->m_networkedname, "CPlantedC4" ) )
+			bomb_timer( ent );
 
-		spectator_list(ent);
+		spectator_list( ent );
 
-		if (!ent || ent->m_iHealth() <= 0 || ent->get_client_class()->m_ClassID != 40) 
+		if ( !ent || ent->get_client_class( )->m_ClassID != 40 || ent->m_iHealth( ) <= 0 )
 			continue;
 
-		//if (g_weebwarecfg.anime_model > 0)
-		//	set_player_models(ent);
-		
-		if (!g_weebwarecfg.visuals_dormant_esp) {
-			if (ent->is_dormant())
+		if ( ent == local )
+			continue;
+
+		if ( g_weebwarecfg.anime_model > 0 )
+			set_player_models( ent );
+
+		if ( !g_weebwarecfg.visuals_dormant_esp ) {
+			if ( ent->is_dormant( ) )
 				continue;
 		}
 
-		if (!g_weebwarecfg.visuals_teammates && ent->m_iTeamNum() == local->m_iTeamNum()) 
+		if ( !g_weebwarecfg.visuals_teammates && ent->m_iTeamNum( ) == local->m_iTeamNum( ) )
 			continue;
-		
-		if (ent == local) 
-			continue;		
 
-		if (g_weebwarecfg.visuals_bspotted)
-			*ent->b_spotted() = true;
-		
 
-		bool visible = is_visible( local, ent );
-		if (g_weebwarecfg.visuals_visible_only && !visible )
+		if ( g_weebwarecfg.visuals_bspotted )
+			*ent->b_spotted( ) = true;
+
+		bool visible = true;
+		if ( g_weebwarecfg.visuals_visible_only )
+			visible = is_visible( local, ent );
+		if ( g_weebwarecfg.visuals_visible_only && !visible )
 			continue;
-		
-		w2s_player[i].boundary = calc_boundaries(ent);
 
-		if (ent->is_dormant())
+		w2s_player[i].boundary = calc_boundaries( ent );
+
+		if ( ent->is_dormant( ) )
 			w2s_player[i].boundary.dormant = true;
 
 
-		if (local->m_iHealth() <= 0) {
-			auto obv = g_weebware.g_entlist->getcliententityfromhandle(local->m_hObserverTarget());
-			if (!obv)
+		if ( local->m_iHealth( ) <= 0 ) {
+			auto obv = g_weebware.g_entlist->getcliententityfromhandle( local->m_hObserverTarget( ) );
+			if ( !obv )
 				return;
 
-			if (obv->EntIndex() == i)
+			if ( obv->EntIndex( ) == i )
 				continue;
 		}
 
-		render_box(w2s_player[i].boundary, ent, visible );
-		render_box_corners(w2s_player[i].boundary, ent, visible );
-		render_health(w2s_player[i].boundary, ent, ent->m_iTeamNum() == local->m_iTeamNum());
-		render_name(w2s_player[i].boundary, ent, visible );
-		render_weapon(w2s_player[i].boundary, ent);
-		render_ammo(w2s_player[i].boundary, ent);
-		render_skeleton(ent, visible );
-		defusing_indicator(w2s_player[i].boundary, ent);
+		render_box( w2s_player[i].boundary, ent, visible );
+		render_box_corners( w2s_player[i].boundary, ent, visible );
+		render_health( w2s_player[i].boundary, ent, ent->m_iTeamNum( ) == local->m_iTeamNum( ) );
+		render_name( w2s_player[i].boundary, ent, visible );
+		render_weapon( w2s_player[i].boundary, ent );
+		render_ammo( w2s_player[i].boundary, ent );
+		render_skeleton( ent, visible );
+		defusing_indicator( w2s_player[i].boundary, ent );
 
 	}
 }
@@ -451,7 +450,7 @@ void c_esp::bomb_timer(c_base_entity* ent) {
 
 void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_visible) {
 
-	if (!g_weebwarecfg.visuals_corner_box)
+	if ( !g_weebwarecfg.visuals_corner_box )
 		return;
 
 	c_color col;
@@ -496,7 +495,8 @@ void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_
 
 void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {
-	if (!g_weebwarecfg.visuals_bounding_box)
+
+	if ( !g_weebwarecfg.visuals_bounding_box )
 		return;
 
 	c_color col;
@@ -528,7 +528,8 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 
 void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 {
-	if (!g_weebwarecfg.visuals_health_bars)
+
+	if ( !g_weebwarecfg.visuals_health_bars )
 		return;
 
 	if (!bounds.has_w2s)
@@ -570,7 +571,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 void c_esp::defusing_indicator(s_boundaries bounds, c_base_entity* ent) {
 
-	if (!g_weebwarecfg.defusing_indicator)
+	if ( !g_weebwarecfg.defusing_indicator )
 		return;
 
 	if (!ent)
@@ -597,8 +598,8 @@ void c_esp::defusing_indicator(s_boundaries bounds, c_base_entity* ent) {
 
 void c_esp::render_ammo(s_boundaries bounds, c_base_entity* ent) {
 
-	if (!g_weebwarecfg.visuals_ammo_esp)
-		return;
+	if ( !g_weebwarecfg.visuals_ammo_esp )
+		return; 
 
 	if (!ent)
 		return;
@@ -660,7 +661,8 @@ void c_esp::render_weapon(s_boundaries bounds, c_base_entity* ent) {
 
 void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 {
-	if (!g_weebwarecfg.visuals_name_esp)
+
+	if ( !g_weebwarecfg.visuals_name_esp )
 		return;
 
 	if (!ent)
@@ -695,60 +697,46 @@ void c_esp::render_name(s_boundaries bounds, c_base_entity* ent, bool is_visible
 
 void c_esp::render_skeleton(c_base_entity* ent, bool is_visible) {
 
-	if (!g_weebwarecfg.visuals_skeleton)
+	if ( !g_weebwarecfg.visuals_skeleton )
 		return;
 
 	const model_t* model;
-	studiohdr_t* hdr;
+	studiohdr_t* hdr = g_weebware.g_model_info->getstudiomodel( ent->getmodel( ) );
 	mstudiobone_t* bone;
-	Vector        bone_world_pos, parent_bone_world_pos, bone_screen_pos, parent_bone_screen_pos;
 
-	model = ent->getmodel();
-	if (!model)
+	if ( !hdr )
 		return;
 
-	hdr = g_weebware.g_model_info->getstudiomodel(model);
-	if (!hdr)
-		return;
-
+	Vector vParent{}, vChild{};
+	Vector sParent{}, sChild{};
 
 	c_color col;
-	if (!(ent->m_iTeamNum() == local->m_iTeamNum())) {
-		col = is_visible ? c_color(g_weebwarecfg.visuals_skeleton_col_visible) : c_color(g_weebwarecfg.visuals_skeleton_col_hidden);
+	if ( !( ent->m_iTeamNum( ) == local->m_iTeamNum( ) ) ) {
+		col = is_visible ? c_color( g_weebwarecfg.visuals_skeleton_col_visible ) : c_color( g_weebwarecfg.visuals_skeleton_col_hidden );
 	}
 	else {
-		col = is_visible ? c_color(g_weebwarecfg.team_visible_col) : c_color(g_weebwarecfg.team_hidden_col);
+		col = is_visible ? c_color( g_weebwarecfg.team_visible_col ) : c_color( g_weebwarecfg.team_hidden_col );
 	}
 
-	for (int i = 0; i < hdr->numbones; ++i) {
-		bone = hdr->GetBone(i);
+	// loop all the bones and draw
+	for ( auto i = 0; i < hdr->numbones; i++ )
+	{
+		auto* bone = hdr->GetBone( i );
 
-		if (bone && (bone->flags & 0x00000100) && bone->parent != -1) {
+		if ( !bone )
+			return;
 
-			bone_world_pos = ent->get_bone(i);
-			parent_bone_world_pos = ent->get_bone(bone->parent);
+		if ( bone && ( bone->flags & 0x00000100 ) && ( bone->parent != -1 ) )
+		{
+			vChild = ent->get_bone( i );
+			vParent = ent->get_bone( bone->parent );
 
-			int iChestBone = 6;
-			Vector vBreastBone;
-			Vector vUpperDirection = ent->get_bone(iChestBone + 1) - ent->get_bone(iChestBone);
-			vBreastBone = ent->get_bone(iChestBone) + vUpperDirection / 2;
-			Vector vDeltaChild = bone_world_pos - vBreastBone;
-			Vector vDeltaParent = parent_bone_world_pos - vBreastBone;
-
-			if ((vDeltaParent.size() < 9 && vDeltaChild.size() < 9))
-				parent_bone_world_pos = vBreastBone;
-
-			if (i == iChestBone - 1)
-				bone_world_pos = vBreastBone;
-
-			if (abs(vDeltaChild.z) < 5 && (vDeltaParent.size() < 5 && vDeltaChild.size() < 5) || i == iChestBone)
-				continue;
-
-			g_maths.world_to_screen(bone_world_pos, bone_screen_pos);
-			g_maths.world_to_screen(parent_bone_world_pos, parent_bone_screen_pos);
-
-			g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
-			g_weebware.g_surface->drawline(bone_screen_pos.x, bone_screen_pos.y, parent_bone_screen_pos.x, parent_bone_screen_pos.y);
+			// draw
+			if ( g_maths.world_to_screen( vParent, sParent ) && g_maths.world_to_screen( vChild, sChild ) ) {
+				g_weebware.g_surface->drawsetcolor( col.r, col.g, col.b, col.a );
+				g_weebware.g_surface->drawline( sParent.x, sParent.y, sChild.x, sChild.y );
+			}
+				
 		}
 	}
 }
