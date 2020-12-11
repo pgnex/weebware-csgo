@@ -21,14 +21,10 @@ bool is_visible(c_base_entity* local, c_base_entity* target, int bone)
 
 	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
 
+	if (!Trace.m_pEnt->is_valid_player())
+		return false;
 
-	if (Trace.m_pEnt == target)
-		return true;
-
-	if (Trace.m_pEnt->is_valid_player())
-		return true;
-
-	if (Trace.fraction == 1.0f)
+	if ( Trace.m_pEnt == target || Trace.fraction == 1.0f)
 		return true;
 
 	return false;
