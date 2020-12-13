@@ -72,7 +72,7 @@ std::map<int, const char*> init_glove_indexes() {
 	m.insert(std::make_pair(glove_motorcycle, "models/weapons/v_models/arms/glove_motorcycle/v_glove_motorcycle.mdl"));
 	m.insert(std::make_pair(glove_specialist, "models/weapons/v_models/arms/glove_specialist/v_glove_specialist.mdl"));
 	m.insert(std::make_pair(glove_hydra, "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_hydra.mdl"));
-	m.insert( std::make_pair( glove_hydra, "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_brokenfang.mdl" ) );
+	m.insert( std::make_pair( glove_brokenfang, "models/weapons/v_models/arms/glove_bloodhound/v_glove_bloodhound_brokenfang.mdl" ) );
 
 	return m;
 }

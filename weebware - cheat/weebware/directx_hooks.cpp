@@ -867,7 +867,7 @@ void gui::imgui_main() {
 			imgui_custom::custom_label_header("Glove Options");
 
 			ImGui::Checkbox("Enabled##glovechanger", &g_weebwarecfg.glovechanger_enabled);
-			const char* glove_models[] = { "Default", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound" };
+			const char* glove_models[] = { "Default", "Sport", "Hand Wraps", "Specialist", "Driver", "Moto", "Hydra", "Bloodhound", "Brokenfang" };
 			imgui_custom::a_better_combo_box("##glovenames", &g_weebwarecfg.glove_model, glove_models, ARRAYSIZE(glove_models));
 			ImGui::Text("Wear");
 			imgui_custom::a_better_slider_float("##Weargloves", &g_weebwarecfg.glove_wearz, 0, 100, "%.0f%%");
