@@ -462,10 +462,10 @@ void c_esp::render_box_corners(s_boundaries bounds, c_base_entity* ent, bool is_
 	}
 
 
-	int x = bounds.x + 2;
-	int y = bounds.y - 2;
-	int w = bounds.w - 6;
-	int h = bounds.h;
+	int x = bounds.x;// +2;
+	int y = bounds.y;// -2;
+	int w = bounds.w - 1;// -6;
+	int h = bounds.h - 1;
 
 	float line_w = (w / 5);
 	float line_h = (h / 6);
@@ -509,8 +509,8 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 
 	// Box
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 60);
-
-	g_weebware.g_surface->drawoutlinedrect(bounds.x + 3, bounds.y - 1, bounds.w + 2 + bounds.x - 3, bounds.h + 2 + bounds.y - 1);
+	g_weebware.g_surface->drawoutlinedrect( bounds.x - 1, bounds.y - 1, ( bounds.w + bounds.x ) + 1, ( bounds.h + bounds.y ) + 1 );
+	g_weebware.g_surface->drawoutlinedrect( bounds.x + 1, bounds.y + 1, ( bounds.w + bounds.x ) - 1, ( bounds.h + bounds.y ) - 1 );
 
 	if (g_weebwarecfg.visuals_dormant_esp) {
 
@@ -522,7 +522,7 @@ void c_esp::render_box(s_boundaries bounds, c_base_entity* ent, bool is_visible)
 	}
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-	g_weebware.g_surface->drawoutlinedrect(bounds.x + 2, bounds.y - 2, (bounds.w + bounds.x) - 3, (bounds.h + bounds.y) - 1);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x, bounds.y, bounds.w + bounds.x, bounds.h + bounds.y);
 
 }
 
@@ -541,10 +541,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	// render the full black line.
 	g_weebware.g_surface->drawsetcolor(0, 0, 0, 255);
-	g_weebware.g_surface->drawline(bounds.x - 1, bounds.y, bounds.x - 1, bounds.y + bounds.h);
-	g_weebware.g_surface->drawsetcolor(0, 0, 0, 50);
-	g_weebware.g_surface->drawline(bounds.x - 2, bounds.y - 1, bounds.x - 2, bounds.y + bounds.h + 1);
-	g_weebware.g_surface->drawline(bounds.x , bounds.y - 1, bounds.x, bounds.y + bounds.h + 1);
+	g_weebware.g_surface->drawoutlinedrect(bounds.x - 5, bounds.y - 1, bounds.x - 2, bounds.y + bounds.h + 1);
 
 	// render the line.
 	// Calculate color
@@ -559,7 +556,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	g_weebware.g_surface->drawsetcolor(col.r, col.g, col.b, col.a);
 
-	g_weebware.g_surface->drawline(bounds.x - 1, bounds.y + length, bounds.x - 1, bounds.y + bounds.h);
+	g_weebware.g_surface->drawline(bounds.x - 4, bounds.y + length, bounds.x - 4, bounds.y + bounds.h - 1);
 
 	if (ent->m_iHealth() < 100 && ent->m_iHealth() > 0) {
 
@@ -901,7 +898,7 @@ void c_esp::display_backtrack_skele()
 	}
 }
 
-bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)
+bool c_esp::is_visible(c_base_entity* local, c_base_entity* target) 
 {
 	if (!local->is_valid_player())
 		return false;
