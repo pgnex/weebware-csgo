@@ -560,7 +560,7 @@ void c_esp::render_health(s_boundaries bounds, c_base_entity* ent, bool is_team)
 
 	if (ent->m_iHealth() < 100 && ent->m_iHealth() > 0) {
 
-		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 5, bounds.y + length, c_color(255, 255, 255, 255), 0, (char*)std::to_string(ent->m_iHealth()).c_str());
+		g_paint_traverse.draw_string(g_weebware.tahoma_font, bounds.x - 8, bounds.y + length, c_color(255, 255, 255, 255), 0, std::to_string(ent->m_iHealth()).c_str());
 
 	}
 }

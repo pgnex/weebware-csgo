@@ -79,7 +79,6 @@
 #include "chams.h"
 
 
-
 // custom include files
 class c_weebware;
 extern c_weebware g_weebware;

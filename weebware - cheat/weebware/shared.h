@@ -3,6 +3,8 @@
 #define SHARED
 #define DEBUG_HOOKS 0
 
+#define WEEBWARE_RELEASE 1
+
 #include "Header.h"
 #include "IViewRenderBeams.h"
 
@@ -12,7 +14,11 @@ typedef void* (__cdecl* create_interface)(const char*, int*);
 class c_weebware
 {
 public:
+#if WEEBWARE_RELEASE
 	std::string g_user_name = "";
+#else
+	std::string g_user_name = "nex";
+#endif
 	std::string g_appdata_path = "";
 	void setup_thread();
 	uintptr_t pattern_scan(const char* szModule, const char* szSignature);

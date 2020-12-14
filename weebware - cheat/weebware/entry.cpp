@@ -10,8 +10,6 @@
 #include <string>
 #include <ShlObj.h>
 
-#define WEEBWARE_RELEASE 0
-
 GameEvents g_events;
 c_weebware g_weebware;
 create_interface retrieve_interface( LPCSTR module_name );
