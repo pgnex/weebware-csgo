@@ -2,6 +2,7 @@
 #include "shared.h"
 #include "gui.h"
 #include "key_values.h"
+#include "net_channel.h"
 #include <intrin.h>
 
 // #include "Polyhook\PolyHook\PolyHook.hpp"
@@ -37,6 +38,7 @@ namespace hooks {
 	vfunc_hook vfunc_dme;
 	vfunc_hook vfunc_ov;
 	vfunc_hook vfunc_svc;
+	vfunc_hook vfunc_snm;
 
 	namespace hook_index {
 		int pt = 41;
@@ -50,6 +52,7 @@ namespace hooks {
 		int dme = 21;
 		int ov = 18;
 		int svc = 13;
+		int snm = 40;
 	}
 
 	void init_hooks() {
@@ -121,6 +124,31 @@ namespace hooks {
 
 		hooks::hook_functions::paint_traverse(v, f, a);
 
+	}
+
+	bool __fastcall	hkSendNetMsg( net_channel* thisptr, int edx, INetMessage* pMessage, bool bForceReliable, bool bVoice )
+	{
+		static auto oSendNetMsg = vfunc_snm.get_original<sendnetmsg>( hook_index::snm );
+
+		/*
+		 * @note: disable files crc check (sv_pure)
+		 * dont send message if it has FileCRCCheck type
+		 */
+
+
+		 //&& Widgets::bypassSvPure->GetState()
+		if ( pMessage->GetType( ) == 14 )
+			return false;
+
+		/*
+		 * @note: fix lag with chocking packets when voice chat is active
+		 * check for voicedata group and enable voice stream
+		 * @credits: Flaww
+		 */
+		if ( pMessage->GetGroup( ) == 9 )
+			bVoice = true;
+
+		return oSendNetMsg( edx, pMessage, bForceReliable, bVoice );
 	}
 
 

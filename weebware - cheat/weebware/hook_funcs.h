@@ -25,6 +25,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_dme;
 	extern vfunc_hook vfunc_ov;
 	extern vfunc_hook vfunc_svc;
+	extern vfunc_hook vfunc_snm;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
 	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
@@ -36,6 +37,7 @@ namespace hooks {
 	using viewmodel = float(__fastcall*)();
 	using drawmodelexecute = void(__thiscall*)(void*, void*, const c_unknownmat_class&, const modelrenderinfo_t&, matrix3x4_t*);
 	using overrideview = void(__fastcall*)(void*, int, view_setup_t*);
+	using sendnetmsg = bool( __thiscall* )( int, INetMessage*, bool, bool );
 
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
 	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
@@ -48,6 +50,7 @@ namespace hooks {
 	float __stdcall hk_viewmodel();
 	void __fastcall hk_overrideview(void* thisptr, int, view_setup_t* vsView);
 	bool __fastcall hk_svcheats(PVOID pConVar, void* edx);
+	bool __fastcall	hkSendNetMsg( net_channel* thisptr, int edx, INetMessage* pMessage, bool bForceReliable, bool bVoice );
 
 	namespace hook_functions {
 		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm);

@@ -14,8 +14,10 @@ c_utils g_utils;
 LegitAntiAim g_LegitAntiAim;
 c_legit g_legitbot;
 
+
 bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm)
 {
+
 	if (cmd->command_number == 0 && sendpacket) {
 		return o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
 	}
@@ -25,7 +27,9 @@ bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* c
 	if ( !cmd || !cmd->command_number ) {
 		g_backtrack.clear_all_records( );
 		return false;
-	}
+	}		
+
+
 
 	if ( !g_weebware.g_engine->is_connected( ) || !g_weebware.g_engine->is_in_game( ) ) {
 		g_backtrack.clear_all_records( );

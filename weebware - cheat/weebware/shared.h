@@ -3,7 +3,7 @@
 #define SHARED
 #define DEBUG_HOOKS 0
 
-#define WEEBWARE_RELEASE 1
+#define WEEBWARE_RELEASE 0
 
 #include "Header.h"
 #include "IViewRenderBeams.h"
