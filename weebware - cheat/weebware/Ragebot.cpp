@@ -200,7 +200,10 @@ namespace ragebot
 			trace_t trace;
 			Ray_t ray;
 			traceFilter.pTarget = (void*)target;
-			ray.Init(local->get_vec_eyepos(), vecEnd);
+
+			auto eye_pos = local->get_vec_eyepos();
+			ray.Init(eye_pos, vecEnd);
+
 			g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &traceFilter, &trace);
 
 			if (trace.fraction == 1.0f)
@@ -343,7 +346,8 @@ namespace ragebot
 			// this->trace_line( data.src, end, MASK_SHOT | CONTENTS_GRATE, local, &data.enter_trace );
 			// this->clip_trace_to_players( data.src, end + data.direction * 40.f, MASK_SHOT | CONTENTS_GRATE, &data.filter, &data.enter_trace );
 
-			this->trace_line( data.src, end + data.direction * 40.f, MASK_SHOT, local, &data.enter_trace );
+			auto abs_end = end + data.direction * 40.f;
+			this->trace_line( data.src, abs_end, MASK_SHOT, local, &data.enter_trace );
 		//	printf( "traced line \n" );
 			if ( data.enter_trace.fraction == 1.0f ) {
 			//	printf( "fraction 1 \n" );
@@ -442,7 +446,8 @@ namespace ragebot
 				continue;
 			
 			// ignore unhittable players
-			if ( g_autowall.get_dmg( local, cur_entity->get_bone( 8 ) ) < 1.f ) // 8 is head.
+			auto head_pos = cur_entity->get_bone(8);
+			if ( g_autowall.get_dmg( local, head_pos ) < 1.f ) // 8 is head.
 				continue;
 
 

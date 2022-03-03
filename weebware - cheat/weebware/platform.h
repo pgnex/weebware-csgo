@@ -15,6 +15,7 @@
 #include <string.h>
 #include <new.h>
 
+typedef uint16_t uint16 
 #define COMPILER_MSVC
 
 //-----------------------------------------------------------------------------
@@ -701,29 +702,29 @@ inline void SetupFPUControlWord()
 // Basic swaps
 //-------------------------------------
 
-template <typename T>
-inline T WordSwapC(T w)
-{
-	uint16 temp;
-
-	temp = ((*((uint16 *)&w) & 0xff00) >> 8);
-	temp |= ((*((uint16 *)&w) & 0x00ff) << 8);
-
-	return *((T*)&temp);
-}
-
-template <typename T>
-inline T DWordSwapC(T dw)
-{
-	uint32_t temp;
-
-	temp = *((uint32_t *)&dw) >> 24;
-	temp |= ((*((uint32_t *)&dw) & 0x00FF0000) >> 8);
-	temp |= ((*((uint32_t *)&dw) & 0x0000FF00) << 8);
-	temp |= ((*((uint32_t *)&dw) & 0x000000FF) << 24);
-
-	return *((T*)&temp);
-}
+//template <typename T>
+//inline T WordSwapC(T w)
+//{
+//	uint16 temp;
+//
+//	temp = ((*((uint16 *)&w) & 0xff00) >> 8);
+//	temp |= ((*((uint16 *)&w) & 0x00ff) << 8);
+//
+//	return *((T*)&temp);
+//}
+//
+//template <typename T>
+//inline T DWordSwapC(T dw)
+//{
+//	uint32_t temp;
+//
+//	temp = *((uint32_t *)&dw) >> 24;
+//	temp |= ((*((uint32_t *)&dw) & 0x00FF0000) >> 8);
+//	temp |= ((*((uint32_t *)&dw) & 0x0000FF00) << 8);
+//	temp |= ((*((uint32_t *)&dw) & 0x000000FF) << 24);
+//
+//	return *((T*)&temp);
+//}
 
 //-------------------------------------
 // Fast swaps
@@ -866,15 +867,10 @@ inline void SwapFloat(float *pOut, const float *pIn) { SafeSwapFloat(pOut, pIn);
 
 #endif
 
-inline uint32_t LoadLittleDWord(uint32_t *base, unsigned int dwordIndex)
-{
-	return LittleDWord(base[dwordIndex]);
-}
-
-inline void StoreLittleDWord(uint32_t *base, unsigned int dwordIndex, uint32_t dword)
-{
-	base[dwordIndex] = LittleDWord(dword);
-}
+//inline void StoreLittleDWord(uint32_t *base, unsigned int dwordIndex, uint32_t dword)
+//{
+//	base[dwordIndex] = LittleDWord(dword);
+//}
 
 // Protect against bad auto operator=
 #define DISALLOW_OPERATOR_EQUAL( _classname )			\
@@ -933,10 +929,10 @@ inline void StoreLittleDWord(uint32_t *base, unsigned int dwordIndex, uint32_t d
 #define WM_XMP_PLAYBACKBEHAVIORCHANGED		(WM_USER + 122)
 #define WM_XMP_PLAYBACKCONTROLLERCHANGED	(WM_USER + 123)
 
-inline const char *GetPlatformExt(void)
-{
-	return IsPlatformX360() ? ".360" : "";
-}
+//inline const char *GetPlatformExt(void)
+//{
+//	return IsPlatformX360() ? ".360" : "";
+//}
 
 // flat view, 6 hw threads
 #define XBOX_PROCESSOR_0			( 1<<0 )

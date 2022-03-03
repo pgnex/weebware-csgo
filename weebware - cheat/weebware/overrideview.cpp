@@ -30,7 +30,8 @@ void overrideview::thirdperson() {
 			Ray_t ray;
 			ITraceFilter filter;
 			filter.pSkip = local;
-			ray.Init(eye_pos, eye_pos - forward * range);
+			auto end_p = eye_pos - forward * range;
+			ray.Init(eye_pos, end_p);
 			g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &filter, &trace);
 
 			if (trace.fraction < 1.f)

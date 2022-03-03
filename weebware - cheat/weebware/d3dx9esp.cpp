@@ -12,8 +12,8 @@ void c_d3dxesp::d9esp_main(IDirect3DDevice9* pDevice) {
 
 	if (!init) {
 		get_device(pDevice);
-		draw.AddFont("Tahoma", 11, false, false);
-		draw.AddFont("Tahoma", 18, false, false);
+		draw.AddFont((char*)"Tahoma", 11, false, false);
+		draw.AddFont((char*)"Tahoma", 18, false, false);
 		draw.Reset();
 		init = true;
 	}

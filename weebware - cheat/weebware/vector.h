@@ -27,36 +27,30 @@ struct _VECTOR : public _VECTOR2D<T>
 
 		float root = 0.0f;
 
-		float sqsr = x * x + y * y + z * z;
+		float sqsr = this->x * this->x + this->y * this->y + this->z * this->z;
 
 		root = sqrt( sqsr );
 
 		return root;
 	}
 
-	float dist_to( const _VECTOR<T>& rhs ) const {
-		Vector delta;
-
-		delta.x = x - rhs.x;
-		delta.y = y - rhs.y;
-		delta.z = z - rhs.z;
-
-		return delta.length( );
+	inline float dist_to( const _VECTOR<T>& rhs ) {
+		return _VECTOR<T>(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z).length();
 	}
 
 	inline _VECTOR<T> operator+( const _VECTOR<T>& rhs ) const
 	{
-		return _VECTOR<T>( x + rhs.x, y + rhs.y, z + rhs.z );
+		return _VECTOR<T>( this->x + rhs.x, this->y + rhs.y, this->z + rhs.z );
 	}
 
 	inline _VECTOR<T> operator-( const _VECTOR<T>& rhs ) const
 	{
-		return _VECTOR<T>( x - rhs.x, y - rhs.y, z - rhs.z );
+		return _VECTOR<T>( this->x - rhs.x, this->y - rhs.y, this->z - rhs.z );
 	}
 
 	inline T operator*( const _VECTOR<T>& rhs ) const
 	{
-		return x * rhs.x + y * rhs.y + z * rhs.z;
+		return this->x * rhs.x + this->y * rhs.y + this->z * rhs.z;
 	}
 
 	inline _VECTOR<T> operator+=( const _VECTOR<T>& rhs )
@@ -80,22 +74,22 @@ struct _VECTOR : public _VECTOR2D<T>
 
 	inline _VECTOR<T> operator+( const T& rhs ) const
 	{
-		return _VECTOR<T>( x + rhs, y + rhs, z + rhs );
+		return _VECTOR<T>( this->x + rhs, this->y + rhs, this->z + rhs );
 	}
 
 	inline _VECTOR<T> operator-( const T& rhs ) const
 	{
-		return _VECTOR<T>( x - rhs, y - rhs, z - rhs );
+		return _VECTOR<T>( this->x - rhs, this->y - rhs, this->z - rhs );
 	}
 
 	inline _VECTOR<T> operator*( const T& rhs ) const
 	{
-		return _VECTOR<T>( x * rhs, y * rhs, z * rhs );
+		return _VECTOR<T>( this->x * rhs, this->y * rhs, this->z * rhs );
 	}
 
 	inline _VECTOR<T> operator/( const T& rhs ) const
 	{
-		return _VECTOR<T>( x / rhs, y / rhs, z / rhs );
+		return _VECTOR<T>( this->x / rhs, this->y / rhs, this->z / rhs );
 	}
 
 	inline _VECTOR<T> operator+=( const T& rhs )
@@ -124,7 +118,7 @@ struct _VECTOR : public _VECTOR2D<T>
 
 	inline T size_sqr( )
 	{
-		return x * x + y * y + z * z;
+		return this->x * this->x + this->y * this->y + this->z * this->z;
 	}
 
 	inline T size( )

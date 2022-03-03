@@ -648,7 +648,9 @@ void edge_aa( Vector& edgeang, bool& willedge, c_base_entity* local )
 			edgeang.y = -30;
 			break;
 		}
-		ray.Init( local->get_vec_eyepos( ), End );
+
+		auto eye_pos = local->get_vec_eyepos();
+		ray.Init( eye_pos, End );
 		g_weebware.g_engine_trace->TraceRay( ray, MASK_SHOT, (ITraceFilter*)&filter, &tr );
 		if ( tr.DidHit( ) )
 		{
@@ -866,7 +868,8 @@ bool c_create_move::is_ground( ) {
 	origin += local->m_vecVelocity( ) * g_weebware.g_global_vars->interval_per_tick;
 
 	Ray_t ray;
-	ray.Init( origin, origin - Vector( 0, 0, 9 ) );
+	Vector diff = origin - Vector(0, 0, 9);
+	ray.Init( origin, diff);
 
 	ITraceFilter traceFilter;
 

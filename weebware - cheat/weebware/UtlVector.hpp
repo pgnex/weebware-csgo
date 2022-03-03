@@ -292,7 +292,7 @@ void CUtlVector<T, A>::Sort(int(__cdecl *pfnCompare)(const T *, const T *))
 template< typename T, class A >
 void CUtlVector<T, A>::EnsureCapacity(int num)
 {
-	MEM_ALLOC_CREDIT_CLASS();
+	// MEM_ALLOC_CREDIT_CLASS();
 	m_Memory.EnsureCapacity(num);
 	ResetDbgInfo();
 }
@@ -366,7 +366,7 @@ int CUtlVector<T, A>::InsertBefore(int elem)
 
 	GrowVector();
 	ShiftElementsRight(elem);
-	Construct(&Element(elem));
+	// Construct(&Element(elem));
 	return elem;
 }
 
@@ -409,7 +409,7 @@ int CUtlVector<T, A>::InsertBefore(int elem, const T& src)
 
 	GrowVector();
 	ShiftElementsRight(elem);
-	CopyConstruct(&Element(elem), src);
+	// CopyConstruct(&Element(elem), src);
 	return elem;
 }
 

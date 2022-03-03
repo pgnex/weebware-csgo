@@ -106,7 +106,7 @@ struct mstudiobbox_t
 	char* getHitboxName()
 	{
 		if (hitboxnameindex == 0)
-			return "";
+			return (char*)"";
 
 		return ((char*)this) + hitboxnameindex;
 	}

@@ -13,7 +13,7 @@ struct studiohdr_t;
 
 struct model_t
 {
-	void* fnHandle;               //0x0000 
+	void* fnHandle;                 //0x0000 
 	char    szName[260];            //0x0004 
 	int     nLoadFlags;             //0x0108 
 	int     nServerCount;           //0x010C 
@@ -575,7 +575,7 @@ public:
 	}
 
 	// set_angles2
-	void c_base_entity::set_angles(Vector angles);
+	void set_angles(Vector angles);
 
 	// Weapons.
 	c_basecombat_weapon* m_pActiveWeapon( );

@@ -29,7 +29,7 @@ private:
 	void recoil_crosshair();
 	void render_weapon(s_boundaries bounds, c_base_entity* ent);
 	void render_ammo(s_boundaries bounds, c_base_entity* ent);
-	bool c_esp::is_visible(c_base_entity* local, c_base_entity* target);
+	bool is_visible(c_base_entity* local, c_base_entity* target);
 	void display_backtrack_skele();
 	void display_backtrack_dots();
 	void set_weapon_models();

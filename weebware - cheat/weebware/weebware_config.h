@@ -775,7 +775,7 @@ public:
 		if (check("visuals_ammo_esp", data)) visuals_ammo_esp = data["visuals_ammo_esp"];
 		if (check("draw_grenade_traj", data)) draw_grenade_traj = data["draw_grenade_traj"];
 		if (check("spec_list", data)) spec_list = data["spec_list"];
-		if ( check( "visual_local_chams", data ) ) visual_local_chams = data["visual_local_chams"];
+		if (check("visual_local_chams", data)) visual_local_chams = data["visual_local_chams"];
 
 		// misc
 		if (check("enable_misc", data)) enable_misc = data["enable_misc"];
@@ -799,10 +799,9 @@ public:
 		if (check("misc_legit_aa_enabled", data)) misc_legit_aa_enabled = data["misc_legit_aa_enabled"];
 		if (check("misc_legit_aa_jitter", data)) misc_legit_aa_jitter = data["misc_legit_aa_jitter"];
 		if (check("misc_legit_aa_edge", data)) misc_legit_aa_edge = data["misc_legit_aa_edge"];
-		if ( check( "visuals_desync_chams", data ) ) visuals_desync_chams = data["visuals_desync_chams"];
+		if (check("visuals_desync_chams", data)) visuals_desync_chams = data["visuals_desync_chams"];
 		if (check("selected_knife_index0", data)) {
-			selected_knife_index[0] = data["selected_knife_index0"];
-			if (selected_knife_index > 0)
+			if (data["selected_knife_index0"] > 0)
 				knifechanger_enabled = true;
 		}
 

@@ -3,7 +3,7 @@
 #include "imgui_custom.h"
 #include "imgui/imgui_internal.h"
 
-char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
+const char* KeyboardKeys[254] = { "_", "M1", "M2", "Break", "M3", "M4", "M5",
 "_", "Backspace", "TAB", "_", "_", "_", "ENTER", "_", "_", "SHIFT", "CTRL", "ALT", "PAUSE",
 "CAPS LOCK", "_", "_", "_", "_", "_", "_", "ESC", "_", "_", "_", "_", "SPACEBAR",
 "PG UP", "PG DOWN", "END", "HOME", "Left", "Up", "Right", "Down", "_", "Print", "_", "Print Screen", "Insert",

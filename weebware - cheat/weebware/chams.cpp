@@ -76,7 +76,7 @@ imaterial* chams::utils::create_default( ) {
 
 
 	KeyValues* keyValues = ( KeyValues* )malloc( sizeof( KeyValues ) );
-	init_key_vals( keyValues, "VertexLitGeneric" );
+	init_key_vals( keyValues, (char*)"VertexLitGeneric" );
 	load_from_buf( keyValues, "default.vmt", s.str( ).c_str( ), 0, 0, 0, 0 );
 	imaterial* created_mat = g_weebware.g_mat_sys->create_mat( "default.vmt", keyValues );
 
@@ -103,7 +103,7 @@ imaterial* chams::utils::create_ignorez( ) {
 
 
 	KeyValues* keyValues = ( KeyValues* )malloc( sizeof( KeyValues ) );
-	init_key_vals( keyValues, "VertexLitGeneric" );
+	init_key_vals( keyValues, (char*)"VertexLitGeneric" );
 	load_from_buf( keyValues, "ignorez.vmt", s.str( ).c_str( ), 0, 0, 0, 0 );
 	imaterial* created_mat = g_weebware.g_mat_sys->create_mat( "ignorez.vmt", keyValues );
 
@@ -129,7 +129,7 @@ imaterial* chams::utils::create_glow( ) {
 
 
 	KeyValues* keyValues = ( KeyValues* )malloc( sizeof( KeyValues ) );
-	init_key_vals( keyValues, "VertexLitGeneric" );
+	init_key_vals( keyValues, (char*)"VertexLitGeneric" );
 	load_from_buf( keyValues, "glow.vmt", s.str( ).c_str( ), 0, 0, 0, 0 );
 	imaterial* created_mat = g_weebware.g_mat_sys->create_mat( "glow.vmt", keyValues );
 

@@ -278,12 +278,14 @@ namespace hooks {
 	void __fastcall hk_overrideview(void* thisptr, int edx, view_setup_t* vsView) {
 		auto o_ov = vfunc_ov.get_original<overrideview>(hook_index::ov);
 
+		/*
 		if (g_weebwarecfg.thirdperson && vsView)
 			overrideview::thirdperson();
 		else if (!g_weebwarecfg.thirdperson && g_weebware.g_input->m_fCameraInThirdPerson) {
 			g_weebware.g_input->m_fCameraInThirdPerson = false;
 			g_weebware.g_input->m_vecCameraOffset.z = 0;
 		}
+		*/
 
 		o_ov(thisptr, edx, vsView);
 	}

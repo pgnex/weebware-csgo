@@ -128,7 +128,7 @@ void gui::shoutbox_chat() {
 	io.MousePos.x = (float)(mouse_x);
 	io.MousePos.y = (float)(mouse_y);
 
-	ImGui::Begin("shoutbox", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("shoutbox", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
 	ImGui::SetWindowSize(ImVec2(500, 240));
 
 	ImGui::BeginChild("shoutbox");
@@ -177,7 +177,7 @@ void gui::weapon_override() {
 	io.MousePos.x = (float)(mouse_x);
 	io.MousePos.y = (float)(mouse_y);
 
-	ImGui::Begin("shoutbox", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
+	ImGui::Begin("shoutbox", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
 	ImGui::SetWindowSize(ImVec2(260, 400));
 
 	auto gun_list = g_gui.filtered_guns();
@@ -229,8 +229,8 @@ void gui::imgui_main() {
 		static int tab_selection = gui::tabs::legit;
 
 		ImGui::PushFont(g_weebware.pFont[0]);
-
-		ImGui::Begin("weebware", false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
+		
+		ImGui::Begin("weebware", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoResize);
 		ImGui::SetWindowSize(ImVec2(800, 600));
 
 

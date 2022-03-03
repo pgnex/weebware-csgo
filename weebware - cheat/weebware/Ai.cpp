@@ -42,7 +42,7 @@ void c_ai::auto_queue() {
 			session_settings->set_string("game/mode", game_mode[g_weebwarecfg.autoqueue_gamemode]);
 			session_settings->set_string("game/mapgroupname", "mg_de_dust2");
 			match_session->update_session_settings(session_settings);
-			handle_match_start(*(uint8_t**)singleton, "", "", "", "");
+			handle_match_start(*(uint8_t**)singleton, "", (char*)"", (char*)"", (char*)"");
 			needs_queue = false;
 		}
 	}

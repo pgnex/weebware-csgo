@@ -249,7 +249,8 @@ bool c_aimbot::in_crosshair(c_base_entity* target) {
 	g_maths.qangle_vector(view_angles, forward);
 	Vector dst = g_legitbot.m_local->get_vec_eyepos() + (forward * g_legitbot.m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
-	ray.Init(g_legitbot.m_local->get_vec_eyepos(), dst);
+	auto start = g_legitbot.m_local->get_vec_eyepos();
+	ray.Init(start, dst);
 	ITraceFilter trace_filter;
 	trace_filter.pSkip = g_legitbot.m_local;
 	g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &trace_filter, &trace);
@@ -518,7 +519,9 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 		trace_t trace;
 		Ray_t ray;
 		traceFilter.pTarget = (void*)target;
-		ray.Init(g_legitbot.m_local->get_vec_eyepos(), vecEnd);
+
+		auto eye_pos1 = g_legitbot.m_local->get_vec_eyepos();
+		ray.Init(eye_pos1, vecEnd);
 		g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &traceFilter, &trace);
 
 		if (trace.fraction == 1.0f)
