@@ -73,7 +73,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Coding Stuff\weebware\weebware - cheat\weebware\Polyhook\Capstone\msvc_vs2017\x86\Release;E:\weebware\weebware\weebware\curl;C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
+    <LibraryPath>E:\weebware\weebware\weebware\curl;C:\programmingbinarys\curl-master;C:\programmingbinarys\binarys;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(LibraryPath)</LibraryPath>
@@ -167,6 +167,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="hook_helper.cpp" />
     <ClCompile Include="imgui_widgets.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -211,66 +212,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="nightmode.cpp" />
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\ADetour.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\AVehHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\BreakPointHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\CapstoneDisassembler.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\HWBreakPointHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\IatHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\MemProtector.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\TestEffectTracker.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VFuncSwapHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\VTableSwapHook.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x64Detour.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="PolyHook2\PolyHook_2_0\sources\x86Detour.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="knife_proxy_hook.cpp" />
     <ClCompile Include="shared_funcs.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -305,6 +246,7 @@
     <ClInclude Include="dme.h" />
     <ClInclude Include="glovechanger.h" />
     <ClInclude Include="gui.h" />
+    <ClInclude Include="hook_helper.h" />
     <ClInclude Include="icon_font.h" />
     <ClInclude Include="imgui_impl_dx9.h" />
     <ClInclude Include="legit_aa.h" />
@@ -344,18 +286,6 @@
     <ClInclude Include="key_values.h" />
     <ClInclude Include="nightmode.h" />
     <ClInclude Include="platform.h" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ADisassembler.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\CapstoneDisassembler.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Enums.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\ErrorLog.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\AVehHook.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\BreakPointHook.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Exceptions\HWBreakPointHook.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\IHook.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Instruction.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\MemProtector.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\Misc.hpp" />
-    <ClInclude Include="PolyHook2\PolyHook_2_0\headers\UID.hpp" />
     <ClInclude Include="knife_proxy_hook.h" />
     <ClInclude Include="shared_funcs.h" />
     <ClInclude Include="skindefs.h" />
@@ -381,7 +311,6 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\..\..\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\d3dx9.lib" />
-    <Library Include="Polyhook\Capstone\msvc_vs2017\x86\Release\capstone.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

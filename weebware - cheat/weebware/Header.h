@@ -61,6 +61,7 @@
 #include "move_helper.h"
 #include "trace.h"
 #include "backtrack.h"
+#include "hook_helper.h"
 #include "hook_funcs.h"
 #include "shared.h"
 #include "authentication.h"
