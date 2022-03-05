@@ -104,7 +104,8 @@ bool c_weebware::init_interfaces( )
 	g_client = reinterpret_cast<i_base_client*>(client_fact( "VClient018", NULL ));
 #endif
 
-	g_client_mode = **(unsigned long***)(pattern_scan( "client.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA" ) + 0x2);
+	g_client_mode = **reinterpret_cast<i_client_mode***>((*reinterpret_cast<uintptr_t**>(g_client))[10] + 5);
+	// g_client_mode = **reinterpret_cast<i_client_mode***>(pattern_scan( "client.dll", "8B 0D ? ? ? ? FF 75 08 8B 01 FF 50 64 BA" ) + 0x2);
 	g_entlist = reinterpret_cast<c_entity_list*>(client_fact( "VClientEntityList003", NULL ));
 	g_panel = reinterpret_cast<c_panel*>(vgui2_fact( "VGUI_Panel009", NULL ));
 	g_matchframework = reinterpret_cast<c_match_framework*>(match_fact("MATCHFRAMEWORK_001", NULL));

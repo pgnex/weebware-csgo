@@ -42,7 +42,7 @@ public:
 	i_base_client* g_client;
 	c_panel* g_panel;
 	c_surface* g_surface;
-	unsigned long* g_client_mode;
+	i_client_mode* g_client_mode;
 	IDirect3DDevice9* g_direct_x;
 	c_input_system* g_input_system;
 	c_input* g_input;

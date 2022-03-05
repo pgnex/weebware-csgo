@@ -14,6 +14,7 @@
 namespace hooks {
 	void init_hooks();
 	void unhook();
+	void Setup();
 
 	extern vfunc_hook vfunc_paint;
 	extern vfunc_hook vfunc_cm;
@@ -28,7 +29,7 @@ namespace hooks {
 	extern vfunc_hook vfunc_snm;
 
 	using painttraverse = void(__thiscall*)(c_panel*, unsigned int, bool, bool);
-	using createmove = bool(__thiscall*)(unsigned long*, float, c_usercmd*);
+	using createmove = bool(__fastcall*)(void*, void*, float, c_usercmd*);
 	using endscene = long(__stdcall*)(IDirect3DDevice9*);
 	using reset = long(__stdcall*)(IDirect3DDevice9*, D3DPRESENT_PARAMETERS*);
 	using emitsound = void(__fastcall*)(void*, void*, void*, int, int, const char*, uint32_t, const char*, float, float, int, int, int, const Vector*, const Vector*, void*, bool, float, int, void*);
@@ -40,7 +41,7 @@ namespace hooks {
 	using sendnetmsg = bool( __thiscall* )( int, INetMessage*, bool, bool );
 
 	void __stdcall hk_paint_traverse(unsigned int v, bool f, bool a);
-	bool __stdcall hk_clientmode_cm(float input_sample_time, c_usercmd* cmd);
+	bool __fastcall hk_clientmode_cm(void*, void*, float frameTime, c_usercmd* cmd);
 	long __stdcall hk_endscene(IDirect3DDevice9* device);
 	long __stdcall hk_reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param);
 	void __fastcall hk_emitsound(void* ecx, void* edx, void* filter, int entity_index, int channel, const char* sound_entry, uint32_t sound_entry_hash, const char* sample, float volume, float attenuation, int seed, int flags, int pitch, const Vector* origin, const Vector* direction, void* utl_origins, bool update_positions, float sound_time, int speaker_entity, void* parameters);
