@@ -308,9 +308,6 @@
     <ClInclude Include="graphics.h">
       <Filter>Source Files\GI\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="hook_funcs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="c_surface.h">
       <Filter>Source Files\Source Development Kit</Filter>
     </ClInclude>
@@ -502,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="hook_helper.h">
       <Filter>Source Files\hooking\minhook</Filter>
+    </ClInclude>
+    <ClInclude Include="hook_funcs.h">
+      <Filter>Source Files\hooking</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
