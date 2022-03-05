@@ -29,4 +29,34 @@ namespace HHELPER
 	{
 		MH_CreateHook(target, detour_addr, original_addr);
 	}
+
+	void HookCm(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookEs(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookRe(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookVm(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookSe(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookDme(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
 }
