@@ -15,5 +15,7 @@ namespace HHELPER
 	void HookVm(LPVOID target, LPVOID detour_addr, LPVOID* original_addr);
 	void HookSe(LPVOID target, LPVOID detour_addr, LPVOID* original_addr);
 	void HookDme(LPVOID target, LPVOID detour_addr, LPVOID* original_addr);
+	void HookOv(LPVOID target, LPVOID detour_addr, LPVOID* original_addr);
+	void HookFsn(LPVOID target, LPVOID detour_addr, LPVOID* original_addr);
 }
 #pragma once

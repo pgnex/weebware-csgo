@@ -160,15 +160,13 @@ namespace hooks {
 	// createmove
 	createmove o_cm = nullptr;
 	bool __fastcall hk_clientmode_cm(void* e, void* z, float input_sample_time, c_usercmd* cmd) {
-		//if (cmd && cmd->command_number) {
-		//	uintptr_t* frame_ptr;
-		//	uintptr_t* frame_pointer;
-		//	__asm mov frame_pointer, ebp;
-		//	bool& send_packet = *reinterpret_cast<bool*>(*frame_pointer - 0x34);
-		//}
+		if (cmd && cmd->command_number) {
+			uintptr_t* frame_ptr;
+			__asm mov frame_ptr, ebp;
+			bool& send_packet = *reinterpret_cast<bool*>(*frame_ptr - 0x34);
+			hooks::hook_functions::clientmode_cm(input_sample_time, cmd, send_packet);
+		}
 		return o_cm(e, z, input_sample_time, cmd);
-
-		//hooks::hook_functions::clientmode_cm(input_sample_time, cmd, g_weebware.send_packet, o_cm);
 	}
 
 
@@ -230,9 +228,8 @@ namespace hooks {
 	}
 
 	// dme
+	drawmodelexecute o_dme = nullptr;
 	void __fastcall hk_draw_model_execute( void* thisptr, void*, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld ) {
-		auto o_dme = vfunc_dme.get_original<drawmodelexecute>( hook_index::dme );
-
 		//if ( !g_weebwarecfg.visuals_chams > 0 ) {
 		//	o_dme( g_weebware.g_model_render, ctx, state, pInfo, pCustomBoneToWorld );
 		//	return;
@@ -252,7 +249,6 @@ namespace hooks {
 	// framestagenotify
 	framestagenotify o_fsn = nullptr;
 	void __stdcall hk_frame_stage_notify(clientframestage_t curStage) {
-	//	auto o_fsn = vfunc_fsn.get_original<framestagenotify>(hook_index::fsn);
 		if (g_weebware.g_engine->is_connected() && g_weebware.g_engine->is_in_game())
 			hooks::hook_functions::frame_stage_notify(curStage);
 
@@ -275,17 +271,15 @@ namespace hooks {
 		return ofunc(pConVar);
 	}
 
-	// 
+	// override view
+	overrideview o_ov = nullptr;
 	void __fastcall hk_overrideview(void* thisptr, int edx, view_setup_t* vsView) {
-		auto o_ov = vfunc_ov.get_original<overrideview>(hook_index::ov);
-
 		if (g_weebwarecfg.thirdperson && vsView)
 			overrideview::thirdperson();
-		else if (!g_weebwarecfg.thirdperson && g_weebware.g_input->m_fCameraInThirdPerson) {
+		else if (g_weebware.g_input->m_fCameraInThirdPerson && !g_weebwarecfg.thirdperson) {
 			g_weebware.g_input->m_fCameraInThirdPerson = false;
 			g_weebware.g_input->m_vecCameraOffset.z = 0;
 		}
-
 		o_ov(thisptr, edx, vsView);
 	}
 
@@ -343,11 +337,22 @@ namespace hooks {
 			(void*)(&hk_scene_end),
 			(void**)(&o_se));
 
-		// emitsound hook
-
 		// drawmodel execute hook
+		HHELPER::HookDme((void*)(GetVirtual(g_weebware.g_model_render, hook_index::dme)),
+			(void*)(&hk_draw_model_execute),
+			(void**)(&o_dme));
+
+		// fsn hook
+		HHELPER::HookFsn((void*)(GetVirtual(g_weebware.g_client, hook_index::fsn)),
+			(void*)(&hk_frame_stage_notify),
+			(void**)(&o_fsn));
 
 		// overrideview hook
+		HHELPER::HookOv((void*)(GetVirtual(g_weebware.g_client_mode, hook_index::ov)),
+			(void*)(&hk_overrideview),
+			(void**)(&o_ov));
+
+		// emitsound hook
 
 		//c_convar* sv_cheats_con = g_weebware.g_convars->find_cvar("sv_cheats");
 		//vfunc_svc.setup(sv_cheats_con, "client.dll");

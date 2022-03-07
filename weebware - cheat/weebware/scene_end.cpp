@@ -11,7 +11,6 @@ void hooks::hook_functions::scene_end( void* thisptr, void* edx ) {
 	if ( g_weebware.g_engine->is_taking_screenshot( ) && g_weebwarecfg.screenshot_proof )
 		return;
 
-
 	if ( g_weebwarecfg.visuals_chams > 0)
 		chams::se::player_chams( );
 

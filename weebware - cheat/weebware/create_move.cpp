@@ -15,14 +15,13 @@ LegitAntiAim g_LegitAntiAim;
 c_legit g_legitbot;
 
 
-bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm)
+bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* cmd, bool& sendpacket)
 {
+	//if (cmd->command_number == 0 && sendpacket) {
+	//	return o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
+	//}
 
-	if (cmd->command_number == 0 && sendpacket) {
-		return o_cm(g_weebware.g_client_mode, input_sample_time, cmd);
-	}
-
-	g_weebware.send_packet = true;
+	//g_weebware.send_packet = true;
 
 	if ( !cmd || !cmd->command_number ) {
 		g_backtrack.clear_all_records( );
@@ -459,81 +458,82 @@ void c_create_move::auto_strafe( c_usercmd* cmd ) {
 bool c_create_move::anti_trigger( c_usercmd* cmd, bool& send_packets )
 {
 
+	//return false;
+
+	//if ( !g_weebwarecfg.anti_triggerbot ) {
+	//	return false;
+	//}
+
+	//if ( !GetAsyncKeyState( g_weebwarecfg.anti_triggerbot_key ) )
+	//	return false;
+
+	//auto org = *local->m_vecOrigin( );
+
+	//org += (local->m_vecVelocity( ) / 6);
+
+	//auto min = *local->m_vecMins( );
+	//auto max = *local->m_vecMaxs( );
+
+	//Vector Local_Bounding[8] = { //the comments below are not accurate
+	//	Vector( org.x + min.x, org.y + min.y, org.z + min.z ), // left buttom
+	//	Vector( org.x + min.x, org.y + min.y, org.z + max.z ), // left top
+	//	Vector( org.x + max.x, org.y + max.y, org.z + max.z ), // right top
+	//	Vector( org.x + max.x, org.y + max.y, org.z + min.z ),  // right buttom
+
+	//	Vector( org.x + min.x, org.y + max.y, org.z + min.z ), // left buttom
+	//	Vector( org.x + min.x, org.y + max.y, org.z + max.z ), // left top
+	//	Vector( org.x + max.x, org.y + min.y, org.z + max.z ), // right top
+	//	Vector( org.x + max.x, org.y + min.y, org.z + min.z )  // right buttom
+	//};
+
+	//for ( auto i = 1; i < 99; i++ ) {
+
+	//	c_base_entity* cur_entity = (c_base_entity*)g_weebware.g_entlist->getcliententity( i );
+
+	//	if ( !cur_entity )
+	//		continue;
+
+	//	if ( cur_entity->m_iHealth( ) <= 0 )
+	//		continue;
+
+	//	if ( cur_entity->m_iTeamNum( ) == local->m_iTeamNum( ) )
+	//		continue;
+
+	//	QAngle viewangle = *cur_entity->eyeangle_ptr( );
+
+	//	Vector direction;
+
+	//	g_maths.qangle_vector( viewangle, direction );
+	//	direction *= 8012.f;
+
+	//	Vector begin = cur_entity->get_vec_eyepos( );
+	//	Vector finish = begin + direction;
+
+	//	Vector angles[8];
+
+	//	for ( auto i = 0; i < 8; i++ )
+	//		g_maths.vector_qangles( Local_Bounding[i] - begin, angles[i] );
+
+	//	if ( !anti_trigger::Checkifbetween( angles, viewangle ) )
+	//		continue;
+
+	//	trace_t trace;
+	//	Ray_t ray;
+	//	ITraceFilter filter;
+	//	filter.pSkip = cur_entity;
+	//	ray.Init( begin, finish );
+	//	g_weebware.g_engine_trace->TraceRay( ray, 0x46004003, &filter, &trace );
+
+	//	if ( ((trace.endpos - begin).size( ) + 10) >= (local->get_vec_eyepos( ) - begin).size( ) ) {
+
+	//		anti_trigger::require_fake = true;
+
+	//		break;
+	//	}
+	//}
+
+	//return anti_trigger::require_fake;
 	return false;
-
-	if ( !g_weebwarecfg.anti_triggerbot ) {
-		return false;
-	}
-
-	if ( !GetAsyncKeyState( g_weebwarecfg.anti_triggerbot_key ) )
-		return false;
-
-	auto org = *local->m_vecOrigin( );
-
-	org += (local->m_vecVelocity( ) / 6);
-
-	auto min = *local->m_vecMins( );
-	auto max = *local->m_vecMaxs( );
-
-	Vector Local_Bounding[8] = { //the comments below are not accurate
-		Vector( org.x + min.x, org.y + min.y, org.z + min.z ), // left buttom
-		Vector( org.x + min.x, org.y + min.y, org.z + max.z ), // left top
-		Vector( org.x + max.x, org.y + max.y, org.z + max.z ), // right top
-		Vector( org.x + max.x, org.y + max.y, org.z + min.z ),  // right buttom
-
-		Vector( org.x + min.x, org.y + max.y, org.z + min.z ), // left buttom
-		Vector( org.x + min.x, org.y + max.y, org.z + max.z ), // left top
-		Vector( org.x + max.x, org.y + min.y, org.z + max.z ), // right top
-		Vector( org.x + max.x, org.y + min.y, org.z + min.z )  // right buttom
-	};
-
-	for ( auto i = 1; i < 99; i++ ) {
-
-		c_base_entity* cur_entity = (c_base_entity*)g_weebware.g_entlist->getcliententity( i );
-
-		if ( !cur_entity )
-			continue;
-
-		if ( cur_entity->m_iHealth( ) <= 0 )
-			continue;
-
-		if ( cur_entity->m_iTeamNum( ) == local->m_iTeamNum( ) )
-			continue;
-
-		QAngle viewangle = *cur_entity->eyeangle_ptr( );
-
-		Vector direction;
-
-		g_maths.qangle_vector( viewangle, direction );
-		direction *= 8012.f;
-
-		Vector begin = cur_entity->get_vec_eyepos( );
-		Vector finish = begin + direction;
-
-		Vector angles[8];
-
-		for ( auto i = 0; i < 8; i++ )
-			g_maths.vector_qangles( Local_Bounding[i] - begin, angles[i] );
-
-		if ( !anti_trigger::Checkifbetween( angles, viewangle ) )
-			continue;
-
-		trace_t trace;
-		Ray_t ray;
-		ITraceFilter filter;
-		filter.pSkip = cur_entity;
-		ray.Init( begin, finish );
-		g_weebware.g_engine_trace->TraceRay( ray, 0x46004003, &filter, &trace );
-
-		if ( ((trace.endpos - begin).size( ) + 10) >= (local->get_vec_eyepos( ) - begin).size( ) ) {
-
-			anti_trigger::require_fake = true;
-
-			break;
-		}
-	}
-
-	return anti_trigger::require_fake;
 }
 
 void c_create_move::run_fake( c_usercmd* cmd, bool& send_packet )
@@ -606,65 +606,65 @@ c_base_entity* get_best_target( c_base_entity* local )
 
 void edge_aa( Vector& edgeang, bool& willedge, c_base_entity* local )
 {
-	ITraceFilter filter;
-	filter.pSkip = local;
-	Ray_t ray;
-	trace_t tr;
-	for ( int i = 0; i < 8; i++ )
-	{
-		bool d2 = false;
-		Vector End = local->get_vec_eyepos( );
-		int value = 30;
+	//ITraceFilter filter;
+	//filter.pSkip = local;
+	//Ray_t ray;
+	//trace_t tr;
+	//for ( int i = 0; i < 8; i++ )
+	//{
+	//	bool d2 = false;
+	//	Vector End = local->get_vec_eyepos( );
+	//	int value = 30;
 
-		switch ( i )
-		{
-		case 0: End.y += value;
-			edgeang.y = 90;
-			break;
-		case 1: End.y -= value;
-			edgeang.y = -90;
-			break;
-		case 2: End.x += value;
-			edgeang.y = 180;
-			break;
-		case 3: End.x -= value;
-			edgeang.y = 0;
-			break;
-		case 4: End.y += value;
-			End.x += value;
-			edgeang.y = 30;
-			break;
-		case 5: End.y -= value;
-			End.x += value;
-			edgeang.y = -150;
-			break;
-		case 6: End.y += value;
-			End.x -= value;
-			edgeang.y = 150;
-			d2 = true;
-			break;
-		case 7: End.y -= value;
-			End.x -= value;
-			edgeang.y = -30;
-			break;
-		}
-		ray.Init( local->get_vec_eyepos( ), End );
-		g_weebware.g_engine_trace->TraceRay( ray, MASK_SHOT, (ITraceFilter*)&filter, &tr );
-		if ( tr.DidHit( ) )
-		{
-			QAngle angle_towall;
-			g_maths.calc_angle( local->get_vec_eyepos( ), End, angle_towall );
+	//	switch ( i )
+	//	{
+	//	case 0: End.y += value;
+	//		edgeang.y = 90;
+	//		break;
+	//	case 1: End.y -= value;
+	//		edgeang.y = -90;
+	//		break;
+	//	case 2: End.x += value;
+	//		edgeang.y = 180;
+	//		break;
+	//	case 3: End.x -= value;
+	//		edgeang.y = 0;
+	//		break;
+	//	case 4: End.y += value;
+	//		End.x += value;
+	//		edgeang.y = 30;
+	//		break;
+	//	case 5: End.y -= value;
+	//		End.x += value;
+	//		edgeang.y = -150;
+	//		break;
+	//	case 6: End.y += value;
+	//		End.x -= value;
+	//		edgeang.y = 150;
+	//		d2 = true;
+	//		break;
+	//	case 7: End.y -= value;
+	//		End.x -= value;
+	//		edgeang.y = -30;
+	//		break;
+	//	}
+	//	ray.Init( local->get_vec_eyepos( ), End );
+	//	g_weebware.g_engine_trace->TraceRay( ray, MASK_SHOT, (ITraceFilter*)&filter, &tr );
+	//	if ( tr.DidHit( ) )
+	//	{
+	//		QAngle angle_towall;
+	//		g_maths.calc_angle( local->get_vec_eyepos( ), End, angle_towall );
 
-			edgeang.y = angle_towall.y;
+	//		edgeang.y = angle_towall.y;
 
-			if ( d2 )
-				edgeang.y = 180;
+	//		if ( d2 )
+	//			edgeang.y = 180;
 
-			willedge = true;
+	//		willedge = true;
 
-			break;
-		}
-	}
+	//		break;
+	//	}
+	//}
 
 }
 
@@ -862,25 +862,26 @@ void c_create_move::chat_spam( ) {
 
 bool c_create_move::is_ground( ) {
 
-	Vector origin = *local->m_vecOrigin( );
-	origin += local->m_vecVelocity( ) * g_weebware.g_global_vars->interval_per_tick;
+	//Vector origin = *local->m_vecOrigin( );
+	//origin += local->m_vecVelocity( ) * g_weebware.g_global_vars->interval_per_tick;
 
-	Ray_t ray;
-	ray.Init( origin, origin - Vector( 0, 0, 9 ) );
+	//Ray_t ray;
+	//ray.Init( origin, origin - Vector( 0, 0, 9 ) );
 
-	ITraceFilter traceFilter;
+	//ITraceFilter traceFilter;
 
-	traceFilter.pSkip = (void*)local;
+	//traceFilter.pSkip = (void*)local;
 
-	trace_t tr;
+	//trace_t tr;
 
-	g_weebware.g_engine_trace->TraceRay( ray, MASK_PLAYERSOLID, &traceFilter, &tr );
+	//g_weebware.g_engine_trace->TraceRay( ray, MASK_PLAYERSOLID, &traceFilter, &tr );
 
-	if ( !tr.DidHit( ) )
-		return false;
+	//if ( !tr.DidHit( ) )
+	//	return false;
 
 
-	return true;
+	//return true;
+	return false;
 }
 
 void c_create_move::auto_jumpbug( c_usercmd* cmd ) {

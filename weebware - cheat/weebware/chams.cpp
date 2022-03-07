@@ -330,7 +330,7 @@ void chams::se::player_chams( ) {
 
 void chams::dme::player_chams( void* thisptr, void* ctx, const c_unknownmat_class& state, const modelrenderinfo_t& pInfo, matrix3x4_t* pCustomBoneToWorld, hooks::drawmodelexecute o_dme ) {
 
-	if ( !g_weebwarecfg.visuals_chams > 0 )
+	if (!g_weebwarecfg.visuals_chams)
 		return;
 
 	// get local

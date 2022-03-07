@@ -59,4 +59,14 @@ namespace HHELPER
 	{
 		MH_CreateHook(target, detour_addr, original_addr);
 	}
+
+	void HookOv(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
+
+	void HookFsn(LPVOID target, LPVOID detour_addr, LPVOID* original_addr)
+	{
+		MH_CreateHook(target, detour_addr, original_addr);
+	}
 }

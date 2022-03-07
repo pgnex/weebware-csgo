@@ -54,7 +54,7 @@ namespace hooks {
 	bool __fastcall	hkSendNetMsg( net_channel* thisptr, int edx, INetMessage* pMessage, bool bForceReliable, bool bVoice );
 
 	namespace hook_functions {
-		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket, hooks::createmove o_cm);
+		bool clientmode_cm(float input_sample_time, c_usercmd* cmd, bool& sendpacket);
 		void paint_traverse(unsigned int v, bool f, bool a);
 		LRESULT __stdcall hk_window_proc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void reset(IDirect3DDevice9* device, D3DPRESENT_PARAMETERS* presentation_param, bool valid);
