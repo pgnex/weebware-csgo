@@ -574,7 +574,6 @@ public:
 
 class CGameTrace;
 
-typedef CGameTrace trace_t;
 
 class c_unknown
 {
@@ -622,7 +621,7 @@ public:
 
 	// available on client only!!!
 	virtual void					getmodelmaterialcolorandlighting(const model_t *model, Vector const& origin,
-		QAngle const& angles, trace_t* ptrace,
+		QAngle const& angles, CGameTrace* ptrace,
 		Vector& lighting, Vector& matcolor) = 0;
 	virtual void					getilluminationpoint(const model_t *model, iclientrenderable *prenderable, Vector const& origin,
 		QAngle const& angles, Vector* plightingcenter) = 0;

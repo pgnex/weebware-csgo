@@ -50,7 +50,7 @@ public:
 	void run(c_usercmd* cmd);
 
 	// feature funcs
-	c_base_entity* get_trace_ent();
+	c_base_entity* get_trace_ent(c_usercmd* cmd);
 	std::vector<int> setup_hitboxes();
 	void shoot(c_usercmd* cmd, c_base_entity* target);
 	bool raytrace_hc(Vector viewAngles, float chance, c_base_entity* target, float dst);

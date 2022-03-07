@@ -911,22 +911,18 @@ bool c_esp::is_visible(c_base_entity* local, c_base_entity* target)
 
 	trace_t Trace;
 
-	Vector src = local->get_vec_eyepos(), dst2 = target->get_bone(8);
+	Vector src = local->get_vec_eyepos(), dst = target->get_bone(8);
 
-	Ray_t ray;
+	ray_t ray(src, dst);
 
-	ray.Init(src, dst2);
+	trace_filter traceFilter(local);
 
-	ITraceFilter traceFilter;
+	g_weebware.g_engine_trace->trace_ray(ray, MASK_SHOT, &traceFilter, &Trace);
 
-	traceFilter.pSkip = (void*)local;
-
-	g_weebware.g_engine_trace->TraceRay(ray, MASK_SHOT, &traceFilter, &Trace);
-
-	if (Trace.m_pEnt == target)
+	if (Trace.entity == target)
 		return true;
 
-	if (Trace.fraction == 1.0f)
+	if (Trace.flFraction == 1.0f)
 		return true;
 
 	return false;

@@ -92,7 +92,7 @@ bool s_bMathlibInitialized = false;
 
 	void vector_qangles(Vector forward, QAngle& angles);
 	void qangle_vector(const QAngle& angles, Vector& forward);
-	void qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp);
+	void qangle_vector4(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp);
 	void AngleVectors(const Vector& viewAngle, Vector& viewForward);
 	void VectorAngles(const Vector& forward, Vector& up, QAngle& angles);
 	void vector_qangles3d(Vector& vecForward, Vector& vecAngles);

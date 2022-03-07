@@ -179,7 +179,7 @@ void c_maths::sin_cos(float value, float &sr, float &cr)
 	cr = cos(value);
 }
 
-void c_maths::qangle_vector(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp)
+void c_maths::qangle_vector4(const QAngle& qAngles, Vector& vecForward, Vector& vecRight, Vector& vecUp)
 {
 	float sp, sy, sr, cp, cy, cr;
 	sin_cos((float)(qAngles.z * (PI / 180.f)), sr, cr);

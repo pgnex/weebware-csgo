@@ -237,7 +237,7 @@ bool c_aimbot::in_crosshair(c_base_entity* target) {
 	if (!g_legitbot.m_local->m_pActiveWeapon()->is_scoped_weapon())
 		return true;
 
-	Ray_t ray;
+	
 	trace_t trace;
 	Vector view_angles;
 
@@ -249,18 +249,17 @@ bool c_aimbot::in_crosshair(c_base_entity* target) {
 	g_maths.qangle_vector(view_angles, forward);
 	Vector dst = g_legitbot.m_local->get_vec_eyepos() + (forward * g_legitbot.m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
-	ray.Init(g_legitbot.m_local->get_vec_eyepos(), dst);
-	ITraceFilter trace_filter;
-	trace_filter.pSkip = g_legitbot.m_local;
-	g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &trace_filter, &trace);
+	ray_t ray(g_legitbot.m_local->get_vec_eyepos(), dst);
+	trace_filter filter(g_legitbot.m_local);
+	g_weebware.g_engine_trace->trace_ray(ray, 0x4600400B, &filter, &trace);
 
-	if (trace.allsolid || trace.startsolid)
+	if (trace.bAllSolid || trace.bStartSolid)
 		return false;
 
-	if (!trace.m_pEnt)
+	if (!trace.entity)
 		return false;
 
-	if (trace.m_pEnt == target)
+	if (trace.entity == target)
 		return true;
 
 	return false;
@@ -385,7 +384,7 @@ void c_triggerbot::run(c_usercmd* cmd) {
 	if (g_weebwarecfg.legit_cfg[get_config_index()].magnet_triggerbot_enabled)
 		do_aim_stuffs(cmd, true);;
 
-	c_base_entity* target = get_trace_ent();
+	c_base_entity* target = get_trace_ent(cmd);
 
 	// our trace didnt return an ent.. lets reset our last delay and do no more
 	if (!target) {
@@ -399,7 +398,7 @@ void c_triggerbot::run(c_usercmd* cmd) {
 }
 
 
-c_base_entity* c_triggerbot::get_trace_ent() {
+c_base_entity* c_triggerbot::get_trace_ent(c_usercmd* cmd) {
 
 	// get our viewangles and account for aimpunch
 	g_weebware.g_engine->get_view_angles(view_angles);
@@ -411,17 +410,15 @@ c_base_entity* c_triggerbot::get_trace_ent() {
 	Vector dst = g_legitbot.m_local->get_vec_eyepos() + (forward * g_legitbot.m_local->m_pActiveWeapon()->get_weapon_info()->flRange);
 
 	trace_t trace;
-	Ray_t ray;
 	Vector src = g_legitbot.m_local->get_vec_eyepos();
 
-	ray.Init(src, dst);
+	ray_t ray(src, dst);
 
-	ITraceFilter traceFilter;
-	traceFilter.pSkip = (void*)g_legitbot.m_local;
+	trace_filter traceFilter(g_legitbot.m_local);
 
-	g_weebware.g_engine_trace->TraceRay(ray, 0x46004003, &traceFilter, &trace);
+	g_weebware.g_engine_trace->trace_ray(ray, 0x46004003, &traceFilter, &trace);
 
-	c_base_entity* trace_entity = trace.m_pEnt;
+	c_base_entity* trace_entity = trace.entity;
 
 	if (!trace_entity->is_valid_player())
 		return nullptr;
@@ -503,8 +500,8 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 	if (chance <= 0.f) return true;
 	int hitCount = 0;
 	Vector vecDirShooting, vecRight, vecUp;
-	g_maths.qangle_vector(viewAngles, vecDirShooting, vecRight, vecUp);
-	c_trace_customfilter traceFilter;
+	g_maths.qangle_vector4(viewAngles, vecDirShooting, vecRight, vecUp);
+	trace_customfilter traceFilter(target);
 
 	for (int seed = 0; seed < 255; seed++)
 	{
@@ -516,15 +513,14 @@ bool c_triggerbot::raytrace_hc(Vector viewAngles, float chance, c_base_entity* t
 
 		Vector vecEnd = g_legitbot.m_local->get_vec_eyepos() + (vecDir * dst);
 		trace_t trace;
-		Ray_t ray;
-		traceFilter.pTarget = (void*)target;
-		ray.Init(g_legitbot.m_local->get_vec_eyepos(), vecEnd);
-		g_weebware.g_engine_trace->TraceRay(ray, 0x4600400B, &traceFilter, &trace);
+		
+		ray_t ray(g_legitbot.m_local->get_vec_eyepos(), vecEnd);
+		g_weebware.g_engine_trace->trace_ray(ray, 0x4600400B, &traceFilter, &trace);
 
-		if (trace.fraction == 1.0f)
+		if (trace.flFraction == 1.0f)
 			continue;
 
-		if (trace.m_pEnt == target)
+		if (trace.entity == target)
 			hitCount++;
 	}
 

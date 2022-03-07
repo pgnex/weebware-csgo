@@ -140,3 +140,23 @@ typedef _VECTOR<int> c_vectori;
 typedef _VECTOR<float> Vector;
 typedef _VECTOR2D<float> c_vector_2d;
 typedef _VECTOR<float> QAngle;
+
+class __declspec(align(16)) VectorAligned : public Vector
+{
+public:
+	VectorAligned() = default;
+
+	explicit VectorAligned(const Vector& vecBase)
+	{
+		this->x = vecBase.x; this->y = vecBase.y; this->z = vecBase.z; this->w = 0.f;
+	}
+
+	constexpr VectorAligned& operator=(const Vector& vecBase)
+	{
+		this->x = vecBase.x; this->y = vecBase.y; this->z = vecBase.z; this->w = 0.f;
+		return *this;
+	}
+
+public:
+	float w;
+};

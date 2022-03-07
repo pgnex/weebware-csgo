@@ -10,59 +10,52 @@ class bf_read;
 class c_input
 {
 public:
-	virtual void  Init_All(void);
-	virtual void  Shutdown_All(void);
-	virtual int   GetButtonBits(int);
-	virtual void  CreateMove(int sequence_number, float input_sample_frametime, bool active);
-	virtual void  ExtraMouseSample(float frametime, bool active);
-	virtual bool  WriteUsercmdDeltaToBuffer(bf_write* buf, int from, int to, bool isnewcommand);
-	virtual void  EncodeUserCmdToBuffer(bf_write& buf, int slot);
-	virtual void  DecodeUserCmdFromBuffer(bf_read& buf, int slot);
+    //std::byte			pad0[0xC];				//0x0000
+    //bool				bTrackIRAvailable;		//0x000C
+    //bool				bMouseInitialized;		//0x000D
+    //bool				bMouseActive;			//0x000E
+    //std::byte			pad1[0xB2];				//0x000F
+    //bool				m_fCameraInThirdPerson;	//0x00C1
+    //std::byte			pad2[0x2];				//0x00C2
+    //Vector				m_vecCameraOffset;		//0x00C4
+    //std::byte			pad3[0x38];				//0x00D0
+    //c_usercmd* m_pCommands;				//0x0108
+    //c_verifiedusercmd* pVerifiedCommands;		//0x010C
 
-	c_usercmd* GetUserCmd(int nSlot, int sequence_number)
-	{
-		typedef c_usercmd* (__thiscall* GetUserCmd_t)(void*, int, int);
-		return getvfunc<GetUserCmd_t>(this, 8)(this, nSlot, sequence_number);
-	}
+    //c_usercmd* GetUserCmd(const int nSequenceNumber) const
+    //{
+    //    return &m_pCommands[nSequenceNumber % MULTIPLAYER_BACKUP];
+    //}
 
-	inline c_usercmd* GetUserCmd(int sequence_number);
-	inline c_verifiedusercmd* GetVerifiedCmd(int sequence_number);
+    //c_verifiedusercmd* GetVerifiedCmd(const int nSequenceNumber) const
+    //{
+    //    return &pVerifiedCommands[nSequenceNumber % MULTIPLAYER_BACKUP];
+    //}
 
-	char				pad_0x00[0x8];
-	bool                m_fTrackIRAvailable;
-	bool                m_fMouseInitialized;
-	bool                m_fMouseActive;
-	bool                m_fJoystickAdvancedInit;
-	char                pad_0x08[0x2C];
-	void* m_pKeys;
-	char                pad_0x38[0x64];
-	int                 pad_0x41;
-	int                 pad_0x42;
-	bool                m_fCameraInterceptingMouse;
-	bool                m_fCameraInThirdPerson;
-	bool                m_fCameraMovingWithMouse;
-	Vector              m_vecCameraOffset;
-	bool                m_fCameraDistanceMove;
-	int                 m_nCameraOldX;
-	int                 m_nCameraOldY;
-	int                 m_nCameraX;
-	int                 m_nCameraY;
-	bool                m_CameraIsOrthographic;
-	Vector              m_angPreviousViewAngles;
-	Vector              m_angPreviousViewAnglesTilt;
-	float               m_flLastForwardMove;
-	int                 m_nClearInputState;
-	char                pad_0xE4[0x8];
-	c_usercmd* m_pCommands;
-	c_verifiedusercmd* m_pVerifiedCommands;
+    //c_usercmd* GGetUserCmd(int slot, int sequence_number)
+    //{
+    //    return &m_pCommands[slot, sequence_number % MULTIPLAYER_BACKUP];
+    //}
+
+public:
+    char pad0[0xC]; // 0x0
+    bool m_trackir_available; // 0xC
+    bool m_mouse_initialized; // 0xD
+    bool m_mouse_active; // 0xE
+    char pad1[0x9E]; // 0xF
+    bool m_fCameraInThirdPerson; // 0xAD
+    char pad2[0x2]; // 0xAE
+    Vector m_vecCameraOffset; // 0xB0
+    char pad3[0x38]; // 0xBC
+    c_usercmd* m_pCommands; // 0xF4
+    c_verifiedusercmd* m_pVerifiedCommands; // 0xF8
+    c_usercmd* GetUserCmd(int sequence_number)
+    {
+        return &m_pCommands[sequence_number % MULTIPLAYER_BACKUP];
+    }
+
+    c_verifiedusercmd* GetVerifiedUserCmd(int sequence_number)
+    {
+        return &m_pVerifiedCommands[sequence_number % MULTIPLAYER_BACKUP];
+    }
 };
-
-c_usercmd* c_input::GetUserCmd(int sequence_number)
-{
-	return &m_pCommands[sequence_number % MULTIPLAYER_BACKUP];
-}
-
-c_verifiedusercmd* c_input::GetVerifiedCmd(int sequence_number)
-{
-	return &m_pVerifiedCommands[sequence_number % MULTIPLAYER_BACKUP];
-}
