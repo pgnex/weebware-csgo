@@ -27,17 +27,19 @@ namespace loader {
 
         private static string cpuID() {
             AntiTamper.IntegrityCheck();
-            string cpuInfo = "";
+            string cpu_id = "";
             ManagementClass managClass = new ManagementClass("win32_processor");
 
             ManagementObjectCollection managCollec = managClass.GetInstances();
 
             foreach (ManagementObject managObj in managCollec) {
-                cpuInfo = managObj.Properties["Revision"].Value.ToString() + managObj.Properties["processorID"].Value.ToString();
+                Console.Write(managObj.Properties["Revision"].Value);
+                // string revision = managObj.Properties["Revision"].Value.ToString(); // = () + ();
+                cpu_id = managObj.Properties["ProcessorId"].Value.ToString();
                 break;
             }
             AntiTamper.IntegrityCheck();
-            return cpuInfo;
+            return cpu_id;
         }
 
 
