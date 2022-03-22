@@ -261,6 +261,9 @@
     <ClCompile Include="hook_helper.cpp">
       <Filter>Source Files\hooking\minhook</Filter>
     </ClCompile>
+    <ClCompile Include="crc32.cpp">
+      <Filter>Source Files\Source Development Kit\md5</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="hook_funcs.h">
       <Filter>Source Files\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="crc32.h">
+      <Filter>Source Files\Source Development Kit\md5</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

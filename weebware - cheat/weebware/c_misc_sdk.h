@@ -719,30 +719,76 @@ struct view_setup_t {
 	char      pad2[0x7C];
 };
 
-class c_global_vars
+// @credits: https://github.com/ValveSoftware/source-sdk-2013/blob/master/sp/src/public/string_t.h
+struct string_t
 {
 public:
-	float realtime;
-	int framecount;
-	float absoluteframetime;
-	float absoluteframestarttimestddev;
-	float curtime;
-	float frametime;
-	int maxclients;
-	int tickcount;
-	float interval_per_tick;
-	float interpolation_amount;
-	int simTicksThisFrame;
-	int network_protocol;
-	void* pSaveData;
-private:
-	bool m_bClient;
-public:
-	bool m_bRemoteClient;
-private:
-	int nTimestampNetworkingBase;
-	int nTimestampRandomizeWindow;
+	bool operator!() const { return (szValue == nullptr); }
+	bool operator==(const string_t& rhs) const { return (szValue == rhs.szValue); }
+	bool operator!=(const string_t& rhs) const { return (szValue != rhs.szValue); }
+	bool operator<(const string_t& rhs) const { return (reinterpret_cast<void*>(const_cast<char*>(szValue)) < reinterpret_cast<void*>(const_cast<char*>(rhs.szValue))); }
+
+	const char* c_str() const { return (szValue) ? szValue : ""; }
+protected:
+	const char* szValue;
 };
+
+class VarMapEntry_t
+{
+public:
+	unsigned short type;
+	unsigned short m_bNeedsToInterpolate;	// Set to false when this var doesn't
+											// need Interpolate() called on it anymore.
+	void* data;
+	void* watcher;
+};
+
+struct VarMapping_t
+{
+	CUtlVector<VarMapEntry_t> m_Entries;
+	int m_nInterpolatedEntries;
+	float m_lastInterpolationTime;
+};
+
+class i_global_vars_base
+{
+public:
+	float			flRealTime;					//0x00
+	int				framecount;					//0x04
+	float			flAbsFrameTime;				//0x08
+	float			flAbsFrameStartTime;		//0x0C
+	float			curtime;					//0x10
+	float			frametime;					//0x14
+	int				maxclients;					//0x18
+	int				iTickCount;					//0x1C
+	float			interval_per_tick;			//0x20
+	float			flInterpolationAmount;		//0x24
+	int				nFrameSimulationTicks;		//0x28
+	int				iNetworkProtocol;			//0x2C
+	void*			pSaveData;					//0x30
+	bool			bClient;					//0x34
+	bool		    bRemoteClient;				//0x35
+	int				iTimestampNetworkingBase;	//0x36
+	int				iTimestampRandomizeWindow;	//0x3A
+};
+
+class c_global_vars : public i_global_vars_base
+{
+public:
+	string_t		szMapName;					//0x3E
+	string_t		szMapGroupName;				//0x42
+	int				iMapVersion;				//0x46
+	string_t		szStartSpot;				//0x4A
+	int				nLoadType;					//0x4E
+	bool			bMapLoadFailed;				//0x52
+	bool			bDeathmatch;				//0x53
+	bool			bCooperative;				//0x54
+	bool			bTeamplay;					//0x55
+	int				nMaxEntities;				//0x56
+	int				nServerCount;				//0x5A
+	void* pEdicts;					//0x5E
+}; // Size: 0x62
+
 
 class c_unknownmat_class {};
 

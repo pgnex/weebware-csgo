@@ -219,6 +219,8 @@ public:
 };
 
 class c_basecombat_weapon;
+class VarMapEntry_t;
+struct VarMapping_t;
 
 class c_base_entity : public i_client_unknown, public iclientrenderable, public c_clientnetworkable
 {
@@ -275,7 +277,8 @@ public:
 	}
 
 	bool is_stationary() {
-		return !(*(bool*)((DWORD)this + 0xE9));
+		if (!this) return false;
+		return this->m_vecVelocity().length() > 0.1f;
 	}
 
 	int draw_model( int flags, uint8_t alpha ) {
@@ -492,6 +495,10 @@ public:
 	{
 		static uintptr_t offset = retrieve_offset( "DT_BasePlayer", "localdata", "m_nTickBase" );
 		return get_value<int>( offset );
+	}
+
+	VarMapping_t* VarMapping() {
+		return reinterpret_cast<VarMapping_t*>((DWORD)this + 0x24);
 	}
 
 	// Save as pointers so we can patch them later for lag compensation.

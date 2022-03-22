@@ -99,6 +99,7 @@
       <PrecompiledHeaderFile>Header.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>Default</LanguageStandard_C>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -158,6 +159,7 @@
     <ClCompile Include="chams.cpp" />
     <ClCompile Include="checksum_md5.cpp" />
     <ClCompile Include="configuration.cpp" />
+    <ClCompile Include="crc32.cpp" />
     <ClCompile Include="create_move.cpp" />
     <ClCompile Include="c_entities.cpp" />
     <ClCompile Include="d3dx9esp.cpp" />
@@ -237,6 +239,7 @@
     <ClInclude Include="chams.h" />
     <ClInclude Include="checksum_md5.hpp" />
     <ClInclude Include="configuration.h" />
+    <ClInclude Include="crc32.h" />
     <ClInclude Include="create_move.h" />
     <ClInclude Include="c_engine_client.h" />
     <ClInclude Include="c_entities.h" />

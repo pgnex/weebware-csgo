@@ -2,6 +2,7 @@
 
 #include "net_channel.h"
 #include "vector.h"
+#include "crc32.h"
 #include "player_info.h"
 #include "key_values.h"
 #include "virtual_function.h"
@@ -27,43 +28,58 @@ enum clientframestage_t
 };
 
 
-class c_usercmd
-{
+class c_usercmd {
 public:
-	c_usercmd()
-	{
-		memset(this, 0, sizeof(*this));
-	};
-	virtual ~c_usercmd() {};
+	virtual			~c_usercmd() { }		// 0x00
+	int				command_number;		// 0x04
+	int				tick_count;			// 0x08
+	QAngle			viewangles;		// 0x0C
+	Vector			vecAimDirection;	// 0x18
+	float			forwardmove;		// 0x24
+	float			sidemove;			// 0x28
+	float			upmove;			// 0x2C
+	int				buttons;			// 0x30
+	std::uint8_t	uImpulse;			// 0x34
+	int				iWeaponSelect;		// 0x38
+	int				iWeaponSubType;		// 0x3C
+	int				randomseed;		// 0x40
+	short			mousedx;		// 0x44
+	short			mousedy;		// 0x46
+	bool			hasbeenpredicted;	// 0x48
+	Vector			vecHeadAngles;		// 0x4C
+	Vector			vecHeadOffset;		// 0x58
 
-	unsigned long GetChecksum(void) const
+	[[nodiscard]] CRC32_t GetChecksum() const
 	{
-		return 0;
+		CRC32_t uHashCRC = 0UL;
+
+		CRC32::Init(&uHashCRC);
+		CRC32::ProcessBuffer(&uHashCRC, &command_number, sizeof(command_number));
+		CRC32::ProcessBuffer(&uHashCRC, &tick_count, sizeof(tick_count));
+		CRC32::ProcessBuffer(&uHashCRC, &viewangles, sizeof(viewangles));
+		CRC32::ProcessBuffer(&uHashCRC, &vecAimDirection, sizeof(vecAimDirection));
+		CRC32::ProcessBuffer(&uHashCRC, &forwardmove, sizeof(forwardmove));
+		CRC32::ProcessBuffer(&uHashCRC, &sidemove, sizeof(sidemove));
+		CRC32::ProcessBuffer(&uHashCRC, &upmove, sizeof(upmove));
+		CRC32::ProcessBuffer(&uHashCRC, &buttons, sizeof(buttons));
+		CRC32::ProcessBuffer(&uHashCRC, &uImpulse, sizeof(uImpulse));
+		CRC32::ProcessBuffer(&uHashCRC, &iWeaponSelect, sizeof(iWeaponSelect));
+		CRC32::ProcessBuffer(&uHashCRC, &iWeaponSubType, sizeof(iWeaponSubType));
+		CRC32::ProcessBuffer(&uHashCRC, &randomseed, sizeof(randomseed));
+		CRC32::ProcessBuffer(&uHashCRC, &mousedx, sizeof(mousedx));
+		CRC32::ProcessBuffer(&uHashCRC, &mousedy, sizeof(mousedy));
+		CRC32::Final(&uHashCRC);
+
+		return uHashCRC;
 	}
-
-	int     command_number;     // 0x04 For matching server and client commands for debugging
-	int     tick_count;         // 0x08 the tick the client created this command
-	QAngle  viewangles;         // 0x0C Player instantaneous view angles.
-	QAngle  aimdirection;       // 0x18
-	float   forwardmove;        // 0x24
-	float   sidemove;           // 0x28
-	float   upmove;             // 0x2C
-	int     buttons;            // 0x30 Attack button states
-	char    impulse;            // 0x34
-	int     weaponselect;       // 0x38 Current weapon id
-	int     weaponsubtype;      // 0x3C
-	int     random_seed;        // 0x40 For shared random functions
-	short   mousedx;            // 0x44 mouse accum in x from create move
-	short   mousedy;            // 0x46 mouse accum in y from create move
-	bool    hasbeenpredicted;   // 0x48 Client only, tracks whether we've predicted this command at least once
-	char    pad_0x4C[0x18];     // 0x4C Current sizeof( usercmd ) =  100  = 0x64
 };
+static_assert(sizeof(c_usercmd) == 0x64);
 
 class c_verifiedusercmd
 {
 public:
-	c_usercmd m_cmd;
-	unsigned long m_crc;
+	c_usercmd cmd;
+	unsigned long crc;
 };
 
 struct player_info
@@ -94,6 +110,11 @@ public:
 	unsigned char filesdownloaded;
 };
 
+//struct c_clientstate
+//{
+//	byte  pad[372];
+//	uint32_t m_ndeltatick;
+//};
 
 class c_engine_client
 {
@@ -255,6 +276,7 @@ public:
 #define in_bullrush		(1 << 22)
 #define in_grenade1		(1 << 23)	// grenade 1
 #define in_grenade2		(1 << 24)	// grenade 2
+#define in_attack3		(1 << 25)
 
 class c_input_system {
 public:
@@ -313,11 +335,15 @@ public:
 	float fMaxVal;
 	void* fnChangeCallback;
 
-	float GetFloat(void) const
-	{
+	float GetFloat(void) const{
 		auto temp = *(int*)(&fValue);
 		auto temp_result = (int)(temp ^ (DWORD)this);
 		return *(float*)(&temp_result);
+	}
+
+	int GetInt(void) const {
+		auto temp = *(int*)(&nValue);
+		return (int)(temp ^ (DWORD)this);
 	}
 };
 
