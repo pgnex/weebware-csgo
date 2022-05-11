@@ -93,7 +93,8 @@ bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* c
 			g_ai.create_move( cmd, g_create_move.local );
 		}
 	}
-	g_create_move.clamp_angles(cmd, original_angles, sendpacket);
+
+//	g_create_move.clamp_angles(cmd, original_angles, sendpacket);
 
 	//g_create_move.real_angle = cmd->viewangles;
 	//g_weebware.real_angle = cmd->viewangles;
@@ -221,7 +222,6 @@ void c_create_move::anti_afk( c_usercmd* cmd ) {
 		update_time = get_epoch_s( ) + 30;
 		updated = true;
 	}
-
 }
 
 void c_create_move::draw_grenade_trajectory( ) {
@@ -905,26 +905,26 @@ void c_create_move::clamp_angles( c_usercmd* cmd, Vector original_angles, bool& 
 	//if ( cmd->buttons & in_attack )
 	//	sendpacket = true;
 
-	QAngle cmd_view = cmd->viewangles;
+	//QAngle cmd_view = cmd->viewangles;
 
-	g_maths.normalize_angle( cmd_view );
-	g_maths.clamp_angle( cmd_view );
+	//g_maths.normalize_angle( cmd_view );
+	//g_maths.clamp_angle( cmd_view );
 
-	cmd->viewangles = cmd_view;
+	//cmd->viewangles = cmd_view;
 
-	g_create_move.correct_movement( original_angles, cmd );
-	g_maths.normalize_angle( cmd->viewangles );
-	g_maths.clamp_angle( cmd->viewangles );
+	//g_create_move.correct_movement( original_angles, cmd );
+	//g_maths.normalize_angle( cmd->viewangles );
+	//g_maths.clamp_angle( cmd->viewangles );
 
-	if ( cmd->forwardmove > 450 )
-		cmd->forwardmove = 450;
+	//if ( cmd->forwardmove > 450 )
+	//	cmd->forwardmove = 450;
 
-	if ( cmd->forwardmove < -450 )
-		cmd->forwardmove = -450;
+	//if ( cmd->forwardmove < -450 )
+	//	cmd->forwardmove = -450;
 
-	if ( cmd->sidemove > 450 )
-		cmd->sidemove = 450;
+	//if ( cmd->sidemove > 450 )
+	//	cmd->sidemove = 450;
 
-	if ( cmd->sidemove < -450 )
-		cmd->sidemove = -450;
+	//if ( cmd->sidemove < -450 )
+	//	cmd->sidemove = -450;
 }

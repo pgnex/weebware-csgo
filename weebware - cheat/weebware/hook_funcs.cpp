@@ -165,8 +165,15 @@ namespace hooks {
 			__asm mov frame_ptr, ebp;
 			bool& send_packet = *reinterpret_cast<bool*>(*frame_ptr - 0x34);
 			hooks::hook_functions::clientmode_cm(input_sample_time, cmd, send_packet);
+
+			// CLAMPS PLEASE NO BAN ?
+			g_maths.clamp_angle(cmd->viewangles);
+			cmd->forwardmove = std::clamp(cmd->forwardmove, -450.f, 450.f);
+			cmd->sidemove = std::clamp(cmd->sidemove, -450.f, 450.f);
+			cmd->upmove = std::clamp(cmd->upmove, -450.f, 450.f);
+
 		}
-		return o_cm(e, z, input_sample_time, cmd);
+		return false; // went from returning original to false if not valid cmd or cmd_number
 	}
 
 
@@ -307,7 +314,7 @@ namespace hooks {
 			(void*)(&hk_paint_traverse),
 			(void**)(&o_pt));
 
-		// createmove hook
+		// createmove hook ( CAUSING BANS NEED TP DEBUG!!!)
 		HHELPER::HookCm((void*)(GetVirtual(g_weebware.g_client_mode, hook_index::cm)),
 			(void*)(&hk_clientmode_cm),
 			(void**)(&o_cm));
