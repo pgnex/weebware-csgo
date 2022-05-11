@@ -276,9 +276,9 @@ namespace hooks {
 	void __fastcall hk_overrideview(void* thisptr, int edx, view_setup_t* vsView) {
 		if (g_weebwarecfg.thirdperson && vsView)
 			overrideview::thirdperson();
-		else if (g_weebware.g_input->m_fCameraInThirdPerson && !g_weebwarecfg.thirdperson) {
-			g_weebware.g_input->m_fCameraInThirdPerson = false;
-			g_weebware.g_input->m_vecCameraOffset.z = 0;
+		else if (g_weebware.g_input->bCameraInThirdPerson && !g_weebwarecfg.thirdperson) {
+			g_weebware.g_input->bCameraInThirdPerson = false;
+			g_weebware.g_input->vecCameraOffset.z = 0;
 		}
 		o_ov(thisptr, edx, vsView);
 	}
@@ -301,11 +301,6 @@ namespace hooks {
 
 	void Setup() {
 		HHELPER::Start();
-
-		// fsn hook
-		HHELPER::HookFn((void*)(GetVirtual(g_weebware.g_client, hook_index::fsn)),
-			(void*)(&hk_frame_stage_notify),
-			(void**)(&o_fsn));
 
 		// pt hook
 		HHELPER::HookPt((void*)(GetVirtual(g_weebware.g_panel, hook_index::pt)),

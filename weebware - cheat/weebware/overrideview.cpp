@@ -15,8 +15,8 @@ void overrideview::thirdperson() {
 			float range = g_weebwarecfg.thirdperson_distance;
 
 			// we're already in thirdperson. nothing to do
-			if (!g_weebware.g_input->m_fCameraInThirdPerson)
-				g_weebware.g_input->m_fCameraInThirdPerson = true;
+			if (!g_weebware.g_input-> bCameraInThirdPerson)
+				g_weebware.g_input->bCameraInThirdPerson = true;
 
 			Vector view_angles;
 			g_weebware.g_engine->get_view_angles(view_angles);
@@ -36,14 +36,14 @@ void overrideview::thirdperson() {
 
 
 			view_angles.z = range;
-			g_weebware.g_input->m_fCameraInThirdPerson = true;
-			g_weebware.g_input->m_vecCameraOffset = view_angles;
+			g_weebware.g_input->bCameraInThirdPerson = true;
+			g_weebware.g_input->vecCameraOffset = view_angles;
 
 		}
 	}
 	else {
-		g_weebware.g_input->m_fCameraInThirdPerson = false;
-		g_weebware.g_input->m_vecCameraOffset.z = 0;
+		g_weebware.g_input->bCameraInThirdPerson = false;
+		g_weebware.g_input->vecCameraOffset.z = 0;
 	}
 
 
