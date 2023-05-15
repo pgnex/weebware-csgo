@@ -660,7 +660,7 @@ void c_d3dxesp::spectator_list(c_base_entity* ent) {
 		tw = draw.GetTextWidth(spec_name.c_str(), tahoma_large);
 		th = draw.GetTextHeight(spec_name.c_str(), tahoma_large);
 		std::transform(spec_name.begin(), spec_name.end(), spec_name.begin(), ::tolower);
-		draw.Text(spec_name.c_str(), (sw - tw) - 5, (spec_count * th) + 2, lefted, tahoma_large, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
+		draw.Text(spec_name.c_str(), (sw - tw) - 3, (spec_count * th) + 3, lefted, tahoma_large, D3DCOLOR_ARGB(col.a, col.r, col.g, col.b));
 
 		spec_count++;
 	}

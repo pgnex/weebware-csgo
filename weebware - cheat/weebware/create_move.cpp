@@ -61,7 +61,8 @@ bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* c
 	g_nightmode.run( );
 
 	g_create_move.fake_lag(cmd, sendpacket);
-	g_LegitAntiAim.Run(cmd);
+	// untrusted>??
+//	g_LegitAntiAim.Run(cmd);
 
 
 	g_create_move.edge_jump_pre_prediction( cmd );

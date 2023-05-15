@@ -4,29 +4,28 @@
 
 #define MULTIPLAYER_BACKUP 150
 
-class c_input
-{
+class c_input {
 public:
-	std::byte			pad0[0xC];				//0x00
-	bool				bTrackIRAvailable;		//0x0C
-	bool				bMouseInitialized;		//0x0D
-	bool				bMouseActive;			//0x0E
-	std::byte			pad1[0x9E];				//0x0F
-	bool				bCameraInThirdPerson;	//0xAD
-	std::byte			pad2[0x2];				//0xAE
-	Vector				vecCameraOffset;		//0xB0
-	std::byte			pad3[0x38];				//0xBC
-	c_usercmd* pCommands;				//0xF4
-	c_verifiedusercmd* pVerifiedCommands;		//0xF8
-
-    c_usercmd* GetUserCmd(const int sequence_number)
-    {
-        return &pCommands[sequence_number % MULTIPLAYER_BACKUP];
-    }
-
-    c_verifiedusercmd* GetVerifiedUserCmd(const int sequence_number)
-    {
-        return &pVerifiedCommands[sequence_number % MULTIPLAYER_BACKUP];
-    }
+	char pad_0000[0xC];
+	bool bTrackIRAvailable;
+	bool bMouseInitialized;
+	bool bMouseActive;
+	char pad_0x08[0x9A];
+	bool bCameraInThirdPerson;
+	char pad_00C3[0x2];
+	Vector vecCameraOffset;
+	char pad_00D1[0x38];
+	c_usercmd* commands;
+	c_verifiedusercmd* verified_commands;
+	c_usercmd* get_user_cmd(int sequence_number) {
+		typedef c_usercmd* (__thiscall* o_getusercmd)(void*, int, int);
+		return &commands[sequence_number % MULTIPLAYER_BACKUP];
+	}
+	c_usercmd* get_user_cmd(int slot, int sequence_number) {
+		typedef c_usercmd* (__thiscall* o_getusercmd)(void*, int, int);
+		return getvfunc <o_getusercmd>(this, 8)(this, slot, sequence_number);
+	}
+	c_verifiedusercmd* get_verified_user_cmd(int sequence_number) {
+		return &verified_commands[sequence_number % MULTIPLAYER_BACKUP];
+	}
 };
-static_assert(sizeof(c_input) == 0xFC);

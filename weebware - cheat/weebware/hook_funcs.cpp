@@ -271,7 +271,7 @@ namespace hooks {
 		if (!g_weebwarecfg.thirdperson)
 			return ofunc(pConVar);
 
-		static auto dwCAM_Think = g_weebware.pattern_scan("client.dll", "85 C0 75 30 38 86");
+		static auto dwCAM_Think = g_weebware.pattern_scan("client.dll", "85 C0 75 30 38 87");
 		if (reinterpret_cast<uintptr_t>(_ReturnAddress()) == dwCAM_Think)
 			return true;
 

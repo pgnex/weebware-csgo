@@ -756,20 +756,20 @@ public:
 	float			flRealTime;					//0x00
 	int				framecount;					//0x04
 	float			flAbsFrameTime;				//0x08
-	float			flAbsFrameStartTime;		//0x0C
+	const std::byte pad[4];
 	float			curtime;					//0x10
 	float			frametime;					//0x14
 	int				maxclients;					//0x18
 	int				iTickCount;					//0x1C
 	float			interval_per_tick;			//0x20
-	float			flInterpolationAmount;		//0x24
-	int				nFrameSimulationTicks;		//0x28
-	int				iNetworkProtocol;			//0x2C
-	void*			pSaveData;					//0x30
-	bool			bClient;					//0x34
-	bool		    bRemoteClient;				//0x35
-	int				iTimestampNetworkingBase;	//0x36
-	int				iTimestampRandomizeWindow;	//0x3A
+	//float			flInterpolationAmount;		//0x24
+	//int				nFrameSimulationTicks;		//0x28
+	//int				iNetworkProtocol;			//0x2C
+	//void*			pSaveData;					//0x30
+	//bool			bClient;					//0x34
+	//bool		    bRemoteClient;				//0x35
+	//int				iTimestampNetworkingBase;	//0x36
+	//int				iTimestampRandomizeWindow;	//0x3A
 };
 
 class c_global_vars : public i_global_vars_base
