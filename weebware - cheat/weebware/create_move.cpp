@@ -28,8 +28,6 @@ bool hooks::hook_functions::clientmode_cm( float input_sample_time, c_usercmd* c
 		return false;
 	}		
 
-
-
 	if ( !g_weebware.g_engine->is_connected( ) || !g_weebware.g_engine->is_in_game( ) ) {
 		g_backtrack.clear_all_records( );
 		return false;

@@ -79,7 +79,7 @@ struct hud_weapons_t {
 
 template<class T>
 static T* find_hud_element(const char* name) {
-	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client.dll", ("B9 ? ? ? ? E8 ? ? ? ? 8B 5D 08")) + 1);
+	static auto fn = *reinterpret_cast<DWORD * *>(g_weebware.pattern_scan("client.dll", ("B9 ? ? ? ? 68 ? ? ? ? E8 ? ? ? ? 89")) + 1);
 
 	static auto find_hud_element = reinterpret_cast<DWORD(__thiscall*)(void*, const char*)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 53 8B 5D 08 56 57 8B F9 33 F6 39 77 28")));
 	return (T*)find_hud_element(fn, name);
@@ -87,7 +87,7 @@ static T* find_hud_element(const char* name) {
 
 
 void c_knifehook::force_update() {
-	static auto fn = reinterpret_cast<std::int32_t(__thiscall*)(void*, std::int32_t)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 51 53 56 8B 75 08 8B D9 57 6B FE 2C")));
+	static auto fn = reinterpret_cast<std::int32_t(__thiscall*)(void*, std::int32_t)>(g_weebware.pattern_scan("client.dll", ("55 8B EC 51 53 56 8B 75 08 8B D9 57 6B")));
 
 	auto element = find_hud_element<std::uintptr_t*>(("CCSGO_HudWeaponSelection"));
 

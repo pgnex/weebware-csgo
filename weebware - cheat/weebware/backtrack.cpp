@@ -118,8 +118,8 @@ void c_backtrack::accuracy_boost(c_usercmd* cmd) {
 		if (cur_entity->m_bGunGameImmunity())
 			continue;
 
-		if (cur_entity->is_stationary())
-			continue;
+		//if (cur_entity->is_stationary())
+		//	continue;
 
 		accuracy_records.push_back(create_record(cur_entity, cmd));
 	}

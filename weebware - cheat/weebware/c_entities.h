@@ -937,12 +937,12 @@ public:
 
 	float GetSpread( )
 	{
-		return getvfunc<float( __thiscall* )(void*)>( this, 452 )(this);
+		return getvfunc<float( __thiscall* )(void*)>( this, 453 )(this);
 	}
 
 	void Update_Accuracy_Penalty( )
 	{
-		getvfunc<void( __thiscall* )(void*)>( this, 483 )(this);
+		getvfunc<void( __thiscall* )(void*)>( this, 484 )(this);
 	}
 
 	bool is_zeus( )
